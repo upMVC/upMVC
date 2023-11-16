@@ -1,4 +1,4 @@
-# BitsHost MMVC
+# upMVC - BitsHost MMVC
  Modular MODEL VIEW CONTROLLER with Router
 
  /*
@@ -20,7 +20,7 @@ https://www.youtube.com/watch?v=DuB6UjEsY_Y&ab_channel=matperino
 
 
 
-BistHost MMVC. PHP MVC with modules. Modular MVC(Model, View, Controller) derive from Hierarchical Model‐View‐Controller (HMVC).	
+upMVC - MMVC, PHP MVC with modules. Modular MVC(Model, View, Controller) derive from Hierarchical Model‐View‐Controller (HMVC).	
 
 (https://github.com/BitsHost/BitsHost-MMVC/wiki)		
 
