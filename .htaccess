@@ -1,0 +1,20 @@
+Options -Indexes
+RewriteEngine on
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME} !-f
+#RewriteRule ^ - [R=404,L]
+#RewriteRule ^ - [R=403,L]
+
+#ErrorDocument 404
+#ErrorDocument 403
+
+
+#level One 
+RewriteRule ^test-([\w\d~%.:_\-]+)$ test?param=$1 [NC]
+RewriteRule ^test-([\w\d~%.:_\-]+)/([\w\d~%.:_\-]+)$ test?param=$1&another=$2 [NC]  
+
+#level Two
+RewriteRule ^moda-page-([\w\d~%.:_\-]+)$ moda-page?param=$1 [NC] 
+RewriteRule ^moda-page-([\w\d~%.:_\-]+)/([\w\d~%.:_\-]+)$ test?param=$1&another=$2 [NC] 
+
+RewriteRule (.+) index.php [QSA,L]

@@ -1,4 +1,4 @@
-# BitsHost MMVC
+# BitsHost-MMVC
  Modular MODEL VIEW CONTROLLER with Router
 
  /*
@@ -20,7 +20,7 @@ https://www.youtube.com/watch?v=DuB6UjEsY_Y&ab_channel=matperino
 
 
 
-BistHost MMVC. PHP MVC with modules. Modular MVC(Model, View, Controller) derive from Hierarchical Model‐View‐Controller (HMVC).	
+BistHost‐MMVC. PHP MVC with modules. Modular MVC(Model, View, Controller). Hierarchical Model‐View‐Controller (HMVC).	
 
 (https://github.com/BitsHost/BitsHost-MMVC/wiki)		
 
@@ -28,7 +28,7 @@ BistHost MMVC. PHP MVC with modules. Modular MVC(Model, View, Controller) derive
 
 													
 
-Introducing MODULAR MVC - Empowering Your Development
+Introducing MODULAR MMVC - Empowering Your Development
 
 In the realm of modern frameworks, it often feels like they do everything except what truly matters. These frameworks tend to add layers of abstraction that demand you to learn new skills and pathways whenever you decide to switch. They also tend to clutter themselves with superfluous options, solving simple problems in needlessly convoluted ways. 
 
