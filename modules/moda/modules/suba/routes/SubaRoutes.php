@@ -5,10 +5,9 @@
  * Copyright (c) 2023 BitsHost
  */
 namespace Suba\Routes;
-use MVC\Routes;
 use Suba\SubaController;
 
-class SubaRoutes extends Routes
+class SubaRoutes
 {
 
 

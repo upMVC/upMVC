@@ -5,14 +5,13 @@
  * Copyright (c) 2023 BitsHost
  */
 namespace Moda\Routes;
-use MVC\Routes;
 use Moda\ModaController;
 
 
 /**
  * ModaRoutes
  */
-class ModaRoutes extends Routes
+class ModaRoutes
 {
 
     

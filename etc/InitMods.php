@@ -6,18 +6,36 @@
  */
 
 //add Routes for your modules
+namespace MVC;
 
 use Test\Routes\TestRoutes;
-
-$testR = new TestRoutes();
-$testR->Routes($router);
-
 use Moda\Routes\ModaRoutes;
-
-$ModaR = new ModaRoutes();
-$ModaR->Routes($router);
-
 use Suba\Routes\SubaRoutes;
 
-$SubaR = new SubaRoutes();
-$SubaR->Routes($router);
+class InitMods
+{
+    public function addRoutes($router)
+    {
+        $testR = new TestRoutes();
+        $testR->Routes($router);
+
+        $ModaR = new ModaRoutes();
+        $ModaR->Routes($router);
+
+        $SubaR = new SubaRoutes();
+        $SubaR->Routes($router);
+
+        /*
+        include "./etc/file.php" ;
+        You can insert a file.php here that can be automatically updated using a tool from a separate user.
+        If you want developers to be able to extend your system. All users should be able to edit file.php.
+        Following that, you may construct a class for all users. When the class is run, a new module is added to file.php.
+        file.php content e.g.:
+
+        $newModule = new myNewModuleRoutes();
+        $newModule->Routes($router);
+
+        */
+    }
+}
+

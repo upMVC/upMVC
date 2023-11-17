@@ -47,7 +47,7 @@ class Router
             <meta http-equiv="refresh" content="3; URL='<?php echo BASE_URL ?>'" />
             <?php
             include './common/404.php';
-            //throw new \Exception("No route found for URI: $url");
+           // throw new \Exception("No route found for URI: $url");
         }
     }
 
