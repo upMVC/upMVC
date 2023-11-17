@@ -37,23 +37,10 @@ class Router
     public function dispatcher($url, $request)
     {
         if (array_key_exists($url, $this->routes)) {
+           
             $className  = $this->routes[$url]['className'];
             $methodName = $this->routes[$url]['methodName'];
-
-            //initialize DB
-            $database = new Database();
-            //$db       = $database->getConnection();
-
-
-            //middleware before
-
-            //initialize class->method
-
-            $className = new $className();
-            $className->$methodName($request);
-
-
-            //middleware after
+            $this->callController($className, $methodName, $request);
         }
         else {
             ?>
@@ -61,9 +48,21 @@ class Router
             <?php
             include './common/404.php';
             //throw new \Exception("No route found for URI: $url");
-
-
-
         }
+    }
+
+    private function callController($className, $methodName, $request)
+    {
+        //initialize DB
+        $database = new Database();
+        //$db       = $database->getConnection();
+
+        //middleware before
+
+        //initialize class->method
+        $className = new $className();
+        $className->$methodName($request);
+
+        //middleware after
     }
 }

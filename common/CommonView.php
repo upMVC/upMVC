@@ -39,7 +39,7 @@ class CommonView
         <?php
 
     }
-    public function startHeader($title)
+    public function startHead($title)
     {
         $newCss = new CommonCss();
         ?>
@@ -62,7 +62,7 @@ class CommonView
 
     }
 
-    public function endHeader()
+    public function endHead()
     {
         ?>
         </head>

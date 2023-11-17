@@ -29,9 +29,6 @@ class Routes
         //-1. default system routes
         $router->addRoute('/abba', TestController::class, 'display');
         ///////////////////route, class, function()////////////////
-
-
-
         ///////////////////////////////////////////////////////////
 
         //-2. modules routes
@@ -40,15 +37,9 @@ class Routes
 
         //combining all modules initialization into a single file
         include "./etc/InitMods.php";
-
-
-
         ///////////////////////////////////////////////////////////
 
         #-3. call Dispatcher
-
         $router->dispatcher($url, $request);
-
-
     }
 }

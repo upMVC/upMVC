@@ -3,8 +3,8 @@ use Html\CommonView;
 
 $newView = new commonView();
 $title   = "List";
-$newView->startHeader($title);
-$newView->endHeader();
+$newView->startHead($title);
+$newView->endHead();
 $newView->startBody($title);
 ?>
 <ul>

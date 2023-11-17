@@ -1,15 +1,24 @@
 {
-    "name": "bitshost/mmvc",
-    "description": "Modular Model View Controller System with router. BitsHost-MMVC",
+    "name": "bitshost/upmvc",
+    "description": "upMVC. Modular Model View Controller. A modular PHP MVC system with integrated routing for scalable and organized web applications. Built-in Namespace Support. Object-Oriented Programming (OOP).",
     "type": "project",
-    "license": "MIT License/Free",
+    "minimum-stability": "beta",
+    "require": {
+        "php": ">=8.2",
+        "another-vendor/package": "1.*",
+        "ext-mysqli": "*"
+    },
     "authors": [
         {
-            "name": "BitsHost"
+            "name": "Adrian D",
+            "email": "contact@delvirai.net",
+            "homepage": "https://upmvc.com",
+            "role": "Developer"
         }
     ],
-    "minimum-stability": "beta",
-    "require": {},
+    "license": [
+        "MIT"
+    ],
     "autoload": {
         "psr-4": {
             "Html\\": "common/",
