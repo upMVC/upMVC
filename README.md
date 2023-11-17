@@ -15,18 +15,9 @@ Rasmus Lerdorf: PHP Frameworks all suck!
 
 https://www.youtube.com/watch?v=DuB6UjEsY_Y&ab_channel=matperino
 
-	
-
-
-
 
 upMVC - MMVC, PHP MVC with modules. Modular MVC(Model, View, Controller) derive from Hierarchical Model‐View‐Controller (HMVC).	
-
-(https://github.com/BitsHost/BitsHost-MMVC/wiki)		
-
-	
-
-													
+											
 
 Introducing MODULAR MVC - Empowering Your Development
 
