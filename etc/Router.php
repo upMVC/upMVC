@@ -53,10 +53,7 @@ class Router
 
     private function callController($className, $methodName, $request)
     {
-        //initialize DB
-        $database = new Database();
-        //$db       = $database->getConnection();
-
+        
         //middleware before
 
         //initialize class->method

@@ -7,14 +7,14 @@
 
 namespace Moda;
 
-use MVC\Controller;
+use Common\Bmvc\BaseController;
 use Moda\ModaModel;
 use Moda\ModaView;
 
 /**
  * ModaController
  */
-class ModaController extends Controller
+class ModaController extends BaseController
 {
     /**
      * display
@@ -28,7 +28,7 @@ class ModaController extends Controller
             new ModaModel('Jane Doe', 'jane@example.com')
         ];
 
-       
+
 
         if (isset($_SESSION["username"])) {
             echo "<br>";

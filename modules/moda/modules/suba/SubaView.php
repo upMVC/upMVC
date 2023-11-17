@@ -1,7 +1,13 @@
 <?php
-use Html\CommonView;
+/*
+ * Created on Tue Oct 31 2023
+ *
+ * Copyright (c) 2023 BitsHost
+ */
 
-$newView = new commonView();
+use Common\Bmvc\BaseView;
+
+$newView = new BaseView();
 $title   = "List";
 $newView->startHead($title);
 $newView->endHead();

@@ -1,12 +1,18 @@
 <?php
+/*
+ * Created on Tue Oct 31 2023
+ *
+ * Copyright (c) 2023 BitsHost
+ */
 namespace Test;
 
-use Html\CommonView;
+use Common\Bmvc\BaseView;
+
 
 /**
  * Testview
  */
-class Testview
+class Testview extends BaseView
 {
     /**
      * View
@@ -17,17 +23,17 @@ class Testview
      */
     public function View($request, $users)
     {
-        $newView = new commonView();
-        $title   = "List";
-        $newView->startHead($title);
+
+        $title = "List";
+        $this->startHead($title);
         ?>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
         <?php
-        $newView->endHead();
-        $newView->startBody($title);
+        $this->endHead();
+        $this->startBody($title);
         ?>
         <ul id="ul">
-        <strong>Click or Double Click on the first line.</strong>
+            <strong>Click or Double Click on the first line.</strong>
             <?php foreach ($users as $user): ?>
                 <li id="cell">
                     <?= $user->name ?> (
@@ -50,9 +56,9 @@ class Testview
         <?php
         echo $request . "<br>";
         print_r($_GET);
-        $newView->endBody();
-        $newView->startFooter();
-        $newView->endFooter();
+        $this->endBody();
+        $this->startFooter();
+        $this->endFooter();
 
     }
 }

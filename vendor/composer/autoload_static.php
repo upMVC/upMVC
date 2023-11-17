@@ -27,9 +27,10 @@ class ComposerStaticInit90c08dfea1c3a4f3cfd7febce74e189b
             'Moda\\' => 5,
             'MVC\\' => 4,
         ),
-        'H' => 
+        'C' => 
         array (
-            'Html\\' => 5,
+            'Common\\Bmvc\\' => 12,
+            'Common\\Assets\\' => 14,
         ),
     );
 
@@ -66,9 +67,13 @@ class ComposerStaticInit90c08dfea1c3a4f3cfd7febce74e189b
         array (
             0 => __DIR__ . '/../..' . '/etc',
         ),
-        'Html\\' => 
+        'Common\\Bmvc\\' => 
         array (
-            0 => __DIR__ . '/../..' . '/common',
+            0 => __DIR__ . '/../..' . '/common/bmvc',
+        ),
+        'Common\\Assets\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/common/assets',
         ),
     );
 

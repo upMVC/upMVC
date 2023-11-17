@@ -7,13 +7,16 @@
 
 namespace Moda;
 
+use Common\Bmvc\BaseModel;
+
 /**
  * ModaModel
  */
-class ModaModel
+class ModaModel extends BaseModel
 {
     public $name;
     public $email;
+    protected $conn;
 
     /**
      * __construct
@@ -24,6 +27,7 @@ class ModaModel
      */
     public function __construct($name, $email)
     {
+        parent::__construct();
         $this->name  = $name;
         $this->email = $email;
     }

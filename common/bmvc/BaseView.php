@@ -1,10 +1,17 @@
 <?php
+/*
+ * Created on Tue Oct 31 2023
+ *
+ * Copyright (c) 2023 BitsHost
+ */
 
-namespace Html;
+namespace Common\Bmvc;
 
-class CommonView
+use Common\Assets\CommonCss;
+
+class BaseView
 {
-   
+
     public function menu()
     {
         ?>
@@ -21,9 +28,11 @@ class CommonView
                             <li><a href="<?php echo BASE_URL; ?>/test-one">👩‍👩‍👧‍👧 1 Parameter(GET)</a></li>
                             <li><a href="<?php echo BASE_URL; ?>/test?param=one">👩‍👩‍👧‍👧 1 Parameter(GET) Classic</a></li>
                             <li><a href="<?php echo BASE_URL; ?>/test-page-one">👩‍👩‍👧‍👧 1 Parameter(GET)</a></li>
-                            <li><a href="<?php echo BASE_URL; ?>/test?param=page-one">👩‍👩‍👧‍👧 1 Parameter(GET) Classic</a></li>
+                            <li><a href="<?php echo BASE_URL; ?>/test?param=page-one">👩‍👩‍👧‍👧 1 Parameter(GET) Classic</a>
+                            </li>
                             <li><a href="<?php echo BASE_URL; ?>/test-one/two">👩‍👩‍👧‍👧 2 Parameters(GET)</a></li>
-                            <li><a href="<?php echo BASE_URL; ?>/test?param=one&another=two">👩‍👩‍👧‍👧 2 Parameters(GET) Classic</a></li>
+                            <li><a href="<?php echo BASE_URL; ?>/test?param=one&another=two">👩‍👩‍👧‍👧 2 Parameters(GET)
+                                    Classic</a></li>
                             <li><a href="<?php echo BASE_URL; ?>/test-page-one/two">👩‍👩‍👧‍👧 2 Parameters(GET)</a></li>
                             <li><a href="<?php echo BASE_URL; ?>/moda">👩‍👩‍👧‍👧 Moda</a></li>
                             <li><a href="<?php echo BASE_URL; ?>/suba">👩‍👩‍👧‍👧 Suba</a></li>
