@@ -47,16 +47,13 @@ class Router
             <meta http-equiv="refresh" content="3; URL='<?php echo BASE_URL ?>'" />
             <?php
             include './common/404.php';
-            //throw new \Exception("No route found for URI: $url");
+           // throw new \Exception("No route found for URI: $url");
         }
     }
 
     private function callController($className, $methodName, $request)
     {
-        //initialize DB
-        $database = new Database();
-        //$db       = $database->getConnection();
-
+        
         //middleware before
 
         //initialize class->method

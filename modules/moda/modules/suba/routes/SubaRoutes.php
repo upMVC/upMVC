@@ -5,10 +5,10 @@
  * Copyright (c) 2023 BitsHost
  */
 namespace Suba\Routes;
-use MVC\Routes;
+
 use Suba\SubaController;
 
-class SubaRoutes extends Routes
+class SubaRoutes
 {
 
 
@@ -17,7 +17,7 @@ class SubaRoutes extends Routes
         $router->addRoute('/suba.php', SubaController::class, 'display');
         $router->addRoute('/suba', SubaController::class, 'display');
         $router->addRoute('/suba/subpage', SubaController::class, 'display');
-        
+
     }
 
 

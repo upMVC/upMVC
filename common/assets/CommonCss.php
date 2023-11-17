@@ -1,5 +1,5 @@
 <?php
-namespace Html;
+namespace Common\Assets;
 
 class CommonCss{
     public function menuCss()

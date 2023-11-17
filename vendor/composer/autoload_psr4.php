@@ -14,5 +14,6 @@ return array(
     'Moda\\Routes\\' => array($baseDir . '/modules/moda/routes'),
     'Moda\\' => array($baseDir . '/modules/moda'),
     'MVC\\' => array($baseDir . '/etc'),
-    'Html\\' => array($baseDir . '/common'),
+    'Common\\Bmvc\\' => array($baseDir . '/common/bmvc'),
+    'Common\\Assets\\' => array($baseDir . '/common/assets'),
 );

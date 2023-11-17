@@ -7,13 +7,16 @@
 
 namespace Test;
 
+use Common\Bmvc\BaseModel;
+
 /**
  * TestModel
  */
-class TestModel
+class TestModel extends BaseModel
 {
     public $name;
     public $email;
+    protected $conn;
 
     /**
      * __construct
@@ -24,6 +27,8 @@ class TestModel
      */
     public function __construct($name, $email)
     {
+        parent::__construct();
+        //$this->conn; You may now utilize it here.  $this->conn is used to construct queries.
         $this->name  = $name;
         $this->email = $email;
     }

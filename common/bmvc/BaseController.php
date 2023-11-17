@@ -5,13 +5,13 @@
  * Copyright (c) 2023 BitsHost
  */
 
-namespace MVC;
+namespace Common\Bmvc;
 
 /**
  * Controller
  */
 
-class Controller
+class BaseController
 {
     /**
      * render

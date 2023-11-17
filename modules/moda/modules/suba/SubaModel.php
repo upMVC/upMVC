@@ -7,14 +7,17 @@
 
 namespace Suba;
 
+use Common\Bmvc\BaseModel;
+
 /**
  * SubaModel
  */
-class SubaModel
+class SubaModel extends BaseModel
 {
     public $name;
     public $email;
-    
+    protected $conn;
+
     /**
      * __construct
      *
@@ -24,6 +27,7 @@ class SubaModel
      */
     public function __construct($name, $email)
     {
+        parent::__construct();
         $this->name  = $name;
         $this->email = $email;
     }

@@ -8,6 +8,7 @@
 namespace MVC;
 
 use Test\TestController;
+use MVC\InitMods;
 
 
 /**
@@ -35,8 +36,10 @@ class Routes
         //$userR = new UserRoutes();
         //$userR->Routes($router);
 
-        //combining all modules initialization into a single file
-        include "./etc/InitMods.php";
+        //combining all modules routes
+
+        $modulesRoutes = new InitMods();
+        $modulesRoutes->addRoutes($router);
         ///////////////////////////////////////////////////////////
 
         #-3. call Dispatcher

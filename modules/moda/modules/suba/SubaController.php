@@ -4,13 +4,14 @@
  *
  * Copyright (c) 2023 BitsHost
  */
+
 namespace Suba;
 
-use MVC\Controller;
+use Common\Bmvc\BaseController;
 use Suba\SubaModel;
 use Suba\SubaView;
 
-class SubaController extends Controller
+class SubaController extends BaseController
 {
     public function display()
     {

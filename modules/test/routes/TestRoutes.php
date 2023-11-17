@@ -7,14 +7,13 @@
 
 namespace Test\Routes;
 
-use MVC\Routes;
 use Test\TestController;
 
 
 /**
  * TestRoutes
  */
-class TestRoutes extends Routes
+class TestRoutes
 {
 
 
@@ -26,6 +25,7 @@ class TestRoutes extends Routes
      */
     public function Routes($router)
     {
+        //$router = new Router();
 
         $router->addRoute('/', TestController::class, 'display');
         $router->addRoute('/index.php', TestController::class, 'display');
