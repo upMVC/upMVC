@@ -39,6 +39,10 @@ class BaseView
                             <li><a href="<?php echo BASE_URL; ?>/error">👩‍👩‍👧‍👧 Error Page</a></li>
 
                         </ul>
+                    </li>
+                    <li>
+                        <a href="<?php echo BASE_URL; ?>/users">👩‍👩‍👧‍👧 Users CRUD</a>
+
                 </ul>
             </div>
 
@@ -67,12 +71,13 @@ class BaseView
                 media="screen">
             <?php
             $newCss->menuCss();
-            $this->menu();
+
 
     }
 
     public function endHead()
     {
+        $this->menu();
         ?>
         </head>
         <?php

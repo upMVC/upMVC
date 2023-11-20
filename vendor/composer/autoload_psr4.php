@@ -6,7 +6,7 @@ $vendorDir = dirname(__DIR__);
 $baseDir = dirname($vendorDir);
 
 return array(
-    'Users\\' => array($baseDir . '/modules/users'),
+    'User\\' => array($baseDir . '/modules/user'),
     'Test\\Routes\\' => array($baseDir . '/modules/test/routes'),
     'Test\\' => array($baseDir . '/modules/test'),
     'Suba\\Routes\\' => array($baseDir . '/modules/moda/modules/suba/routes'),
