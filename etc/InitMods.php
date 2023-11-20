@@ -11,6 +11,7 @@ namespace MVC;
 use Test\Routes\TestRoutes;
 use Moda\Routes\ModaRoutes;
 use Suba\Routes\SubaRoutes;
+use User\Routes\UserRoutes;
 
 class InitMods
 {
@@ -24,6 +25,11 @@ class InitMods
 
         $SubaR = new SubaRoutes();
         $SubaR->Routes($router);
+
+        $UserR = new UserRoutes();
+        $UserR->Routes($router);
+
+
 
         /*
         include "./etc/file.php" ;
