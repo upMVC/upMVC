@@ -50,4 +50,5 @@ Diagram:
 
 
 
-![upMVC-FileStructure ](https://github.com/BitsHost/upMVC/assets/23263143/d1a865cd-2d69-483a-85fe-56022e725cad)
+
+![upMVC-FileStructure ](https://github.com/BitsHost/upMVC/assets/23263143/b1f92106-476a-45ee-9462-9b562edfe777)
