@@ -48,4 +48,5 @@ Diagram:
 
  File Structure:
 
-![upMVC-FileStructure ](https://github.com/BitsHost/upMVC/assets/23263143/b5f92803-4a60-4490-8259-cf6585dafce5)
+![upMVC-FileStructure ](https://github.com/BitsHost/upMVC/assets/23263143/793c34f2-da44-4652-95d8-4d83aeaed6e4)
+
