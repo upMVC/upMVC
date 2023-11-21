@@ -7,39 +7,27 @@
 
 namespace MVC;
 
-//use PDO;
-//use PDOException;
+use PDO;
+use PDOException;
 
 /**
  * Database
  */
 
  class Database {
-    private static $instance = null;
-    private $conn;
-
-    private function __construct() {
-        $dbHost = 'localhost'; // Replace with your actual database host
-        $dbUser = 'root'; // Replace with your actual database user
-        $dbPassword = ''; // Replace with your actual database password
-        $dbName = 'test'; // Replace with your actual database name
-
-        $this->conn = new \mysqli($dbHost, $dbUser, $dbPassword, $dbName);
-
-        if ($this->conn->connect_error) {
-            die("Connection failed: " . $this->conn->connect_error);
+    private $host = "127.0.0.1";
+    private $database_name = "test";
+    private $username = "root";
+    private $password = "";
+    public $conn;
+    public function getConnection(){
+        $this->conn = null;
+        try{
+            $this->conn = new PDO("mysql:host=" . $this->host . ";dbname=" . $this->database_name, $this->username, $this->password);
+            $this->conn->exec("set names utf8");
+        }catch(PDOException $exception){
+            echo "Database could not be connected: " . $exception->getMessage();
         }
-    }
-
-    public static function getInstance() {
-        if (self::$instance === null) {
-            self::$instance = new self();
-        }
-
-        return self::$instance;
-    }
-
-    public function getConnection() {
         return $this->conn;
     }
-}
+}  
