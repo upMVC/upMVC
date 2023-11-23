@@ -34,9 +34,7 @@ class ModaController extends BaseController
             echo "<br>";
             echo $_SESSION["username"];
             echo "<br>";
-
-        }
-        else {
+        } else {
             echo " Not Logged In! Something else.";
         }
 
@@ -46,5 +44,4 @@ class ModaController extends BaseController
         //$newView = new TestView();
         //$newView->view();
     }
-
 }

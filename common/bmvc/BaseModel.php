@@ -153,7 +153,6 @@ class BaseModel
         $stmt->bindParam(':id', $sanitizedId);
         foreach ($sanitizedData as $key => $value) {
             $stmt->bindValue(":$key", $value);
-           
         }
 
         // Execute the statement
@@ -195,7 +194,7 @@ class BaseModel
     {
         // Additional filters can be added here based on your requirements
         $sanitizedInput = filter_var($input, FILTER_SANITIZE_STRING);
-        
+
         if ($sanitizedInput === false) {
             // Handle the error, log it, or return an error message
             return "Error during sanitization.";

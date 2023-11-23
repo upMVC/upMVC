@@ -27,4 +27,3 @@ $url = $config->cleanUrlQuestionMark($urlWithoutSitePath);
 
 $start = new Routes();
 $start->startRoutes($url, $request);
-

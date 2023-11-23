@@ -25,7 +25,6 @@ class Router
     public function addRoute($route, $className, $methodName)
     {
         $this->routes[$route] = ['className' => $className, 'methodName' => $methodName];
-
     }
 
     /**
@@ -37,23 +36,22 @@ class Router
     public function dispatcher($url, $request)
     {
         if (array_key_exists($url, $this->routes)) {
-           
+
             $className  = $this->routes[$url]['className'];
             $methodName = $this->routes[$url]['methodName'];
             $this->callController($className, $methodName, $request);
-        }
-        else {
-            ?>
+        } else {
+?>
             <meta http-equiv="refresh" content="3; URL='<?php echo BASE_URL ?>'" />
-            <?php
+<?php
             include './common/404.php';
-           // throw new \Exception("No route found for URI: $url");
+            // throw new \Exception("No route found for URI: $url");
         }
     }
 
     private function callController($className, $methodName, $request)
     {
-        
+
         //middleware before
 
         //initialize class->method

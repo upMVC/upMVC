@@ -4,6 +4,7 @@
  *
  * Copyright (c) 2023 BitsHost
  */
+
 namespace User;
 
 use Common\Bmvc\BaseModel;
@@ -13,7 +14,6 @@ class UserModel extends BaseModel
     public function __construct()
     {
         parent::__construct();
-
     }
     public function getUserById($userId, $table)
     {
@@ -45,5 +45,3 @@ class UserModel extends BaseModel
         return $this->delete($userId, $table);
     }
 }
-
-?>

@@ -4,6 +4,7 @@
  *
  * Copyright (c) 2023 BitsHost
  */
+
 namespace User\Routes;
 
 use User\UserController;
@@ -24,15 +25,6 @@ class UserRoutes
      */
     public function Routes($router)
     {
-
         $router->addRoute('/users', UserController::class, 'display');
-        
-    
-
-
     }
-
-
-
-
 }

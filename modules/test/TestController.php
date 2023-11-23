@@ -33,17 +33,11 @@ class TestController
             echo "<br>";
             echo $_SESSION["username"];
             echo "<br>";
-
-        }
-        else {
+        } else {
             echo " Not Logged In! Something else.";
         }
 
         $view = new TestView();
         $view->View($request, $users);
-
-
-
     }
-
 }

@@ -57,12 +57,5 @@ class TestRoutes
         foreach ($routesArray as $key => $value) {
             $router->addRoute($value[0], "$value[1]", $value[2]);
         }
-
-
-
     }
-
-
-
-
 }

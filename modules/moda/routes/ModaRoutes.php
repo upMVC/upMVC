@@ -4,6 +4,7 @@
  *
  * Copyright (c) 2023 BitsHost
  */
+
 namespace Moda\Routes;
 
 use Moda\ModaController;
@@ -30,11 +31,5 @@ class ModaRoutes
         $router->addRoute('/moda/subpage', ModaController::class, 'display');
         $router->addRoute('/moda-page-one', ModaController::class, 'display');
         $router->addRoute('/moda-page-one/two', ModaController::class, 'display');
-
-
     }
-
-
-
-
 }

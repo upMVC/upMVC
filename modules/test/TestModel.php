@@ -32,5 +32,4 @@ class TestModel extends BaseModel
         $this->name  = $name;
         $this->email = $email;
     }
-
 }

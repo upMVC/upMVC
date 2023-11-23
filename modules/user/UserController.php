@@ -31,8 +31,7 @@ class UserController
                     $this->updateUser();
                     break;
             }
-        }
-        else {
+        } else {
             $action = $_GET['action'];
 
             switch ($action) {
@@ -68,8 +67,7 @@ class UserController
 
         if ($userRecord) {
             print_r($userRecord);
-        }
-        else {
+        } else {
             echo "User not found.";
         }
     }
@@ -80,8 +78,7 @@ class UserController
 
         if ($userRecords) {
             print_r($userRecords);
-        }
-        else {
+        } else {
             echo "No users found.";
         }
     }
@@ -103,11 +100,9 @@ class UserController
             $totalUsers = count($this->getUserModel()->getAllUsers($table));
             $totalPages = ceil($totalUsers / $itemsPerPage);
             $view->renderReadTable($userRecords, $page, $totalPages, $this->moduleRoute);
-        }
-        else {
+        } else {
             echo "No users found.";
         }
-
     }
 
     public function createUser()
@@ -125,8 +120,7 @@ class UserController
         if ($userId) {
             echo "User created successfully! (ID: $userId)";
             header('Location: ' . $this->moduleRoute . '?action=read');
-        }
-        else {
+        } else {
             echo "Error creating user.";
         }
     }
@@ -147,8 +141,7 @@ class UserController
         if ($success) {
             echo "User updated successfully!";
             header('Location: ' . $this->moduleRoute . '?action=read');
-        }
-        else {
+        } else {
             echo "Error updating user.";
         }
     }
@@ -162,8 +155,7 @@ class UserController
         if ($success) {
             echo "User deleted successfully!";
             header('Location: ' . $this->moduleRoute . '?action=read');
-        }
-        else {
+        } else {
             echo "Error deleting user.";
         }
     }
@@ -178,8 +170,7 @@ class UserController
 
         if ($user) {
             $view->renderUpdateForm($user, $this->moduleRoute);
-        }
-        else {
+        } else {
             echo "User not found.";
         }
     }
@@ -189,9 +180,4 @@ class UserController
         $view = new UserView();
         $view->renderCreateForm($this->moduleRoute);
     }
-
-
 }
-
-
-?>

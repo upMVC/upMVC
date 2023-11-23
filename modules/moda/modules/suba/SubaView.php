@@ -14,7 +14,7 @@ $newView->endHead();
 $newView->startBody($title);
 ?>
 <ul>
-    <?php foreach ($users as $user): ?>
+    <?php foreach ($users as $user) : ?>
         <li>
             <?= $user->name ?> (
             <?= $user->email ?>)

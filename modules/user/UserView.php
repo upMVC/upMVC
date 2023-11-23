@@ -4,6 +4,7 @@
  *
  * Copyright (c) 2023 BitsHost
  */
+
 namespace User;
 
 use Common\Bmvc\BaseView;

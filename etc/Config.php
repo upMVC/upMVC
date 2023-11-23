@@ -11,7 +11,7 @@ namespace MVC;
  * Config
  */
 class Config
-{    
+{
     //Application directory
     //should be empty if domain location is root; e.g. public_html => $sitePath = "";
     //else - if domain location is: public_html/app => $sitePath = "/app"; public_html/folder/app => $sitePath = "/folder/app"
@@ -58,11 +58,9 @@ class Config
         if (strpos($url, "?") !== false) {
             $url = substr($url, 0, strpos($url, "?"));
             return $url;
-        }
-        else {
+        } else {
             return $url;
         }
-
     }
 
     public function cleanUrlSitePath($sitePath, $url)

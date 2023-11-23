@@ -4,6 +4,7 @@
  *
  * Copyright (c) 2023 BitsHost
  */
+
 namespace Suba\Routes;
 
 use Suba\SubaController;
@@ -17,10 +18,5 @@ class SubaRoutes
         $router->addRoute('/suba.php', SubaController::class, 'display');
         $router->addRoute('/suba', SubaController::class, 'display');
         $router->addRoute('/suba/subpage', SubaController::class, 'display');
-
     }
-
-
-
-
 }

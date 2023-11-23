@@ -14,7 +14,7 @@ class BaseView
 
     public function menu()
     {
-        ?>
+?>
         <header class="header">
             <?php
             ?>
@@ -49,13 +49,13 @@ class BaseView
 
         </header>
 
-        <?php
+    <?php
 
     }
     public function startHead($title)
     {
         $newCss = new CommonCss();
-        ?>
+    ?>
         <!DOCTYPE html>
         <html>
 
@@ -67,12 +67,9 @@ class BaseView
             <meta http-equiv="X-UA-Compatible" content="IE=edge">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
             <!-- Bootstrap -->
-            <link href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" rel="stylesheet"
-                media="screen">
-            <?php
-            $newCss->menuCss();
-
-
+            <link href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" rel="stylesheet" media="screen">
+        <?php
+        $newCss->menuCss();
     }
 
     public function endHead()
@@ -80,61 +77,58 @@ class BaseView
         $this->menu();
         ?>
         </head>
-        <?php
+    <?php
 
     }
 
     public function startBody($title)
     {
-        ?>
+    ?>
 
         <body>
             <div class="container">
                 <h1>
                     <?php echo $title ?>
                 </h1>
-                <?php
+            <?php
 
-    }
+        }
 
-    public function endBody()
-    {
-        ?>
+        public function endBody()
+        {
+            ?>
             </div>
 
         </body>
 
-        <?php
+    <?php
 
-    }
+        }
 
-    public function startFooter()
-    {
-        ?>
+        public function startFooter()
+        {
+    ?>
         <br><br>
         <div>
-            <p style="text-align:center;"><a href="<?php //echo BASE_URL; ?> https://bitshost.biz/free-web-hosting.html"
-                    style="color: black; text-align:center; font-size: 15px;" target="_blank">©️ All rights reserved - BitsHost
+            <p style="text-align:center;"><a href="<?php //echo BASE_URL; 
+                                                    ?> https://bitshost.biz/free-web-hosting.html" style="color: black; text-align:center; font-size: 15px;" target="_blank">©️ All rights reserved - BitsHost
                     Cloud
                     <?php echo date("Y"); ?><a>
 
             </p>
         </div>
 
-        <?php
+    <?php
 
 
-    }
+        }
 
-    public function endFooter()
-    {
-        ?>
+        public function endFooter()
+        {
+    ?>
 
         </html>
-        <?php
+<?php
 
+        }
     }
-
-
-
-}
