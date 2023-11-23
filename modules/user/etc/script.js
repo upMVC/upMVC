@@ -1,4 +1,6 @@
 /*
+ *   Created on Tue Oct 31 2023
+ 
  *   Copyright (c) 2023 BitsHost
  *   All rights reserved.
 
@@ -19,6 +21,8 @@
  *   LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  *   OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  *   SOFTWARE.
+ *   Here you may host your app for free:
+ *   https://bitshost.biz/
  */
 
 
