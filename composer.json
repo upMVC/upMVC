@@ -4,9 +4,7 @@
     "type": "project",
     "minimum-stability": "beta",
     "require": {
-        "php": ">=8.1",
-        "another-vendor/package": "1.*",
-        "ext-mysqli": "*"
+        "php": ">=8.1"
     },
     "authors": [
         {
