@@ -41,8 +41,8 @@ But why MMVC specifically?
 What truly sets MMVC apart is its ability to harness the latest PHP capabilities without constraint. No more endless loops, as this framework liberates your development possibilities.
 
 Install: 
-# composer require bitshost/upmvc
-# composer create-project --prefer-dist --stability=dev bitshost/upmvc yourfolder
+### composer require bitshost/upmvc
+### composer create-project --prefer-dist --stability=dev bitshost/upmvc yourfolder
 
 
 
