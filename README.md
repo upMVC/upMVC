@@ -43,21 +43,24 @@ What truly sets MMVC apart is its ability to harness the latest PHP capabilities
 
 # Install: 
 
+
 #### composer require bitshost/upmvc
 
-or
+#### or
 
 #### composer create-project --prefer-dist --stability=dev bitshost/upmvc yourfolder
-
+#
 
 ## Settings:
+
 		
 etc/Config.php 
-## 
-etc/Database.php
 
-# 		
-Add routes:
+etc/Database.php
+#
+		
+## Add routes:
+
 
 1 - General Routes - > etc/Routes.php
 
@@ -66,10 +69,11 @@ Add routes:
 3 - Adding module routes in Modules Initialiser - > etc/InitMods.php 
 
 # 
-	   
+#
+
 BitsHost Team
 
-  
+#
 Diagram:
 ![upMVC-Diagram](https://github.com/BitsHost/upMVC/assets/23263143/b3d2ff6c-bff5-41c8-9dad-a08d1b7ad6c5)
 
