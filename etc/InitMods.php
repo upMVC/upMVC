@@ -12,6 +12,7 @@ use Test\Routes\TestRoutes;
 use Moda\Routes\ModaRoutes;
 use Suba\Routes\SubaRoutes;
 use User\Routes\UserRoutes;
+use New\Routes\NewRoutes;
 
 class InitMods
 {
@@ -28,6 +29,9 @@ class InitMods
 
         $UserR = new UserRoutes();
         $UserR->Routes($router);
+
+        $NewR = new NewRoutes();
+        $NewR->Routes($router);
 
 
 

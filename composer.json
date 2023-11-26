@@ -29,7 +29,9 @@
             "Moda\\": "modules/moda/",
             "Moda\\Routes\\": "modules/moda/routes/",
             "Suba\\": "modules/moda/modules/suba/",
-            "Suba\\Routes\\": "modules/moda/modules/suba/routes/"
+            "Suba\\Routes\\": "modules/moda/modules/suba/routes/",
+            "New\\": "modules/new/",
+            "New\\Routes\\": "modules/new/routes/"
         }
     }
 }

@@ -63,6 +63,12 @@ class BaseView
                     </li>
                     <li>
                         <a href="<?php echo BASE_URL; ?>/users">👩‍👩‍👧‍👧 Users CRUD</a>
+                       
+                    </li>
+                    <li>
+                       
+                        <a href="<?php echo BASE_URL; ?>/new">👩‍👩‍👧‍👧 Users CRUD PHPISTOLS</a>
+                    </li>
 
                 </ul>
             </div>
