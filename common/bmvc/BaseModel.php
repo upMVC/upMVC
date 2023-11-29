@@ -178,8 +178,15 @@ class BaseModel
 
         // Execute the statement
         $success = $stmt->execute();
+        // If the UPDATE statement doesn't change any rows (for example, if the WHERE condition doesn't
+        // match any existing rows), $rowCount will be 0.
+        $rowCount = $stmt->rowCount();
 
-        return $success;
+        if ($rowCount > 0) {
+            return $success;
+        } else {
+            return false;
+        }
     }
 
     public function delete($id, $table)
@@ -200,8 +207,15 @@ class BaseModel
 
         // Execute the statement
         $success = $stmt->execute();
+        // If the UPDATE statement doesn't change any rows (for example, if the WHERE condition doesn't
+        // match any existing rows), $rowCount will be 0.
+        $rowCount = $stmt->rowCount();
 
-        return $success;
+        if ($rowCount > 0) {
+            return $success;
+        } else {
+            return false;
+        }
     }
 
     public function __destruct()

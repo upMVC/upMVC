@@ -32,8 +32,8 @@
 
 namespace New;
 
-use New\NewModel;
-use New\NewView;
+//use New\NewModel;
+//use New\NewView;
 use Exception;
 
 class NewController
@@ -60,6 +60,7 @@ class NewController
 		//add your own filters
 
 		$dataUsers->id = intval($_POST['id']);
+
 		$dataUsers->name = filter_var($_POST['name'], FILTER_SANITIZE_SPECIAL_CHARS);
 		$dataUsers->email = filter_var($_POST['email'], FILTER_SANITIZE_SPECIAL_CHARS);
 
