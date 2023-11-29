@@ -134,7 +134,7 @@ class UserController
     public function createUser()
     {
         $table    = 'users';
-        $name     = filter_input(INPUT_POST, 'name', FILTER_SANITIZE_STRING);
+        $name     = filter_input(INPUT_POST, 'name', FILTER_SANITIZE_SPECIAL_CHARS);
         $email    = filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL);
         $userData = [
             'name'  => $name,
@@ -155,7 +155,7 @@ class UserController
     {
         $table    = 'users';
         $userId   = filter_input(INPUT_POST, 'id', FILTER_SANITIZE_NUMBER_INT);
-        $name     = filter_input(INPUT_POST, 'name', FILTER_SANITIZE_STRING);
+        $name     = filter_input(INPUT_POST, 'name', FILTER_SANITIZE_SPECIAL_CHARS);
         $email    = filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL);
         $userData = [
             'name'  => $name,
