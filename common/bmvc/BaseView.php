@@ -41,6 +41,9 @@ class BaseView
             ?>
             <div class="wrapper">
                 <ul class="menu">
+                <li>
+                        <a href="https://upmvc.com">👩‍👩‍👧‍👧 upMVC</a>
+                    </li>
                     <li>
                         <a href="<?php echo BASE_URL; ?>">🏠 Home</a>
 
@@ -63,12 +66,14 @@ class BaseView
                     </li>
                     <li>
                         <a href="<?php echo BASE_URL; ?>/users">👩‍👩‍👧‍👧 Users CRUD</a>
-                       
                     </li>
                     <li>
-                       
-                        <a href="<?php echo BASE_URL; ?>/new">👩‍👩‍👧‍👧 Users CRUD PHPISTOLS</a>
+                       <a href="<?php echo BASE_URL; ?>/new">👩‍👩‍👧‍👧 Users CRUD PHPISTOLS</a>
+                   </li>
+                    <li>
+                        <a href="<?php echo BASE_URL; ?>/apiInfo">👩‍👩‍👧‍👧 ApiInfo</a>
                     </li>
+                    
 
                 </ul>
             </div>

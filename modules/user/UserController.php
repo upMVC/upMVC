@@ -215,10 +215,10 @@ class UserController
     {
         if ($request === 'POST') {
             $task = $_POST['task'];
-            $userId = $_POST['id'];
+            if($_POST['id']){
+                $userId = $_POST['id'];
+            } 
             //$postData = json_decode(file_get_contents('php://input'), true);
-
-
             switch ($task) {
                 case 'create':
                     $this->nameApi = $_POST["name"];
@@ -244,6 +244,7 @@ class UserController
             }
         } else {
             $task = $_GET['task'];
+            
             //code....
 
         }
@@ -266,7 +267,7 @@ class UserController
         $userRecord = $this->getUserModel()->getUserById($userId, $this->table);
 
         if ($userRecord) {
-            print(json_encode($userRecord));
+            print_r(json_encode($userRecord));
         } else {
             echo "User not found.";
         }
@@ -316,5 +317,11 @@ class UserController
         } else {
             print_r(json_encode($success));
         }
+    }
+
+    public function apiInfo(){
+        $html = new UserView;
+        return $html->apiInfo($this->moduleRoute);
+
     }
 }
