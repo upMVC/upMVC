@@ -38,6 +38,11 @@ class UserController
 
     public $moduleRoute = BASE_URL . '/users';
 
+    private $table = 'users';
+
+    private $nameApi;
+    private $emailApi;
+
     public function display($request)
     {
 
@@ -95,7 +100,7 @@ class UserController
 
     public function getAllUsers($table)
     {
-        $userRecords = $this->userModel->getAllUsers($table);
+        $userRecords = $this->getUserModel()->getAllUsers($table);
 
         if ($userRecords) {
             print_r($userRecords);
@@ -129,7 +134,7 @@ class UserController
     public function createUser()
     {
         $table    = 'users';
-        $name     = filter_input(INPUT_POST, 'name', FILTER_SANITIZE_STRING);
+        $name     = filter_input(INPUT_POST, 'name', FILTER_SANITIZE_SPECIAL_CHARS);
         $email    = filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL);
         $userData = [
             'name'  => $name,
@@ -150,7 +155,7 @@ class UserController
     {
         $table    = 'users';
         $userId   = filter_input(INPUT_POST, 'id', FILTER_SANITIZE_NUMBER_INT);
-        $name     = filter_input(INPUT_POST, 'name', FILTER_SANITIZE_STRING);
+        $name     = filter_input(INPUT_POST, 'name', FILTER_SANITIZE_SPECIAL_CHARS);
         $email    = filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL);
         $userData = [
             'name'  => $name,
@@ -200,5 +205,123 @@ class UserController
     {
         $view = new UserView();
         $view->renderCreateForm($this->moduleRoute);
+    }
+
+
+
+    /////////API EXAMPLE///////////////////////////////////////////////////////////////////////
+
+    public function apiResponse($request)
+    {
+        if ($request === 'POST') {
+            $task = $_POST['task'];
+            if($_POST['id']){
+                $userId = $_POST['id'];
+            } 
+            //$postData = json_decode(file_get_contents('php://input'), true);
+            switch ($task) {
+                case 'create':
+                    $this->nameApi = $_POST["name"];
+                    $this->emailApi = $_POST["email"];
+                    $this->createUserApi();
+                    break;
+                case 'update':
+                    $this->nameApi = $_POST["name"];
+                    $this->emailApi = $_POST["email"];
+                    $this->updateUserApi($userId);
+                    break;
+                case 'delete':
+                    $this->deleteUserApi($userId);
+                    break;
+                case 'readall':
+                    $this->getAllUsersApi();
+                    break;
+                case 'readById':
+                    $this->getUserByIdApi($userId);
+                    break;
+                default:
+                    echo "Bad Request";
+            }
+        } else {
+            $task = $_GET['task'];
+            
+            //code....
+
+        }
+    }
+
+    public function getAllUsersApi()
+    {
+
+        $userRecords = $this->getUserModel()->getAllUsers($this->table);
+
+        if ($userRecords) {
+            print(json_encode($userRecords));
+        } else {
+            echo "No users found.";
+        }
+    }
+
+    public function getUserByIdApi($userId)
+    {
+        $userRecord = $this->getUserModel()->getUserById($userId, $this->table);
+
+        if ($userRecord) {
+            print_r(json_encode($userRecord));
+        } else {
+            echo "User not found.";
+        }
+    }
+
+    public function createUserApi()
+    {
+        $userData = [
+            'name'  => $this->nameApi,
+            'email' => $this->emailApi,
+        ];
+
+        $userId = $this->getUserModel()->createUser($userData, $this->table);
+        $output = [];
+        if ($userId) {
+
+            $output["response"] = "User created successfully! (ID: $userId)";
+            print_r(json_encode($userId));
+        } else {
+            $output["response"] = "Error creating user.";
+            print_r(json_encode($output));
+        }
+    }
+
+
+    public function updateUserApi($userId)
+    {
+        $userData = [
+            'name'  => $this->nameApi,
+            'email' => $this->emailApi,
+        ];
+
+        $success = $this->getUserModel()->updateUser($userId, $userData, $this->table);
+        if ($success) {
+            print_r(json_encode($success));
+        } else {
+            print_r(json_encode($success));
+        }
+    }
+
+    public function deleteUserApi($userId)
+    {
+        $success = $this->getUserModel()->deleteUser($userId, $this->table);
+
+        if ($success) {
+            print_r(json_encode($success));
+        } else {
+            print_r(json_encode($success));
+        }
+    }
+
+    public function apiInfo(){
+        $html = new UserView;
+        return $html->apiInfo($this->moduleRoute);
+
     }
 }

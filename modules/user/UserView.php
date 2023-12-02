@@ -158,4 +158,28 @@ class UserView
         $view->startFooter();
         $view->endFooter();
     }
+
+    public function apiInfo($moduleRoute)
+    {
+        $view        = new BaseView();
+        $this->title = "Api INFO";
+        $view->startHead($this->title);
+        $view->endHead();
+        $view->startBody($this->title);
+?>
+        <div>Test API, minimal example, without authentication</div>
+        <p>Send POST request to <?php echo  $moduleRoute?>/apiUsers</p>
+        <div>You can use POSTMAN, HTTPie, REQBIN for testing.</div>
+        <br>
+        <p>CREATE User example: <a href="https://reqbin.com/yummdfum" target="_blank">Example</a></p>
+        <p>READ all Users example: <a href="https://reqbin.com/eif1q78f" target="_blank">Example</a></p>
+        <p>READ user by id  example: <a href="https://reqbin.com/geowugvz" target="_blank">Example</a></p>
+        <p>UPDATE User example: <a href="https://reqbin.com/hj3q7alc" target="_blank">Example</a></p>
+        <p>DELETE user example: <a href="https://reqbin.com/hocr5uae" target="_blank">Example</a></p>   
+        <br>
+       
+<?php
+        $view->startFooter();
+        $view->endFooter();
+    }
 }

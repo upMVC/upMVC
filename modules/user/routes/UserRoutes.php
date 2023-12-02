@@ -47,5 +47,7 @@ class UserRoutes
     public function Routes($router)
     {
         $router->addRoute('/users', UserController::class, 'display');
+        $router->addRoute('/apiUsers', UserController::class, 'apiResponse');
+        $router->addRoute('/apiInfo', UserController::class, 'apiInfo');
     }
 }
