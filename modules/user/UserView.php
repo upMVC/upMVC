@@ -167,17 +167,160 @@ class UserView
         $view->endHead();
         $view->startBody($this->title);
 ?>
-        <div>Test API, minimal example, without authentication</div>
-        <p>Send POST request to <?php echo  $moduleRoute?>/apiUsers</p>
+        <div>Minimal example of a test API without authentication.</div>
+        <p>Send POST request to <?php echo  $moduleRoute ?>/apiUsers</p>
         <div>You can use POSTMAN, HTTPie, REQBIN for testing.</div>
         <br>
         <p>CREATE User example: <a href="https://reqbin.com/yummdfum" target="_blank">Example</a></p>
-        <p>READ all Users example: <a href="https://reqbin.com/eif1q78f" target="_blank">Example</a></p>
-        <p>READ user by id  example: <a href="https://reqbin.com/geowugvz" target="_blank">Example</a></p>
-        <p>UPDATE User example: <a href="https://reqbin.com/hj3q7alc" target="_blank">Example</a></p>
-        <p>DELETE user example: <a href="https://reqbin.com/hocr5uae" target="_blank">Example</a></p>   
+        Example:
         <br>
-       
+        task=create <br>
+        name=HANAH <br>
+        email=hanah@email.com </br></br>
+        <pre><code>$url = "https://upmvc.com/demo/apiUsers";
+
+$curl = curl_init($url);
+curl_setopt($curl, CURLOPT_URL, $url);
+curl_setopt($curl, CURLOPT_POST, true);
+curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+
+$headers = array(
+   "Content-Type: application/x-www-form-urlencoded",
+);
+curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
+
+$data = "task=create&name=HANAH&email=hanah%40email.com";
+
+curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
+
+//for debug only!
+curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
+curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+
+$resp = curl_exec($curl);
+curl_close($curl);
+var_dump($resp);</code></pre></br>
+        <p>READ all Users example: <a href="https://reqbin.com/eif1q78f" target="_blank">Example</a></p>
+        Example: <br>
+        <span>task=readall</span></br><br>
+        <pre><code>$url = "https://upmvc.com/demo/apiUsers";
+
+$curl = curl_init($url);
+curl_setopt($curl, CURLOPT_URL, $url);
+curl_setopt($curl, CURLOPT_POST, true);
+curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+
+$headers = array(
+   "Content-Type: application/x-www-form-urlencoded",
+);
+curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
+
+$data = "task=readall";
+
+curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
+
+//for debug only!
+curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
+curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+
+$resp = curl_exec($curl);
+curl_close($curl);
+var_dump($resp);
+</code></pre></br>
+        <p>READ user by id example: <a href="https://reqbin.com/geowugvz" target="_blank">Example</a></p>
+        Example:<br>
+        task=readById<br>
+        id=50<br><br>
+        <pre><code>$url = "https://upmvc.com/demo/apiUsers";
+
+$curl = curl_init($url);
+curl_setopt($curl, CURLOPT_URL, $url);
+curl_setopt($curl, CURLOPT_POST, true);
+curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+
+$headers = array(
+   "Content-Type: application/x-www-form-urlencoded",
+);
+curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
+
+$data = "task=readById&id=50";
+
+curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
+
+//for debug only!
+curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
+curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+
+$resp = curl_exec($curl);
+curl_close($curl);
+var_dump($resp);</code></pre><br><br>
+        <p>UPDATE User example: <a href="https://reqbin.com/" target="_blank">Example</a></p>
+        <div>Example:<br>
+            id=62<br>
+            task=update<br>
+            name=dydy<br>
+            email=dydy@email.com<br></div><br>
+
+        <br>
+        <pre><code>
+
+$url = "https://upmvc.com/demo/apiUsers";
+
+$curl = curl_init($url);
+curl_setopt($curl, CURLOPT_URL, $url);
+curl_setopt($curl, CURLOPT_POST, true);
+curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+
+$headers = array(
+"Content-Type: application/x-www-form-urlencoded",
+);
+curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
+
+$data = "id=47&atask=update&name=HANAH&email=hanah@email.com";
+
+curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
+
+//for debug only!
+curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
+curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+
+$resp = curl_exec($curl);
+curl_close($curl);
+var_dump($resp);
+
+
+
+</code></pre></br>
+        <p>DELETE user example: <a href="https://reqbin.com/hocr5uae" target="_blank">Example</a></p>
+        <br>
+        Example:<br>
+        task=delete<br>
+        id=49<br><br>
+        <pre><code>$url = "https://upmvc.com/demo/apiUsers";
+
+$curl = curl_init($url);
+curl_setopt($curl, CURLOPT_URL, $url);
+curl_setopt($curl, CURLOPT_POST, true);
+curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+
+$headers = array(
+   "Content-Type: application/x-www-form-urlencoded",
+);
+curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
+
+$data = "task=delete&id=49";
+
+curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
+
+//for debug only!
+curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
+curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+
+$resp = curl_exec($curl);
+curl_close($curl);
+var_dump($resp);
+</code></pre>
+
 <?php
         $view->startFooter();
         $view->endFooter();
