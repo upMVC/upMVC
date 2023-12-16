@@ -70,6 +70,16 @@ etc/Database.php
 
 # 
 #
+Make your module in the MVC style (model, view, controller).
+You may or may not wish to utilize BASE MODEL, BASE VIEW, and BASE CONTROLLER from the common/bmvc subdirectory.
+Because these routes should be presented to Router, you must provide their namespace to InitMods.php and initialize your module routes. 
+##
+The Names Convention
+##
+Modules are not required to follow the following convention:
+Model, View, Controller - will be called by using module name in their name:
+BooksModel.php - class BooksModel; BooksView.php - class BooksModel; BooksController.php - class BooksController;
+Your module routes should be kept under modules/routes - file ModuleRoutes.php - we call it just for convenience - by module name - for example, module name = Books - > BooksRoutes.php class BooksRoutes
 
 BitsHost Team
 
