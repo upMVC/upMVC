@@ -68,12 +68,15 @@ etc/Database.php
 
 3 - Adding module routes in Modules Initialiser - > etc/InitMods.php 
 
-# 
+
 #
+#
+
 # Steps
-Make your module in the MVC style (model, view, controller).
-### You may or may not wish to utilize BASE MODEL, BASE VIEW and BASE CONTROLLER from the common/bmvc subdirectory.
- - make a distinctive namespace for each module
+#
+ - Make your module in the MVC style (model, view, controller).
+ - You may or may not wish to utilize BASE MODEL, BASE VIEW and BASE CONTROLLER from the common/bmvc subdirectory.
+ - Make a distinctive namespace for each module
  - Your module routes should be kept under modules/YourModule/routes - file ModuleNameRoutes.php
  - Because these routes should be presented to Router, you must provide their namespace to InitMods.php and initialize your module routes. 
  - Don't forget to update composer.json with your new namespaces for your module and routes, as well as refresh composer from the terminal:
@@ -84,15 +87,16 @@ Make your module in the MVC style (model, view, controller).
 
 #
 #
+
 # The Names Convention
 #
 ## Considering recommendations:
  - Model, View, Controller - will be called by using module name in their name. For example, module name = books:
- - BooksModel.php - class BooksModel; BooksView.php - class BooksModel; BooksController.php - class BooksController;
- - and make a distinctive namespace for each module - namespace ModuleName;
+ - BooksModel.php - class BooksModel; BooksView.php - class BooksView; BooksController.php - class BooksController;
+ - and make a distinctive namespace for each module - namespace ModuleName - e.g. Books;
  - Your module routes should be kept under modules/routes - file ModuleRoutes.php - we call it just for convenience - by module name - for example, module name = books: 
    - BooksRoutes.php class BooksRoutes
-   - namespace ModuleName\Routes
+   - namespace ModuleName\Routes, e.g. Books\Routes
 #
 #
 BitsHost Team
