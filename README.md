@@ -94,8 +94,8 @@ etc/Database.php
  - Model, View, Controller - will be called by using module name in their name. For example, module name = books:
  - BooksModel.php - class BooksModel; BooksView.php - class BooksView; BooksController.php - class BooksController;
  - and make a distinctive namespace for each module - namespace ModuleName - e.g. Books;
- - Your module routes should be kept under modules/routes - file ModuleRoutes.php - we call it just for convenience - by module name - for example, module name = books: 
-   - BooksRoutes.php class BooksRoutes
+ - Your module routes should be kept under modules/yourModule/routes - file ModuleRoutes.php - we call it just for convenience - by module name - for example, module name = books: 
+   - BooksRoutes.php class BooksRoutes in folder /modules/books/routes
    - namespace ModuleName\Routes, e.g. Books\Routes
 #
 #
