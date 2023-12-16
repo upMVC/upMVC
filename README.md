@@ -76,6 +76,7 @@ etc/Database.php
 #
  - Make your module in the MVC style (model, view, controller).
  - You may or may not wish to utilize BASE MODEL, BASE VIEW and BASE CONTROLLER from the common/bmvc subdirectory.
+ - BaseModel contains all of the data required for CRUD OPERATIONS; simply expand it in your module model and you have a CRUD ready-made module; see example module modules/user.
  - Make a distinctive namespace for each module
  - Your module routes should be kept under modules/YourModule/routes - file ModuleNameRoutes.php
  - Because these routes should be presented to Router, you must provide their namespace to InitMods.php and initialize your module routes. 
