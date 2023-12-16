@@ -70,17 +70,31 @@ etc/Database.php
 
 # 
 #
+# Steps
 Make your module in the MVC style (model, view, controller).
-You may or may not wish to utilize BASE MODEL, BASE VIEW, and BASE CONTROLLER from the common/bmvc subdirectory.
-Because these routes should be presented to Router, you must provide their namespace to InitMods.php and initialize your module routes. 
-##
-The Names Convention
-##
-Modules are not required to follow the following convention:
-Model, View, Controller - will be called by using module name in their name:
-BooksModel.php - class BooksModel; BooksView.php - class BooksModel; BooksController.php - class BooksController;
-Your module routes should be kept under modules/routes - file ModuleRoutes.php - we call it just for convenience - by module name - for example, module name = Books - > BooksRoutes.php class BooksRoutes
+### You may or may not wish to utilize BASE MODEL, BASE VIEW and BASE CONTROLLER from the common/bmvc subdirectory.
+ - make a distinctive namespace for each module
+ - Your module routes should be kept under modules/YourModule/routes - file ModuleNameRoutes.php
+ - Because these routes should be presented to Router, you must provide their namespace to InitMods.php and initialize your module routes. 
+ - Don't forget to update composer.json with your new namespaces for your module and routes, as well as refresh composer from the terminal:
+ - composer  dump-autoload
+ - php composer.phar dump-autolad
 
+### You have more than one method of accomplishing things in example modules, upMVC - don't enforce RULES like others do, but respect architecture models MVC, MMVC, and pure PHP and OOP programming rules.
+
+#
+#
+# The Names Convention
+#
+## Considering recommendations:
+ - Model, View, Controller - will be called by using module name in their name. For example, module name = books:
+ - BooksModel.php - class BooksModel; BooksView.php - class BooksModel; BooksController.php - class BooksController;
+ - and make a distinctive namespace for each module - namespace ModuleName;
+ - Your module routes should be kept under modules/routes - file ModuleRoutes.php - we call it just for convenience - by module name - for example, module name = books: 
+   - BooksRoutes.php class BooksRoutes
+   - namespace ModuleName\Routes
+#
+#
 BitsHost Team
 
 #
