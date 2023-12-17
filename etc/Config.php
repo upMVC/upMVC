@@ -57,7 +57,6 @@ class Config
 
         //initialize session////////////
         session_start();
-        $_SESSION["username"] = "defaultAppUser"; 
         /////////////////////////////////////
     }
 
