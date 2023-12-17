@@ -14,7 +14,7 @@ class MailController
     $mail          = new PHPMailer();
     $mail->CharSet = 'UTF-8';
     $mail->isSMTP(); // Use SMTP protocol
-    $mail->Host       = 'bitsworld.ro'; // Specify  SMTP server
+    $mail->Host       = 'yourhost.com'; // Specify  SMTP server
     $mail->SMTPAuth   = true; // Auth. SMTP
     $mail->Username   = 'youremail@email.com'; // Mail who send by PHPMailer
     $mail->Password   = 'Klr!GH2]@Xb6'; // your pass mail box
