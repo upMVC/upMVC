@@ -43,7 +43,15 @@ class UserController
     private $nameApi;
     private $emailApi;
 
-    public function display($request)
+public function display($request){
+    if (isset($_SESSION["username"])) {
+        $this->selectAction($request);
+    } else {
+        header('Location: ' . BASE_URL . '/');
+    }
+}
+
+    public function selectAction($request)
     {
 
         if ($request === 'POST') {

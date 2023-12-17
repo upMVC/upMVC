@@ -52,17 +52,12 @@ class ModaController extends BaseController
 
 
         if (isset($_SESSION["username"])) {
-            echo "<br>";
-            echo $_SESSION["username"];
-            echo "<br>";
+            $this->render('moda/ModaView', ['users' => $users]);
         } else {
             echo " Not Logged In! Something else.";
+            header('Location: ' . BASE_URL . '/');
         }
 
-        $this->render('moda/ModaView', ['users' => $users]);
-
-
-        //$newView = new TestView();
-        //$newView->view();
+        
     }
 }

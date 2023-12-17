@@ -43,22 +43,16 @@ class TestController
      */
     public function display($request)
     {
+        $view = new TestView();
         $users = [
             new TestModel('John Doe', 'john@example.com'),
             new TestModel('Jane Doe', 'jane@example.com')
         ];
 
-
-        //test for logged in user
         if (isset($_SESSION["username"])) {
-            echo "<br>";
-            echo $_SESSION["username"];
-            echo "<br>";
+            $view->View($request, $users);
         } else {
-            echo " Not Logged In! Something else.";
+            $view->notLoggedIn();
         }
-
-        $view = new TestView();
-        $view->View($request, $users);
     }
 }

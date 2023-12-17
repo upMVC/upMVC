@@ -43,14 +43,13 @@ class SubaController extends BaseController
 
 
 
+       
         if (isset($_SESSION["username"])) {
-            echo "<br>";
-            echo $_SESSION["username"];
-            echo "<br>";
+            $this->render('moda/modules/suba/SubaView', ['users' => $users]);
         } else {
             echo " Not Logged In! Something else.";
+            header('Location: ' . BASE_URL . '/');
         }
-
-        $this->render('moda/modules/suba/SubaView', ['users' => $users]);
+   
     }
 }

@@ -1,4 +1,7 @@
+<?php
 /*
+ *   Created on Tue Oct 31 2023
+ 
  *   Copyright (c) 2023 BitsHost
  *   All rights reserved.
 
@@ -19,26 +22,34 @@
  *   LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  *   OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  *   SOFTWARE.
+ *   Here you may host your app for free:
+ *   https://bitshost.biz/
  */
 
+namespace Auth\Routes;
 
--- Create the users table
-
-CREATE TABLE `users` (
-  `id` int(11) NOT NULL,
-  `name` varchar(255) NOT NULL,
-  `email` varchar(255) NOT NULL,
-  `username` varchar(50) NOT NULL,
-  `password` varchar(30) NOT NULL,
-  `token` varchar(50) NOT NULL,
-  `state` tinyint(1) NOT NULL,
-  `stamp` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+use Auth\AuthController;
 
 
+/**
+ * ModaRoutes
+ */
+class AuthRoutes
+{
 
--- Insert sample data
-INSERT INTO `users` (`name`, `email`) VALUES
-    ('John Doe', 'john@example.com'),
-    ('Jane Smith', 'jane@example.com'),
-    ('Bob Johnson', 'bob@example.com');
+
+    /**
+     * Routes
+     *
+     * @param  mixed $router
+     * @return void
+     */
+    public function Routes($router)
+    {
+        $router->addRoute('/auth', AuthController::class, 'display');
+        $router->addRoute('/logout', AuthController::class, 'logout');
+        $router->addRoute('/signup', AuthController::class, 'signUp');
+        $router->addRoute('/activation', AuthController::class, 'AccountActivation');
+       
+    }
+}

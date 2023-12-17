@@ -1,4 +1,7 @@
+<?php
 /*
+ *   Created on Tue Oct 31 2023
+ 
  *   Copyright (c) 2023 BitsHost
  *   All rights reserved.
 
@@ -19,26 +22,35 @@
  *   LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  *   OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  *   SOFTWARE.
+ *   Here you may host your app for free:
+ *   https://bitshost.biz/
  */
 
+namespace MVC;
 
--- Create the users table
+use PDO;
+use PDOException;
 
-CREATE TABLE `users` (
-  `id` int(11) NOT NULL,
-  `name` varchar(255) NOT NULL,
-  `email` varchar(255) NOT NULL,
-  `username` varchar(50) NOT NULL,
-  `password` varchar(30) NOT NULL,
-  `token` varchar(50) NOT NULL,
-  `state` tinyint(1) NOT NULL,
-  `stamp` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+/**
+ * Database
+ */
 
-
-
--- Insert sample data
-INSERT INTO `users` (`name`, `email`) VALUES
-    ('John Doe', 'john@example.com'),
-    ('Jane Smith', 'jane@example.com'),
-    ('Bob Johnson', 'bob@example.com');
+class Database
+{
+    private $host = "127.0.0.1";
+    private $database_name = "test";
+    private $username = "root";
+    private $password = "";
+    public $conn;
+    public function getConnection()
+    {
+        $this->conn = null;
+        try {
+            $this->conn = new PDO("mysql:host=" . $this->host . ";dbname=" . $this->database_name, $this->username, $this->password);
+            $this->conn->exec("set names utf8");
+        } catch (PDOException $exception) {
+            echo "Database could not be connected: " . $exception->getMessage();
+        }
+        return $this->conn;
+    }
+}

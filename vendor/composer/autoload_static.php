@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit90c08dfea1c3a4f3cfd7febce74e189b
+class ComposerStaticInit49502ca6970de9d65a6295b99bbb2d5b
 {
     public static $prefixLengthsPsr4 = array (
         'U' => 
@@ -22,6 +22,10 @@ class ComposerStaticInit90c08dfea1c3a4f3cfd7febce74e189b
             'Suba\\Routes\\' => 12,
             'Suba\\' => 5,
         ),
+        'P' => 
+        array (
+            'PHPMailer\\PHPMailer\\' => 20,
+        ),
         'N' => 
         array (
             'New\\Routes\\' => 11,
@@ -31,12 +35,18 @@ class ComposerStaticInit90c08dfea1c3a4f3cfd7febce74e189b
         array (
             'Moda\\Routes\\' => 12,
             'Moda\\' => 5,
+            'Mail\\' => 5,
             'MVC\\' => 4,
         ),
         'C' => 
         array (
             'Common\\Bmvc\\' => 12,
             'Common\\Assets\\' => 14,
+        ),
+        'A' => 
+        array (
+            'Auth\\Routes\\' => 12,
+            'Auth\\' => 5,
         ),
     );
 
@@ -65,6 +75,10 @@ class ComposerStaticInit90c08dfea1c3a4f3cfd7febce74e189b
         array (
             0 => __DIR__ . '/../..' . '/modules/moda/modules/suba',
         ),
+        'PHPMailer\\PHPMailer\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/modules/mail/phpmailer',
+        ),
         'New\\Routes\\' => 
         array (
             0 => __DIR__ . '/../..' . '/modules/new/routes',
@@ -81,6 +95,10 @@ class ComposerStaticInit90c08dfea1c3a4f3cfd7febce74e189b
         array (
             0 => __DIR__ . '/../..' . '/modules/moda',
         ),
+        'Mail\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/modules/mail',
+        ),
         'MVC\\' => 
         array (
             0 => __DIR__ . '/../..' . '/etc',
@@ -93,6 +111,14 @@ class ComposerStaticInit90c08dfea1c3a4f3cfd7febce74e189b
         array (
             0 => __DIR__ . '/../..' . '/common/assets',
         ),
+        'Auth\\Routes\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/modules/auth/routes',
+        ),
+        'Auth\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/modules/auth',
+        ),
     );
 
     public static $classMap = array (
@@ -102,9 +128,9 @@ class ComposerStaticInit90c08dfea1c3a4f3cfd7febce74e189b
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit90c08dfea1c3a4f3cfd7febce74e189b::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit90c08dfea1c3a4f3cfd7febce74e189b::$prefixDirsPsr4;
-            $loader->classMap = ComposerStaticInit90c08dfea1c3a4f3cfd7febce74e189b::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit49502ca6970de9d65a6295b99bbb2d5b::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit49502ca6970de9d65a6295b99bbb2d5b::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInit49502ca6970de9d65a6295b99bbb2d5b::$classMap;
 
         }, null, ClassLoader::class);
     }
