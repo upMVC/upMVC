@@ -24,7 +24,7 @@ class MailController
     $mail->isSMTP(); // Use SMTP protocol
     $mail->Host       = 'bitsworld.ro'; // Specify  SMTP server
     $mail->SMTPAuth   = true; // Auth. SMTP
-    $mail->Username   = 'office@bitsworld.ro'; // Mail who send by PHPMailer
+    $mail->Username   = 'youremail@email.com'; // Mail who send by PHPMailer
     $mail->Password   = 'Klr!GH2]@Xb6'; // your pass mail box
     $mail->SMTPSecure = 'ssl'; // Accept SSL
     $mail->Port       = 465; // port of your out server
@@ -59,7 +59,7 @@ class MailController
     $mail->isSMTP(); // Use SMTP protocol
     $mail->Host       = 'bitsworld.ro'; // Specify  SMTP server
     $mail->SMTPAuth   = true; // Auth. SMTP
-    $mail->Username   = 'office@bitsworld.ro'; // Mail who send by PHPMailer
+    $mail->Username   = 'youremail@email.com'; // Mail who send by PHPMailer
     $mail->Password   = 'Klr!GH2]@Xb6'; // your pass mail box
     $mail->SMTPSecure = 'ssl'; // Accept SSL
     $mail->Port       = 465; // port of your out server
