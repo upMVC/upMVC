@@ -23,11 +23,19 @@
 
 
 -- Create the users table
-CREATE TABLE IF NOT EXISTS `users` (
-    `id` INT AUTO_INCREMENT PRIMARY KEY,
-    `name` VARCHAR(255) NOT NULL,
-    `email` VARCHAR(255) NOT NULL
-);
+
+CREATE TABLE `users` (
+  `id` int(11) NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `email` varchar(255) NOT NULL,
+  `username` varchar(50) NOT NULL,
+  `password` varchar(30) NOT NULL,
+  `token` varchar(50) NOT NULL,
+  `state` tinyint(1) NOT NULL,
+  `stamp` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+
+
 
 -- Insert sample data
 INSERT INTO `users` (`name`, `email`) VALUES
