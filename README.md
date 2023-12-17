@@ -83,6 +83,7 @@ etc/Database.php
  - Don't forget to update composer.json with your new namespaces for your module and routes, as well as refresh composer from the terminal:
  - composer  dump-autoload
  - php composer.phar dump-autolad
+ - setup your PHPMailer - mail/MailController.php
 
 ### You have more than one method of accomplishing things in example modules, upMVC - don't enforce RULES like others do, but respect architecture models MVC, MMVC, and pure PHP and OOP programming rules.
 
