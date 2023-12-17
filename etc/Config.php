@@ -36,7 +36,9 @@ class Config
     //Application directory
     //should be empty if domain location is root; e.g. public_html => $sitePath = "";
     //else - if domain location is: public_html/app => $sitePath = "/app"; public_html/folder/app => $sitePath = "/folder/app"
+   
     public $sitePath = ""; //Application directory
+   
     /**
      * initConfig
      *
@@ -49,18 +51,13 @@ class Config
         error_reporting(0);
         /////////////////////////////////////
 
-        define('THIS_DIR', str_replace("\\", "/", dirname(__FILE__, 2)));
-
-
         //Application URL
         //your domain address => https://www.yourdomain.com or https://yourdomain.com
-        define('BASE_URL', 'https://www.yourdomain.com');
+        define('BASE_URL', 'https://www.yourdomain.com'); //Application URL
 
-        //initialize session/test////////////
+        //initialize session////////////
         session_start();
-        $_SESSION["username"] = "defaultAppUser";
-        // session_unset(); // logout
-        //session_write_close();
+        $_SESSION["username"] = "defaultAppUser"; 
         /////////////////////////////////////
     }
 
