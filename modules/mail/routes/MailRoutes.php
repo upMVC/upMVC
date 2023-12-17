@@ -26,38 +26,27 @@
  *   https://bitshost.biz/
  */
 
-namespace Moda;
+namespace PHPMailer\PHPMailer
 
-use Common\Bmvc\BaseController;
-use Moda\ModaModel;
-use Moda\ModaView;
+use PHPMailer\PHPMailer\MailController;
+
 
 /**
- * ModaController
+ * ModaRoutes
  */
-class ModaController extends BaseController
+class MailRoutes
 {
+
+
     /**
-     * display
+     * Routes
      *
+     * @param  mixed $router
      * @return void
      */
-    public function display()
+    public function Routes($router)
     {
-        $users = [
-            new ModaModel('John Doe', 'john@example.com'),
-            new ModaModel('Jane Doe', 'jane@example.com')
-        ];
-
-
-
-        if (isset($_SESSION["username"])) {
-            $this->render('moda/ModaView', ['users' => $users]);
-        } else {
-            echo " Not Logged In! Something else.";
-            header('Location: ' . BASE_URL . '/');
-        }
-
-        
+        $router->addRoute('/send', MailController::class, 'send_mail_by_PHPMailer');
+       
     }
 }

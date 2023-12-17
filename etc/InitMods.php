@@ -13,6 +13,7 @@ use Moda\Routes\ModaRoutes;
 use Suba\Routes\SubaRoutes;
 use User\Routes\UserRoutes;
 use New\Routes\NewRoutes;
+use Auth\Routes\AuthRoutes;
 
 class InitMods
 {
@@ -32,6 +33,9 @@ class InitMods
 
         $NewR = new NewRoutes();
         $NewR->Routes($router);
+
+        $AuthR = new AuthRoutes();
+        $AuthR->Routes($router);
 
 
 

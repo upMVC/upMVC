@@ -41,12 +41,14 @@ class BaseView
             ?>
             <div class="wrapper">
                 <ul class="menu">
-                <li>
+                    <li>
                         <a href="https://upmvc.com">👩‍👩‍👧‍👧 upMVC</a>
                     </li>
                     <li>
                         <a href="<?php echo BASE_URL; ?>">🏠 Home</a>
-
+                    </li>
+                    <li>
+                        <a href="<?php echo BASE_URL; ?>">🏠 Routing</a>
                         <ul>
                             <li><a href="<?php echo BASE_URL; ?>/test">👩‍👩‍👧‍👧 Test</a></li>
                             <li><a href="<?php echo BASE_URL; ?>/test-one">👩‍👩‍👧‍👧 1 Parameter(GET)</a></li>
@@ -61,20 +63,39 @@ class BaseView
                             <li><a href="<?php echo BASE_URL; ?>/moda">👩‍👩‍👧‍👧 Moda</a></li>
                             <li><a href="<?php echo BASE_URL; ?>/suba">👩‍👩‍👧‍👧 Suba</a></li>
                             <li><a href="<?php echo BASE_URL; ?>/error">👩‍👩‍👧‍👧 Error Page</a></li>
-
                         </ul>
                     </li>
                     <li>
-                        <a href="<?php echo BASE_URL; ?>/users">👩‍👩‍👧‍👧 Users CRUD</a>
+                        <a href="<?php echo BASE_URL; ?>">🏠 CRUD</a>
+                        <ul>
+                            <li>
+                                <a href="<?php echo BASE_URL; ?>/users">👩‍👩‍👧‍👧 Users CRUD</a>
+                            </li>
+                            <li>
+                                <a href="<?php echo BASE_URL; ?>/new">👩‍👩‍👧‍👧 Users CRUD PHPISTOLS</a>
+                            </li>
+                        </ul>
                     </li>
-                    <li>
-                       <a href="<?php echo BASE_URL; ?>/new">👩‍👩‍👧‍👧 Users CRUD PHPISTOLS</a>
-                   </li>
                     <li>
                         <a href="<?php echo BASE_URL; ?>/apiInfo">👩‍👩‍👧‍👧 ApiInfo</a>
                     </li>
-                    
 
+                    <li>
+                        <a href="<?php echo BASE_URL; ?>/auth">👩‍👩‍👧‍👧 Authentication</a>
+                    </li>
+                    <?php
+                    if (isset($_SESSION["logged"]) && $_SESSION["logged"] = true) {
+                    ?>
+                        <li>
+                            <a href="<?php echo BASE_URL; ?>/logout">👩‍👩‍👧‍👧 Logout</a>
+                        </li>
+                    <?php
+
+                    }
+                    ?>
+                     <li>
+                        <a href="https://github.com/upMVC/upMVC/wiki/How%E2%80%90to-Page" target="_blank">👩‍👩‍👧‍👧 Wiki</a>
+                    </li>
                 </ul>
             </div>
 
@@ -118,6 +139,7 @@ class BaseView
     ?>
 
         <body>
+            <div style="text-align:center;">Use user: demo, pass: demo for login!</div>
             <div class="container">
                 <h1>
                     <?php echo $title ?>

@@ -26,38 +26,30 @@
  *   https://bitshost.biz/
  */
 
-namespace Moda;
+namespace Auth\Routes;
 
-use Common\Bmvc\BaseController;
-use Moda\ModaModel;
-use Moda\ModaView;
+use Auth\AuthController;
+
 
 /**
- * ModaController
+ * ModaRoutes
  */
-class ModaController extends BaseController
+class AuthRoutes
 {
+
+
     /**
-     * display
+     * Routes
      *
+     * @param  mixed $router
      * @return void
      */
-    public function display()
+    public function Routes($router)
     {
-        $users = [
-            new ModaModel('John Doe', 'john@example.com'),
-            new ModaModel('Jane Doe', 'jane@example.com')
-        ];
-
-
-
-        if (isset($_SESSION["username"])) {
-            $this->render('moda/ModaView', ['users' => $users]);
-        } else {
-            echo " Not Logged In! Something else.";
-            header('Location: ' . BASE_URL . '/');
-        }
-
-        
+        $router->addRoute('/auth', AuthController::class, 'display');
+        $router->addRoute('/logout', AuthController::class, 'logout');
+        $router->addRoute('/signup', AuthController::class, 'signUp');
+        $router->addRoute('/activation', AuthController::class, 'AccountActivation');
+       
     }
 }

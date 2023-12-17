@@ -74,9 +74,24 @@ class Testview extends BaseView
 
             });
         </script>
-<?php
+    <?php
         echo $request . "<br>";
         print_r($_GET);
+        $this->endBody();
+        $this->startFooter();
+        $this->endFooter();
+    }
+
+    public function notLoggedIn()
+    {
+        $title = "List";
+        $this->startHead($title);
+        ?>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+        <?php
+        $this->endHead();
+        $this->startBody($title);
+        echo " Not Logged In! Something else.";
         $this->endBody();
         $this->startFooter();
         $this->endFooter();

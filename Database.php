@@ -26,38 +26,31 @@
  *   https://bitshost.biz/
  */
 
-namespace Moda;
+namespace MVC;
 
-use Common\Bmvc\BaseController;
-use Moda\ModaModel;
-use Moda\ModaView;
+use PDO;
+use PDOException;
 
 /**
- * ModaController
+ * Database
  */
-class ModaController extends BaseController
+
+class Database
 {
-    /**
-     * display
-     *
-     * @return void
-     */
-    public function display()
+    private $host = "127.0.0.1";
+    private $database_name = "test";
+    private $username = "root";
+    private $password = "";
+    public $conn;
+    public function getConnection()
     {
-        $users = [
-            new ModaModel('John Doe', 'john@example.com'),
-            new ModaModel('Jane Doe', 'jane@example.com')
-        ];
-
-
-
-        if (isset($_SESSION["username"])) {
-            $this->render('moda/ModaView', ['users' => $users]);
-        } else {
-            echo " Not Logged In! Something else.";
-            header('Location: ' . BASE_URL . '/');
+        $this->conn = null;
+        try {
+            $this->conn = new PDO("mysql:host=" . $this->host . ";dbname=" . $this->database_name, $this->username, $this->password);
+            $this->conn->exec("set names utf8");
+        } catch (PDOException $exception) {
+            echo "Database could not be connected: " . $exception->getMessage();
         }
-
-        
+        return $this->conn;
     }
 }

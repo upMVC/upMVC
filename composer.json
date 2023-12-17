@@ -31,7 +31,11 @@
             "Suba\\": "modules/moda/modules/suba/",
             "Suba\\Routes\\": "modules/moda/modules/suba/routes/",
             "New\\": "modules/new/",
-            "New\\Routes\\": "modules/new/routes/"
+            "New\\Routes\\": "modules/new/routes/",
+            "Auth\\": "modules/auth/",
+            "Auth\\Routes\\": "modules/auth/routes/",
+            "Mail\\": "modules/mail/",
+            "PHPMailer\\PHPMailer\\": "modules/mail/phpmailer/"
         }
     }
 }
