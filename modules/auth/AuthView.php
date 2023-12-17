@@ -384,6 +384,3 @@ class AuthView
 <?php
     }
 }
-
-//$new = new ViewAutentificare();
-//$new->formularLogin();
