@@ -6,15 +6,7 @@ use PHPMailer\PHPMailer\PHPMailer;
 
 class MailController
 {
-  public function hello($idUser)
-  {
-    echo 'hello';
-    echo $idUser;
-    //$mail = new PHPMailer();
-  }
-  //https://stackoverflow.com/questions/48128618/how-to-use-phpmailer-without-composer
-//https://phppot.com/php/sendmail-in-php-using-mail-smtp-with-phpmailer/
-//https://github.com/PHPMailer/PHPMailer
+  
   function send_mail_by_PHPMailer($to, $from, $subject, $message)
   {
 
