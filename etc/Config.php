@@ -51,6 +51,8 @@ class Config
         error_reporting(0);
         /////////////////////////////////////
 
+        define('THIS_DIR', str_replace("\\", "/", dirname(__FILE__, 2)));
+
         //Application URL
         //your domain address => https://www.yourdomain.com or https://yourdomain.com
         define('BASE_URL', 'https://www.yourdomain.com'); //Application URL
