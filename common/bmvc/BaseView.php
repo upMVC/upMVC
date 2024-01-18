@@ -79,6 +79,9 @@ class BaseView
                     <li>
                         <a href="<?php echo BASE_URL; ?>/apiInfo">👩‍👩‍👧‍👧 ApiInfo</a>
                     </li>
+                    <li>
+                        <a href="<?php echo BASE_URL; ?>/react">👩‍👩‍👧‍👧 React</a>
+                    </li>
 
                     <li>
                         <a href="<?php echo BASE_URL; ?>/auth">👩‍👩‍👧‍👧 Authentication</a>
