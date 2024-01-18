@@ -43,5 +43,5 @@ $urlWithoutSitePath = $config->cleanUrlSitePath($sitePath, $url);
 $url = $config->cleanUrlQuestionMark($urlWithoutSitePath);
 
 
-$start = new Routes();
-$start->startRoutes($url, $request);
+$upMVC = new Routes();
+$upMVC->startRoutes($url, $request);
