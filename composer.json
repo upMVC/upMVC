@@ -35,7 +35,10 @@
             "Auth\\": "modules/auth/",
             "Auth\\Routes\\": "modules/auth/routes/",
             "Mail\\": "modules/mail/",
-            "PHPMailer\\PHPMailer\\": "modules/mail/phpmailer/"
+            "PHPMailer\\PHPMailer\\": "modules/mail/phpmailer/",
+            "React\\": "modules/react/",
+            "React\\Routes\\": "modules/react/routes",
+            "React\\Component\\": "modules/react/etc"
         }
     }
 }
