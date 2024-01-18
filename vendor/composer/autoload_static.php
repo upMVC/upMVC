@@ -22,6 +22,12 @@ class ComposerStaticInit49502ca6970de9d65a6295b99bbb2d5b
             'Suba\\Routes\\' => 12,
             'Suba\\' => 5,
         ),
+        'R' => 
+        array (
+            'React\\Routes\\' => 13,
+            'React\\Component\\' => 16,
+            'React\\' => 6,
+        ),
         'P' => 
         array (
             'PHPMailer\\PHPMailer\\' => 20,
@@ -74,6 +80,18 @@ class ComposerStaticInit49502ca6970de9d65a6295b99bbb2d5b
         'Suba\\' => 
         array (
             0 => __DIR__ . '/../..' . '/modules/moda/modules/suba',
+        ),
+        'React\\Routes\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/modules/react/routes',
+        ),
+        'React\\Component\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/modules/react/etc',
+        ),
+        'React\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/modules/react',
         ),
         'PHPMailer\\PHPMailer\\' => 
         array (

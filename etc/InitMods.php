@@ -14,6 +14,8 @@ use Suba\Routes\SubaRoutes;
 use User\Routes\UserRoutes;
 use New\Routes\NewRoutes;
 use Auth\Routes\AuthRoutes;
+use React\Routes\ReactRoutes;
+
 
 class InitMods
 {
@@ -36,6 +38,9 @@ class InitMods
 
         $AuthR = new AuthRoutes();
         $AuthR->Routes($router);
+
+        $ReactR = new ReactRoutes();
+        $ReactR->Routes($router);
 
 
 
