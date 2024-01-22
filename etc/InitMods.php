@@ -15,6 +15,7 @@ use User\Routes\UserRoutes;
 use New\Routes\NewRoutes;
 use Auth\Routes\AuthRoutes;
 use React\Routes\ReactRoutes;
+use Reactb\Routes\ReactbRoutes;
 
 
 class InitMods
@@ -41,6 +42,9 @@ class InitMods
 
         $ReactR = new ReactRoutes();
         $ReactR->Routes($router);
+
+        $ReactbR = new ReactbRoutes();
+        $ReactbR->Routes($router);
 
 
 
