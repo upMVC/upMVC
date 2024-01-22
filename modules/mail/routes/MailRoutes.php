@@ -26,9 +26,10 @@
  *   https://bitshost.biz/
  */
 
-namespace PHPMailer\PHPMailer
+namespace Mail;
 
-use PHPMailer\PHPMailer\MailController;
+//use MailController;
+use Mail\MailController;
 
 
 /**
