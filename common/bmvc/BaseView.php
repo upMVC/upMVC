@@ -81,6 +81,9 @@ class BaseView
                     </li>
                     <li>
                         <a href="<?php echo BASE_URL; ?>/react">👩‍👩‍👧‍👧 React</a>
+                        <ul>
+                            <li><a href="<?php echo BASE_URL; ?>/reactb">👩‍👩‍👧‍👧 ReactB</a></li>
+                        </ul>
                     </li>
 
                     <li>
