@@ -36,9 +36,11 @@ namespace New;
 //use New\NewView;
 use Exception;
 
+
 class NewController
+
 {
-	public function display()
+	public function display($request)
 	{
 		ini_set('display_errors', 'On');
 		error_reporting(E_ALL ^ E_WARNING ^ E_NOTICE);

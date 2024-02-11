@@ -8,7 +8,7 @@ use React\Component\Component;
 
 class ReactController
 {
-    public function display()
+    public function display($request)
     {
         $view = new ReactView();
         if (isset($_SESSION["username"])) {
@@ -19,7 +19,7 @@ class ReactController
         }
     }
 
-    public function comp()
+    public function comp($request)
     {
         require_once(THIS_DIR . "/modules/react/etc/component.js");
         //$newComponent = new Component();
