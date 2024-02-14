@@ -68,6 +68,32 @@ etc/Database.php
 
 3 - Adding module routes in Modules Initialiser - > etc/InitMods.php 
 
+#
+Note: 
+#
+A friendly URL is a short and simple web address that redirects to a longer web address. Friendly URLs are called Aliases in Sitecore.
+#
+We achieve this by combining some .htacces rules with module routes.
+Check modules/test/routes/TestRoutes.php and the .htaccess file - you will notice the rules established in the.htaccess file for these specific routes - you may build as many as you like.
+
+#
+
+<img width="482" alt="Screenshot 2024-02-14 141414" src="https://github.com/upMVC/upMVC/assets/23263143/7494c92d-5fb8-4246-9e1a-12cd08edf21c">
+
+#
+
+<img width="550" alt="Screenshot 2024-02-14 141435" src="https://github.com/upMVC/upMVC/assets/23263143/f0c30024-f382-405d-8c75-880b9fd385d7">
+
+#
+In the same file, modules/test/routes/TestRoutes.php, you will see for demonstration purposes how you may handle a large number of URLs with parameters (such as an idProduct) in a very straightforward way.
+
+#
+<img width="550" alt="Screenshot 2024-02-14 141435" src="https://github.com/upMVC/upMVC/assets/23263143/54d03348-1318-4216-baee-5a39b05df822">
+
+
+
+#
+
 
 #
 #
