@@ -88,9 +88,8 @@ Check modules/test/routes/TestRoutes.php and the .htaccess file - you will notic
 In the same file, modules/test/routes/TestRoutes.php, you will see for demonstration purposes how you may handle a large number of URLs with parameters (such as an idProduct) in a very straightforward way.
 
 #
-<img width="550" alt="Screenshot 2024-02-14 141435" src="https://github.com/upMVC/upMVC/assets/23263143/54d03348-1318-4216-baee-5a39b05df822">
 
-
+<img width="550" alt="Screenshot 2024-02-14 142531" src="https://github.com/upMVC/upMVC/assets/23263143/d5e155b2-92f8-4034-9fc8-1267efdbbf23">
 
 #
 
