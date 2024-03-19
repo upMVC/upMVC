@@ -1,4 +1,5 @@
 <?php
+
 /*
  *   Created on Tue Oct 31 2023
  
@@ -26,46 +27,20 @@
  *   https://bitshost.biz/
  */
 
-namespace React\Component;
+namespace ReactCrud\Routes;
 
-class Component
+use ReactCrud\ReactCrudController;
+
+class ReactCrudRoutes
 {
-    public function componentOne()
+    public function Routes($router)
     {
-
-        require_once(THIS_DIR."/modules/react/etc/component.js");
-        /*echo "'use strict';
-
-            const e = React.createElement;
-
-            class LikeButton extends React.Component {
-                constructor(props) {
-                    super(props);
-                    this.state = {
-                        liked: false
-                    };
-                }
-
-                render() {
-                    if (this.state.liked) {
-                        return 'You liked this.';
-                    }
-
-                    return e(
-                        'button', {
-                            onClick: () => this.setState({
-                                liked: true
-                            })
-                        },
-                        'Like'
-                    );
-                }
-            }
-
-            const domContainer = document.querySelector('#like_button_container');
-            const root = ReactDOM.createRoot(domContainer);
-            root.render(e(LikeButton));
-       ";
-       */
+        $router->addRoute('/reactcrud', ReactCrudController::class, 'display');
+        //react Build links from index.html 
+        $router->addRoute('/crud/manifest', ReactCrudController::class, 'manifest');
+        $router->addRoute('/crud/css', ReactCrudController::class, 'css');
+        $router->addRoute('/crud/cssb', ReactCrudController::class, 'cssb');
+        $router->addRoute('/crud/js', ReactCrudController::class, 'js');
+        $router->addRoute('/crud/jsa', ReactCrudController::class, 'jsb');
     }
 }

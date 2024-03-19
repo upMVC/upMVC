@@ -1,4 +1,5 @@
 <?php
+
 /*
  *   Created on Tue Oct 31 2023
  
@@ -26,46 +27,63 @@
  *   https://bitshost.biz/
  */
 
-namespace React\Component;
+namespace ReactCrud;
 
-class Component
+//use ReactCrud\ReactCrudModel;
+use ReactCrud\ReactCrudView;
+//use ReactCrud\Component\Component;
+
+class ReactCrudController
 {
-    public function componentOne()
+    public function display($request)
+    {
+        $view = new ReactCrudView();
+        if (isset($_SESSION["username"])) {
+            $view->View($request);
+        } else {
+            echo " Not Logged In! Something else.";
+            header('Location: ' . BASE_URL . '/');
+        }
+    }
+
+    public function logo()
     {
 
-        require_once(THIS_DIR."/modules/react/etc/component.js");
-        /*echo "'use strict';
+        require_once(THIS_DIR . "/modules/reactcrud/etc/build/logo192.png");
+    }
 
-            const e = React.createElement;
 
-            class LikeButton extends React.Component {
-                constructor(props) {
-                    super(props);
-                    this.state = {
-                        liked: false
-                    };
-                }
+    public function manifest()
+    {
 
-                render() {
-                    if (this.state.liked) {
-                        return 'You liked this.';
-                    }
+        require_once(THIS_DIR . "/modules/reactcrud/etc/build/manifest.json");
+        //echo "bingo";
+    }
 
-                    return e(
-                        'button', {
-                            onClick: () => this.setState({
-                                liked: true
-                            })
-                        },
-                        'Like'
-                    );
-                }
-            }
 
-            const domContainer = document.querySelector('#like_button_container');
-            const root = ReactDOM.createRoot(domContainer);
-            root.render(e(LikeButton));
-       ";
-       */
+
+
+
+    public function css()
+    {
+        require_once(THIS_DIR . "/modules/reactcrud/etc/build/static/css/2.326c04ff.chunk.css");
+    }
+
+    public function cssb()
+    {
+        require_once(THIS_DIR . "/modules/reactcrud/etc/build/static/css/main.b1413f35.chunk.css");
+        //echo "works";
+    }
+
+    public function js()
+    {
+
+        require_once(THIS_DIR . "/modules/reactcrud/etc/build/static/js/2.b5004239.chunk.js");
+    }
+
+    public function jsb()
+    {
+
+        require_once(THIS_DIR . "/modules/reactcrud/etc/build/static/js/main.dc560686.chunk.js");
     }
 }

@@ -49,6 +49,7 @@ class NewModel
     var $id;
     var $name;
     var $email;
+    var $errorInfo;
 
 
     /**
@@ -111,6 +112,7 @@ class NewModel
             } else {
                 //var_dump($q->errorInfo());
                 //$q->debugDumpParams();
+                $errorInfo = $q->errorInfo();
                 return (0);
             }
         }

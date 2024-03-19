@@ -41,10 +41,11 @@ class CommonCss{
 
 
             .wrapper {
-                max-width: 1200px;
-                margin: 10px auto;
-                padding: 10px;
+                max-width: 1250px;
+                margin: 15px auto;
+                padding: 8px;
                 text-align: center;
+                font-size: 13px;
             }
 
             /**
@@ -78,7 +79,7 @@ class CommonCss{
             .menu li:focus-within>ul,
             .menu li:hover>ul {
                 height: auto;
-                margin-left: 15px;
+                margin-left: 13px;
             }
 
             /**
@@ -135,7 +136,7 @@ class CommonCss{
                 color: #fff;
                 font-weight: bold;
                 text-decoration: none;
-                padding: 1rem 1.5rem;
+                padding: 1.1rem 1.3rem;
             }
 
             .menu a:focus-within,
@@ -166,9 +167,9 @@ class CommonCss{
             .menu li a:not(:only-child)::after {
                 content: "»";
                 display: inline-block;
-                margin-left: 10px;
+                margin-left: 15px;
                 float: right;
-                font-size: 25px;
+                font-size: 20px;
             }
         </style>
         <?php

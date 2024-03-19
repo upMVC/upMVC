@@ -24,9 +24,13 @@ class ComposerStaticInit49502ca6970de9d65a6295b99bbb2d5b
         ),
         'R' => 
         array (
+            'Reactb\\Routes\\' => 14,
+            'Reactb\\' => 7,
             'React\\Routes\\' => 13,
             'React\\Component\\' => 16,
             'React\\' => 6,
+            'ReactCrud\\Routes\\' => 17,
+            'ReactCrud\\' => 10,
         ),
         'P' => 
         array (
@@ -81,6 +85,14 @@ class ComposerStaticInit49502ca6970de9d65a6295b99bbb2d5b
         array (
             0 => __DIR__ . '/../..' . '/modules/moda/modules/suba',
         ),
+        'Reactb\\Routes\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/modules/reactb/routes',
+        ),
+        'Reactb\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/modules/reactb',
+        ),
         'React\\Routes\\' => 
         array (
             0 => __DIR__ . '/../..' . '/modules/react/routes',
@@ -92,6 +104,14 @@ class ComposerStaticInit49502ca6970de9d65a6295b99bbb2d5b
         'React\\' => 
         array (
             0 => __DIR__ . '/../..' . '/modules/react',
+        ),
+        'ReactCrud\\Routes\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/modules/reactcrud/routes',
+        ),
+        'ReactCrud\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/modules/reactcrud',
         ),
         'PHPMailer\\PHPMailer\\' => 
         array (

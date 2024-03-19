@@ -1,4 +1,5 @@
 <?php
+
 /*
  *   Created on Tue Oct 31 2023
  
@@ -26,46 +27,10 @@
  *   https://bitshost.biz/
  */
 
-namespace React\Component;
+namespace ReactCrud;
 
-class Component
+use MyApp\Models\BaseModel;
+
+class ReactCrudModel extends BaseModel
 {
-    public function componentOne()
-    {
-
-        require_once(THIS_DIR."/modules/react/etc/component.js");
-        /*echo "'use strict';
-
-            const e = React.createElement;
-
-            class LikeButton extends React.Component {
-                constructor(props) {
-                    super(props);
-                    this.state = {
-                        liked: false
-                    };
-                }
-
-                render() {
-                    if (this.state.liked) {
-                        return 'You liked this.';
-                    }
-
-                    return e(
-                        'button', {
-                            onClick: () => this.setState({
-                                liked: true
-                            })
-                        },
-                        'Like'
-                    );
-                }
-            }
-
-            const domContainer = document.querySelector('#like_button_container');
-            const root = ReactDOM.createRoot(domContainer);
-            root.render(e(LikeButton));
-       ";
-       */
-    }
 }
