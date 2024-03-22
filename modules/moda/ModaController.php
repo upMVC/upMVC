@@ -42,7 +42,7 @@ class ModaController extends BaseController
      *
      * @return void
      */
-    public function display()
+    public function display($request)
     {
         $users = [
             new ModaModel('John Doe', 'john@example.com'),
@@ -53,6 +53,7 @@ class ModaController extends BaseController
 
         if (isset($_SESSION["username"])) {
             $this->render('moda/ModaView', ['users' => $users]);
+            echo $request;
         } else {
             echo " Not Logged In! Something else.";
             header('Location: ' . BASE_URL . '/');

@@ -46,17 +46,17 @@ class AuthController
     public $html;
     var $name;
 
-    public function display()
+    public function display($request)
     {
         if (isset($_SESSION["logged"])  && $_SESSION["logged"] = true) {
             $this->url = BASE_URL;
             header("Location: $this->url");
         } else {
-            $this->Login();
+            $this->Login($request);
         }
     }
 
-    public function Login()
+    public function Login($request)
     {
         $view        = new BaseView();
         $this->html = new AuthView();
@@ -98,7 +98,7 @@ class AuthController
         }
     }
 
-    function Logout()
+    function Logout($request)
     {
 
         session_unset();
@@ -123,7 +123,7 @@ class AuthController
         header("Location: $this->url");
     }
 
-    function signUp($db)
+    function signUp($request)
     {
         $view        = new BaseView();
         $this->html = new AuthView();

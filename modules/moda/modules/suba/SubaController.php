@@ -34,7 +34,7 @@ use Suba\SubaView;
 
 class SubaController extends BaseController
 {
-    public function display()
+    public function display($request)
     {
         $users = [
             new SubaModel('John Doe', 'john@example.com'),
@@ -46,6 +46,7 @@ class SubaController extends BaseController
        
         if (isset($_SESSION["username"])) {
             $this->render('moda/modules/suba/SubaView', ['users' => $users]);
+            echo $request;
         } else {
             echo " Not Logged In! Something else.";
             header('Location: ' . BASE_URL . '/');

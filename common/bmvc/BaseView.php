@@ -74,6 +74,9 @@ class BaseView
                             <li>
                                 <a href="<?php echo BASE_URL; ?>/new">👩‍👩‍👧‍👧 Users CRUD PHPISTOLS</a>
                             </li>
+                            <li>
+                                <a href="<?php echo BASE_URL; ?>/reactcrud">👩‍👩‍👧‍👧 Users CRUD React</a>
+                            </li>
                         </ul>
                     </li>
                     <li>
@@ -83,6 +86,9 @@ class BaseView
                         <a href="<?php echo BASE_URL; ?>/react">👩‍👩‍👧‍👧 React</a>
                         <ul>
                             <li><a href="<?php echo BASE_URL; ?>/reactb">👩‍👩‍👧‍👧 ReactB</a></li>
+                            <li>
+                                <a href="<?php echo BASE_URL; ?>/reactcrud">👩‍👩‍👧‍👧 Users CRUD React</a>
+                            </li>
                         </ul>
                     </li>
 
@@ -99,7 +105,7 @@ class BaseView
 
                     }
                     ?>
-                     <li>
+                    <li>
                         <a href="https://github.com/upMVC/upMVC/wiki/How%E2%80%90to-Page" target="_blank">👩‍👩‍👧‍👧 Wiki</a>
                     </li>
                 </ul>
@@ -150,6 +156,8 @@ class BaseView
                 <h1>
                     <?php echo $title ?>
                 </h1>
+            </div>
+            <div class="container">
             <?php
 
         }

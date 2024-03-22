@@ -2,7 +2,7 @@
 /*
  *   Created on Tue Oct 31 2023
  
- *   Copyright (c) 2023 BitsHost
+ *   Copyright (c) 2023 
  *   All rights reserved.
 
  *   Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -42,14 +42,17 @@ class UserController
 
     private $nameApi;
     private $emailApi;
+    private $usernameApi;
+    private $passwordApi;
 
-public function display($request){
-    if (isset($_SESSION["username"])) {
-        $this->selectAction($request);
-    } else {
-        header('Location: ' . BASE_URL . '/');
+    public function display($request)
+    {
+        if (isset($_SESSION["username"])) {
+            $this->selectAction($request);
+        } else {
+            header('Location: ' . BASE_URL . '/');
+        }
     }
-}
 
     public function selectAction($request)
     {
@@ -223,19 +226,23 @@ public function display($request){
     {
         if ($request === 'POST') {
             $task = $_POST['task'];
-            if($_POST['id']){
+            if ($_POST['id']) {
                 $userId = $_POST['id'];
-            } 
+            }
             //$postData = json_decode(file_get_contents('php://input'), true);
             switch ($task) {
                 case 'create':
                     $this->nameApi = $_POST["name"];
                     $this->emailApi = $_POST["email"];
+                    $this->usernameApi = $_POST["username"];
+                    $this->passwordApi = $_POST["password"];
                     $this->createUserApi();
                     break;
                 case 'update':
                     $this->nameApi = $_POST["name"];
                     $this->emailApi = $_POST["email"];
+                    $this->usernameApi = $_POST["username"];
+                    $this->passwordApi = $_POST["password"];
                     $this->updateUserApi($userId);
                     break;
                 case 'delete':
@@ -252,7 +259,7 @@ public function display($request){
             }
         } else {
             $task = $_GET['task'];
-            
+
             //code....
 
         }
@@ -265,6 +272,7 @@ public function display($request){
 
         if ($userRecords) {
             print(json_encode($userRecords));
+            header('Access-Control-Allow-Origin: *');
         } else {
             echo "No users found.";
         }
@@ -275,7 +283,8 @@ public function display($request){
         $userRecord = $this->getUserModel()->getUserById($userId, $this->table);
 
         if ($userRecord) {
-            print_r(json_encode($userRecord));
+            // print_r(json_encode($userRecord));
+            return $userRecord;
         } else {
             echo "User not found.";
         }
@@ -286,14 +295,19 @@ public function display($request){
         $userData = [
             'name'  => $this->nameApi,
             'email' => $this->emailApi,
+            'username' => $this->usernameApi,
+            'password' => $this->passwordApi,
         ];
 
         $userId = $this->getUserModel()->createUser($userData, $this->table);
+        //get data for created user
+        $createddUser = $this->getUserByIdApi($userId);
         $output = [];
         if ($userId) {
 
             $output["response"] = "User created successfully! (ID: $userId)";
-            print_r(json_encode($userId));
+            print_r(json_encode($createddUser));
+            header('Access-Control-Allow-Origin: *');
         } else {
             $output["response"] = "Error creating user.";
             print_r(json_encode($output));
@@ -306,11 +320,16 @@ public function display($request){
         $userData = [
             'name'  => $this->nameApi,
             'email' => $this->emailApi,
-        ];
-
+            'username' => $this->usernameApi,
+            'password' => $this->passwordApi,
+            ];
+        
         $success = $this->getUserModel()->updateUser($userId, $userData, $this->table);
+        //get updated user data 
+        $updateddUser = $this->getUserByIdApi($userId);
         if ($success) {
-            print_r(json_encode($success));
+            print_r(json_encode($updateddUser));
+            header('Access-Control-Allow-Origin: *');
         } else {
             print_r(json_encode($success));
         }
@@ -318,18 +337,21 @@ public function display($request){
 
     public function deleteUserApi($userId)
     {
+        //get deleted user data befor delete
+        $deletedUser = $this->getUserByIdApi($userId);
         $success = $this->getUserModel()->deleteUser($userId, $this->table);
 
         if ($success) {
-            print_r(json_encode($success));
+            print_r(json_encode($deletedUser));
+            header('Access-Control-Allow-Origin: *');
         } else {
             print_r(json_encode($success));
         }
     }
 
-    public function apiInfo(){
+    public function apiInfo()
+    {
         $html = new UserView;
         return $html->apiInfo($this->moduleRoute);
-
     }
 }
