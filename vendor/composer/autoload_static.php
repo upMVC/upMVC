@@ -7,6 +7,10 @@ namespace Composer\Autoload;
 class ComposerStaticInit49502ca6970de9d65a6295b99bbb2d5b
 {
     public static $prefixLengthsPsr4 = array (
+        'u' => 
+        array (
+            'upMVC\\' => 6,
+        ),
         'U' => 
         array (
             'User\\Routes\\' => 12,
@@ -46,7 +50,6 @@ class ComposerStaticInit49502ca6970de9d65a6295b99bbb2d5b
             'Moda\\Routes\\' => 12,
             'Moda\\' => 5,
             'Mail\\' => 5,
-            'MVC\\' => 4,
         ),
         'C' => 
         array (
@@ -61,6 +64,10 @@ class ComposerStaticInit49502ca6970de9d65a6295b99bbb2d5b
     );
 
     public static $prefixDirsPsr4 = array (
+        'upMVC\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/etc',
+        ),
         'User\\Routes\\' => 
         array (
             0 => __DIR__ . '/../..' . '/modules/user/routes',
@@ -136,10 +143,6 @@ class ComposerStaticInit49502ca6970de9d65a6295b99bbb2d5b
         'Mail\\' => 
         array (
             0 => __DIR__ . '/../..' . '/modules/mail',
-        ),
-        'MVC\\' => 
-        array (
-            0 => __DIR__ . '/../..' . '/etc',
         ),
         'Common\\Bmvc\\' => 
         array (

@@ -6,6 +6,7 @@ $vendorDir = dirname(__DIR__);
 $baseDir = dirname($vendorDir);
 
 return array(
+    'upMVC\\' => array($baseDir . '/etc'),
     'User\\Routes\\' => array($baseDir . '/modules/user/routes'),
     'User\\' => array($baseDir . '/modules/user'),
     'Test\\Routes\\' => array($baseDir . '/modules/test/routes'),
@@ -25,7 +26,6 @@ return array(
     'Moda\\Routes\\' => array($baseDir . '/modules/moda/routes'),
     'Moda\\' => array($baseDir . '/modules/moda'),
     'Mail\\' => array($baseDir . '/modules/mail'),
-    'MVC\\' => array($baseDir . '/etc'),
     'Common\\Bmvc\\' => array($baseDir . '/common/bmvc'),
     'Common\\Assets\\' => array($baseDir . '/common/assets'),
     'Auth\\Routes\\' => array($baseDir . '/modules/auth/routes'),

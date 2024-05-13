@@ -29,8 +29,8 @@
 
 require 'vendor/autoload.php';
 
-use MVC\Routes;
-use MVC\Config;
+use upMVC\Routes;
+use upMVC\Config;
 
 $url = $_SERVER['REQUEST_URI'];
 $request = $_SERVER['REQUEST_METHOD'];

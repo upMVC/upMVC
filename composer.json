@@ -21,7 +21,7 @@
         "psr-4": {
             "Common\\Assets\\": "common/assets",
             "Common\\Bmvc\\": "common/bmvc",
-            "MVC\\": "etc/",
+            "upMVC\\": "etc/",
             "User\\": "modules/user/",
             "User\\Routes\\": "modules/user/routes/",
             "Test\\": "modules/test/",
