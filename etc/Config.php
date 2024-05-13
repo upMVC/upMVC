@@ -26,7 +26,7 @@
  *   https://bitshost.biz/
  */
 
-namespace MVC;
+namespace upMVC;
 
 /**
  * Config

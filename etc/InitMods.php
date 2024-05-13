@@ -27,7 +27,7 @@
  */
 
 //add Routes for your modules
-namespace MVC;
+namespace upMVC;
 
 use Test\Routes\TestRoutes;
 use Moda\Routes\ModaRoutes;

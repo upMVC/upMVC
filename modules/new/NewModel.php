@@ -37,7 +37,7 @@
 
 namespace New;
 
-use MVC\Database;
+use upMVC\Database;
 use PDO;
 
 class NewModel

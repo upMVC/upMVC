@@ -26,10 +26,10 @@
  *   https://bitshost.biz/
  */
 
-namespace MVC;
+namespace upMVC;
 
 use Test\TestController;
-use MVC\InitMods;
+use upMVC\InitMods;
 
 
 /**

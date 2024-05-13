@@ -28,7 +28,7 @@
 
 namespace Common\Bmvc;
 
-use MVC\Database;
+use upMVC\Database;
 use PDO;
 
 
