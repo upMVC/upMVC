@@ -74,7 +74,7 @@ Note:
 A friendly URL is a short and simple web address that redirects to a longer web address. Friendly URLs are called Aliases in Sitecore.
 #
 We achieve this by combining some .htacces rules with module routes.
-Check modules/test/routes/TestRoutes.php and the .htaccess file - you will notice the rules established in the.htaccess file for these specific routes - you may build as many as you like.
+Check modules/test/routes/Routes.php and the .htaccess file - you will notice the rules established in the.htaccess file for these specific routes - you may build as many as you like.
 
 #
 
@@ -85,7 +85,7 @@ Check modules/test/routes/TestRoutes.php and the .htaccess file - you will notic
 <img width="550" alt="Screenshot 2024-02-14 141435" src="https://github.com/upMVC/upMVC/assets/23263143/f0c30024-f382-405d-8c75-880b9fd385d7">
 
 #
-In the same file, modules/test/routes/TestRoutes.php, you will see for demonstration purposes how you may handle a large number of URLs with parameters (such as an idProduct) in a very straightforward way.
+In the same file, modules/test/routes/Routes.php, you will see for demonstration purposes how you may handle a large number of URLs with parameters (such as an idProduct) in a very straightforward way.
 
 #
 
@@ -103,7 +103,7 @@ In the same file, modules/test/routes/TestRoutes.php, you will see for demonstra
  - You may or may not wish to utilize BASE MODEL, BASE VIEW and BASE CONTROLLER from the common/bmvc subdirectory.
  - BaseModel contains all of the data required for CRUD OPERATIONS; simply expand it in your module model and you have a CRUD ready-made module; see example module modules/user.
  - Make a distinctive namespace for each module
- - Your module routes should be kept under modules/YourModule/routes - file ModuleNameRoutes.php
+ - Your module routes should be kept under modules/YourModule/routes - file Routes.php
  - Because these routes should be presented to Router, you must provide their namespace to InitMods.php and initialize your module routes. 
  - Don't forget to update composer.json with your new namespaces for your module and routes, as well as refresh composer from the terminal:
  - composer  dump-autoload
@@ -119,10 +119,10 @@ In the same file, modules/test/routes/TestRoutes.php, you will see for demonstra
 #
 ## Considering recommendations:
  - Model, View, Controller - will be called by using module name in their name. For example, module name = books:
- - BooksModel.php - class BooksModel; BooksView.php - class BooksView; BooksController.php - class BooksController;
+ - Model.php - class Model; View.php - class View; Controller.php - class Controller;
  - and make a distinctive namespace for each module - namespace ModuleName - e.g. Books;
- - Your module routes should be kept under modules/yourModule/routes - file ModuleRoutes.php - we call it just for convenience - by module name - for example, module name = books: 
-   - BooksRoutes.php class BooksRoutes in folder /modules/books/routes
+ - Your module routes should be kept under modules/yourModule/routes - file Routes.php: 
+   - Routes.php class Routes in folder /modules/books/routes
    - namespace ModuleName\Routes, e.g. Books\Routes
 #
 #
