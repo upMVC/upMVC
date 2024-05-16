@@ -28,7 +28,7 @@
 
 namespace upMVC;
 
-use Test\TestController;
+use Test\Controller;
 use upMVC\InitMods;
 
 
@@ -49,7 +49,7 @@ class Routes
         $router = new Router();
 
         //-1. default system routes
-        $router->addRoute('/abba', TestController::class, 'display');
+        $router->addRoute('/abba', Controller::class, 'display');
         ///////////////////route, class, function()////////////////
         ///////////////////////////////////////////////////////////
 

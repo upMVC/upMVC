@@ -25,15 +25,31 @@
  *   Here you may host your app for free:
  *   https://bitshost.biz/
  */
-//
+
+namespace Auth\Routes;
+
+use Auth\Controller;
 
 
-require 'vendor/autoload.php';
+/**
+ * ModaRoutes
+ */
+class Routes
+{
 
-use upMVC\Start;
 
-$fireUpMVC = new Start();
-$fireUpMVC->upMVC();
-
-
-?>
+    /**
+     * Routes
+     *
+     * @param  mixed $router
+     * @return void
+     */
+    public function Routes($router)
+    {
+        $router->addRoute('/auth', Controller::class, 'display');
+        $router->addRoute('/logout', Controller::class, 'logout');
+        $router->addRoute('/signup', Controller::class, 'signUp');
+        $router->addRoute('/activation', Controller::class, 'AccountActivation');
+       
+    }
+}

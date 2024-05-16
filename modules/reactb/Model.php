@@ -1,4 +1,5 @@
 <?php
+
 /*
  *   Created on Tue Oct 31 2023
  
@@ -25,15 +26,11 @@
  *   Here you may host your app for free:
  *   https://bitshost.biz/
  */
-//
 
+namespace Reactb;
 
-require 'vendor/autoload.php';
+use Common\Bmvc\BaseModel;
 
-use upMVC\Start;
-
-$fireUpMVC = new Start();
-$fireUpMVC->upMVC();
-
-
-?>
+class ReactbModel extends BaseModel
+{
+}

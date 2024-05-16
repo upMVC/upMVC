@@ -1,9 +1,9 @@
 <?php
-/*
- *   Created on Tue Oct 31 2023
+/**   
+   Created on Tue Oct 31 2023
  
- *   Copyright (c) 2023 BitsHost
- *   All rights reserved.
+   Copyright (c) 2023 BitsHost
+   All rights reserved.
 
  *   Permission is hereby granted, free of charge, to any person obtaining a copy
  *   of this software and associated documentation files (the "Software"), to deal
@@ -23,17 +23,29 @@
  *   OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  *   SOFTWARE.
  *   Here you may host your app for free:
- *   https://bitshost.biz/
+     https://bitshost.biz/
  */
-//
+
+namespace New\Routes;
+
+use New\Controller;
 
 
-require 'vendor/autoload.php';
+/**
+ * ModaRoutes
+ */
+class Routes
+{
 
-use upMVC\Start;
 
-$fireUpMVC = new Start();
-$fireUpMVC->upMVC();
-
-
-?>
+    /**
+     * Routes
+     *
+     * @param  mixed $router
+     * @return void
+     */
+    public function Routes($router)
+    {
+        $router->addRoute('/new', Controller::class, 'display');
+    }
+}

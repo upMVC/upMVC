@@ -25,15 +25,34 @@
  *   Here you may host your app for free:
  *   https://bitshost.biz/
  */
-//
 
+namespace Test;
 
-require 'vendor/autoload.php';
+use Test\Model;
+use Test\TestView;
 
-use upMVC\Start;
+/**
+ * TestController
+ */
+class Controller
+{
+    /**
+     * display
+     *
+     * @return void
+     */
+    public function display($request)
+    {
+        $view = new View();
+        $users = [
+            new Model('John Doe', 'john@example.com'),
+            new Model('Jane Doe', 'jane@example.com')
+        ];
 
-$fireUpMVC = new Start();
-$fireUpMVC->upMVC();
-
-
-?>
+        if (isset($_SESSION["username"])) {
+            $view->View($request, $users);
+        } else {
+            $view->notLoggedIn();
+        }
+    }
+}

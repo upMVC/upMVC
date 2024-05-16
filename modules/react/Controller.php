@@ -1,4 +1,5 @@
 <?php
+
 /*
  *   Created on Tue Oct 31 2023
  
@@ -25,15 +26,30 @@
  *   Here you may host your app for free:
  *   https://bitshost.biz/
  */
-//
 
+namespace React;
 
-require 'vendor/autoload.php';
+use React\Model;
+use React\View;
+use React\Component\Component;
 
-use upMVC\Start;
+class Controller
+{
+    public function display($request)
+    {
+        $view = new View();
+        if (isset($_SESSION["username"])) {
+            $view->View($request);
+        } else {
+            echo " Not Logged In! Something else.";
+            header('Location: ' . BASE_URL . '/');
+        }
+    }
 
-$fireUpMVC = new Start();
-$fireUpMVC->upMVC();
-
-
-?>
+    public function comp($request)
+    {
+        require_once(THIS_DIR . "/modules/react/etc/component.js");
+        //$newComponent = new Component();
+        //$newComponent->componentOne();
+    }
+}

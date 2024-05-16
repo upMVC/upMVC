@@ -1,4 +1,5 @@
 <?php
+
 /*
  *   Created on Tue Oct 31 2023
  
@@ -25,15 +26,21 @@
  *   Here you may host your app for free:
  *   https://bitshost.biz/
  */
-//
 
+namespace ReactCrud\Routes;
 
-require 'vendor/autoload.php';
+use ReactCrud\Controller;
 
-use upMVC\Start;
-
-$fireUpMVC = new Start();
-$fireUpMVC->upMVC();
-
-
-?>
+class Routes
+{
+    public function Routes($router)
+    {
+        $router->addRoute('/reactcrud', Controller::class, 'display');
+        //react Build links from index.html 
+        $router->addRoute('/crud/manifest', Controller::class, 'manifest');
+        $router->addRoute('/crud/css', Controller::class, 'css');
+        $router->addRoute('/crud/cssb', Controller::class, 'cssb');
+        $router->addRoute('/crud/js', Controller::class, 'js');
+        $router->addRoute('/crud/jsa', Controller::class, 'jsb');
+    }
+}

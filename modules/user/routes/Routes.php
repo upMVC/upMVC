@@ -25,15 +25,29 @@
  *   Here you may host your app for free:
  *   https://bitshost.biz/
  */
-//
+
+namespace User\Routes;
+
+use User\Controller;
 
 
-require 'vendor/autoload.php';
+/**
+ * ModaRoutes
+ */
+class Routes
+{
 
-use upMVC\Start;
 
-$fireUpMVC = new Start();
-$fireUpMVC->upMVC();
-
-
-?>
+    /**
+     * Routes
+     *
+     * @param  mixed $router
+     * @return void
+     */
+    public function Routes($router)
+    {
+        $router->addRoute('/users', Controller::class, 'display');
+        $router->addRoute('/apiUsers', Controller::class, 'apiResponse');
+        $router->addRoute('/apiInfo', Controller::class, 'apiInfo');
+    }
+}

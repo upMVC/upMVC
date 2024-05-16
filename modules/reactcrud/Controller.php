@@ -1,4 +1,5 @@
 <?php
+
 /*
  *   Created on Tue Oct 31 2023
  
@@ -25,15 +26,64 @@
  *   Here you may host your app for free:
  *   https://bitshost.biz/
  */
-//
+
+namespace ReactCrud;
+
+//use ReactCrud\ReactCrudModel;
+use ReactCrud\ReactCrudView;
+//use ReactCrud\Component\Component;
+
+class Controller
+{
+    public function display($request)
+    {
+        $view = new View();
+        if (isset($_SESSION["username"])) {
+            $view->View($request);
+        } else {
+            echo " Not Logged In! Something else.";
+            header('Location: ' . BASE_URL . '/');
+        }
+    }
+
+    public function logo()
+    {
+
+        require_once(THIS_DIR . "/modules/reactcrud/etc/build/logo192.png");
+    }
 
 
-require 'vendor/autoload.php';
+    public function manifest()
+    {
 
-use upMVC\Start;
+        require_once(THIS_DIR . "/modules/reactcrud/etc/build/manifest.json");
+        //echo "bingo";
+    }
 
-$fireUpMVC = new Start();
-$fireUpMVC->upMVC();
 
 
-?>
+
+
+    public function css()
+    {
+        require_once(THIS_DIR . "/modules/reactcrud/etc/build/static/css/2.326c04ff.chunk.css");
+    }
+
+    public function cssb()
+    {
+        require_once(THIS_DIR . "/modules/reactcrud/etc/build/static/css/main.b1413f35.chunk.css");
+        //echo "works";
+    }
+
+    public function js()
+    {
+
+        require_once(THIS_DIR . "/modules/reactcrud/etc/build/static/js/2.b5004239.chunk.js");
+    }
+
+    public function jsb()
+    {
+
+        require_once(THIS_DIR . "/modules/reactcrud/etc/build/static/js/main.dc560686.chunk.js");
+    }
+}

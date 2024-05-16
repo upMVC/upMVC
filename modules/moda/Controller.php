@@ -25,15 +25,40 @@
  *   Here you may host your app for free:
  *   https://bitshost.biz/
  */
-//
+
+namespace Moda;
+
+use Common\Bmvc\BaseController;
+use Moda\Model;
+use Moda\View;
+
+/**
+ * ModaController
+ */
+class Controller extends BaseController
+{
+    /**
+     * display
+     *
+     * @return void
+     */
+    public function display($request)
+    {
+        $users = [
+            new Model('John Doe', 'john@example.com'),
+            new Model('Jane Doe', 'jane@example.com')
+        ];
 
 
-require 'vendor/autoload.php';
 
-use upMVC\Start;
+        if (isset($_SESSION["username"])) {
+            $this->render('moda/View', ['users' => $users]);
+            echo $request;
+        } else {
+            echo " Not Logged In! Something else.";
+            header('Location: ' . BASE_URL . '/');
+        }
 
-$fireUpMVC = new Start();
-$fireUpMVC->upMVC();
-
-
-?>
+        
+    }
+}
