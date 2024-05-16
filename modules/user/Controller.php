@@ -28,8 +28,8 @@
 
 namespace User;
 
-use User\UserModel;
-use User\UserView;
+use User\Model;
+use User\View;
 
 
 class Controller
