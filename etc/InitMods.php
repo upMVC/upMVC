@@ -29,19 +29,30 @@
 //add Routes for your modules
 namespace upMVC;
 
-use Test\Routes\TestRoutes;
-use Moda\Routes\ModaRoutes;
-use Suba\Routes\SubaRoutes;
-use User\Routes\UserRoutes;
-use New\Routes\NewRoutes;
-use Auth\Routes\AuthRoutes;
-use React\Routes\ReactRoutes;
-use Reactb\Routes\ReactbRoutes;
-use ReactCrud\Routes\ReactCrudRoutes;
+use Test\Routes\Routes as TestRoutes;
+use Moda\Routes\Routes as ModaRoutes;
+use Suba\Routes\Routes as SubaRoutes;
+use User\Routes\Routes as UserRoutes;
+use New\Routes\Routes as NewRoutes;
+use Auth\Routes\Routes as AuthRoutes;
+use React\Routes\Routes as ReactRoutes;
+use Reactb\Routes\Routes as ReactbRoutes;
+use ReactCrud\Routes\Routes as ReactCrudRoutes;
 
 
 class InitMods
 {
+
+    protected $testR;
+    protected $ModaR;
+    protected $SubaR;
+    protected $UserR;
+    protected $NewR;
+    protected $AuthR;
+    protected $ReactR;
+    protected $ReactbR;
+    protected $ReactCrudR;
+
     public function addRoutes($router)
     {
         $testR = new TestRoutes();

@@ -25,15 +25,32 @@
  *   Here you may host your app for free:
  *   https://bitshost.biz/
  */
-//
+
+namespace Moda\Routes;
+
+use Moda\Controller;
 
 
-require 'vendor/autoload.php';
+/**
+ * ModaRoutes
+ */
+class Routes
+{
 
-use upMVC\Start;
 
-$fireUpMVC = new Start();
-$fireUpMVC->upMVC();
+    /**
+     * Routes
+     *
+     * @param  mixed $router
+     * @return void
+     */
+    public function Routes($router)
+    {
 
-
-?>
+        $router->addRoute('/moda.php', Controller::class, 'display');
+        $router->addRoute('/moda', Controller::class, 'display');
+        $router->addRoute('/moda/subpage', Controller::class, 'display');
+        $router->addRoute('/moda-page-one', Controller::class, 'display');
+        $router->addRoute('/moda-page-one/two', Controller::class, 'display');
+    }
+}

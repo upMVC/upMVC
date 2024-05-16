@@ -1,4 +1,5 @@
 <?php
+
 /*
  *   Created on Tue Oct 31 2023
  
@@ -25,15 +26,20 @@
  *   Here you may host your app for free:
  *   https://bitshost.biz/
  */
-//
 
+namespace Reactb\Routes;
 
-require 'vendor/autoload.php';
+use Reactb\Controller;
 
-use upMVC\Start;
-
-$fireUpMVC = new Start();
-$fireUpMVC->upMVC();
-
-
-?>
+class Routes
+{
+    public function Routes($router)
+    {
+        $router->addRoute('/reactb', Controller::class, 'display');
+        //react Build links from index.html 
+        $router->addRoute('/logo', Controller::class, 'logo');
+        $router->addRoute('/manifest', Controller::class, 'manifest');
+        $router->addRoute('/mainjs', Controller::class, 'mainjs');
+        $router->addRoute('/maincss', Controller::class, 'maincss');
+    }
+}

@@ -25,15 +25,32 @@
  *   Here you may host your app for free:
  *   https://bitshost.biz/
  */
-//
+
+namespace Suba;
+
+use Common\Bmvc\BaseController;
+use Suba\Model;
+use Suba\View;
+
+class Controller extends BaseController
+{
+    public function display($request)
+    {
+        $users = [
+            new Model('John Doe', 'john@example.com'),
+            new Model('Jane Doe', 'jane@example.com')
+        ];
 
 
-require 'vendor/autoload.php';
 
-use upMVC\Start;
-
-$fireUpMVC = new Start();
-$fireUpMVC->upMVC();
-
-
-?>
+       
+        if (isset($_SESSION["username"])) {
+            $this->render('moda/modules/suba/View', ['users' => $users]);
+            echo $request;
+        } else {
+            echo " Not Logged In! Something else.";
+            header('Location: ' . BASE_URL . '/');
+        }
+   
+    }
+}

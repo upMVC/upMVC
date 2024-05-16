@@ -25,15 +25,31 @@
  *   Here you may host your app for free:
  *   https://bitshost.biz/
  */
-//
 
+namespace Moda;
 
-require 'vendor/autoload.php';
+use Common\Bmvc\BaseModel;
 
-use upMVC\Start;
+/**
+ * ModaModel
+ */
+class Model extends BaseModel
+{
+    public $name;
+    public $email;
+    protected $conn;
 
-$fireUpMVC = new Start();
-$fireUpMVC->upMVC();
-
-
-?>
+    /**
+     * __construct
+     *
+     * @param  mixed $name
+     * @param  mixed $email
+     * @return void
+     */
+    public function __construct($name, $email)
+    {
+        parent::__construct();
+        $this->name  = $name;
+        $this->email = $email;
+    }
+}

@@ -25,15 +25,19 @@
  *   Here you may host your app for free:
  *   https://bitshost.biz/
  */
-//
+
+namespace Suba\Routes;
+
+use Suba\Controller;
+
+class Routes
+{
 
 
-require 'vendor/autoload.php';
-
-use upMVC\Start;
-
-$fireUpMVC = new Start();
-$fireUpMVC->upMVC();
-
-
-?>
+    public function Routes($router)
+    {
+        $router->addRoute('/suba.php', Controller::class, 'display');
+        $router->addRoute('/suba', Controller::class, 'display');
+        $router->addRoute('/suba/subpage', Controller::class, 'display');
+    }
+}

@@ -1,4 +1,5 @@
 <?php
+
 /*
  *   Created on Tue Oct 31 2023
  
@@ -25,15 +26,16 @@
  *   Here you may host your app for free:
  *   https://bitshost.biz/
  */
-//
 
+namespace React\Routes;
 
-require 'vendor/autoload.php';
+use React\Controller;
 
-use upMVC\Start;
-
-$fireUpMVC = new Start();
-$fireUpMVC->upMVC();
-
-
-?>
+class Routes
+{
+    public function Routes($router)
+    {
+        $router->addRoute('/react', Controller::class, 'display');
+        $router->addRoute('/comp', Controller::class, 'comp');
+    }
+}

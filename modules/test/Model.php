@@ -25,15 +25,32 @@
  *   Here you may host your app for free:
  *   https://bitshost.biz/
  */
-//
 
+namespace Test;
 
-require 'vendor/autoload.php';
+use Common\Bmvc\BaseModel;
 
-use upMVC\Start;
+/**
+ * TestModel
+ */
+class Model extends BaseModel
+{
+    public $name;
+    public $email;
+    protected $conn;
 
-$fireUpMVC = new Start();
-$fireUpMVC->upMVC();
-
-
-?>
+    /**
+     * __construct
+     *
+     * @param  mixed $name
+     * @param  mixed $email
+     * @return void
+     */
+    public function __construct($name, $email)
+    {
+        parent::__construct();
+        //$this->conn; You may now utilize it here.  $this->conn is used to construct queries.
+        $this->name  = $name;
+        $this->email = $email;
+    }
+}

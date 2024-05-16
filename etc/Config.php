@@ -33,17 +33,16 @@ namespace upMVC;
  */
 class Config
 {
+    protected $url;
     //Application directory
     //should be empty if domain location is root; e.g. public_html => $sitePath = "";
     //else - if domain location is: public_html/app => $sitePath = "/app"; public_html/folder/app => $sitePath = "/folder/app"
-   
-    public $sitePath = ""; //Application directory
+
+    protected $sitePath = "/upMVC"; //Application directory
 
     //Application URL
-    //your domain address => https://www.yourdomain.com or https://yourdomain.com
+    protected $domainName = "http://localhost"; // main domain, not subdomain, not subfolder
 
-    public $domainName = ""; // main domain, not subdomain, not subfolder
-   
     /**
      * initConfig
      *
@@ -53,11 +52,11 @@ class Config
     {
         /////////////////////////////////////
         //error
-        error_reporting(0);
+        error_reporting(1);
         /////////////////////////////////////
 
         define('THIS_DIR', str_replace("\\", "/", dirname(__FILE__, 2)));
-    
+
         define("BASE_URL", "{$this->domainName}{$this->sitePath}");
 
         //initialize session////////////
@@ -90,4 +89,6 @@ class Config
         $url = str_replace($sitePath, "", $url);
         return $url;
     }
+
+
 }
