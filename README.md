@@ -53,9 +53,9 @@ What truly sets MMVC apart is its ability to harness the latest PHP capabilities
 
 # or
 
-#### composer create-project bitshost/upmvc:dev-main demo yourFolderNameHere
+#### composer create-project bitshost/upmvc:dev-main yourFolderNameHere
 #### or
-#### composer create-project bitshost/upmvc:dev-master demo yourFolderNameHere
+#### composer create-project bitshost/upmvc:dev-master yourFolderNameHere
 #
 
 ## Settings:
