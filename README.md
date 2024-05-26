@@ -42,13 +42,18 @@ What truly sets MMVC apart is its ability to harness the latest PHP capabilities
 
 
 # Install: 
+# (since there is no release yet)
 
 
-#### composer require bitshost/upmvc
+#### composer require bitshost/upmvc:dev-main
+# or
+#### composer require bitshost/upmvc:dev-master
 
 #### or
 
-#### composer create-project --prefer-dist --stability=dev bitshost/upmvc yourfolder
+#### composer create-project bitshost/upmvc:dev-main demo yourFolderNameHere
+# or
+#### composer create-project bitshost/upmvc:dev-master demo yourFolderNameHere
 #
 
 ## Settings:
