@@ -41,10 +41,10 @@ class Routes
     /**
      * startRoutes
      *
-     * @param  mixed $url
+     * @param  mixed $reqRoute
      * @return void
      */
-    public function startRoutes($url, $request)
+    public function startRoutes($reqRoute, $reqMet)
     {
         $router = new Router();
 
@@ -64,6 +64,6 @@ class Routes
         ///////////////////////////////////////////////////////////
 
         #-3. call Dispatcher
-        $router->dispatcher($url, $request);
+        $router->dispatcher($reqRoute, $reqMet);
     }
 }

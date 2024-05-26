@@ -51,33 +51,33 @@ class Router
     /**
      * dispatcher
      *
-     * @param  mixed $url
+     * @param  mixed $reqRoute
      * @return void
      */
-    public function dispatcher($url, $request)
+    public function dispatcher($reqRoute, $reqMet)
     {
-        if (array_key_exists($url, $this->routes)) {
+        if (array_key_exists($reqRoute, $this->routes)) {
 
-            $className  = $this->routes[$url]['className'];
-            $methodName = $this->routes[$url]['methodName'];
-            $this->callController($className, $methodName, $request);
+            $className  = $this->routes[$reqRoute]['className'];
+            $methodName = $this->routes[$reqRoute]['methodName'];
+            $this->callController($className, $methodName, $reqMet);
         } else {
 ?>
             <meta http-equiv="refresh" content="3; URL='<?php echo BASE_URL ?>'" />
 <?php
             include './common/404.php';
-            // throw new \Exception("No route found for URI: $url");
+            // throw new \Exception("No route found for URI: $reqRoute");
         }
     }
 
-    private function callController($className, $methodName, $request)
+    private function callController($className, $methodName, $reqMet)
     {
 
         //middleware before
 
         //initialize class->method
         $className = new $className();
-        $className->$methodName($request);
+        $className->$methodName($reqMet);
 
         //middleware after
     }
