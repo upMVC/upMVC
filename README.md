@@ -46,13 +46,13 @@ What truly sets MMVC apart is its ability to harness the latest PHP capabilities
 
 
 #### composer require bitshost/upmvc:dev-main
-# or
+#### or
 #### composer require bitshost/upmvc:dev-master
 
-#### or
+# or
 
 #### composer create-project bitshost/upmvc:dev-main demo yourFolderNameHere
-# or
+#### or
 #### composer create-project bitshost/upmvc:dev-master demo yourFolderNameHere
 #
 
