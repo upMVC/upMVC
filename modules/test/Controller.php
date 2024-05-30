@@ -28,8 +28,8 @@
 
 namespace Test;
 
-use Test\Model;
-use Test\TestView;
+//use Test\Model
+//use Test\View
 
 /**
  * TestController

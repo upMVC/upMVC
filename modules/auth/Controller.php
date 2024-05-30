@@ -30,8 +30,6 @@
 
 namespace Auth;
 
-use Auth\Model;
-use Auth\View;
 use Common\Bmvc\BaseView;
 use Mail\MailController;
 use PDO;
@@ -41,10 +39,8 @@ class Controller
     public $title = "Authetnication Page";
     public $username;
     public $url = BASE_URL;
-    //public $pass;
-    // public $view;
     public $html;
-    var $name;
+    public $name;
 
     public function display($request)
     {
@@ -52,11 +48,11 @@ class Controller
             $this->url = BASE_URL;
             header("Location: $this->url");
         } else {
-            $this->Login($request);
+            $this->login($request);
         }
     }
 
-    public function Login($request)
+    public function login()
     {
         $view        = new BaseView();
         $this->html = new View();
@@ -66,7 +62,7 @@ class Controller
         $view->endHead();
         $view->startBody($this->title);
 
-        $this->html->Login();
+        $this->html->login();
         $this->html->validate();
 
         $view->endBody();
@@ -77,7 +73,7 @@ class Controller
         if ($_POST) {
             $useri->username = $_POST['username'];
             $useri->password     = $_POST['password'];
-            //$useri->tokenSession = $token;
+            //$users->tokenSession = $token
             $stmt            = $useri->readUserLogin();
             if ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                 $activ = intval($row['state']);
@@ -98,12 +94,12 @@ class Controller
         }
     }
 
-    function Logout($request)
+    public function logout()
     {
 
         session_unset();
         session_destroy();
-        //session_write_close();
+        //session_write_close()
         \ob_start();
         $view        = new BaseView();
         $this->html = new View();
@@ -118,12 +114,12 @@ class Controller
         $view->endFooter();
         \ob_clean();
 
-        //header("Refresh: 3; url=$this->url");
-        //echo "Bye! You will be redirected to the home page in 3 seconds!";
+        //header("Refresh: 3; url=$this->url")
+        //echo "Bye! You will be redirected to the home page in 3 seconds!"
         header("Location: $this->url");
     }
 
-    function signUp($request)
+    public function signUp()
     {
         $view        = new BaseView();
         $this->html = new View();
@@ -141,7 +137,8 @@ class Controller
             $user->username = $_POST['username'];
             $user->email    = $_POST['email'];
             $user->password     = $_POST['password'];
-            $stmt           = $user->createUserSignup();
+            //$stmt           = $user->createUserSignup()
+            $user->createUserSignup();
             //confirmation email
             $this->url     = BASE_URL . "/activation?token=" . $token;
             $to      = $_POST['email'];
@@ -149,10 +146,10 @@ class Controller
             $subject = "Account Activation";
             $message = '<p>Activate your account:
             <br> <a href="' . $this->url . '"> Click on confirmation link.</a></p>';
-            $newSent->send_mail_by_PHPMailer($to, $from, $subject, $message);
+            $newSent->sendMailByPHPMailer($to, $from, $subject, $message);
             $this->html->welcomeNew();
         } else {
-            $this->html->Signup();
+            $this->html->signup();
             $this->html->validateSignUp();
         }
 
@@ -161,12 +158,12 @@ class Controller
         $view->endFooter();
     }
 
-    public function TokenGenerator($TokenLength)
+    public function tokenGenerator($tokenLength)
     {
         $char = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
         $token     = '';
         $n         = 0;
-        while ($n < $TokenLength) {
+        while ($n < $tokenLength) {
             $position = rand(0, strlen($char) - 1);
             $token .= $char[$position];
             $n++;
@@ -174,7 +171,7 @@ class Controller
         return $token;
     }
 
-    public function AccountActivation()
+    public function accountActivation()
     {
         $this->html = new View();
         $user = new Model();

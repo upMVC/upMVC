@@ -1,4 +1,6 @@
 <?php
+
+
 /*
  *   Created on Tue Oct 31 2023
  
@@ -27,13 +29,9 @@
  */
 //
 
-
-require 'vendor/autoload.php';
+require_once 'vendor/autoload.php';
 
 use upMVC\Start;
 
 $fireUpMVC = new Start();
 $fireUpMVC->upMVC();
-
-
-?>

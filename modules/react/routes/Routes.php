@@ -33,7 +33,7 @@ use React\Controller;
 
 class Routes
 {
-    public function Routes($router)
+    public function routes($router)
     {
         $router->addRoute('/react', Controller::class, 'display');
         $router->addRoute('/comp', Controller::class, 'comp');

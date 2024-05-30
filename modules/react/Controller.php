@@ -29,9 +29,8 @@
 
 namespace React;
 
-use React\Model;
-use React\View;
-use React\Component\Component;
+
+//use React\Component\Component
 
 class Controller
 {
@@ -48,8 +47,8 @@ class Controller
 
     public function comp($request)
     {
-        require_once(THIS_DIR . "/modules/react/etc/component.js");
-        //$newComponent = new Component();
-        //$newComponent->componentOne();
+        require_once THIS_DIR . "/modules/react/etc/component.js";
+        //$newComponent = new Component()
+        //$newComponent->componentOne()
     }
 }

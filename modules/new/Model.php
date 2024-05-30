@@ -84,9 +84,9 @@ class Model
             $this->id = $this->dbConnexion->lastInsertId();
             return (1);
         } else {
-            //var_dump($q->errorInfo());
-            //$q->debugDumpParams();
-            return (0);
+            //var_dump($q->errorInfo())
+            //$q->debugDumpParams()
+            return 0;
         }
     }
 
@@ -108,12 +108,12 @@ class Model
 
             $q = $this->dbConnexion->prepare($query);
             if ($q->execute(array(':id' => $this->id, ':name' => $this->name, ':email' => $this->email))) {
-                return (1);
+                return 1;
             } else {
                 //var_dump($q->errorInfo());
                 //$q->debugDumpParams();
                 $errorInfo = $q->errorInfo();
-                return (0);
+                return 0;
             }
         }
         // the element don't exists
@@ -141,7 +141,7 @@ class Model
         } else {
             //var_dump($q->errorInfo());
             //$q->debugDumpParams();
-            return (0);
+            return 0;
         }
     }
 
@@ -155,7 +155,7 @@ class Model
     {
 
         $query = "  SELECT u.`id`, u.`name`, u.`email`
-                    FROM $this->users AS u 
+                    FROM $this->users AS u
                     WHERE u.id = :id";
 
 
@@ -166,14 +166,14 @@ class Model
                 $this->name = $row['name'];
                 $this->email = $row['email'];
 
-                return (1);
+                return 1;
             } else {
-                return (0);
+                return 0;
             }
         } else {
-            //var_dump($q->errorInfo());
-            //$q->debugDumpParams();
-            return (0);
+            //var_dump($q->errorInfo())
+            //$q->debugDumpParams()
+            return 0;
         }
     }
 
@@ -224,8 +224,8 @@ class Model
             }
             return ($this->count());
         } else {
-            //var_dump($q->errorInfo());
-            //$q->debugDumpParams();
+            //var_dump($q->errorInfo())
+            //$q->debugDumpParams()
             return (0);
         }
     }
@@ -244,12 +244,12 @@ class Model
 
         if ($q->execute()) {
             if ($row = $q->fetch(PDO::FETCH_ASSOC)) {
-                return ($row['nbRows']);
+                return $row['nbRows'];
             }
         } else {
-            //var_dump($q->errorInfo());
-            //$q->debugDumpParams();
-            return (0);
+            //var_dump($q->errorInfo())
+            //$q->debugDumpParams()
+            return 0;
         }
     }
 }

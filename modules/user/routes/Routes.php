@@ -44,7 +44,7 @@ class Routes
      * @param  mixed $router
      * @return void
      */
-    public function Routes($router)
+    public function routes($router)
     {
         $router->addRoute('/users', Controller::class, 'display');
         $router->addRoute('/apiUsers', Controller::class, 'apiResponse');

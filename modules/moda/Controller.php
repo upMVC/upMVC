@@ -29,8 +29,8 @@
 namespace Moda;
 
 use Common\Bmvc\BaseController;
-use Moda\Model;
-use Moda\View;
+//use Moda\Model
+//use Moda\View
 
 /**
  * ModaController

@@ -2,7 +2,7 @@
 /*
  *   Created on Tue Oct 31 2023
  
- *   Copyright (c) 2023 
+ *   Copyright (c) 2023
  *   All rights reserved.
 
  *   Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -28,8 +28,8 @@
 
 namespace User;
 
-use User\Model;
-use User\View;
+//use User\Model
+//use User\View
 
 
 class Controller
@@ -69,24 +69,29 @@ class Controller
                     break;
             }
         } else {
-            $action = $_GET['action'];
+            if (isset($_GET['action'])) {
 
-            switch ($action) {
-                case 'read':
-                    $this->getUsersWithPagination();
-                    break;
-                case 'update':
-                    $this->renderUpdateForm();
-                    break;
-                case 'delete':
-                    $this->deleteUser();
-                    break;
-                case 'form':
-                    $this->createForm();
-                    break;
-                default:
-                    $this->getUsersWithPagination();
-                    break;
+                $action = $_GET['action'];
+
+                switch ($action) {
+                    case 'read':
+                        $this->getUsersWithPagination();
+                        break;
+                    case 'update':
+                        $this->renderUpdateForm();
+                        break;
+                    case 'delete':
+                        $this->deleteUser();
+                        break;
+                    case 'form':
+                        $this->createForm();
+                        break;
+                    default:
+                        $this->getUsersWithPagination();
+                        break;
+                }
+            } else {
+                $this->getUsersWithPagination();
             }
         }
     }
@@ -133,7 +138,7 @@ class Controller
         $userRecords = $this->getUserModel()->getUsersWithPagination($table, $page, $pageSize);
 
         if ($userRecords) {
-            //print_r($userRecords);
+            //print_r($userRecords)
             $totalUsers = count($this->getUserModel()->getAllUsers($table));
             $totalPages = ceil($totalUsers / $itemsPerPage);
             $view->renderReadTable($userRecords, $page, $totalPages, $this->moduleRoute);
@@ -229,7 +234,7 @@ class Controller
             if ($_POST['id']) {
                 $userId = $_POST['id'];
             }
-            //$postData = json_decode(file_get_contents('php://input'), true);
+            //$postData = json_decode(file_get_contents('php://input'), true)
             switch ($task) {
                 case 'create':
                     $this->nameApi = $_POST["name"];
@@ -283,7 +288,7 @@ class Controller
         $userRecord = $this->getUserModel()->getUserById($userId, $this->table);
 
         if ($userRecord) {
-            // print_r(json_encode($userRecord));
+            // print_r(json_encode($userRecord))
             return $userRecord;
         } else {
             echo "User not found.";
@@ -322,10 +327,10 @@ class Controller
             'email' => $this->emailApi,
             'username' => $this->usernameApi,
             'password' => $this->passwordApi,
-            ];
-        
+        ];
+
         $success = $this->getUserModel()->updateUser($userId, $userData, $this->table);
-        //get updated user data 
+        //get updated user data
         $updateddUser = $this->getUserByIdApi($userId);
         if ($success) {
             print_r(json_encode($updateddUser));

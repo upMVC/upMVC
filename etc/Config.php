@@ -1,20 +1,19 @@
 <?php
 /*
  *   Created on Tue Oct 31 2023
- 
  *   Copyright (c) 2023 BitsHost
  *   All rights reserved.
-
+ *
  *   Permission is hereby granted, free of charge, to any person obtaining a copy
  *   of this software and associated documentation files (the "Software"), to deal
  *   in the Software without restriction, including without limitation the rights
  *   to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  *   copies of the Software, and to permit persons to whom the Software is
  *   furnished to do so, subject to the following conditions:
-
+ *
  *   The above copyright notice and this permission notice shall be included in all
  *   copies or substantial portions of the Software.
-
+ *
  *   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  *   IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  *   FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -34,60 +33,75 @@ namespace upMVC;
 class Config
 {
     //Application directory
-    //should be empty if domain location is root; e.g. public_html => $sitePath = "";
-    //else - if domain location is: public_html/app => $sitePath = "/app"; public_html/folder/app => $sitePath = "/folder/app"
-   
-    public $sitePath = ""; //Application directory
+    //should be empty if domain location is root; e.g. public_html => $sitePath = ""
+    //else - if domain location is: public_html/app => $sitePath = "/app" public_html/folder/app => $sitePath = "/folder/app"
+
+    public const SITE_PATH = '';
+
 
     //Application URL
     //your domain address => https://www.yourdomain.com or https://yourdomain.com
+    // main domain, not subdomain, not subfolder
+    
+    public const DOMAIN_NAME = 'https://yourdomain.com';
 
-    public $domainName = ""; // main domain, not subdomain, not subfolder
-   
     /**
      * initConfig
      *
      * @return void
      */
-    public function initConfig()
+    public function initConfig(): void
     {
-        /////////////////////////////////////
-        //error
-        error_reporting(0);
-        /////////////////////////////////////
+        error_reporting(E_ALL & ~E_DEPRECATED & ~E_NOTICE);
 
-        define('THIS_DIR', str_replace("\\", "/", dirname(__FILE__, 2)));
-    
-        define("BASE_URL", "{$this->domainName}{$this->sitePath}");
+        define('THIS_DIR', str_replace('\\', '/', dirname(__FILE__, 2)));
+        define('BASE_URL', self::DOMAIN_NAME . self::SITE_PATH);
 
-        //initialize session////////////
         session_start();
-        /////////////////////////////////////
     }
 
-    public function setSitePath($sitePath)
+    /**
+     * setSitePath
+     *
+     * @param string $value
+     * @return void
+     */
+    public function setSitePath(string $value): void
     {
-        $this->sitePath = $sitePath;
+        define('SITE_PATH', $value);
     }
 
-    public function getSitePath()
+    /**
+     * getSitePath
+     *
+     * @return string
+     */
+    public function getSitePath(): string
     {
-        return $this->sitePath;
+        return self::SITE_PATH;
     }
 
-    public function cleanUrlQuestionMark($url)
+    /**
+     * cleanUrlQuestionMark
+     *
+     * @param string $urlWithoutSitePath
+     * @return string
+     */
+    public function cleanUrlQuestionMark(string $urlWithoutSitePath): string
     {
-        if (strpos($url, "?") !== false) {
-            $url = substr($url, 0, strpos($url, "?"));
-            return $url;
-        } else {
-            return $url;
-        }
+        $parts = parse_url($urlWithoutSitePath);
+        return $parts['path'] ?? $urlWithoutSitePath;
     }
 
-    public function cleanUrlSitePath($sitePath, $url)
+    /**
+     * cleanUrlSitePath
+     *
+     * @param string $sitePath
+     * @param string $reqUrl
+     * @return string
+     */
+    public function cleanUrlSitePath(string $sitePath, string $reqUrl): string
     {
-        $url = str_replace($sitePath, "", $url);
-        return $url;
+        return str_replace($sitePath, '', $reqUrl);
     }
 }

@@ -1,20 +1,19 @@
 <?php
 /*
  *   Created on Tue Oct 31 2023
- 
  *   Copyright (c) 2023 BitsHost
  *   All rights reserved.
-
+ *
  *   Permission is hereby granted, free of charge, to any person obtaining a copy
  *   of this software and associated documentation files (the "Software"), to deal
  *   in the Software without restriction, including without limitation the rights
  *   to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  *   copies of the Software, and to permit persons to whom the Software is
  *   furnished to do so, subject to the following conditions:
-
+ *
  *   The above copyright notice and this permission notice shall be included in all
  *   copies or substantial portions of the Software.
-
+ *
  *   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  *   IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  *   FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -35,50 +34,45 @@ class Router
 {
     protected $routes = [];
 
-    /**
-     * addRoute
-     *
-     * @param  mixed $route
-     * @param  mixed $className
-     * @param  mixed $methodName
-     * @return void
-     */
     public function addRoute($route, $className, $methodName)
     {
         $this->routes[$route] = ['className' => $className, 'methodName' => $methodName];
     }
 
-    /**
-     * dispatcher
-     *
-     * @param  mixed $reqRoute
-     * @return void
-     */
     public function dispatcher($reqRoute, $reqMet)
     {
         if (array_key_exists($reqRoute, $this->routes)) {
-
-            $className  = $this->routes[$reqRoute]['className'];
+            $className = $this->routes[$reqRoute]['className'];
             $methodName = $this->routes[$reqRoute]['methodName'];
             $this->callController($className, $methodName, $reqMet);
         } else {
-?>
-            <meta http-equiv="refresh" content="3; URL='<?php echo BASE_URL ?>'" />
-<?php
-            include './common/404.php';
-            // throw new \Exception("No route found for URI: $reqRoute");
+            $this->handle404($reqRoute);
         }
     }
 
     private function callController($className, $methodName, $reqMet)
     {
+        $this->beforeMiddleware();
+        $controller = new $className();
+        $controller->$methodName($reqMet);
+        $this->afterMiddleware();
+    }
 
-        //middleware before
+    private function beforeMiddleware()
+    {
+        // Implement your before middleware logic here
+    }
 
-        //initialize class->method
-        $className = new $className();
-        $className->$methodName($reqMet);
+    private function afterMiddleware()
+    {
+        // Implement your after middleware logic here
+    }
 
-        //middleware after
+    private function handle404($reqRoute)
+    {
+        ?>
+        <meta http-equiv="refresh" content="3; URL='<?php echo BASE_URL ?>'" />
+        <?php
+        include_once './common/404.php';
     }
 }
