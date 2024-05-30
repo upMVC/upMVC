@@ -44,7 +44,7 @@ class Routes
      * @param  mixed $router
      * @return void
      */
-    public function Routes($router)
+    public function routes($router)
     {
         $router->addRoute('/auth', Controller::class, 'display');
         $router->addRoute('/logout', Controller::class, 'logout');

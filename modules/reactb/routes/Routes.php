@@ -33,10 +33,10 @@ use Reactb\Controller;
 
 class Routes
 {
-    public function Routes($router)
+    public function routes($router)
     {
         $router->addRoute('/reactb', Controller::class, 'display');
-        //react Build links from index.html 
+        //react Build links from index.html
         $router->addRoute('/logo', Controller::class, 'logo');
         $router->addRoute('/manifest', Controller::class, 'manifest');
         $router->addRoute('/mainjs', Controller::class, 'mainjs');

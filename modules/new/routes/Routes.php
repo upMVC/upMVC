@@ -1,5 +1,5 @@
 <?php
-/**   
+/**
    Created on Tue Oct 31 2023
  
    Copyright (c) 2023 BitsHost
@@ -44,7 +44,7 @@ class Routes
      * @param  mixed $router
      * @return void
      */
-    public function Routes($router)
+    public function routes($router)
     {
         $router->addRoute('/new', Controller::class, 'display');
     }

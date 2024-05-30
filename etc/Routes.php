@@ -1,20 +1,19 @@
 <?php
 /*
  *   Created on Tue Oct 31 2023
- 
  *   Copyright (c) 2023 BitsHost
  *   All rights reserved.
-
+ *
  *   Permission is hereby granted, free of charge, to any person obtaining a copy
  *   of this software and associated documentation files (the "Software"), to deal
  *   in the Software without restriction, including without limitation the rights
  *   to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  *   copies of the Software, and to permit persons to whom the Software is
  *   furnished to do so, subject to the following conditions:
-
+ *
  *   The above copyright notice and this permission notice shall be included in all
  *   copies or substantial portions of the Software.
-
+ *
  *   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  *   IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  *   FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -30,40 +29,63 @@ namespace upMVC;
 
 use Test\Controller;
 use upMVC\InitMods;
-
+use upMVC\Router;
 
 /**
  * Routes
  */
 class Routes
 {
+    /**
+     * @var Router
+     */
+    private $router;
+
+    /**
+     * @param Router $router
+     */
+    public function __construct(Router $router)
+    {
+        $this->router = $router;
+    }
 
     /**
      * startRoutes
      *
-     * @param  mixed $reqRoute
+     * @param string $reqRoute
+     * @param string $reqMet
      * @return void
      */
-    public function startRoutes($reqRoute, $reqMet)
+    public function startRoutes(string $reqRoute, string $reqMet): void
     {
-        $router = new Router();
+        $this->registerRoutes();
+        $this->dispatchRoute($reqRoute, $reqMet);
+    }
 
-        //-1. default system routes
-        $router->addRoute('/abba', Controller::class, 'display');
-        ///////////////////route, class, function()////////////////
-        ///////////////////////////////////////////////////////////
+    /**
+     * registerRoutes
+     *
+     * @return void
+     */
+    private function registerRoutes(): void
+    {
+        // Register default system routes
+        $this->router->addRoute('/abba', Controller::class, 'display');
 
-        //-2. modules routes
-        //$userR = new UserRoutes();
-        //$userR->Routes($router);
-
-        //combining all modules routes
-
+        // Register module routes
         $modulesRoutes = new InitMods();
-        $modulesRoutes->addRoutes($router);
-        ///////////////////////////////////////////////////////////
+        $modulesRoutes->addRoutes($this->router);
+    }
 
-        #-3. call Dispatcher
-        $router->dispatcher($reqRoute, $reqMet);
+    /**
+     * dispatchRoute
+     *
+     * @param string $reqRoute
+     * @param string $reqMet
+     * @return void
+     */
+    private function dispatchRoute(string $reqRoute, string $reqMet): void
+    {
+        $this->router->dispatcher($reqRoute, $reqMet);
     }
 }

@@ -29,9 +29,9 @@
 
 namespace Reactb;
 
-//use Reactb\ReactbModel;
-use Reactb\ReactbView;
-//use Reactb\Component\Component;
+//use Reactb\ReactbModel
+//use Reactb\View
+//use Reactb\Component\Component
 
 class Controller
 {
@@ -49,26 +49,26 @@ class Controller
     public function logo()
     {
 
-        require_once(THIS_DIR . "/modules/reactb/etc/build/logo192.png");
+        require_once THIS_DIR . "/modules/reactb/etc/build/logo192.png";
     }
 
 
     public function manifest()
     {
 
-        require_once(THIS_DIR . "/modules/reactb/etc/build/manifest.json");
+        require_once THIS_DIR . "/modules/reactb/etc/build/manifest.json";
     }
 
 
     public function mainjs()
     {
 
-        require_once(THIS_DIR . "/modules/reactb/etc/build/static/js/main.10d2eb17.js");
+        require_once THIS_DIR . "/modules/reactb/etc/build/static/js/main.10d2eb17.js";
     }
 
 
     public function maincss()
     {
-        require_once(THIS_DIR . "/modules/reactb/etc/build/static/css/main.f855e6bc.css");
+        require_once THIS_DIR . "/modules/reactb/etc/build/static/css/main.f855e6bc.css";
     }
 }

@@ -29,9 +29,9 @@
 
 namespace ReactCrud;
 
-//use ReactCrud\ReactCrudModel;
-use ReactCrud\ReactCrudView;
-//use ReactCrud\Component\Component;
+//use ReactCrud\ReactCrudModel
+//use ReactCrud\View
+//use ReactCrud\Component\Component
 
 class Controller
 {
@@ -49,15 +49,15 @@ class Controller
     public function logo()
     {
 
-        require_once(THIS_DIR . "/modules/reactcrud/etc/build/logo192.png");
+        require_once THIS_DIR . "/modules/reactcrud/etc/build/logo192.png";
     }
 
 
     public function manifest()
     {
 
-        require_once(THIS_DIR . "/modules/reactcrud/etc/build/manifest.json");
-        //echo "bingo";
+        require_once THIS_DIR . "/modules/reactcrud/etc/build/manifest.json";
+        //echo "bingo"
     }
 
 
@@ -66,24 +66,24 @@ class Controller
 
     public function css()
     {
-        require_once(THIS_DIR . "/modules/reactcrud/etc/build/static/css/2.326c04ff.chunk.css");
+        require_once THIS_DIR . "/modules/reactcrud/etc/build/static/css/2.326c04ff.chunk.css";
     }
 
     public function cssb()
     {
-        require_once(THIS_DIR . "/modules/reactcrud/etc/build/static/css/main.b1413f35.chunk.css");
-        //echo "works";
+        require_once THIS_DIR . "/modules/reactcrud/etc/build/static/css/main.b1413f35.chunk.css";
+        //echo "works"
     }
 
     public function js()
     {
 
-        require_once(THIS_DIR . "/modules/reactcrud/etc/build/static/js/2.b5004239.chunk.js");
+        require_once THIS_DIR . "/modules/reactcrud/etc/build/static/js/2.b5004239.chunk.js";
     }
 
     public function jsb()
     {
 
-        require_once(THIS_DIR . "/modules/reactcrud/etc/build/static/js/main.dc560686.chunk.js");
+        require_once THIS_DIR . "/modules/reactcrud/etc/build/static/js/main.dc560686.chunk.js";
     }
 }

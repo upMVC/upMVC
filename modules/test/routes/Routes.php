@@ -44,9 +44,9 @@ class Routes
      * @param  mixed $router
      * @return void
      */
-    public function Routes($router)
+    public function routes($router)
     {
-        //$router = new Router();
+        //$router = new Router()
 
         $router->addRoute('/', Controller::class, 'display');
         $router->addRoute('/index.php', Controller::class, 'display');

@@ -33,7 +33,7 @@ class View
 {
 
 
-    public function Login()
+    public function login()
     {
 ?>
         <div>
@@ -100,7 +100,7 @@ class View
 
     }
 
-    public function Signup()
+    public function signup()
     {
     ?>
         <div>
@@ -207,7 +207,7 @@ class View
 
     /////////////////
 
-    //welcome 
+    //welcome
     public function welcomeNew()
     {
     ?>

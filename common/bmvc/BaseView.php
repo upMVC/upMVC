@@ -178,7 +178,7 @@ class BaseView
     ?>
         <br><br>
         <div>
-            <p style="text-align:center;"><a href="<?php //echo BASE_URL; 
+            <p style="text-align:center;"><a href="<?php //echo BASE_URL
                                                     ?> https://bitshost.biz/free-web-hosting.html" style="color: black; text-align:center; font-size: 15px;" target="_blank">©️ All rights reserved - BitsHost
                     Cloud
                     <?php echo date("Y"); ?><a>

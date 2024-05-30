@@ -28,7 +28,7 @@
 
 namespace Mail;
 
-//use MailController;
+//use MailController
 use Mail\MailController;
 
 
@@ -45,7 +45,7 @@ class MailRoutes
      * @param  mixed $router
      * @return void
      */
-    public function Routes($router)
+    public function routes($router)
     {
         $router->addRoute('/send', MailController::class, 'send_mail_by_PHPMailer');
        

@@ -37,7 +37,7 @@ class View extends BaseView
     public function View($request)
     {
         $title = "ReactCrud Module";
-        //$this->startHead($title);
+        //$this->startHead($title)
 
 ?>
 
