@@ -56,7 +56,9 @@ What truly sets MMVC apart is its ability to harness the latest PHP capabilities
 #### composer create-project bitshost/upmvc:dev-main yourFolderNameHere
 #### or
 #### composer create-project bitshost/upmvc:dev-master yourFolderNameHere
-#
+#### or - current directory(include point(.))
+#### composer create-project bitshost/upmvc:dev-main .
+
 
 ## Settings:
 
@@ -106,7 +108,7 @@ In the same file, modules/test/routes/Routes.php, you will see for demonstration
 
 # Steps
 #
- - Edit /etc/Config.php, /etc/Database.php, /modules/mail/MailController.php with your data.
+ - Edit /etc/Config.php, /etc/ConfigDatabase.php, /modules/mail/MailController.php with your data.
  - Make your module in the MVC style (model, view, controller).
  - You may or may not wish to utilize BASE MODEL, BASE VIEW and BASE CONTROLLER from the common/bmvc subdirectory.
  - BaseModel contains all of the data required for CRUD OPERATIONS; simply expand it in your module model and you have a CRUD ready-made module; see example module modules/user.

@@ -27,7 +27,7 @@
 
 namespace upMVC;
 
-class configDatabase
+class ConfigDatabase
 {
     private static $config = [
         'db' => [

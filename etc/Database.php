@@ -21,10 +21,10 @@ class Database
 
     private function loadConfig()
     {
-        $this->host = configDatabase::get('db.host');
-        $this->databaseName = configDatabase::get('db.name');
-        $this->username = configDatabase::get('db.user');
-        $this->password = configDatabase::get('db.pass');
+        $this->host = ConfigDatabase::get('db.host');
+        $this->databaseName = ConfigDatabase::get('db.name');
+        $this->username = ConfigDatabase::get('db.user');
+        $this->password = ConfigDatabase::get('db.pass');
     }
 
     public function getConnection()
