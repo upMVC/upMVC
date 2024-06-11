@@ -47,7 +47,7 @@ class MailRoutes
      */
     public function routes($router)
     {
-        $router->addRoute('/send', MailController::class, 'send_mail_by_PHPMailer');
+        $router->addRoute('/send', MailController::class, 'sendMailByPHPMailer');
        
     }
 }

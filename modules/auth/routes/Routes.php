@@ -47,9 +47,10 @@ class Routes
     public function routes($router)
     {
         $router->addRoute('/auth', Controller::class, 'display');
-        $router->addRoute('/logout', Controller::class, 'logout');
-        $router->addRoute('/signup', Controller::class, 'signUp');
-        $router->addRoute('/activation', Controller::class, 'AccountActivation');
+        $router->addRoute('/logout', Controller::class, 'display');
+        $router->addRoute('/signup', Controller::class, 'display');
+        $router->addRoute('/activation', Controller::class, 'display');
+        //$router->addRoute('/ariel', Controller::class, 'display');
        
     }
 }

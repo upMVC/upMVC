@@ -43,7 +43,14 @@ class Controller
 {
 	//var $errorInfo
 
-	public function display()
+   public function display($reqRoute, $reqMet){
+	$this->phPistols();
+	echo $reqMet . " " .  $reqRoute . " ";
+   }
+
+   
+
+	private function phPistols()
 	{
 		ini_set('display_errors', 'On');
 		error_reporting(E_ALL ^ E_WARNING ^ E_NOTICE);

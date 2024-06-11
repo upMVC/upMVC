@@ -33,7 +33,7 @@ use Common\Bmvc\BaseView;
 
 class View extends BaseView
 {
-    public function View($request)
+    public function View()
     {
         $title = "React Module";
         $this->startHead($title);
@@ -59,8 +59,11 @@ class View extends BaseView
         <!-- Load our React component. -->
         <script src="<?php echo \BASE_URL; ?>/comp"></script>
 <?php
+
         $this->endBody();
         $this->startFooter();
         $this->endFooter();
+      
+        
     }
 }

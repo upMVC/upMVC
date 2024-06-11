@@ -34,7 +34,7 @@ class Component
     {
 
         require_once(THIS_DIR."/modules/react/etc/component.js");
-        /*echo "'use strict';
+       /*echo "'use strict';
 
             const e = React.createElement;
 
@@ -57,7 +57,7 @@ class Component
                                 liked: true
                             })
                         },
-                        'Like'
+                        'Likke'
                     );
                 }
             }
