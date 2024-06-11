@@ -42,17 +42,39 @@ class Controller
     public $html;
     public $name;
 
-    public function display($request)
+    public function display($reqRoute, $reqMet)
+
+    {
+        switch ($reqRoute) {
+            case "/auth":
+                $this->auth();
+                break;
+            case "/logout":
+                $this->logout();
+                break;
+            case "/signup":
+                $this->signUp();
+                break;
+            case "/activation":
+                $this->accountActivation();
+                break;
+            default:
+                $this->login();
+                echo $reqMet;
+        }
+    }
+
+    private function auth()
     {
         if (isset($_SESSION["logged"])  && $_SESSION["logged"] = true) {
             $this->url = BASE_URL;
             header("Location: $this->url");
         } else {
-            $this->login($request);
+            $this->login();
         }
     }
 
-    public function login()
+    private function login()
     {
         $view        = new BaseView();
         $this->html = new View();
@@ -69,12 +91,12 @@ class Controller
         $view->startFooter();
         $view->endFooter();
 
-        $useri = new Model();
+        $users = new Model();
         if ($_POST) {
-            $useri->username = $_POST['username'];
-            $useri->password     = $_POST['password'];
+            $users->username = $_POST['username'];
+            $users->password     = $_POST['password'];
             //$users->tokenSession = $token
-            $stmt            = $useri->readUserLogin();
+            $stmt            = $users->readUserLogin();
             if ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                 $activ = intval($row['state']);
                 if ($activ === 1) {
@@ -94,7 +116,7 @@ class Controller
         }
     }
 
-    public function logout()
+    private function logout()
     {
 
         session_unset();
@@ -119,7 +141,7 @@ class Controller
         header("Location: $this->url");
     }
 
-    public function signUp()
+    private function signUp()
     {
         $view        = new BaseView();
         $this->html = new View();
@@ -158,7 +180,7 @@ class Controller
         $view->endFooter();
     }
 
-    public function tokenGenerator($tokenLength)
+    private function tokenGenerator($tokenLength)
     {
         $char = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
         $token     = '';
@@ -171,7 +193,7 @@ class Controller
         return $token;
     }
 
-    public function accountActivation()
+    private function accountActivation()
     {
         $this->html = new View();
         $user = new Model();

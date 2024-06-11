@@ -30,25 +30,39 @@
 namespace React;
 
 
-//use React\Component\Component
+//use React\Component\Component;
 
 class Controller
 {
-    public function display($request)
+    public function display($reqRoute, $reqMet)
+    {
+        switch ($reqRoute) {
+            case "/react":
+                $this->main($reqMet, $reqRoute);
+                break;
+            case "/comp":
+                $this->comp($reqMet);
+                break;
+            default:
+               echo "nothing";
+        }
+    }
+
+    private function main($reqMet, $reqRoute)
     {
         $view = new View();
-        if (isset($_SESSION["username"])) {
-            $view->View($request);
+        if (isset($_SESSION["logged"])) {
+            $view->View($reqMet);
+            echo $reqMet . " " .  $reqRoute . " ";
         } else {
             echo " Not Logged In! Something else.";
             header('Location: ' . BASE_URL . '/');
         }
     }
-
-    public function comp($request)
+    private function comp($reqMet)
     {
         require_once THIS_DIR . "/modules/react/etc/component.js";
-        //$newComponent = new Component()
-        //$newComponent->componentOne()
+        //$newComponent = new Component();
+        //$newComponent->componentOne();
     }
 }

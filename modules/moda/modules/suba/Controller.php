@@ -34,7 +34,7 @@ use Suba\View;
 
 class Controller extends BaseController
 {
-    public function display($request)
+    public function display($reqRoute, $reqMet)
     {
         $users = [
             new Model('John Doe', 'john@example.com'),
@@ -44,9 +44,9 @@ class Controller extends BaseController
 
 
        
-        if (isset($_SESSION["username"])) {
+        if (isset($_SESSION["logged"])) {
             $this->render('moda/modules/suba/View', ['users' => $users]);
-            echo $request;
+            echo $reqMet . " " .  $reqRoute . " ";
         } else {
             echo " Not Logged In! Something else.";
             header('Location: ' . BASE_URL . '/');

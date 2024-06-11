@@ -44,17 +44,17 @@ class Router
         if (array_key_exists($reqRoute, $this->routes)) {
             $className = $this->routes[$reqRoute]['className'];
             $methodName = $this->routes[$reqRoute]['methodName'];
-            $this->callController($className, $methodName, $reqMet);
+            $this->callController($className, $methodName, $reqRoute, $reqMet);
         } else {
             $this->handle404($reqRoute);
         }
     }
 
-    private function callController($className, $methodName, $reqMet)
+    private function callController($className, $methodName, $reqRoute, $reqMet)
     {
         $this->beforeMiddleware();
         $controller = new $className();
-        $controller->$methodName($reqMet);
+        $controller->$methodName($reqRoute, $reqMet);
         $this->afterMiddleware();
     }
 

@@ -36,6 +36,6 @@ class Routes
     public function routes($router)
     {
         $router->addRoute('/react', Controller::class, 'display');
-        $router->addRoute('/comp', Controller::class, 'comp');
+        $router->addRoute('/comp', Controller::class, 'display');
     }
 }

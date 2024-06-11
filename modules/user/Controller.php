@@ -45,19 +45,20 @@ class Controller
     private $usernameApi;
     private $passwordApi;
 
-    public function display($request)
+    public function display($reqRoute, $reqMet)
     {
         if (isset($_SESSION["username"])) {
-            $this->selectAction($request);
+            $this->selectAction($reqMet);
+            echo $reqMet . " " .  $reqRoute . " ";
         } else {
             header('Location: ' . BASE_URL . '/');
         }
     }
 
-    public function selectAction($request)
+    public function selectAction($reqMet)
     {
 
-        if ($request === 'POST') {
+        if ($reqMet === 'POST') {
             $action = $_POST['action'];
 
             switch ($action) {
@@ -96,14 +97,14 @@ class Controller
         }
     }
 
-    public function getUserModel()
+    private function getUserModel()
     {
         $userModel       = new Model();
         $this->userModel = $userModel;
         return $this->userModel;
     }
 
-    public function getUserById($userId, $table)
+    private function getUserById($userId, $table)
     {
         $userRecord = $this->getUserModel()->getUserById($userId, $table);
 
@@ -114,7 +115,7 @@ class Controller
         }
     }
 
-    public function getAllUsers($table)
+    private function getAllUsers($table)
     {
         $userRecords = $this->getUserModel()->getAllUsers($table);
 
@@ -126,7 +127,7 @@ class Controller
     }
 
 
-    public function getUsersWithPagination()
+    private function getUsersWithPagination()
     {
         $view         = new View();
         $table        = "users";
@@ -147,7 +148,7 @@ class Controller
         }
     }
 
-    public function createUser()
+    private function createUser()
     {
         $table    = 'users';
         $name     = filter_input(INPUT_POST, 'name', FILTER_SANITIZE_SPECIAL_CHARS);
@@ -167,7 +168,7 @@ class Controller
         }
     }
 
-    public function updateUser()
+    private function updateUser()
     {
         $table    = 'users';
         $userId   = filter_input(INPUT_POST, 'id', FILTER_SANITIZE_NUMBER_INT);
@@ -188,7 +189,7 @@ class Controller
         }
     }
 
-    public function deleteUser()
+    private function deleteUser()
     {
         $table   = "users";
         $userId  = filter_input(INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT);
@@ -227,9 +228,9 @@ class Controller
 
     /////////API EXAMPLE///////////////////////////////////////////////////////////////////////
 
-    public function apiResponse($request)
+    public function apiResponse($reqMet, $reqRoute)
     {
-        if ($request === 'POST') {
+        if ($reqMet === 'POST') {
             $task = $_POST['task'];
             if ($_POST['id']) {
                 $userId = $_POST['id'];
@@ -270,7 +271,7 @@ class Controller
         }
     }
 
-    public function getAllUsersApi()
+    private function getAllUsersApi()
     {
 
         $userRecords = $this->getUserModel()->getAllUsers($this->table);
@@ -283,7 +284,7 @@ class Controller
         }
     }
 
-    public function getUserByIdApi($userId)
+    private function getUserByIdApi($userId)
     {
         $userRecord = $this->getUserModel()->getUserById($userId, $this->table);
 
@@ -295,7 +296,7 @@ class Controller
         }
     }
 
-    public function createUserApi()
+    private function createUserApi()
     {
         $userData = [
             'name'  => $this->nameApi,
@@ -320,7 +321,7 @@ class Controller
     }
 
 
-    public function updateUserApi($userId)
+    private function updateUserApi($userId)
     {
         $userData = [
             'name'  => $this->nameApi,
@@ -340,7 +341,7 @@ class Controller
         }
     }
 
-    public function deleteUserApi($userId)
+    private function deleteUserApi($userId)
     {
         //get deleted user data befor delete
         $deletedUser = $this->getUserByIdApi($userId);

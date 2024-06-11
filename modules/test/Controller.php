@@ -41,7 +41,7 @@ class Controller
      *
      * @return void
      */
-    public function display($request)
+    public function display($reqRoute, $reqMet)
     {
         $view = new View();
         $users = [
@@ -49,8 +49,9 @@ class Controller
             new Model('Jane Doe', 'jane@example.com')
         ];
 
-        if (isset($_SESSION["username"])) {
-            $view->View($request, $users);
+        if (isset($_SESSION["logged"])) {
+            $view->View($reqMet, $users);
+            echo $reqMet . " " .  $reqRoute . " ";
         } else {
             $view->notLoggedIn();
         }

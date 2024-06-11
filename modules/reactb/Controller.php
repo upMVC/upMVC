@@ -35,11 +35,12 @@ namespace Reactb;
 
 class Controller
 {
-    public function display($request)
+    public function display($reqRoute, $reqMet)
     {
         $view = new View();
-        if (isset($_SESSION["username"])) {
-            $view->View($request);
+        if (isset($_SESSION["logged"])) {
+            $view->View($reqMet);
+            echo $reqMet . " " .  $reqRoute . " ";
         } else {
             echo " Not Logged In! Something else.";
             header('Location: ' . BASE_URL . '/');
