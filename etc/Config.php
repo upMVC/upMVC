@@ -36,14 +36,14 @@ class Config
     //should be empty if domain location is root; e.g. public_html => $sitePath = ""
     //else - if domain location is: public_html/app => $sitePath = "/app" public_html/folder/app => $sitePath = "/folder/app"
 
-    public const SITE_PATH = '/upMVC-DEV';
+    public const SITE_PATH = '';
 
 
     //Application URL
     //your domain address => https://www.yourdomain.com or https://yourdomain.com
     // main domain, not subdomain, not subfolder
     
-    public const DOMAIN_NAME = 'http://localhost';
+    public const DOMAIN_NAME = 'https://yourdomain.com';
 
     /**
      * initConfig
