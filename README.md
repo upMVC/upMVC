@@ -46,16 +46,14 @@ What truly sets MMVC apart is its ability to harness the latest PHP capabilities
 
 
 #### composer require bitshost/upmvc:dev-main
-#### or
-#### composer require bitshost/upmvc:dev-master
+#### (composer require bitshost/upmvc:dev-master - not available)
 
-### (NOTE: When utilizing upMVC as a library, you need place index.php or its content in the folder/file where you wish to utilize it, as well as add .htaccess rules in your .htaccess or copy/paste rules)
+### (NOTE: When utilizing upMVC as a library, you need place index.php or its content in the folder/file where you wish to utilize it, as well as add .htaccess rules in your .htaccess or copy/paste rules and edit config files /vendor/upmvc/.. -> /etc/Config.php, /etc/ConfigDatabase.php, /modules/mail/MailController.php )
 
-# or
+### or
 
 #### composer create-project bitshost/upmvc:dev-main yourFolderNameHere
-#### or
-#### composer create-project bitshost/upmvc:dev-master yourFolderNameHere
+#### (composer create-project bitshost/upmvc:dev-master yourFolderNameHere - not available)
 #### or - current directory(include point(.))
 #### composer create-project bitshost/upmvc:dev-main .
 
