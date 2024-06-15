@@ -42,15 +42,60 @@ class Config
     //Application URL
     //your domain address => https://www.yourdomain.com or https://yourdomain.com
     // main domain, not subdomain, not subfolder
-    
+
     public const DOMAIN_NAME = 'https://yourdomain.com';
+
+    /**
+     * Get the requested route from the current request URI.
+     *
+     * This method extracts the route from the request URI by:
+     * 1. Removing the site path prefix from the URI.
+     * 2. Removing any query string parameters from the URI.
+     *
+     * The resulting route is the clean, path-only representation of the
+     * requested resource, which can be used for routing and processing.
+     *
+     * @param string $reqURI The full request URI.
+     * @return string The extracted route.
+     */
+
+
+    public function getReqRoute($reqURI)
+    {
+        // Initialize the configuration
+        $this->initConfig();
+
+        // Remove the site path from the request URI
+        $urlWithoutSitePath = $this->cleanUrlSitePath(self::SITE_PATH, $reqURI);
+
+        // Remove the query string from the URL
+        return $this->cleanUrlQuestionMark($urlWithoutSitePath);
+    }
+
+    /**
+     * Initialize the application configuration.
+     *
+     * This method sets up the necessary configuration for the application,
+     * including:
+     * 1. Disabling error reporting for deprecated and notice-level errors.
+     * 2. Defining the application's base directory and URL.
+     * 3. Starting the PHP session.
+     *
+     * This initialization should be performed before any other application
+     * logic is executed, to ensure a consistent and reliable configuration
+     * environment.
+     *
+     * @return void
+     */
+
 
     /**
      * initConfig
      *
      * @return void
      */
-    public function initConfig(): void
+    
+    private function initConfig(): void
     {
         error_reporting(E_ALL & ~E_DEPRECATED & ~E_NOTICE);
 
@@ -60,26 +105,6 @@ class Config
         session_start();
     }
 
-    /**
-     * setSitePath
-     *
-     * @param string $value
-     * @return void
-     */
-    public function setSitePath(string $value): void
-    {
-        define('SITE_PATH', $value);
-    }
-
-    /**
-     * getSitePath
-     *
-     * @return string
-     */
-    public function getSitePath(): string
-    {
-        return self::SITE_PATH;
-    }
 
     /**
      * cleanUrlQuestionMark
@@ -87,7 +112,7 @@ class Config
      * @param string $urlWithoutSitePath
      * @return string
      */
-    public function cleanUrlQuestionMark(string $urlWithoutSitePath): string
+    private function cleanUrlQuestionMark(string $urlWithoutSitePath): string
     {
         $parts = parse_url($urlWithoutSitePath);
         return $parts['path'] ?? $urlWithoutSitePath;
@@ -100,7 +125,7 @@ class Config
      * @param string $reqUrl
      * @return string
      */
-    public function cleanUrlSitePath(string $sitePath, string $reqUrl): string
+    private function cleanUrlSitePath(string $sitePath, string $reqUrl): string
     {
         return str_replace($sitePath, '', $reqUrl);
     }
