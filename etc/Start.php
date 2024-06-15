@@ -7,7 +7,7 @@ namespace upMVC;
 class Start
 
 {
-    
+
     public function upMVC()
 
     {
@@ -17,11 +17,7 @@ class Start
         $reqURI = $_SERVER['REQUEST_URI'];
         $reqMet = $_SERVER['REQUEST_METHOD'];
 
-        $config->initConfig();
-        $sitePath = $config->getSitePath();
-
-        $urlWithoutSitePath = $config->cleanUrlSitePath($sitePath, $reqURI);
-        $reqRoute = $config->cleanUrlQuestionMark($urlWithoutSitePath);
+        $reqRoute = $config->getReqRoute($reqURI);
 
         $initRoutes = new Routes($router);
         $initRoutes->startRoutes($reqRoute, $reqMet);
