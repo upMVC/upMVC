@@ -18,8 +18,8 @@
     ],
     "autoload": {
         "psr-4": {
-            "Common\\Assets\\": "common/assets",
-            "Common\\Bmvc\\": "common/bmvc",
+
+            "Common\\": "common/",
             "upMVC\\": "etc/",
             "User\\": "modules/user/",
             "Test\\": "modules/test/",

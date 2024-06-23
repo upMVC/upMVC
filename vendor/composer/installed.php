@@ -3,7 +3,7 @@
         'name' => 'bitshost/upmvc',
         'pretty_version' => 'dev-main',
         'version' => 'dev-main',
-        'reference' => '4a7067314da2470fc4c96cf1533bd02d55ca3506',
+        'reference' => '93695ecac2d48b0533a8e6cdf9a66beb1e91478d',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -13,7 +13,7 @@
         'bitshost/upmvc' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => '4a7067314da2470fc4c96cf1533bd02d55ca3506',
+            'reference' => '93695ecac2d48b0533a8e6cdf9a66beb1e91478d',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
