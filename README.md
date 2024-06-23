@@ -133,7 +133,7 @@ In the same file, modules/test/routes/Routes.php, you will see for demonstration
 # The Names Convention
 #
 ## Considering recommendations:
- - Model, View, Controller - will be called by using module name in their name. For example, module name = books:
+ - Model, View, Controller - will be called without using module name in their name. For example, module name = books:
  - Model.php - class Model; View.php - class View; Controller.php - class Controller;
  - and make a distinctive namespace for each module - namespace ModuleName - e.g. Books;
  - Your module routes should be kept under modules/yourModule/routes - file Routes.php: 
