@@ -30,7 +30,7 @@
             "Mail\\": "modules/mail/",
             "PHPMailer\\PHPMailer\\": "modules/mail/phpmailer/",
             "React\\": "modules/react/",
-            "React\\Component\\": "modules/react/etc",
+            "React\\Component\\": "modules/react/etc/",
             "Reactb\\": "modules/reactb/",
             "ReactCrud\\": "modules/reactcrud/"
         }
