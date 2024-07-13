@@ -28,6 +28,8 @@
 
 namespace User;
 
+use PDO;
+
 //use User\Model
 //use User\View
 
@@ -228,46 +230,78 @@ class Controller
 
     /////////API EXAMPLE///////////////////////////////////////////////////////////////////////
 
-    public function apiResponse($reqMet, $reqRoute)
+    public function apiResponse($reqRoute, $reqMet)
     {
         if ($reqMet === 'POST') {
-            $task = $_POST['task'];
-            if ($_POST['id']) {
-                $userId = $_POST['id'];
+            if (isset($_POST['task'])) {
+                $task = $_POST['task'];
+
+                //$postData = json_decode(file_get_contents('php://input'), true)
+                switch ($task) {
+                    case 'create':
+                        if (isset($_POST['name'], $_POST['email'], $_POST['username'], $_POST['password'])) {
+                            $this->nameApi = $_POST["name"];
+                            $this->emailApi = $_POST["email"];
+                            $this->usernameApi = $_POST["username"];
+                            $this->passwordApi = $_POST["password"];
+                            $this->createUserApi();
+                        } else {
+                            $this->errorParameters($reqMet);
+                        }
+                        break;
+                    case 'update':
+                        if (isset($_POST['id'], $_POST['name'], $_POST['email'], $_POST['username'], $_POST['password'])) {
+                            $userId = $_POST['id'];
+                            $this->nameApi = $_POST["name"];
+                            $this->emailApi = $_POST["email"];
+                            $this->usernameApi = $_POST["username"];
+                            $this->passwordApi = $_POST["password"];
+                            $this->updateUserApi($userId);
+                        } else {
+                            $this->errorParameters($reqMet);
+                        }
+                        break;
+                    case 'delete':
+                        if (isset($_POST['id'])) {
+                            $userId = $_POST['id'];
+                            $this->deleteUserApi($userId);
+                        } else {
+                            $this->errorParameters($reqMet);
+                        }
+                        break;
+                    case 'readall':
+                        $this->getAllUsersApi();
+                        break;
+                    case 'readById':
+                        if (isset($_POST['id'])) {
+                            $userId = $_POST['id'];
+                            $this->getUserByIdApi($userId);
+                        } else {
+                            $this->errorParameters($reqMet);
+                        }
+                        break;
+                    default:
+                        $this->badRequest($reqMet);
+                }
+            } else {
+                $this->errorParameters($reqMet);
+                //code....
             }
-            //$postData = json_decode(file_get_contents('php://input'), true)
-            switch ($task) {
-                case 'create':
-                    $this->nameApi = $_POST["name"];
-                    $this->emailApi = $_POST["email"];
-                    $this->usernameApi = $_POST["username"];
-                    $this->passwordApi = $_POST["password"];
-                    $this->createUserApi();
-                    break;
-                case 'update':
-                    $this->nameApi = $_POST["name"];
-                    $this->emailApi = $_POST["email"];
-                    $this->usernameApi = $_POST["username"];
-                    $this->passwordApi = $_POST["password"];
-                    $this->updateUserApi($userId);
-                    break;
-                case 'delete':
-                    $this->deleteUserApi($userId);
-                    break;
-                case 'readall':
-                    $this->getAllUsersApi();
-                    break;
-                case 'readById':
-                    $this->getUserByIdApi($userId);
-                    break;
-                default:
-                    echo "Bad Request";
+        } elseif ($reqMet === 'GET') {
+            if (isset($_GET["task"])) {
+                $task = $_GET['task'];
+
+                //code...
+
             }
-        } else {
-            $task = $_GET['task'];
+
+            $this->badRequest($reqMet);
 
             //code....
 
+        } else {
+            $this->badRequest($reqMet);
+            //code....
         }
     }
 
@@ -275,10 +309,18 @@ class Controller
     {
 
         $userRecords = $this->getUserModel()->getAllUsers($this->table);
+        $numberOfRecords = count($userRecords);
 
         if ($userRecords) {
-            print(json_encode($userRecords));
-            header('Access-Control-Allow-Origin: *');
+            for ($i = 0; $i < $numberOfRecords; $i++) {
+                $output[$i]['id'] = $userRecords[$i]['id'];
+                $output[$i]['name'] = $userRecords[$i]['name'];
+                $output[$i]['email'] = $userRecords[$i]['email'];
+                $output[$i]['username'] = $userRecords[$i]['username'];
+                $output[$i]['password'] = $userRecords[$i]['password'];
+                header('Access-Control-Allow-Origin: *');
+            }
+            print_r(\json_encode($output));
         } else {
             echo "No users found.";
         }
@@ -289,10 +331,22 @@ class Controller
         $userRecord = $this->getUserModel()->getUserById($userId, $this->table);
 
         if ($userRecord) {
-            // print_r(json_encode($userRecord))
-            return $userRecord;
+            print_r(\json_encode($userRecord));
         } else {
-            echo "User not found.";
+            $answer["actionResult"] = "User not found.";
+            print_r(json_encode($answer));
+        }
+    }
+
+    private function getUserByIdApiForUpdate($userId)
+    {
+        $userRecord = $this->getUserModel()->getUserById($userId, $this->table);
+
+        if ($userRecord) {
+            return json_encode($userRecord);
+        } else {
+            $answer["actionResult"] = "User not found.";
+            return json_encode($answer);
         }
     }
 
@@ -306,14 +360,12 @@ class Controller
         ];
 
         $userId = $this->getUserModel()->createUser($userData, $this->table);
-        //get data for created user
-        $createddUser = $this->getUserByIdApi($userId);
-        $output = [];
-        if ($userId) {
 
-            $output["response"] = "User created successfully! (ID: $userId)";
-            print_r(json_encode($createddUser));
-            header('Access-Control-Allow-Origin: *');
+        //get data for created user
+        $createdUser = $this->getUserByIdApiForUpdate($userId);
+        if ($userId) {
+            print_r($createdUser);
+            // header('Access-Control-Allow-Origin: *');
         } else {
             $output["response"] = "Error creating user.";
             print_r(json_encode($output));
@@ -331,29 +383,48 @@ class Controller
         ];
 
         $success = $this->getUserModel()->updateUser($userId, $userData, $this->table);
-        //get updated user data
-        $updateddUser = $this->getUserByIdApi($userId);
-        if ($success) {
-            print_r(json_encode($updateddUser));
-            header('Access-Control-Allow-Origin: *');
+
+        if ($success === false) {
+            //get data for created user
+            $updatedUser = $this->getUserByIdApiForUpdate($userId);
+            print_r($updatedUser);
         } else {
-            print_r(json_encode($success));
+
+            $updatedUser = $this->getUserByIdApiForUpdate($userId);
+            print_r($updatedUser);
         }
     }
 
     private function deleteUserApi($userId)
     {
         //get deleted user data befor delete
-        $deletedUser = $this->getUserByIdApi($userId);
+        $deletedUser = $this->getUserByIdApiForUpdate($userId);
         $success = $this->getUserModel()->deleteUser($userId, $this->table);
 
-        if ($success) {
-            print_r(json_encode($deletedUser));
-            header('Access-Control-Allow-Origin: *');
+        if ($success === true) {
+            print_r($deletedUser);
         } else {
-            print_r(json_encode($success));
+            $answer["actionResult"] = $success;
+            $answer["status"] = "User not found, not deleted.";
+            print_r(\json_encode($answer));
         }
     }
+
+
+    private function errorParameters($reqMet)
+    {
+        $output = [];
+        $output["answer"] = "Bad Data. Parameters missing! Request is: " . $reqMet;
+        print_r(json_encode($output));
+    }
+
+    private function badRequest($reqMet)
+    {
+        $output = [];
+        $output["answer"] = "Bad Request. Request is: " . $reqMet;
+        print_r(json_encode($output));
+    }
+
 
     public function apiInfo()
     {

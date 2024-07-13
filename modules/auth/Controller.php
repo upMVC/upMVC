@@ -98,8 +98,8 @@ class Controller
             //$users->tokenSession = $token
             $stmt            = $users->readUserLogin();
             if ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                $activ = intval($row['state']);
-                if ($activ === 1) {
+                $active = intval($row['state']);
+                if ($active === 1) {
                     $_SESSION["username"] = $row['username'];
                     $_SESSION["iduser"]   = $row['id'];
                     $_SESSION["logged"] = true;
