@@ -2,6 +2,7 @@
     "name": "bitshost/upmvc",
     "description": "upMVC. Modular Model View Controller. A modular PHP MVC system with integrated routing for scalable and organized web applications. Built-in Namespace Support. Object-Oriented Programming (OOP).",
     "type": "project",
+    "minimum-stability": "dev",
     "require": {
         "php": ">=8.1"
     },
@@ -18,21 +19,30 @@
     ],
     "autoload": {
         "psr-4": {
-
-            "Common\\": "common/",
+            "Common\\Assets\\": "common/assets",
+            "Common\\Bmvc\\": "common/bmvc",
             "upMVC\\": "etc/",
             "User\\": "modules/user/",
+            "User\\Routes\\": "modules/user/routes/",
             "Test\\": "modules/test/",
+            "Test\\Routes\\": "modules/test/routes/",
             "Moda\\": "modules/moda/",
+            "Moda\\Routes\\": "modules/moda/routes/",
             "Suba\\": "modules/moda/modules/suba/",
+            "Suba\\Routes\\": "modules/moda/modules/suba/routes/",
             "New\\": "modules/new/",
+            "New\\Routes\\": "modules/new/routes/",
             "Auth\\": "modules/auth/",
+            "Auth\\Routes\\": "modules/auth/routes/",
             "Mail\\": "modules/mail/",
             "PHPMailer\\PHPMailer\\": "modules/mail/phpmailer/",
             "React\\": "modules/react/",
-            "React\\Component\\": "modules/react/etc/",
+            "React\\Routes\\": "modules/react/routes",
+            "React\\Component\\": "modules/react/etc",
             "Reactb\\": "modules/reactb/",
-            "ReactCrud\\": "modules/reactcrud/"
+            "Reactb\\Routes\\": "modules/reactb/routes",
+            "ReactCrud\\": "modules/reactcrud/",
+            "ReactCrud\\Routes\\": "modules/reactcrud/routes"
         }
     }
 }
