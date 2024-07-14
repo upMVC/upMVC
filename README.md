@@ -14,7 +14,15 @@ Demo: https://upmvc.com/demo/
 
 Rasmus Lerdorf: PHP Frameworks all suck!	
 
-https://www.youtube.com/watch?v=DuB6UjEsY_Y&ab_channel=matperino
+
+<a href = "https://www.youtube.com/watch?v=DuB6UjEsY_Y&ab_channel=matperino" target="_blank">Rasmus Lerdorf: PHP Frameworks all suck!</a>
+
+
+#
+### "Many frameworks may look very appealing at first glance because they seem to reduce web application development to a couple of trivial steps leading to some code generation and often automatic schema detection, but these same shortcuts are likely to be your bottlenecks as well since they achieve this simplicity by sacrifizing flexibility and performance."
+
+<a href="https://toys.lerdorf.com/the-no-framework-php-mvc-framework" target="_blank">All Framweworks: "achieve this simplicity by sacrifizing flexibility and performance" Rasmus Lerdorf</a>
+
 
 
 upMVC - MMVC, PHP MVC with modules. Modular MVC(Model, View, Controller) derive from Hierarchical Model‐View‐Controller (HMVC).	
