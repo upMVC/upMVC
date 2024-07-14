@@ -166,6 +166,7 @@ class View
         $view->startHead($this->title);
         $view->endHead();
         $view->startBody($this->title);
+        $moduleRoute = BASE_URL . '';
 ?>
         <div>Minimal example of a test API without authentication.</div>
         <p>Send POST request to <?php echo  $moduleRoute ?>/apiUsers</p>
