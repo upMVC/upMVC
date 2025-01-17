@@ -17,4 +17,11 @@ RewriteRule ^test-([\w\d~%.:_\-]+)/([\w\d~%.:_\-]+)$ test?param=$1&another=$2 [N
 RewriteRule ^moda-page-([\w\d~%.:_\-]+)$ moda-page?param=$1 [NC] 
 RewriteRule ^moda-page-([\w\d~%.:_\-]+)/([\w\d~%.:_\-]+)$ test?param=$1&another=$2 [NC] 
 
+#level Custom - only for module userorm
+#RewriteRule ^usersorm/getall/([\w\d~%.:_\-]+)$ usersorm/getall?param=$1 [NC] 
+RewriteRule ^usersorm/edit/([\w\d~%.:_\-]+)$ usersorm/edit?param=$1 [NC]
+RewriteRule ^usersorm/delete/([\w\d~%.:_\-]+)$ usersorm/delete?param=$1 [NC]
+RewriteRule ^usersorm/update/([\w\d~%.:_\-]+)$ usersorm/update?param=$1 [NC]
+
+
 RewriteRule (.+) index.php [QSA,L]

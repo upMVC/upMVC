@@ -4,7 +4,8 @@
     "type": "project",
     "minimum-stability": "dev",
     "require": {
-        "php": ">=8.1"
+        "php": ">=8.1",
+        "gabordemooij/redbean": "dev-master"
     },
     "authors": [
         {
@@ -24,6 +25,8 @@
             "upMVC\\": "etc/",
             "User\\": "modules/user/",
             "User\\Routes\\": "modules/user/routes/",
+            "Userorm\\": "modules/userorm/",
+            "Userorm\\Routes\\": "modules/userorm/routes/",
             "Test\\": "modules/test/",
             "Test\\Routes\\": "modules/test/routes/",
             "Moda\\": "modules/moda/",
