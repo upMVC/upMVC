@@ -77,6 +77,9 @@ class BaseView
                             <li>
                                 <a href="<?php echo BASE_URL; ?>/reactcrud">👩‍👩‍👧‍👧 Users CRUD React</a>
                             </li>
+                            <li>
+                                <a href="<?php echo BASE_URL; ?>/usersorm">👩‍👩‍👧‍👧 Users CRUD ORM</a>
+                            </li>
                         </ul>
                     </li>
                     <li>
@@ -133,6 +136,10 @@ class BaseView
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
             <!-- Bootstrap -->
             <link href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" rel="stylesheet" media="screen">
+
+            <!-- Bootstrap 5.1.3
+            <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" media="screen">
+            -->
         <?php
         $newCss->menuCss();
     }

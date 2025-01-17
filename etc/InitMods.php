@@ -31,6 +31,7 @@ use Test\Routes\Routes as TestRoutes;
 use Moda\Routes\Routes as ModaRoutes;
 use Suba\Routes\Routes as SubaRoutes;
 use User\Routes\Routes as UserRoutes;
+use Userorm\Routes\Routes as UserormRoutes;
 use New\Routes\Routes as NewRoutes;
 use Auth\Routes\Routes as AuthRoutes;
 use React\Routes\Routes as ReactRoutes;
@@ -96,6 +97,7 @@ class InitMods
             new ModaRoutes(),
             new SubaRoutes(),
             new UserRoutes(),
+            new UserormRoutes(),
             new NewRoutes(),
             new AuthRoutes(),
             new ReactRoutes(),
