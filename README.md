@@ -92,6 +92,13 @@ What truly sets MMVC apart is its ability to harness the latest PHP capabilities
 
 3 - Adding module routes in Modules Initialiser - > etc/InitMods.php 
 
+4 - Adding namespaces in composer.json  =>
+
+"autoload": {
+        "psr-4": { ...  }
+    }
+    
+
 #
 Note: 
 #
