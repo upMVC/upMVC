@@ -101,6 +101,7 @@ class Config
 
         define('THIS_DIR', str_replace('\\', '/', dirname(__FILE__, 2)));
         define('BASE_URL', self::DOMAIN_NAME . self::SITE_PATH);
+        define('SITEPATH', SELF::SITE_PATH);
 
         session_start();
     }

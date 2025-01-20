@@ -33,4 +33,6 @@ return array(
     'Common\\Assets\\' => array($baseDir . '/common/assets'),
     'Auth\\Routes\\' => array($baseDir . '/modules/auth/routes'),
     'Auth\\' => array($baseDir . '/modules/auth'),
+    'Admin\\Routes\\' => array($baseDir . '/modules/admin/routes'),
+    'Admin\\' => array($baseDir . '/modules/admin'),
 );
