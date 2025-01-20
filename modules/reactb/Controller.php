@@ -42,8 +42,10 @@ class Controller
             $view->View($reqMet);
             echo $reqMet . " " .  $reqRoute . " ";
         } else {
-            echo " Not Logged In! Something else.";
-            header('Location: ' . BASE_URL . '/');
+            $view->View($reqMet);
+            echo $reqMet . " " .  $reqRoute . " ";
+            //echo " Not Logged In! Something else.";
+            //header('Location: ' . BASE_URL . '/');
         }
     }
 

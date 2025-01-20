@@ -27,6 +27,7 @@
 
 namespace upMVC;
 
+use Admin\Routes\Routes as AdminRoutes;
 use Test\Routes\Routes as TestRoutes;
 use Moda\Routes\Routes as ModaRoutes;
 use Suba\Routes\Routes as SubaRoutes;
@@ -93,6 +94,7 @@ class InitMods
     private function getModules(): array
     {
         return [
+            new AdminRoutes(),
             new TestRoutes(),
             new ModaRoutes(),
             new SubaRoutes(),

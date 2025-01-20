@@ -20,6 +20,8 @@
     ],
     "autoload": {
         "psr-4": {
+            "Admin\\":"modules/admin/",
+            "Admin\\Routes\\": "modules/admin/routes/",
             "Common\\Assets\\": "common/assets",
             "Common\\Bmvc\\": "common/bmvc",
             "upMVC\\": "etc/",

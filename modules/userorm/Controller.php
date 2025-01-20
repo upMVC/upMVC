@@ -24,7 +24,8 @@ class Controller extends BaseControllerOrm
         if (isset($_SESSION["logged"])) {
             $this->switch($reqRoute, $reqMet);
         } else {
-            echo 'not logged';
+            
+            header('Location: ' . BASE_URL . '/');
             //$view->notLoggedIn();
         }
     }

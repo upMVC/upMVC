@@ -63,6 +63,8 @@ class ComposerStaticInit49502ca6970de9d65a6295b99bbb2d5b
         array (
             'Auth\\Routes\\' => 12,
             'Auth\\' => 5,
+            'Admin\\Routes\\' => 13,
+            'Admin\\' => 6,
         ),
     );
 
@@ -174,6 +176,14 @@ class ComposerStaticInit49502ca6970de9d65a6295b99bbb2d5b
         'Auth\\' => 
         array (
             0 => __DIR__ . '/../..' . '/modules/auth',
+        ),
+        'Admin\\Routes\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/modules/admin/routes',
+        ),
+        'Admin\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/modules/admin',
         ),
     );
 

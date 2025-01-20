@@ -86,11 +86,17 @@ class BaseView
                         <a href="<?php echo BASE_URL; ?>/apiInfo">👩‍👩‍👧‍👧 ApiInfo</a>
                     </li>
                     <li>
-                        <a href="<?php echo BASE_URL; ?>/react">👩‍👩‍👧‍👧 React</a>
+                        <a href="<?php echo BASE_URL; ?>/react">👩‍👩‍👧‍👧 JS </a>
                         <ul>
-                            <li><a href="<?php echo BASE_URL; ?>/reactb">👩‍👩‍👧‍👧 ReactB</a></li>
+                        <li>
+                                <a href="<?php echo BASE_URL; ?>/react">👩‍👩‍👧‍👧 React</a>
+                            </li>
                             <li>
-                                <a href="<?php echo BASE_URL; ?>/reactcrud">👩‍👩‍👧‍👧 Users CRUD React</a>
+                                <a href="<?php echo BASE_URL; ?>/reactb">👩‍👩‍👧‍👧 ReactB</a>
+                            </li>
+                            
+                        <li>
+                                <a href="<?php echo BASE_URL; ?>/admin">👩‍👩‍👧‍👧 NoBuild</a>
                             </li>
                         </ul>
                     </li>

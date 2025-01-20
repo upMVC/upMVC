@@ -3,7 +3,7 @@
 <div class="container mt-4">
     <h2>Edit User</h2>
     
-    <form action="/upMVC-DEV/usersorm/update/<?= $user[0]['id'] ?>" method="POST" class="mt-4">
+    <form action="<?PHP echo SITEPATH; ?>/usersorm/update/<?= $user[0]['id'] ?>" method="POST" class="mt-4">
         <div class="mb-3">
             <label for="name" class="form-label">Name</label>
             <input type="text" class="form-control" id="name" name="name" 
@@ -22,7 +22,7 @@
         </div>
         
         <button type="submit" class="btn btn-primary">Update User</button>
-        <a href="/upMVC-DEV/usersorm" class="btn btn-secondary">Cancel</a>
+        <a href="<?PHP echo SITEPATH; ?>/usersorm" class="btn btn-secondary">Cancel</a>
     </form>
 </div>
 
