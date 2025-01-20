@@ -42,9 +42,10 @@ But why MMVC specifically?
 
 1. **Modularity:** MMVC allows you to work on a module without impacting the rest of your project. Modules can be interchanged and integrated seamlessly, enhancing your development agility.
 
-2. **Language Freedom:** Perhaps most importantly, you have the freedom to write your modules in your preferred language, whether it's PHP, JS, PYTHON, or modern technologies like TS and React. There are no constraints on your creativity.
+2. **Language Freedom:** Perhaps most importantly, you have the freedom to write your modules in your preferred language, whether it's PHP, JS, PYTHON, or modern technologies like TS, React, Vue, Preact. There are no constraints on your creativity.
 
 3. **Development-Centric:** MMVC was designed with development in mind. You can steer your project in any direction you desire, utilizing your own autoloader or composer autoload. Composer/packagist usage is optional, not obligatory.
+4. **"Islands"** of Interactivity: Within this PHP-generated HTML, you strategically place interactive components built with frameworks like React, Vue, Preact or Svelte. These components handle dynamic elements, such as user interactions, real-time updates, and animations. Read here: <a href="https://upmvc.com/Blog/The-Rise-of-%22PHP-Islands%22:-A-Hybrid-Approach-to-Web-Development/#wbb1" target="_blank">The Rise of "PHP Islands": A Hybrid Approach to Web Development</a>
 
 What truly sets MMVC apart is its ability to harness the latest PHP capabilities without constraint. No more endless loops, as this framework liberates your development possibilities.
 
@@ -70,6 +71,8 @@ What truly sets MMVC apart is its ability to harness the latest PHP capabilities
 #### (composer create-project bitshost/upmvc:dev-master yourFolderNameHere - not available)
 #### or - current directory(include point(.))
 #### composer create-project bitshost/upmvc:dev-main .
+
+#### Comands: composer dump-autoload and/or composer update
 
 
 ## Settings:
