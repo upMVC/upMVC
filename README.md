@@ -161,6 +161,10 @@ In the same file, modules/test/routes/Routes.php, you will see for demonstration
    - namespace ModuleName\Routes, e.g. Books\Routes
 #
 #
+##
+## The provided modules (Mail and Authentication) are for illustrative purposes only. You can safely delete them, as well as any other existing modules. The goal is to demonstrate the modularity of the system and how you can create your own custom modules to suit your specific project needs.
+
+##
 BitsHost Team
 
 #
