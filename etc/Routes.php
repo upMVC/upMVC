@@ -27,7 +27,14 @@
 
 namespace upMVC;
 
+//custom routes example
+//For instance, purpose - we are injecting the controller from the 'Test' module here, as a custom route or using system routes.
+//We utilize an alias to prevent naming conflicts between the 'Test' module's 'Controller' and the 'Admin' module's 'Controller'.
+
 use Test\Controller;
+use Admin\Controller as AnythingElse;
+//end custom routes example
+
 use upMVC\InitMods;
 use upMVC\Router;
 
@@ -71,6 +78,7 @@ class Routes
     {
         // Register default system routes
         $this->router->addRoute('/abba', Controller::class, 'display');
+        $this->router->addRoute('/abbac', AnythingElse::class, 'display');
 
         // Register module routes
         $modulesRoutes = new InitMods();

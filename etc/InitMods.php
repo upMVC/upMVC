@@ -39,8 +39,14 @@ use React\Routes\Routes as ReactRoutes;
 use Reactb\Routes\Routes as ReactbRoutes;
 use ReactCrud\Routes\Routes as ReactCrudRoutes;
 //add other module routes
+
 //custom routes example
+//For instance, purpose - we are injecting the controller from the 'Test' module here, as a custom route or using system routes.
+//We utilize an alias to prevent naming conflicts between the 'Test' module's 'Controller' and the 'Admin' module's 'Controller'.
+
 use Test\Controller;
+use Admin\Controller as AnythingElseHere;
+//end custom routes example
 
 /**
  * InitMods
@@ -84,6 +90,8 @@ class InitMods
         // Register custom routes here
         // $router->addRoute('/custom-route', CustomController::class, 'customAction');
         $router->addRoute('/custom', Controller::class, 'display');
+        $router->addRoute('/customb', AnythingElseHere::class, 'display');
+        
     }
 
     /**
