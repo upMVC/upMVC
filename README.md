@@ -18,37 +18,6 @@ Rasmus Lerdorf: PHP Frameworks all suck!
 <a href = "https://www.youtube.com/watch?v=DuB6UjEsY_Y&ab_channel=matperino" target="_blank">Rasmus Lerdorf: PHP Frameworks all suck!</a>
 
 
-#
-### "Many frameworks may look very appealing at first glance because they seem to reduce web application development to a couple of trivial steps leading to some code generation and often automatic schema detection, but these same shortcuts are likely to be your bottlenecks as well since they achieve this simplicity by sacrifizing flexibility and performance."
-
-<a href="https://toys.lerdorf.com/the-no-framework-php-mvc-framework" target="_blank">All Framweworks: "achieve this simplicity by sacrifizing flexibility and performance" Rasmus Lerdorf</a>
-
-
-
-upMVC - MMVC, PHP MVC with modules. Modular MVC(Model, View, Controller) derive from Hierarchical Model‐View‐Controller (HMVC).	
-											
-
-Introducing MODULAR MVC - Empowering Your Development
-
-In the realm of modern frameworks, it often feels like they do everything except what truly matters. These frameworks tend to add layers of abstraction that demand you to learn new skills and pathways whenever you decide to switch. They also tend to clutter themselves with superfluous options, solving simple problems in needlessly convoluted ways. 
-
-Consider PHP, including its blade templating engine. Why introduce yet another template engine when PHP is already equipped for the task? Delving into a new framework often necessitates a substantial relearning effort, pushing you far beyond your existing PHP knowledge.
-
-So, why should you choose MMVC?
-
-MMVC, standing for Modular Model View Controller, is not about reinventing the wheel. Instead, it's about optimizing the use of exceptional components. It offers a structured, straightforward approach, and its versatility proves invaluable for project management and development.
-
-But why MMVC specifically?
-
-1. **Modularity:** MMVC allows you to work on a module without impacting the rest of your project. Modules can be interchanged and integrated seamlessly, enhancing your development agility.
-
-2. **Language Freedom:** Perhaps most importantly, you have the freedom to write your modules in your preferred language, whether it's PHP, JS, PYTHON, or modern technologies like TS, React, Vue, Preact. There are no constraints on your creativity.
-
-3. **Development-Centric:** MMVC was designed with development in mind. You can steer your project in any direction you desire, utilizing your own autoloader or composer autoload. Composer/packagist usage is optional, not obligatory.
-4. **"Islands"** of Interactivity: Within this PHP-generated HTML, you strategically place interactive components built with frameworks like React, Vue, Preact or Svelte. These components handle dynamic elements, such as user interactions, real-time updates, and animations. Read here: <a href="https://upmvc.com/Blog/The-Rise-of-%22PHP-Islands%22:-A-Hybrid-Approach-to-Web-Development/#wbb1" target="_blank">The Rise of "PHP Islands": A Hybrid Approach to Web Development</a>
-
-What truly sets MMVC apart is its ability to harness the latest PHP capabilities without constraint. No more endless loops, as this framework liberates your development possibilities.
-
 # Use cases:
 #### You can use the system as a standalone, as a library, as a library in the standalone version where it can be a module, you can also use it as a standalone in the standalone version /shop /blog /app /anything else - in this way, you split your app into multiple apps(shop, blog, app, anything else as separate instances of upMVC) each with their modules connected to the same or different endpoints.
 
@@ -165,7 +134,6 @@ In the same file, modules/test/routes/Routes.php, you will see for demonstration
 ## The provided modules (Mail and Authentication) are for illustrative purposes only. You can safely delete them, as well as any other existing modules. The goal is to demonstrate the modularity of the system and how you can create your own custom modules to suit your specific project needs.
 
 ##
-BitsHost Team
 
 #
 Diagram:
@@ -177,3 +145,41 @@ Diagram:
 
 
 ![upMVC-FileStructure ](https://github.com/BitsHost/upMVC/assets/23263143/b1f92106-476a-45ee-9462-9b562edfe777)
+
+
+#
+#
+#
+### "Many frameworks may look very appealing at first glance because they seem to reduce web application development to a couple of trivial steps leading to some code generation and often automatic schema detection, but these same shortcuts are likely to be your bottlenecks as well since they achieve this simplicity by sacrifizing flexibility and performance."
+
+<a href="https://toys.lerdorf.com/the-no-framework-php-mvc-framework" target="_blank">All Framweworks: "achieve this simplicity by sacrifizing flexibility and performance" Rasmus Lerdorf</a>
+
+
+
+upMVC - MMVC, PHP MVC with modules. Modular MVC(Model, View, Controller) derive from Hierarchical Model‐View‐Controller (HMVC).	
+											
+
+Introducing MODULAR MVC - Empowering Your Development
+
+In the realm of modern frameworks, it often feels like they do everything except what truly matters. These frameworks tend to add layers of abstraction that demand you to learn new skills and pathways whenever you decide to switch. They also tend to clutter themselves with superfluous options, solving simple problems in needlessly convoluted ways. 
+
+Consider PHP, including its blade templating engine. Why introduce yet another template engine when PHP is already equipped for the task? Delving into a new framework often necessitates a substantial relearning effort, pushing you far beyond your existing PHP knowledge.
+
+So, why should you choose MMVC?
+
+MMVC, standing for Modular Model View Controller, is not about reinventing the wheel. Instead, it's about optimizing the use of exceptional components. It offers a structured, straightforward approach, and its versatility proves invaluable for project management and development.
+
+But why MMVC specifically?
+
+1. **Modularity:** MMVC allows you to work on a module without impacting the rest of your project. Modules can be interchanged and integrated seamlessly, enhancing your development agility.
+
+2. **Language Freedom:** Perhaps most importantly, you have the freedom to write your modules in your preferred language, whether it's PHP, JS, PYTHON, or modern technologies like TS, React, Vue, Preact. There are no constraints on your creativity.
+
+3. **Development-Centric:** MMVC was designed with development in mind. You can steer your project in any direction you desire, utilizing your own autoloader or composer autoload. Composer/packagist usage is optional, not obligatory.
+4. **"Islands"** of Interactivity: Within this PHP-generated HTML, you strategically place interactive components built with frameworks like React, Vue, Preact or Svelte. These components handle dynamic elements, such as user interactions, real-time updates, and animations. Read here: <a href="https://upmvc.com/Blog/The-Rise-of-%22PHP-Islands%22:-A-Hybrid-Approach-to-Web-Development/#wbb1" target="_blank">The Rise of "PHP Islands": A Hybrid Approach to Web Development</a>
+
+What truly sets MMVC apart is its ability to harness the latest PHP capabilities without constraint. No more endless loops, as this framework liberates your development possibilities.
+
+##
+BitsHost Team
+
