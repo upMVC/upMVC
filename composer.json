@@ -47,7 +47,9 @@
             "Reactb\\": "modules/reactb/",
             "Reactb\\Routes\\": "modules/reactb/routes",
             "ReactCrud\\": "modules/reactcrud/",
-            "ReactCrud\\Routes\\": "modules/reactcrud/routes"
+            "ReactCrud\\Routes\\": "modules/reactcrud/routes",
+            "Dashboard\\": "modules/dashboard/",
+            "Dashboard\\Routes\\": "modules/dashboard/routes"
         }
     }
 }

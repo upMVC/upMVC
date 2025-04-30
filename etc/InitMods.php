@@ -38,6 +38,7 @@ use Auth\Routes\Routes as AuthRoutes;
 use React\Routes\Routes as ReactRoutes;
 use Reactb\Routes\Routes as ReactbRoutes;
 use ReactCrud\Routes\Routes as ReactCrudRoutes;
+use Dashboard\Routes\Routes as DashboardRoutes;
 //add other module routes
 
 //custom routes example
@@ -113,6 +114,7 @@ class InitMods
             new ReactRoutes(),
             new ReactbRoutes(),
             new ReactCrudRoutes(),
+            new DashboardRoutes(),
             //new OtherRoutes()
         ];
     }

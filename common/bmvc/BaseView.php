@@ -33,6 +33,41 @@ use Common\Assets\CommonCss;
 class BaseView
 {
 
+    protected $globals = [
+        'settings' => [
+            'theme' => 'light',
+            'site_name' => 'Dashboard',
+            'items_per_page' => '10',
+            'maintenance_mode' => 'false'
+        ]
+    ];
+
+    /**
+     * Add a global variable accessible to all views
+     * 
+     * @param string $key Variable name
+     * @param mixed $value Variable value
+     */
+    public function addGlobal($key, $value) {
+        if ($key === 'settings' && isset($this->globals['settings'])) {
+            // Merge settings instead of overwriting
+            $this->globals['settings'] = array_merge($this->globals['settings'], $value);
+        } else {
+            $this->globals[$key] = $value;
+        }
+        error_log("BaseView addGlobal - Key: $key, Current globals: " . print_r($this->globals, true));
+    }
+
+    /**
+     * Get a global variable
+     * 
+     * @param string $key Variable name
+     * @return mixed|null Variable value or null if not found
+     */
+    public function getGlobal($key) {
+        return $this->globals[$key] ?? null;
+    }
+
     public function menu()
     {
 ?>
