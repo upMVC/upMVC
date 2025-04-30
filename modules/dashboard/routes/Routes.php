@@ -15,7 +15,7 @@ class Routes
             $router->addRoute('/dashboard/users', Controller::class, 'users'),
             $router->addRoute('/dashboard/users/add', Controller::class, 'addUser'),
             $router->addRoute('/dashboard/users/edit', Controller::class, 'editUser'),
-            $router->addRoute('/dashboard/users/delete/{id}', Controller::class, 'deleteUser'),
+            $router->addRoute('/dashboard/users/delete/', Controller::class, 'deleteUser'),
             $router->addRoute('/dashboard/settings', Controller::class, 'settings')
         ];
     }

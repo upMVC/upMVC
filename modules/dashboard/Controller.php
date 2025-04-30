@@ -161,7 +161,12 @@ class Controller extends BaseController {
             exit;
         }
 
-        $id = $params['id'] ?? null;
+
+        if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+        $id = $_GET['userid'] ?? null;
+        ///echo $id;
+        //unset($_GET['userid']); // Remove id from data to be updated
+        //$id = $params['userid'] ?? null;
         if ($id) {
             $result = $this->model->deleteUser($id);
             if ($result !== true) {
@@ -174,6 +179,7 @@ class Controller extends BaseController {
                 return;
             }
         }
+      }
         
         header('Location: '.BASE_URL.'/dashboard/users');
         exit;

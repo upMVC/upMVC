@@ -188,7 +188,7 @@ function closeModal(modalId) {
 
 function confirmDelete(userId) {
     if (confirm('Are you sure you want to delete this user?')) {
-        window.location.href = `${BASE_URL}/dashboard/users/delete/${userId}`;
+        window.location.href = `${BASE_URL}/dashboard/users/delete/?userid=${userId}`;
     }
 }
 
