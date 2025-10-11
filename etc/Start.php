@@ -12,6 +12,7 @@ use upMVC\Config\ConfigManager;
 use upMVC\Config\Environment;
 use upMVC\Container\Container;
 use upMVC\Exceptions\ErrorHandler;
+use upMVC\Exceptions\ConfigurationException;
 use upMVC\Middleware\AuthMiddleware;
 use upMVC\Middleware\LoggingMiddleware;
 use upMVC\Middleware\CorsMiddleware;

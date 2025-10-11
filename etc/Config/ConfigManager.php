@@ -122,7 +122,8 @@ class ConfigManager
      */
     private static function loadConfigFiles(): void
     {
-        $configDir = THIS_DIR . '/etc';
+        $baseDir = defined('THIS_DIR') ? THIS_DIR : dirname(__DIR__);
+        $configDir = $baseDir . '/etc';
         $configFiles = [
             'app' => $configDir . '/Config.php',
             'database' => $configDir . '/ConfigDatabase.php'
@@ -214,13 +215,15 @@ class ConfigManager
      */
     private static function loadAdditionalConfigs(): void
     {
+        $baseDir = defined('THIS_DIR') ? THIS_DIR : dirname(__DIR__);
+        
         // Cache configuration
         self::$config['cache'] = [
             'default' => Environment::get('CACHE_DRIVER', 'file'),
             'stores' => [
                 'file' => [
                     'driver' => 'file',
-                    'path' => THIS_DIR . '/storage/cache',
+                    'path' => $baseDir . '/storage/cache',
                 ],
                 'array' => [
                     'driver' => 'array',
@@ -235,7 +238,7 @@ class ConfigManager
             'lifetime' => (int) Environment::get('SESSION_LIFETIME', 120),
             'expire_on_close' => filter_var(Environment::get('SESSION_EXPIRE_ON_CLOSE', 'false'), FILTER_VALIDATE_BOOLEAN),
             'encrypt' => filter_var(Environment::get('SESSION_ENCRYPT', 'false'), FILTER_VALIDATE_BOOLEAN),
-            'files' => THIS_DIR . '/storage/sessions',
+            'files' => $baseDir . '/storage/sessions',
             'connection' => null,
             'table' => 'sessions',
             'store' => null,
@@ -275,12 +278,12 @@ class ConfigManager
             'channels' => [
                 'file' => [
                     'driver' => 'file',
-                    'path' => THIS_DIR . '/logs/app.log',
+                    'path' => $baseDir . '/logs/app.log',
                     'level' => Environment::get('LOG_LEVEL', 'debug'),
                 ],
                 'daily' => [
                     'driver' => 'daily',
-                    'path' => THIS_DIR . '/logs/app.log',
+                    'path' => $baseDir . '/logs/app.log',
                     'level' => Environment::get('LOG_LEVEL', 'debug'),
                     'days' => 14,
                 ],

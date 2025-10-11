@@ -32,8 +32,8 @@ namespace upMVC;
  */
 class Config
 {
-    public const SITE_PATH = '';
-    public const DOMAIN_NAME = 'https://yourdomain.com';
+    public const SITE_PATH = '/upMVC';
+    public const DOMAIN_NAME = 'http://localhost';
     
     private static $config = [
         'debug' => true,

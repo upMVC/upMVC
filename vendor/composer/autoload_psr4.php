@@ -6,6 +6,12 @@ $vendorDir = dirname(__DIR__);
 $baseDir = dirname($vendorDir);
 
 return array(
+    'upMVC\\Middleware\\' => array($baseDir . '/etc/Middleware'),
+    'upMVC\\Exceptions\\' => array($baseDir . '/etc/Exceptions'),
+    'upMVC\\Events\\' => array($baseDir . '/etc/Events'),
+    'upMVC\\Container\\' => array($baseDir . '/etc/Container'),
+    'upMVC\\Config\\' => array($baseDir . '/etc/Config'),
+    'upMVC\\Cache\\' => array($baseDir . '/etc/Cache'),
     'upMVC\\' => array($baseDir . '/etc'),
     'Userorm\\Routes\\' => array($baseDir . '/modules/userorm/routes'),
     'Userorm\\' => array($baseDir . '/modules/userorm'),
@@ -29,6 +35,10 @@ return array(
     'Moda\\Routes\\' => array($baseDir . '/modules/moda/routes'),
     'Moda\\' => array($baseDir . '/modules/moda'),
     'Mail\\' => array($baseDir . '/modules/mail'),
+    'Enhanced\\Routes\\' => array($baseDir . '/modules/enhanced/routes'),
+    'Enhanced\\' => array($baseDir . '/modules/enhanced'),
+    'Dashboard\\Routes\\' => array($baseDir . '/modules/dashboard/routes'),
+    'Dashboard\\' => array($baseDir . '/modules/dashboard'),
     'Common\\Bmvc\\' => array($baseDir . '/common/bmvc'),
     'Common\\Assets\\' => array($baseDir . '/common/assets'),
     'Auth\\Routes\\' => array($baseDir . '/modules/auth/routes'),

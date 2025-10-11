@@ -41,7 +41,7 @@ class Environment
             return;
         }
 
-        $baseDir = defined('THIS_DIR') ? THIS_DIR : dirname(__DIR__, 2);
+        $baseDir = defined('THIS_DIR') ? THIS_DIR : dirname(__DIR__);
         $envFile = $baseDir . '/' . $path;
         
         if (!file_exists($envFile)) {
@@ -70,9 +70,11 @@ class Environment
                 $value = trim($value);
                 
                 // Remove quotes if present
-                if (($value[0] === '"' && $value[-1] === '"') || 
-                    ($value[0] === "'" && $value[-1] === "'")) {
-                    $value = substr($value, 1, -1);
+                if (strlen($value) >= 2) {
+                    if (($value[0] === '"' && $value[-1] === '"') || 
+                        ($value[0] === "'" && $value[-1] === "'")) {
+                        $value = substr($value, 1, -1);
+                    }
                 }
                 
                 // Set environment variable
