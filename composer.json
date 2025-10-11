@@ -25,6 +25,12 @@
             "Common\\Assets\\": "common/assets",
             "Common\\Bmvc\\": "common/bmvc",
             "upMVC\\": "etc/",
+            "upMVC\\Middleware\\": "etc/Middleware/",
+            "upMVC\\Container\\": "etc/Container/",
+            "upMVC\\Exceptions\\": "etc/Exceptions/",
+            "upMVC\\Config\\": "etc/Config/",
+            "upMVC\\Cache\\": "etc/Cache/",
+            "upMVC\\Events\\": "etc/Events/",
             "User\\": "modules/user/",
             "User\\Routes\\": "modules/user/routes/",
             "Userorm\\": "modules/userorm/",
@@ -49,7 +55,9 @@
             "ReactCrud\\": "modules/reactcrud/",
             "ReactCrud\\Routes\\": "modules/reactcrud/routes",
             "Dashboard\\": "modules/dashboard/",
-            "Dashboard\\Routes\\": "modules/dashboard/routes"
+            "Dashboard\\Routes\\": "modules/dashboard/routes",
+            "Enhanced\\": "modules/enhanced/",
+            "Enhanced\\Routes\\": "modules/enhanced/routes/"
         }
     }
 }

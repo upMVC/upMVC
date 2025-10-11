@@ -32,18 +32,59 @@ namespace upMVC;
  */
 class Config
 {
-    //Application directory
-    //should be empty if domain location is root; e.g. public_html => $sitePath = ""
-    //else - if domain location is: public_html/app => $sitePath = "/app" public_html/folder/app => $sitePath = "/folder/app"
-
     public const SITE_PATH = '';
-
-
-    //Application URL
-    //your domain address => https://www.yourdomain.com or https://yourdomain.com
-    // main domain, not subdomain, not subfolder
-
     public const DOMAIN_NAME = 'https://yourdomain.com';
+    
+    private static $config = [
+        'debug' => true,
+        'timezone' => 'UTC',
+        'session' => [
+            'name' => 'UPMVC_SESSION',
+            'lifetime' => 3600,
+            'secure' => false,
+            'httponly' => true
+        ],
+        'cache' => [
+            'enabled' => false,
+            'driver' => 'file',
+            'ttl' => 3600
+        ],
+        'security' => [
+            'csrf_protection' => true,
+            'rate_limit' => 100
+        ]
+    ];
+    
+    public static function get(string $key, $default = null)
+    {
+        $parts = explode('.', $key);
+        $config = self::$config;
+        
+        foreach ($parts as $part) {
+            if (isset($config[$part])) {
+                $config = $config[$part];
+            } else {
+                return $default;
+            }
+        }
+        
+        return $config;
+    }
+    
+    public static function set(string $key, $value): void
+    {
+        $parts = explode('.', $key);
+        $config = &self::$config;
+        
+        foreach ($parts as $part) {
+            if (!isset($config[$part])) {
+                $config[$part] = [];
+            }
+            $config = &$config[$part];
+        }
+        
+        $config = $value;
+    }
 
     /**
      * Get the requested route from the current request URI.
@@ -97,13 +138,39 @@ class Config
     
     private function initConfig(): void
     {
-        error_reporting(E_ALL & ~E_DEPRECATED & ~E_NOTICE);
+        // Set timezone
+        date_default_timezone_set(self::get('timezone', 'UTC'));
+        
+        // Error reporting based on debug mode
+        if (self::get('debug', false)) {
+            error_reporting(E_ALL);
+            ini_set('display_errors', 1);
+        } else {
+            error_reporting(0);
+            ini_set('display_errors', 0);
+        }
 
         define('THIS_DIR', str_replace('\\', '/', dirname(__FILE__, 2)));
         define('BASE_URL', self::DOMAIN_NAME . self::SITE_PATH);
         define('SITEPATH', SELF::SITE_PATH);
 
+        // Enhanced session configuration
+        $sessionConfig = self::get('session', []);
+        if (isset($sessionConfig['name'])) {
+            session_name($sessionConfig['name']);
+        }
+        
+        session_set_cookie_params([
+            'lifetime' => $sessionConfig['lifetime'] ?? 3600,
+            'secure' => $sessionConfig['secure'] ?? false,
+            'httponly' => $sessionConfig['httponly'] ?? true,
+            'samesite' => 'Strict'
+        ]);
+        
         session_start();
+        
+        // Initialize error handler
+        ErrorHandler::register();
     }
 
 

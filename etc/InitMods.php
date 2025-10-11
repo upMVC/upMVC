@@ -39,6 +39,7 @@ use React\Routes\Routes as ReactRoutes;
 use Reactb\Routes\Routes as ReactbRoutes;
 use ReactCrud\Routes\Routes as ReactCrudRoutes;
 use Dashboard\Routes\Routes as DashboardRoutes;
+use Enhanced\Routes\Routes as EnhancedRoutes;
 //add other module routes
 
 //custom routes example
@@ -115,6 +116,7 @@ class InitMods
             new ReactbRoutes(),
             new ReactCrudRoutes(),
             new DashboardRoutes(),
+            new EnhancedRoutes(),
             //new OtherRoutes()
         ];
     }
