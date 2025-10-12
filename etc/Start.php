@@ -41,9 +41,9 @@ class Start
             $this->setupEnhancedMiddleware($router);
             $this->registerMiddleware($router); // Keep legacy middleware for backward compatibility
 
-            // Get request data
-            $reqURI = $_SERVER['REQUEST_URI'];
-            $reqMet = $_SERVER['REQUEST_METHOD'];
+            // Get request data (with CLI fallback)
+            $reqURI = $_SERVER['REQUEST_URI'] ?? '/';
+            $reqMet = $_SERVER['REQUEST_METHOD'] ?? 'GET';
 
             // Process request
             $reqRoute = $config->getReqRoute($reqURI);
@@ -143,7 +143,7 @@ class Start
         $router->addMiddleware('csrf', function($route, $method) {
             if ($method === 'POST' && ConfigManager::get('security.csrf_protection', true)) {
                 $token = $_POST['csrf_token'] ?? '';
-                if (!Security::validateCsrf($token)) {
+                if (!\upMVC\Security::validateCsrf($token)) {
                     http_response_code(403);
                     echo 'CSRF token validation failed';
                     return false;
@@ -157,7 +157,7 @@ class Start
             $identifier = $_SERVER['REMOTE_ADDR'] ?? 'unknown';
             $limit = ConfigManager::get('security.rate_limit', 100);
             
-            if (!Security::rateLimit($identifier, $limit)) {
+            if (!\upMVC\Security::rateLimit($identifier, $limit)) {
                 http_response_code(429);
                 echo 'Rate limit exceeded';
                 return false;
