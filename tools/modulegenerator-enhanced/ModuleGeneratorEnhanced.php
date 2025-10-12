@@ -134,7 +134,8 @@ class ModuleGeneratorEnhanced
         }
 
         // Set defaults with enhanced features
-        $config['namespace'] = $config['namespace'] ?? ucfirst($config['name']);
+        // upMVC convention: namespace is module name with only first letter capitalized
+        $config['namespace'] = $config['namespace'] ?? ucfirst(strtolower($config['name']));
         $config['directory_name'] = $config['directory_name'] ?? strtolower($config['name']); // upMVC convention: lowercase directories
         $config['table_name'] = $config['table_name'] ?? strtolower($config['name']) . 's';
         $config['route_name'] = $config['route_name'] ?? strtolower($config['name']) . 's';

@@ -60,9 +60,10 @@
             "Dashboard\\Routes\\": "modules/dashboard/routes",
             "Enhanced\\": "modules/enhanced/",
             "Enhanced\\Routes\\": "modules/enhanced/routes/",
-            "TestProducts\\": "modules/testproducts/",
-            "TestProducts\\Routes\\": "modules/testproducts/routes/",
-            "TestProducts\\Modules\\": "modules/testproducts/modules/"
+            "TestItems\\": "modules/testitems/",
+            "TestItems\\Routes\\": "modules/testitems/routes/",
+            "Testitems\\": "modules/testitems/",
+            "Testitems\\Routes\\": "modules/testitems/routes/"
         }
     }
 }
