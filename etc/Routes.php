@@ -36,6 +36,7 @@ use Admin\Controller as AnythingElse;
 //end custom routes example
 
 use upMVC\InitMods;
+use upMVC\InitModsImproved;
 use upMVC\Router;
 
 /**
@@ -81,7 +82,8 @@ class Routes
         $this->router->addRoute('/abbac', AnythingElse::class, 'display');
 
         // Register module routes
-        $modulesRoutes = new InitMods();
+        //$modulesRoutes = new InitMods(); // Old way legacy
+        $modulesRoutes  = new InitModsImproved();
         $modulesRoutes->addRoutes($this->router);
     }
 

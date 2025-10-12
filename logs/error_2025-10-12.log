@@ -1,0 +1,1 @@
+{"type":"Error","severity":2,"message":"Cannot modify header information - headers already sent by (output started at D:\\GitHub\\upMVC\\common\\assets\\CommonCss.php:35)","file":"D:\\GitHub\\upMVC\\modules\\auth\\Controller.php","line":107,"time":"2025-10-12 11:39:05"}
