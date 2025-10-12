@@ -83,7 +83,7 @@ class Router
             'uri' => $_SERVER['REQUEST_URI'] ?? '',
             'query_params' => $_GET,
             'post_params' => $_POST,
-            'headers' => getallheaders() ?: [],
+            'headers' => function_exists('getallheaders') ? getallheaders() : [],
             'timestamp' => time()
         ];
 
