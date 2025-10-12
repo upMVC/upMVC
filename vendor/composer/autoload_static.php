@@ -26,6 +26,10 @@ class ComposerStaticInit49502ca6970de9d65a6295b99bbb2d5b
         ),
         'T' => 
         array (
+            'Tools\\ModuleGenerator\\' => 22,
+            'Tools\\ModuleGeneratorEnhanced\\' => 30,
+            'Testproducts\\Routes\\' => 20,
+            'Testproducts\\' => 13,
             'Test\\Routes\\' => 12,
             'Test\\' => 5,
         ),
@@ -37,13 +41,13 @@ class ComposerStaticInit49502ca6970de9d65a6295b99bbb2d5b
         'R' => 
         array (
             'RedBeanPHP\\' => 11,
+            'Reactcrud\\Routes\\' => 17,
+            'Reactcrud\\' => 10,
             'Reactb\\Routes\\' => 14,
             'Reactb\\' => 7,
             'React\\Routes\\' => 13,
             'React\\Component\\' => 16,
             'React\\' => 6,
-            'ReactCrud\\Routes\\' => 17,
-            'ReactCrud\\' => 10,
         ),
         'P' => 
         array (
@@ -72,13 +76,23 @@ class ComposerStaticInit49502ca6970de9d65a6295b99bbb2d5b
         ),
         'C' => 
         array (
+            'CrudTest\\Routes\\' => 16,
+            'CrudTest\\Modules\\' => 17,
+            'CrudTest\\' => 9,
             'Common\\Bmvc\\' => 12,
             'Common\\Assets\\' => 14,
+        ),
+        'B' => 
+        array (
+            'BasicTest\\Routes\\' => 17,
+            'BasicTest\\' => 10,
         ),
         'A' => 
         array (
             'Auth\\Routes\\' => 12,
             'Auth\\' => 5,
+            'ApiTest\\Routes\\' => 15,
+            'ApiTest\\' => 8,
             'Admin\\Routes\\' => 13,
             'Admin\\' => 6,
         ),
@@ -129,6 +143,22 @@ class ComposerStaticInit49502ca6970de9d65a6295b99bbb2d5b
         array (
             0 => __DIR__ . '/../..' . '/modules/user',
         ),
+        'Tools\\ModuleGenerator\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/tools/modulegenerator',
+        ),
+        'Tools\\ModuleGeneratorEnhanced\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/tools/modulegenerator-enhanced',
+        ),
+        'Testproducts\\Routes\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/modules/testproducts/routes',
+        ),
+        'Testproducts\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/modules/testproducts',
+        ),
         'Test\\Routes\\' => 
         array (
             0 => __DIR__ . '/../..' . '/modules/test/routes',
@@ -149,6 +179,14 @@ class ComposerStaticInit49502ca6970de9d65a6295b99bbb2d5b
         array (
             0 => __DIR__ . '/..' . '/gabordemooij/redbean/RedBeanPHP',
         ),
+        'Reactcrud\\Routes\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/modules/reactcrud/routes',
+        ),
+        'Reactcrud\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/modules/reactcrud',
+        ),
         'Reactb\\Routes\\' => 
         array (
             0 => __DIR__ . '/../..' . '/modules/reactb/routes',
@@ -168,14 +206,6 @@ class ComposerStaticInit49502ca6970de9d65a6295b99bbb2d5b
         'React\\' => 
         array (
             0 => __DIR__ . '/../..' . '/modules/react',
-        ),
-        'ReactCrud\\Routes\\' => 
-        array (
-            0 => __DIR__ . '/../..' . '/modules/reactcrud/routes',
-        ),
-        'ReactCrud\\' => 
-        array (
-            0 => __DIR__ . '/../..' . '/modules/reactcrud',
         ),
         'PHPMailer\\PHPMailer\\' => 
         array (
@@ -217,6 +247,18 @@ class ComposerStaticInit49502ca6970de9d65a6295b99bbb2d5b
         array (
             0 => __DIR__ . '/../..' . '/modules/dashboard',
         ),
+        'CrudTest\\Routes\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/modules/CrudTest/routes',
+        ),
+        'CrudTest\\Modules\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/modules/CrudTest/modules',
+        ),
+        'CrudTest\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/modules/CrudTest',
+        ),
         'Common\\Bmvc\\' => 
         array (
             0 => __DIR__ . '/../..' . '/common/bmvc',
@@ -225,6 +267,14 @@ class ComposerStaticInit49502ca6970de9d65a6295b99bbb2d5b
         array (
             0 => __DIR__ . '/../..' . '/common/assets',
         ),
+        'BasicTest\\Routes\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/modules/BasicTest/routes',
+        ),
+        'BasicTest\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/modules/BasicTest',
+        ),
         'Auth\\Routes\\' => 
         array (
             0 => __DIR__ . '/../..' . '/modules/auth/routes',
@@ -232,6 +282,14 @@ class ComposerStaticInit49502ca6970de9d65a6295b99bbb2d5b
         'Auth\\' => 
         array (
             0 => __DIR__ . '/../..' . '/modules/auth',
+        ),
+        'ApiTest\\Routes\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/modules/ApiTest/routes',
+        ),
+        'ApiTest\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/modules/ApiTest',
         ),
         'Admin\\Routes\\' => 
         array (

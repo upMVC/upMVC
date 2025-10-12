@@ -27,9 +27,9 @@
  *   https://bitshost.biz/
  */
 
-namespace ReactCrud\Routes;
+namespace Reactcrud\Routes;
 
-use ReactCrud\Controller;
+use Reactcrud\Controller;
 
 class Routes
 {

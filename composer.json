@@ -20,7 +20,7 @@
     ],
     "autoload": {
         "psr-4": {
-            "Admin\\":"modules/admin/",
+            "Admin\\": "modules/admin/",
             "Admin\\Routes\\": "modules/admin/routes/",
             "Common\\Assets\\": "common/assets",
             "Common\\Bmvc\\": "common/bmvc",
@@ -31,6 +31,8 @@
             "upMVC\\Config\\": "etc/Config/",
             "upMVC\\Cache\\": "etc/Cache/",
             "upMVC\\Events\\": "etc/Events/",
+            "Tools\\ModuleGenerator\\": "tools/modulegenerator/",
+            "Tools\\ModuleGeneratorEnhanced\\": "tools/modulegenerator-enhanced/",
             "User\\": "modules/user/",
             "User\\Routes\\": "modules/user/routes/",
             "Userorm\\": "modules/userorm/",
@@ -52,12 +54,15 @@
             "React\\Component\\": "modules/react/etc",
             "Reactb\\": "modules/reactb/",
             "Reactb\\Routes\\": "modules/reactb/routes",
-            "ReactCrud\\": "modules/reactcrud/",
-            "ReactCrud\\Routes\\": "modules/reactcrud/routes",
+            "Reactcrud\\": "modules/reactcrud/",
+            "Reactcrud\\Routes\\": "modules/reactcrud/routes",
             "Dashboard\\": "modules/dashboard/",
             "Dashboard\\Routes\\": "modules/dashboard/routes",
             "Enhanced\\": "modules/enhanced/",
-            "Enhanced\\Routes\\": "modules/enhanced/routes/"
+            "Enhanced\\Routes\\": "modules/enhanced/routes/",
+            "TestProducts\\": "modules/testproducts/",
+            "TestProducts\\Routes\\": "modules/testproducts/routes/",
+            "TestProducts\\Modules\\": "modules/testproducts/modules/"
         }
     }
 }

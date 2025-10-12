@@ -69,6 +69,27 @@ class Environment
                 $key = trim($key);
                 $value = trim($value);
                 
+                // Remove inline comments (anything after # outside of quotes)
+                if (strpos($value, '#') !== false) {
+                    // Check if # is inside quotes
+                    $inQuotes = false;
+                    $quoteChar = null;
+                    for ($i = 0; $i < strlen($value); $i++) {
+                        $char = $value[$i];
+                        if (($char === '"' || $char === "'") && !$inQuotes) {
+                            $inQuotes = true;
+                            $quoteChar = $char;
+                        } elseif ($char === $quoteChar && $inQuotes) {
+                            $inQuotes = false;
+                            $quoteChar = null;
+                        } elseif ($char === '#' && !$inQuotes) {
+                            // Found comment outside quotes - trim it
+                            $value = trim(substr($value, 0, $i));
+                            break;
+                        }
+                    }
+                }
+                
                 // Remove quotes if present
                 if (strlen($value) >= 2) {
                     if (($value[0] === '"' && $value[-1] === '"') || 
