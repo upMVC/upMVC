@@ -130,10 +130,10 @@ In the same file, modules/test/routes/Routes.php, you will see for demonstration
 ## Considering recommendations:
  - Model, View, Controller - will be called without using module name in their name. For example, module name = books:
  - Model.php - class Model; View.php - class View; Controller.php - class Controller;
- - and make a distinctive namespace for each module - namespace ModuleName - e.g. Books;
- - Your module routes should be kept under modules/yourModule/routes - file Routes.php: 
+ - and make a distinctive namespace for each module - namespace Modulename - e.g. Books;
+ - Your module routes should be kept under modules/yourmodule/routes - file Routes.php: 
    - Routes.php class Routes in folder /modules/books/routes
-   - namespace ModuleName\Routes, e.g. Books\Routes
+   - namespace Modulename\Routes, e.g. Books\Routes
 #
 #
 ##
