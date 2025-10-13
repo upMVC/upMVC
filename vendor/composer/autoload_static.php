@@ -57,8 +57,8 @@ class ComposerStaticInit49502ca6970de9d65a6295b99bbb2d5b
         ),
         'N' => 
         array (
-            'New\\Routes\\' => 11,
-            'New\\' => 4,
+            'Newmod\\Routes\\' => 14,
+            'Newmod\\' => 7,
         ),
         'M' => 
         array (
@@ -211,13 +211,13 @@ class ComposerStaticInit49502ca6970de9d65a6295b99bbb2d5b
         array (
             0 => __DIR__ . '/../..' . '/modules/mail/phpmailer',
         ),
-        'New\\Routes\\' => 
+        'Newmod\\Routes\\' => 
         array (
-            0 => __DIR__ . '/../..' . '/modules/new/routes',
+            0 => __DIR__ . '/../..' . '/modules/newmod/routes',
         ),
-        'New\\' => 
+        'Newmod\\' => 
         array (
-            0 => __DIR__ . '/../..' . '/modules/new',
+            0 => __DIR__ . '/../..' . '/modules/newmod',
         ),
         'Moda\\Routes\\' => 
         array (

@@ -33,7 +33,7 @@ use Moda\Routes\Routes as ModaRoutes;
 use Suba\Routes\Routes as SubaRoutes;
 use User\Routes\Routes as UserRoutes;
 use Userorm\Routes\Routes as UserormRoutes;
-use New\Routes\Routes as NewRoutes;
+use Newmod\Routes\Routes as NewmodRoutes;
 use Auth\Routes\Routes as AuthRoutes;
 use React\Routes\Routes as ReactRoutes;
 use Reactb\Routes\Routes as ReactbRoutes;
@@ -110,7 +110,7 @@ class InitMods
             new SubaRoutes(),
             new UserRoutes(),
             new UserormRoutes(),
-            new NewRoutes(),
+            new NewmodRoutes(),
             new AuthRoutes(),
             new ReactRoutes(),
             new ReactbRoutes(),
