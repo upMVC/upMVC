@@ -30,7 +30,7 @@
      https://bitshost.biz/
  */
 
-namespace New;
+namespace Newmod;
 
 use Common\Bmvc\BaseView;
 

@@ -30,10 +30,10 @@
      https://bitshost.biz/
  */
 
-namespace New;
+namespace Newmod;
 
-//use New\Model
-//use New\View
+//use Newmod\Model
+//use Newmod\View
 use PDO;
 use Exception;
 

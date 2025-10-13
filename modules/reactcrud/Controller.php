@@ -27,7 +27,7 @@
  *   https://bitshost.biz/
  */
 
-namespace ReactCrud;
+namespace Reactcrud;
 
 //use ReactCrud\ReactCrudModel
 //use ReactCrud\View

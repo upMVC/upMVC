@@ -9,6 +9,12 @@ class ComposerStaticInit49502ca6970de9d65a6295b99bbb2d5b
     public static $prefixLengthsPsr4 = array (
         'u' => 
         array (
+            'upMVC\\Middleware\\' => 17,
+            'upMVC\\Exceptions\\' => 17,
+            'upMVC\\Events\\' => 13,
+            'upMVC\\Container\\' => 16,
+            'upMVC\\Config\\' => 13,
+            'upMVC\\Cache\\' => 12,
             'upMVC\\' => 6,
         ),
         'U' => 
@@ -20,6 +26,10 @@ class ComposerStaticInit49502ca6970de9d65a6295b99bbb2d5b
         ),
         'T' => 
         array (
+            'Tools\\ModuleGenerator\\' => 22,
+            'Tools\\ModuleGeneratorEnhanced\\' => 30,
+            'Testitems\\Routes\\' => 17,
+            'Testitems\\' => 10,
             'Test\\Routes\\' => 12,
             'Test\\' => 5,
         ),
@@ -31,13 +41,13 @@ class ComposerStaticInit49502ca6970de9d65a6295b99bbb2d5b
         'R' => 
         array (
             'RedBeanPHP\\' => 11,
+            'Reactcrud\\Routes\\' => 17,
+            'Reactcrud\\' => 10,
             'Reactb\\Routes\\' => 14,
             'Reactb\\' => 7,
             'React\\Routes\\' => 13,
             'React\\Component\\' => 16,
             'React\\' => 6,
-            'ReactCrud\\Routes\\' => 17,
-            'ReactCrud\\' => 10,
         ),
         'P' => 
         array (
@@ -45,14 +55,24 @@ class ComposerStaticInit49502ca6970de9d65a6295b99bbb2d5b
         ),
         'N' => 
         array (
-            'New\\Routes\\' => 11,
-            'New\\' => 4,
+            'Newmod\\Routes\\' => 14,
+            'Newmod\\' => 7,
         ),
         'M' => 
         array (
             'Moda\\Routes\\' => 12,
             'Moda\\' => 5,
             'Mail\\' => 5,
+        ),
+        'E' => 
+        array (
+            'Enhanced\\Routes\\' => 16,
+            'Enhanced\\' => 9,
+        ),
+        'D' => 
+        array (
+            'Dashboard\\Routes\\' => 17,
+            'Dashboard\\' => 10,
         ),
         'C' => 
         array (
@@ -69,6 +89,30 @@ class ComposerStaticInit49502ca6970de9d65a6295b99bbb2d5b
     );
 
     public static $prefixDirsPsr4 = array (
+        'upMVC\\Middleware\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/etc/Middleware',
+        ),
+        'upMVC\\Exceptions\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/etc/Exceptions',
+        ),
+        'upMVC\\Events\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/etc/Events',
+        ),
+        'upMVC\\Container\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/etc/Container',
+        ),
+        'upMVC\\Config\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/etc/Config',
+        ),
+        'upMVC\\Cache\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/etc/Cache',
+        ),
         'upMVC\\' => 
         array (
             0 => __DIR__ . '/../..' . '/etc',
@@ -88,6 +132,22 @@ class ComposerStaticInit49502ca6970de9d65a6295b99bbb2d5b
         'User\\' => 
         array (
             0 => __DIR__ . '/../..' . '/modules/user',
+        ),
+        'Tools\\ModuleGenerator\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/tools/modulegenerator',
+        ),
+        'Tools\\ModuleGeneratorEnhanced\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/tools/modulegenerator-enhanced',
+        ),
+        'Testitems\\Routes\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/modules/testitems/routes',
+        ),
+        'Testitems\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/modules/testitems',
         ),
         'Test\\Routes\\' => 
         array (
@@ -109,6 +169,14 @@ class ComposerStaticInit49502ca6970de9d65a6295b99bbb2d5b
         array (
             0 => __DIR__ . '/..' . '/gabordemooij/redbean/RedBeanPHP',
         ),
+        'Reactcrud\\Routes\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/modules/reactcrud/routes',
+        ),
+        'Reactcrud\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/modules/reactcrud',
+        ),
         'Reactb\\Routes\\' => 
         array (
             0 => __DIR__ . '/../..' . '/modules/reactb/routes',
@@ -129,25 +197,17 @@ class ComposerStaticInit49502ca6970de9d65a6295b99bbb2d5b
         array (
             0 => __DIR__ . '/../..' . '/modules/react',
         ),
-        'ReactCrud\\Routes\\' => 
-        array (
-            0 => __DIR__ . '/../..' . '/modules/reactcrud/routes',
-        ),
-        'ReactCrud\\' => 
-        array (
-            0 => __DIR__ . '/../..' . '/modules/reactcrud',
-        ),
         'PHPMailer\\PHPMailer\\' => 
         array (
             0 => __DIR__ . '/../..' . '/modules/mail/phpmailer',
         ),
-        'New\\Routes\\' => 
+        'Newmod\\Routes\\' => 
         array (
-            0 => __DIR__ . '/../..' . '/modules/new/routes',
+            0 => __DIR__ . '/../..' . '/modules/newmod/routes',
         ),
-        'New\\' => 
+        'Newmod\\' => 
         array (
-            0 => __DIR__ . '/../..' . '/modules/new',
+            0 => __DIR__ . '/../..' . '/modules/newmod',
         ),
         'Moda\\Routes\\' => 
         array (
@@ -160,6 +220,22 @@ class ComposerStaticInit49502ca6970de9d65a6295b99bbb2d5b
         'Mail\\' => 
         array (
             0 => __DIR__ . '/../..' . '/modules/mail',
+        ),
+        'Enhanced\\Routes\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/modules/enhanced/routes',
+        ),
+        'Enhanced\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/modules/enhanced',
+        ),
+        'Dashboard\\Routes\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/modules/dashboard/routes',
+        ),
+        'Dashboard\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/modules/dashboard',
         ),
         'Common\\Bmvc\\' => 
         array (

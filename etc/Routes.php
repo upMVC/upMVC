@@ -36,6 +36,7 @@ use Admin\Controller as AnythingElse;
 //end custom routes example
 
 use upMVC\InitMods;
+use upMVC\InitModsImproved;
 use upMVC\Router;
 
 /**
@@ -79,9 +80,13 @@ class Routes
         // Register default system routes
         $this->router->addRoute('/abba', Controller::class, 'display');
         $this->router->addRoute('/abbac', AnythingElse::class, 'display');
+        
+        // Add default home route (missing route causing 404)
+       // $this->router->addRoute('/', \New\Controller::class, 'display');
 
         // Register module routes
-        $modulesRoutes = new InitMods();
+        //$modulesRoutes = new InitMods(); // Old way legacy
+        $modulesRoutes  = new InitModsImproved();
         $modulesRoutes->addRoutes($this->router);
     }
 

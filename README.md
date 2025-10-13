@@ -1,13 +1,19 @@
-# upMVC - BitsHost MMVC
- Modular MODEL VIEW CONTROLLER with Router
+# 📚 upMVC Framework v2.0 - Complete Documentation
 
- /*
- 
- * Created on Tue Oct 31 2023
- *
- * Copyright (c) 2023 BitsHost
+> **Modern, lightweight PHP framework for rapid development with clean architecture**
 
- */
+**Status: ✅ Production Ready** | **PHP 8.1+** | **PSR-4 Compliant** | **MIT License**
+
+## 🚀 **Quick Navigation**
+
+### **🎯 New to upMVC? Start Here:**
+- **[📋 First Steps Guide](FIRST-STEPS-GUIDE.md)** - Get running in 5 minutes
+- **[📁 Repository Structure Guide](REPOSITORY-STRUCTURE-GUIDE.md)** - Which repository to use
+- **[📘 How-To Guide](HOW-TO-GUIDE.md)** - Complete development guide
+- **[❓ FAQ](FAQ.md)** - Common questions and solutions
+
+### **📊 Project Status:**
+- **[🎉 Final Cleanup Summary](FINAL-CLEANUP-SUMMARY.md)** - Complete project overview
 
 Demo: https://upmvc.com/demo/
 	

@@ -26,9 +26,9 @@
      https://bitshost.biz/
  */
 
-namespace New\Routes;
+namespace Newmod\Routes;
 
-use New\Controller;
+use Newmod\Controller;
 
 
 /**

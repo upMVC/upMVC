@@ -35,7 +35,7 @@
  *	Manage elements of the the table users.
  */
 
-namespace New;
+namespace Newmod;
 
 use upMVC\Database;
 use PDO;

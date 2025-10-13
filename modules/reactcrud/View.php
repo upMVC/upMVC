@@ -27,7 +27,7 @@
  *   https://bitshost.biz/
  */
 
-namespace ReactCrud;
+namespace Reactcrud;
 
 use Common\Bmvc\BaseView;
 use Common\Assets\CommonCss;
