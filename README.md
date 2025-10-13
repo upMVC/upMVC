@@ -1,8 +1,20 @@
-# 📚 upMVC noFramework v1.0.2 - Complete Documentation
+# 📚 upMVC noFramework v2.0 - Complete Documentation
 
 > **Modern, lightweight PHP noframework for rapid development with clean architecture**
 
 **Status: ✅ Production Ready** | **PHP 8.1+** | **PSR-4 Compliant** | **MIT License**
+
+## 🎨 **NEW: Modern UI System**
+
+upMVC v2.0 introduces a **contemporary design system** while maintaining complete backward compatibility:
+
+- **🌟 Modern BaseView**: Contemporary CSS Grid/Flexbox layouts with dark mode
+- **📱 Responsive Design**: Mobile-first approach with modern navigation
+- **⚡ Alpine.js Integration**: Lightweight interactivity (~40KB vs 87KB jQuery)
+- **🎯 Zero Breaking Changes**: Drop-in replacement for existing BaseView
+
+**Quick Demo:** `/test` (original) vs `/test/modern` (new design)
+**Documentation:** [Modern BaseView Guide](MODERN_BASEVIEW_GUIDE.md) | [Demo Instructions](MODERN_DEMO.md)
 
 ## 🌟 **What is upMVC?**
 
