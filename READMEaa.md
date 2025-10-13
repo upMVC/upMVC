@@ -4,12 +4,6 @@
 
 **Status: ✅ Production Ready** | **PHP 8.1+** | **PSR-4 Compliant** | **MIT License**
 
-## 🌟 **What is upMVC?**
-
-A lightweight, modern PHP 8.1+ framework built on Modular MVC (MMVC) architecture. Designed for developers who want flexibility without framework bloat. Features true modularity, "PHP Islands" for frontend integration (React/Vue), dependency injection, middleware pipeline, and clean routing. No forced conventions - use pure PHP or integrate modern JS frameworks as needed. Perfect for rapid development while maintaining performance and flexibility.
-
-✨ **Key Features:** Modular architecture • PHP 8.1+ • PSR-4 compliant • Dependency injection • Middleware support • Frontend framework integration • Minimal learning curve
-
 ## 🚀 **Quick Navigation**
 
 ### **🎯 New to upMVC? Start Here:**
@@ -136,10 +130,10 @@ In the same file, modules/test/routes/Routes.php, you will see for demonstration
 ## Considering recommendations:
  - Model, View, Controller - will be called without using module name in their name. For example, module name = books:
  - Model.php - class Model; View.php - class View; Controller.php - class Controller;
- - and make a distinctive namespace for each module - namespace Modulename - e.g. Books;
- - Your module routes should be kept under modules/yourmodule/routes - file Routes.php: 
+ - and make a distinctive namespace for each module - namespace ModuleName - e.g. Books;
+ - Your module routes should be kept under modules/yourModule/routes - file Routes.php: 
    - Routes.php class Routes in folder /modules/books/routes
-   - namespace Modulename\Routes, e.g. Books\Routes
+   - namespace ModuleName\Routes, e.g. Books\Routes
 #
 #
 ##
