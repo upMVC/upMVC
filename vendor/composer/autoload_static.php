@@ -71,10 +71,10 @@ class ComposerStaticInit49502ca6970de9d65a6295b99bbb2d5b
         ),
         'D' => 
         array (
+            'Dashusers\\Routes\\' => 17,
+            'Dashusers\\' => 10,
             'Dashboardexample\\Routes\\' => 24,
             'Dashboardexample\\' => 17,
-            'Dashboard\\Routes\\' => 17,
-            'Dashboard\\' => 10,
         ),
         'C' => 
         array (
@@ -85,6 +85,8 @@ class ComposerStaticInit49502ca6970de9d65a6295b99bbb2d5b
         array (
             'Auth\\Routes\\' => 12,
             'Auth\\' => 5,
+            'Ashboard\\Routes\\' => 16,
+            'Ashboard\\' => 9,
             'Admin\\Routes\\' => 13,
             'Admin\\' => 6,
         ),
@@ -231,6 +233,14 @@ class ComposerStaticInit49502ca6970de9d65a6295b99bbb2d5b
         array (
             0 => __DIR__ . '/../..' . '/modules/enhanced',
         ),
+        'Dashusers\\Routes\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/modules/dashusers/routes',
+        ),
+        'Dashusers\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/modules/dashusers',
+        ),
         'Dashboardexample\\Routes\\' => 
         array (
             0 => __DIR__ . '/../..' . '/modules/dashboardexample/routes',
@@ -238,14 +248,6 @@ class ComposerStaticInit49502ca6970de9d65a6295b99bbb2d5b
         'Dashboardexample\\' => 
         array (
             0 => __DIR__ . '/../..' . '/modules/dashboardexample',
-        ),
-        'Dashboard\\Routes\\' => 
-        array (
-            0 => __DIR__ . '/../..' . '/modules/dashboard/routes',
-        ),
-        'Dashboard\\' => 
-        array (
-            0 => __DIR__ . '/../..' . '/modules/dashboard',
         ),
         'Common\\Bmvc\\' => 
         array (
@@ -262,6 +264,14 @@ class ComposerStaticInit49502ca6970de9d65a6295b99bbb2d5b
         'Auth\\' => 
         array (
             0 => __DIR__ . '/../..' . '/modules/auth',
+        ),
+        'Ashboard\\Routes\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/modules/dashboard/routes',
+        ),
+        'Ashboard\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/modules/dashboard',
         ),
         'Admin\\Routes\\' => 
         array (

@@ -127,7 +127,7 @@ class Start
         }
 
         // Add authentication middleware for protected routes
-        $protectedRoutes = ['/dashboard/*', '/admin/*', '/users/*'];
+        $protectedRoutes = ['/zashboardx/*', '/admin/*', '/users/*'];
         $middlewareManager->addGlobal(new AuthMiddleware($protectedRoutes));
     }
     
