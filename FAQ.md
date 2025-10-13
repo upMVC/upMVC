@@ -8,20 +8,25 @@
 
 ### **Q: Which repository should I use for my project?**
 **A:** 
-- **Production:** Use `d:\GitHub\upMVC\` - This is the clean, production-ready version
+- **Production:** Use the main `upMVC` repository - This is the clean, production-ready version
 - **Development/Learning:** Use `upMVC-DEV` - Contains additional modules and development tools
 - **Experimentation:** Use other dev repositories for testing new features
 
 ### **Q: Why do I get "composer not found" error?**
 **A:** You need to install Composer first:
 ```bash
-# Windows (using Chocolatey)
-choco install composer
+# Download and install from https://getcomposer.org/download/
 
-# Or download from https://getcomposer.org/download/
-# Linux/Mac
+# Linux/Ubuntu
 curl -sS https://getcomposer.org/installer | php
 sudo mv composer.phar /usr/local/bin/composer
+
+# CentOS/RHEL
+sudo yum install composer
+
+# Or using package managers
+apt-get install composer  # Debian/Ubuntu
+brew install composer     # macOS
 ```
 
 ### **Q: What PHP version is required?**
@@ -314,7 +319,7 @@ $cached = CacheManager::get('key', $default);
 
 ### **Q: How do I deploy to production?**
 **A:** 
-1. **Use production repository:** `d:\GitHub\upMVC\`
+1. **Use production repository:** Clone the main `upMVC` repository
 2. **Configure environment:**
    ```env
    APP_ENV=production
