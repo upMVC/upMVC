@@ -1,6 +1,6 @@
-# 📚 upMVC Framework v2.0 - Complete Documentation
+# 📚 upMVC noFramework v1.02 - Complete Documentation
 
-> **Modern, lightweight PHP framework for rapid development with clean architecture**
+> **Modern, lightweight PHP noframework for rapid development with clean architecture**
 
 **Status: ✅ Production Ready** | **PHP 8.1+** | **PSR-4 Compliant** | **MIT License**
 
