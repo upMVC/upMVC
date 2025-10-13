@@ -4,6 +4,12 @@
 
 **Status: ✅ Production Ready** | **PHP 8.1+** | **PSR-4 Compliant** | **MIT License**
 
+## 🌟 **What is upMVC?**
+
+A lightweight, modern PHP 8.1+ framework built on Modular MVC (MMVC) architecture. Designed for developers who want flexibility without framework bloat. Features true modularity, "PHP Islands" for frontend integration (React/Vue), dependency injection, middleware pipeline, and clean routing. No forced conventions - use pure PHP or integrate modern JS frameworks as needed. Perfect for rapid development while maintaining performance and flexibility.
+
+✨ **Key Features:** Modular architecture • PHP 8.1+ • PSR-4 compliant • Dependency injection • Middleware support • Frontend framework integration • Minimal learning curve
+
 ## 🚀 **Quick Navigation**
 
 ### **🎯 New to upMVC? Start Here:**
