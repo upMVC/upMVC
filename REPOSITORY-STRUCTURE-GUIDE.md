@@ -12,7 +12,7 @@ upMVC has multiple repositories serving different purposes. This guide explains 
 
 | Repository | Purpose | Status | Best For | Contains |
 |------------|---------|--------|----------|----------|
-| **upMVC** | ✅ Production | Clean & Ready | Production use | Core framework only |
+| **upMVC** | ✅ Production | Clean & Ready | Production use | Core noFramework only |
 | **upMVC-DEV** | 🔧 Development | Full featured | Learning & experimentation | Core + demo modules + tools |
 | **aupMVC-DEV** | 🧪 Alternative Dev | Testing branch | Alternative features | Enhanced features testing |
 | **mockup** | 📊 Data Processing | Specialized | Data analysis | CSV processing tools |
@@ -32,7 +32,7 @@ upMVC has multiple repositories serving different purposes. This guide explains 
 upMVC/
 ├── index.php                 # Clean bootstrap
 ├── composer.json             # Optimized dependencies
-├── etc/                      # Core framework ✅
+├── etc/                      # Core noFramework ✅
 │   ├── Start.php            # Enhanced bootstrap
 │   ├── Router.php           # Middleware-enabled routing
 │   ├── Config.php           # Production configuration
@@ -92,11 +92,11 @@ upMVC-DEV/
 ```
 
 #### **✅ Use This Repository When:**
-- Learning upMVC framework
+- Learning upMVC noFramework
 - Experimenting with new features
 - Need example implementations
 - Developing custom modules
-- Want to see all framework capabilities
+- Want to see all noFramework capabilities
 
 #### **✅ Benefits:**
 - Rich examples and demonstrations
@@ -172,7 +172,7 @@ mockup/
 - Essential modules only
 - Best performance
 
-#### **📚 I want to learn upMVC framework:**
+#### **📚 I want to learn upMVC noFramework:**
 → **Use: upMVC-DEV** (Development Repository)
 - Rich examples and demos
 - All available modules
@@ -249,7 +249,7 @@ cp -r ../my-production-app/modules/mymodule ./modules/
 
 | Feature | upMVC | upMVC-DEV | aupMVC-DEV | mockup | AS |
 |---------|-------|-----------|------------|--------|----|
-| **Core Framework** | ✅ | ✅ | ✅ | ❌ | ❌ |
+| **Core NoFramework** | ✅ | ✅ | ✅ | ❌ | ❌ |
 | **Production Ready** | ✅ | ⚠️ | ⚠️ | ❌ | ⚠️ |
 | **Demo Modules** | ❌ | ✅ | ✅ | ❌ | ⚠️ |
 | **Development Tools** | ❌ | ✅ | ✅ | ❌ | ⚠️ |
@@ -325,7 +325,7 @@ cp -r ../my-production-app/modules/mymodule ./modules/
 - **aupMVC-DEV**: Experimental, verify features before use
 
 ### **🔧 Use With Caution:**
-- **mockup**: Specialized tools, not a framework
+- **mockup**: Specialized tools, not a noFramework
 - **AS**: Project-specific, may not suit general use
 
 ---
@@ -350,7 +350,7 @@ cp -r ../my-production-app/modules/mymodule ./modules/
 
 ### **🎯 Need This? → Use This Repository:**
 - **Production app** → upMVC
-- **Learning framework** → upMVC-DEV  
+- **Learning noFramework** → upMVC-DEV  
 - **Examples & demos** → upMVC-DEV
 - **Experimental features** → aupMVC-DEV
 - **Data processing** → mockup

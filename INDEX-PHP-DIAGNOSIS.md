@@ -127,7 +127,7 @@ public const DOMAIN_NAME = 'http://localhost:8000';  # Update if needed
 
 ## 🔍 **Key Takeaway**
 
-**upMVC is a web framework designed for HTTP requests, not CLI execution.** The issues were caused by:
+**upMVC is a web noFramework designed for HTTP requests, not CLI execution.** The issues were caused by:
 - Attempting CLI execution of a web-focused application
 - Missing environment-specific fallbacks  
 - Incorrect assumptions about available functions

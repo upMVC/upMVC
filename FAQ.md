@@ -1,4 +1,4 @@
-# ❓ upMVC Framework - FAQ
+# ❓ upMVC NoFramework - FAQ
 
 ## 🔍 **Frequently Asked Questions**
 
@@ -355,7 +355,7 @@ chmod 755 storage/ logs/
 4. **Test thoroughly** in development environment
 5. **Update incrementally** rather than all at once
 
-### **Q: How do I update upMVC framework?**
+### **Q: How do I update upMVC noFramework?**
 **A:** 
 1. **Check for updates** in the main repository
 2. **Review changelog** for breaking changes

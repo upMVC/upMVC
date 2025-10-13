@@ -1,4 +1,4 @@
-# 🚀 upMVC Framework - First Steps Guide
+# 🚀 upMVC NoFramework - First Steps Guide
 
 ## ⚡ **Quick Start (5 Minutes)**
 
@@ -203,14 +203,14 @@ Time: 2025-10-13 15:30:45
 
 ---
 
-## 📊 **Step 8: Explore the Framework**
+## 📊 **Step 8: Explore the NoFramework**
 
 ### **Understanding the Structure:**
 ```
 your-app/
 ├── index.php           # ← Entry point
 ├── composer.json       # ← Dependencies & autoloading
-├── etc/               # ← Core framework files
+├── etc/               # ← Core noFramework files
 │   ├── Start.php      # ← Application bootstrap
 │   ├── Router.php     # ← URL routing
 │   └── Config.php     # ← Configuration
@@ -221,7 +221,7 @@ your-app/
 
 ### **Key Files to Know:**
 - **`index.php`** - Application entry point
-- **`etc/Start.php`** - Framework initialization  
+- **`etc/Start.php`** - NoFramework initialization  
 - **`etc/Router.php`** - URL routing system
 - **`modules/*/Controller.php`** - Handle requests
 - **`modules/*/routes/Routes.php`** - Define URLs
@@ -316,7 +316,7 @@ Check `etc/ConfigDatabase.php` credentials and ensure database exists.
 - Check error logs regularly
 - Use `var_dump()` and `error_log()` for debugging
 
-### **4. Leverage the Framework:**
+### **4. Leverage the NoFramework:**
 - Use the built-in caching system
 - Implement middleware for common functionality
 - Use the container for dependency injection
@@ -353,7 +353,7 @@ Check `etc/ConfigDatabase.php` credentials and ensure database exists.
 
 ## 🎉 **Congratulations!**
 
-You've successfully set up upMVC and created your first module! You're now ready to build amazing web applications with this modern PHP framework.
+You've successfully set up upMVC and created your first module! You're now ready to build amazing web applications with this modern PHP noFramework.
 
 **Remember:** The upMVC community is here to help. Check the FAQ for common questions, and don't hesitate to explore the example modules for inspiration.
 

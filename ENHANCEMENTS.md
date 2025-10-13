@@ -326,4 +326,4 @@ class DatabaseServiceProvider implements ServiceProviderInterface
 }
 ```
 
-This enhancement package transforms upMVC into a modern, scalable PHP framework while maintaining its simplicity and flexibility principles.
+This enhancement package transforms upMVC into a modern, scalable PHP noFramework while maintaining its simplicity and flexibility principles.

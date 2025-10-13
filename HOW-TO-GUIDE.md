@@ -1,4 +1,4 @@
-# 📘 upMVC Framework - How-To Guide
+# 📘 upMVC NoFramework - How-To Guide
 
 ## 🚀 **Getting Started with upMVC**
 

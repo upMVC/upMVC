@@ -167,7 +167,7 @@ return [
    - Type declarations
    - Documentation improvements
 
-2. **Testing framework**
+2. **Testing noFramework**
    - Unit tests for core components
    - Integration tests for modules
    - CI/CD pipeline setup

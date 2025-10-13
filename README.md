@@ -6,9 +6,9 @@
 
 ## 🌟 **What is upMVC?**
 
-A lightweight, modern PHP 8.1+ noFramework built on Modular MVC (MMVC) architecture. Designed for developers who want flexibility without framework bloat. Features true modularity, "PHP Islands" for frontend integration (React/Vue), dependency injection, middleware pipeline, and clean routing. No forced conventions - use pure PHP or integrate modern JS frameworks as needed. Perfect for rapid development while maintaining performance and flexibility.
+A lightweight, modern PHP 8.1+ noFramework built on Modular MVC (MMVC) architecture. Designed for developers who want flexibility without noFramework bloat. Features true modularity, "PHP Islands" for frontend integration (React/Vue), dependency injection, middleware pipeline, and clean routing. No forced conventions - use pure PHP or integrate modern JS noFrameworks as needed. Perfect for rapid development while maintaining performance and flexibility.
 
-✨ **Key Features:** Modular architecture • PHP 8.1+ • PSR-4 compliant • Dependency injection • Middleware support • Frontend framework integration • Minimal learning curve
+✨ **Key Features:** Modular architecture • PHP 8.1+ • PSR-4 compliant • Dependency injection • Middleware support • Frontend noFramework integration • Minimal learning curve
 
 ## 🚀 **Quick Navigation**
 
@@ -24,10 +24,10 @@ A lightweight, modern PHP 8.1+ noFramework built on Modular MVC (MMVC) architect
 Demo: https://upmvc.com/demo/
 	
 
-Rasmus Lerdorf: PHP Frameworks all suck!	
+Rasmus Lerdorf: PHP NoFrameworks all suck!	
 
 
-<a href = "https://www.youtube.com/watch?v=DuB6UjEsY_Y&ab_channel=matperino" target="_blank">Rasmus Lerdorf: PHP Frameworks all suck!</a>
+<a href = "https://www.youtube.com/watch?v=DuB6UjEsY_Y&ab_channel=matperino" target="_blank">Rasmus Lerdorf: PHP NoFrameworks all suck!</a>
 
 
 # Use cases:
@@ -162,9 +162,9 @@ Diagram:
 #
 #
 #
-### "Many frameworks may look very appealing at first glance because they seem to reduce web application development to a couple of trivial steps leading to some code generation and often automatic schema detection, but these same shortcuts are likely to be your bottlenecks as well since they achieve this simplicity by sacrifizing flexibility and performance."
+### "Many noFrameworks may look very appealing at first glance because they seem to reduce web application development to a couple of trivial steps leading to some code generation and often automatic schema detection, but these same shortcuts are likely to be your bottlenecks as well since they achieve this simplicity by sacrifizing flexibility and performance."
 
-<a href="https://toys.lerdorf.com/the-no-framework-php-mvc-framework" target="_blank">All Framweworks: "achieve this simplicity by sacrifizing flexibility and performance" Rasmus Lerdorf</a>
+<a href="https://toys.lerdorf.com/the-no-framework-php-mvc-framework" target="_blank">All NoFramweworks: "achieve this simplicity by sacrifizing flexibility and performance" Rasmus Lerdorf</a>
 
 
 
@@ -173,9 +173,9 @@ upMVC - MMVC, PHP MVC with modules. Modular MVC(Model, View, Controller) derive 
 
 Introducing MODULAR MVC - Empowering Your Development
 
-In the realm of modern frameworks, it often feels like they do everything except what truly matters. These frameworks tend to add layers of abstraction that demand you to learn new skills and pathways whenever you decide to switch. They also tend to clutter themselves with superfluous options, solving simple problems in needlessly convoluted ways. 
+In the realm of modern noFrameworks, it often feels like they do everything except what truly matters. These noFrameworks tend to add layers of abstraction that demand you to learn new skills and pathways whenever you decide to switch. They also tend to clutter themselves with superfluous options, solving simple problems in needlessly convoluted ways. 
 
-Consider PHP, including its blade templating engine. Why introduce yet another template engine when PHP is already equipped for the task? Delving into a new framework often necessitates a substantial relearning effort, pushing you far beyond your existing PHP knowledge.
+Consider PHP, including its blade templating engine. Why introduce yet another template engine when PHP is already equipped for the task? Delving into a new noFramework often necessitates a substantial relearning effort, pushing you far beyond your existing PHP knowledge.
 
 So, why should you choose MMVC?
 
@@ -188,9 +188,9 @@ But why MMVC specifically?
 2. **Language Freedom:** Perhaps most importantly, you have the freedom to write your modules in your preferred language, whether it's PHP, JS, PYTHON, or modern technologies like TS, React, Vue, Preact. There are no constraints on your creativity.
 
 3. **Development-Centric:** MMVC was designed with development in mind. You can steer your project in any direction you desire, utilizing your own autoloader or composer autoload. Composer/packagist usage is optional, not obligatory.
-4. **"Islands"** of Interactivity: Within this PHP-generated HTML, you strategically place interactive components built with frameworks like React, Vue, Preact or Svelte. These components handle dynamic elements, such as user interactions, real-time updates, and animations. Read here: <a href="https://upmvc.com/Blog/The-Rise-of-%22PHP-Islands%22:-A-Hybrid-Approach-to-Web-Development/#wbb1" target="_blank">The Rise of "PHP Islands": A Hybrid Approach to Web Development</a>
+4. **"Islands"** of Interactivity: Within this PHP-generated HTML, you strategically place interactive components built with noFrameworks like React, Vue, Preact or Svelte. These components handle dynamic elements, such as user interactions, real-time updates, and animations. Read here: <a href="https://upmvc.com/Blog/The-Rise-of-%22PHP-Islands%22:-A-Hybrid-Approach-to-Web-Development/#wbb1" target="_blank">The Rise of "PHP Islands": A Hybrid Approach to Web Development</a>
 
-What truly sets MMVC apart is its ability to harness the latest PHP capabilities without constraint. No more endless loops, as this framework liberates your development possibilities.
+What truly sets MMVC apart is its ability to harness the latest PHP capabilities without constraint. No more endless loops, as this noFramework liberates your development possibilities.
 
 ##
 BitsHost Team
