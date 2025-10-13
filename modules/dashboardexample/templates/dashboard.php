@@ -28,15 +28,15 @@
             <i class="fas fa-bolt text-yellow-500 text-xl"></i>
         </div>
         <div class="space-y-4">
-            <a href="<?php echo BASE_URL ?>/dashboard/users/new" class="flex items-center text-blue-600 hover:text-blue-700">
+            <a href="<?php echo BASE_URL ?>/dashboardexample/users/add" class="flex items-center text-blue-600 hover:text-blue-700">
                 <i class="fas fa-user-plus mr-2"></i>
                 Add New User
             </a>
-            <a href="<?php echo BASE_URL ?>/dashboard/reports" class="flex items-center text-blue-600 hover:text-blue-700">
+            <a href="<?php echo BASE_URL ?>/dashboardexample/reports" class="flex items-center text-blue-600 hover:text-blue-700">
                 <i class="fas fa-chart-bar mr-2"></i>
                 Generate Report
             </a>
-            <a href="<?php echo BASE_URL ?>/dashboard/settings" class="flex items-center text-blue-600 hover:text-blue-700">
+            <a href="<?php echo BASE_URL ?>/dashboardexample/settings" class="flex items-center text-blue-600 hover:text-blue-700">
                 <i class="fas fa-cog mr-2"></i>
                 System Settings
             </a>

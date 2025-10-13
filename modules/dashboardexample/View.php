@@ -1,5 +1,5 @@
 <?php
-namespace Dashboard;
+namespace Dashboardexample;
 
 use Common\Bmvc\BaseView;
 

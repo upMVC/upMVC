@@ -9,7 +9,7 @@
             <span class="block sm:inline"><?= $error ?></span>
         </div>
     <?php endif; ?>
-    <form class="mt-8 space-y-6" action="<?php echo BASE_URL ?>/dashboard/login" method="POST">
+    <form class="mt-8 space-y-6" action="<?php echo BASE_URL ?>/dashboardexample/login" method="POST">
         <div class="rounded-md shadow-sm -space-y-px">
             <div>
                 <label for="email" class="sr-only">Email address</label>

@@ -71,6 +71,8 @@ class ComposerStaticInit49502ca6970de9d65a6295b99bbb2d5b
         ),
         'D' => 
         array (
+            'Dashboardexample\\Routes\\' => 24,
+            'Dashboardexample\\' => 17,
             'Dashboard\\Routes\\' => 17,
             'Dashboard\\' => 10,
         ),
@@ -228,6 +230,14 @@ class ComposerStaticInit49502ca6970de9d65a6295b99bbb2d5b
         'Enhanced\\' => 
         array (
             0 => __DIR__ . '/../..' . '/modules/enhanced',
+        ),
+        'Dashboardexample\\Routes\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/modules/dashboardexample/routes',
+        ),
+        'Dashboardexample\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/modules/dashboardexample',
         ),
         'Dashboard\\Routes\\' => 
         array (

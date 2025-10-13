@@ -41,6 +41,8 @@ return array(
     'Mail\\' => array($baseDir . '/modules/mail'),
     'Enhanced\\Routes\\' => array($baseDir . '/modules/enhanced/routes'),
     'Enhanced\\' => array($baseDir . '/modules/enhanced'),
+    'Dashboardexample\\Routes\\' => array($baseDir . '/modules/dashboardexample/routes'),
+    'Dashboardexample\\' => array($baseDir . '/modules/dashboardexample'),
     'Dashboard\\Routes\\' => array($baseDir . '/modules/dashboard/routes'),
     'Dashboard\\' => array($baseDir . '/modules/dashboard'),
     'Common\\Bmvc\\' => array($baseDir . '/common/bmvc'),

@@ -54,16 +54,16 @@ Settings: <?php echo htmlspecialchars(print_r($settings ?? [], true)); ?>
                 <h2 class="text-2xl font-bold">Dashboard</h2>
             </div>
             <nav class="flex-1">
-                <a href="<?php echo BASE_URL ?>/dashboard" class="flex items-center px-6 py-3 hover:bg-gray-700">
+                <a href="<?php echo BASE_URL ?>/dashboardexample" class="flex items-center px-6 py-3 hover:bg-gray-700">
                     <i class="fas fa-home mr-3"></i>
                     Dashboard
                 </a>
                 <?php if (isset($_SESSION['user']['role']) && $_SESSION['user']['role'] === 'admin'): ?>
-                <a href="<?php echo BASE_URL ?>/dashboard/users" class="flex items-center px-6 py-3 hover:bg-gray-700">
+                <a href="<?php echo BASE_URL ?>/dashboardexample/users" class="flex items-center px-6 py-3 hover:bg-gray-700">
                     <i class="fas fa-users mr-3"></i>
                     Users
                 </a>
-                <a href="<?php echo BASE_URL ?>/dashboard/settings" class="flex items-center px-6 py-3 hover:bg-gray-700">
+                <a href="<?php echo BASE_URL ?>/dashboardexample/settings" class="flex items-center px-6 py-3 hover:bg-gray-700">
                     <i class="fas fa-cog mr-3"></i>
                     Settings
                 </a>
@@ -74,7 +74,7 @@ Settings: <?php echo htmlspecialchars(print_r($settings ?? [], true)); ?>
                     <i class="fas fa-user-circle text-2xl mr-3"></i>
                     <div>
                         <p class="font-medium"><?= $_SESSION['user']['name'] ?? 'User' ?></p>
-                        <a href="<?php echo BASE_URL ?>/dashboard/logout" class="text-sm text-gray-400 hover:text-white">Logout</a>
+                        <a href="<?php echo BASE_URL ?>/dashboardexample/logout" class="text-sm text-gray-400 hover:text-white">Logout</a>
                     </div>
                 </div>
             </div>
