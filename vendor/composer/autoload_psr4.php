@@ -23,8 +23,6 @@ return array(
     'Testitems\\' => array($baseDir . '/modules/testitems'),
     'Test\\Routes\\' => array($baseDir . '/modules/test/routes'),
     'Test\\' => array($baseDir . '/modules/test'),
-    'TestItems\\Routes\\' => array($baseDir . '/modules/testitems/routes'),
-    'TestItems\\' => array($baseDir . '/modules/testitems'),
     'Suba\\Routes\\' => array($baseDir . '/modules/moda/modules/suba/routes'),
     'Suba\\' => array($baseDir . '/modules/moda/modules/suba'),
     'RedBeanPHP\\' => array($vendorDir . '/gabordemooij/redbean/RedBeanPHP'),

@@ -149,13 +149,24 @@ class Controller extends BaseController
     {
         try {
             $fileCache = CacheManager::store('file');
-            if (method_exists($fileCache, 'getStats')) {
+            
+            // Type check and method check for FileCache specific functionality
+            if ($fileCache instanceof \upMVC\Cache\FileCache && method_exists($fileCache, 'getStats')) {
                 return $fileCache->getStats();
             }
+            
+            // Fallback for other cache implementations
+            return [
+                'status' => 'Cache active',
+                'driver' => get_class($fileCache),
+                'available_methods' => get_class_methods($fileCache)
+            ];
+            
         } catch (\Exception $e) {
-            // Ignore errors
+            return [
+                'status' => 'Cache error: ' . $e->getMessage(),
+                'driver' => 'unknown'
+            ];
         }
-
-        return ['status' => 'Cache stats not available'];
     }
 }

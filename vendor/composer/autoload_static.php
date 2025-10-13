@@ -32,8 +32,6 @@ class ComposerStaticInit49502ca6970de9d65a6295b99bbb2d5b
             'Testitems\\' => 10,
             'Test\\Routes\\' => 12,
             'Test\\' => 5,
-            'TestItems\\Routes\\' => 17,
-            'TestItems\\' => 10,
         ),
         'S' => 
         array (
@@ -158,14 +156,6 @@ class ComposerStaticInit49502ca6970de9d65a6295b99bbb2d5b
         'Test\\' => 
         array (
             0 => __DIR__ . '/../..' . '/modules/test',
-        ),
-        'TestItems\\Routes\\' => 
-        array (
-            0 => __DIR__ . '/../..' . '/modules/testitems/routes',
-        ),
-        'TestItems\\' => 
-        array (
-            0 => __DIR__ . '/../..' . '/modules/testitems',
         ),
         'Suba\\Routes\\' => 
         array (
