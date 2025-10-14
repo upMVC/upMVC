@@ -33,6 +33,9 @@ A lightweight, modern PHP 8.1+ noFramework built on Modular MVC (MMVC) architect
 ### **📊 Project Status:**
 - **[🎉 Final Cleanup Summary](FINAL-CLEANUP-SUMMARY.md)** - Complete project overview
 
+### **🛠 Development:**
+- **[🐛 /zbug Folder](zbug/README.md)** - Debug files and development utilities (excluded from Git)
+
 Demo: https://upmvc.com/demo/
 	
 
