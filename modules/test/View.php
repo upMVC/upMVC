@@ -54,6 +54,19 @@ class View extends BaseView
         $this->endHead();
         $this->startBody($title);
         ?>
+        
+        <!-- Modern UI Demo Link -->
+        <div class="alert alert-info" style="margin-bottom: 20px;">
+            <h4>🎨 New Modern UI Available!</h4>
+            <p>Check out the enhanced modern version of this test module with contemporary design, dark mode, and interactive features:</p>
+            <a href="<?php echo BASE_URL; ?>/test/modern" class="btn btn-primary">
+                ✨ View Modern Demo
+            </a>
+            <small class="text-muted" style="display: block; margin-top: 10px;">
+                Same functionality, modern look & feel
+            </small>
+        </div>
+        
         <ul id="ul">
             <strong>Click or Double Click on the first line.</strong>
             <?php foreach ($users as $user) : ?>

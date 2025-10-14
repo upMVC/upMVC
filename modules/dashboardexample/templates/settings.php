@@ -9,7 +9,7 @@
         </div>
     <?php endif; ?>
 
-    <form action="<?php echo BASE_URL ?>/dashboard/settings" method="POST" class="p-6 space-y-6">
+    <form action="<?php echo BASE_URL ?>/dashboardexample/settings" method="POST" class="p-6 space-y-6">
         <!-- Site Name -->
         <div>
             <label for="site_name" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Site Name</label>

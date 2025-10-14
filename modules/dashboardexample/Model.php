@@ -1,5 +1,5 @@
 <?php
-namespace Dashboard;
+namespace Dashboardexample;
 
 use Common\Bmvc\BaseModel;
 use upMVC\Database;
@@ -9,28 +9,76 @@ class Model extends BaseModel {
     //protected $conn;
     protected $table = 'dashboard_users';
     
+    // Expose db property for Controller access
+    public $db;
+    
     public function __construct() {
         parent::__construct();
-        //$this->conn = (new Database())->getConnection();
-        //$this->initializeDatabase();
+        // Expose the connection as db property for Controller access
+        $this->db = $this->conn;
+        // Only initialize database if tables don't exist
+        $this->ensureTablesExist();
     }
 
-    private function initializeDatabase() {
+    private function ensureTablesExist() {
         try {
-            // Drop existing tables
-            $this->conn->exec("DROP TABLE IF EXISTS dashboard_users;");
-            $this->conn->exec("DROP TABLE IF EXISTS dashboard_settings;");
+            // Check if dashboard_users table exists (MySQL compatible)
+            $stmt = $this->conn->prepare("SHOW TABLES LIKE 'dashboard_users'");
+            $stmt->execute();
             
-            $schema = file_get_contents(__DIR__ . '/sql/schema.sql');
-            $statements = array_filter(array_map('trim', explode(';', $schema)));
-            
-            foreach ($statements as $statement) {
-                if (!empty($statement)) {
-                    $this->conn->exec($statement);
+            if (!$stmt->fetch()) {
+                error_log("Dashboard tables not found, creating them...");
+                
+                // Create dashboard_users table (MySQL compatible)
+                $this->conn->exec("
+                    CREATE TABLE IF NOT EXISTS dashboard_users (
+                        id INT PRIMARY KEY AUTO_INCREMENT,
+                        name VARCHAR(255) NOT NULL,
+                        email VARCHAR(255) NOT NULL UNIQUE,
+                        password VARCHAR(255) NOT NULL,
+                        role ENUM('admin', 'user') DEFAULT 'user',
+                        last_login DATETIME,
+                        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+                    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
+                ");
+                
+                // Create dashboard_settings table (MySQL compatible)
+                $this->conn->exec("
+                    CREATE TABLE IF NOT EXISTS dashboard_settings (
+                        id INT PRIMARY KEY AUTO_INCREMENT,
+                        setting_key VARCHAR(255) NOT NULL UNIQUE,
+                        setting_value TEXT,
+                        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+                    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
+                ");
+                
+                // Create default admin user (password: admin123)
+                $hashedPassword = password_hash('admin123', PASSWORD_DEFAULT);
+                $stmt = $this->conn->prepare("INSERT IGNORE INTO dashboard_users (name, email, password, role) VALUES (?, ?, ?, ?)");
+                $stmt->execute(['Admin', 'admin@example.com', $hashedPassword, 'admin']);
+                
+                // Insert default settings
+                $defaultSettings = [
+                    'site_name' => 'Dashboard',
+                    'theme' => 'light',
+                    'items_per_page' => '10',
+                    'maintenance_mode' => 'false'
+                ];
+                
+                foreach ($defaultSettings as $key => $value) {
+                    $stmt = $this->conn->prepare("INSERT IGNORE INTO dashboard_settings (setting_key, setting_value) VALUES (?, ?)");
+                    $stmt->execute([$key, $value]);
                 }
+                
+                error_log("Dashboard tables created successfully");
+            } else {
+                error_log("Dashboard tables already exist");
             }
         } catch (\PDOException $e) {
-            die("Error initializing database: " . $e->getMessage());
+            error_log("Error initializing dashboard database: " . $e->getMessage());
+            // Don't die, just log the error - let the application continue
         }
     }
 
@@ -149,7 +197,9 @@ class Model extends BaseModel {
      * @return array
      */
     public function getUserByRole($role) {
-        return $this->where('role', $role)->get();
+        $stmt = $this->conn->prepare("SELECT * FROM {$this->table} WHERE role = ?");
+        $stmt->execute([$role]);
+        return $stmt->fetchAll();
     }
 
     /**

@@ -84,7 +84,7 @@
     <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white dark:bg-gray-800 dark:border-gray-700">
         <div class="mt-3">
             <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-4">Add New User</h3>
-            <form id="addUserForm" action="<?php echo BASE_URL ?>/dashboard/users/add" method="POST" class="space-y-4">
+            <form id="addUserForm" action="<?php echo BASE_URL ?>/dashboardexample/users/add" method="POST" class="space-y-4">
                 <div>
                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Name</label>
                     <input type="text" name="name" required 
@@ -128,7 +128,7 @@
     <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white dark:bg-gray-800 dark:border-gray-700">
         <div class="mt-3">
             <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-4">Edit User</h3>
-            <form id="editUserForm" action="<?php echo BASE_URL ?>/dashboard/users/edit" method="POST" class="space-y-4">
+            <form id="editUserForm" action="<?php echo BASE_URL ?>/dashboardexample/users/edit" method="POST" class="space-y-4">
                 <input type="hidden" name="id" id="editUserId">
                 <div>
                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Name</label>
@@ -188,7 +188,7 @@ function closeModal(modalId) {
 
 function confirmDelete(userId) {
     if (confirm('Are you sure you want to delete this user?')) {
-        window.location.href = `${BASE_URL}/dashboard/users/delete/?userid=${userId}`;
+        window.location.href = `${BASE_URL}/dashboardexample/users/delete/?userid=${userId}`;
     }
 }
 

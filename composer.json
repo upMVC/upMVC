@@ -58,6 +58,8 @@
             "Reactcrud\\Routes\\": "modules/reactcrud/routes/",
             "Dashboard\\": "modules/dashboard/",
             "Dashboard\\Routes\\": "modules/dashboard/routes/",
+            "Dashboardexample\\": "modules/dashboardexample/",
+            "Dashboardexample\\Routes\\": "modules/dashboardexample/routes/",
             "Enhanced\\": "modules/enhanced/",
             "Enhanced\\Routes\\": "modules/enhanced/routes/",
             "Testitems\\": "modules/testitems/",

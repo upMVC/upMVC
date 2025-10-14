@@ -53,6 +53,10 @@ class Routes
         $router->addRoute('/test.php', Controller::class, 'display');
         $router->addRoute('/test', Controller::class, 'display');
         $router->addRoute('/test/subpage', Controller::class, 'display');
+        
+        // Modern view routes
+        $router->addRoute('/test/modern', Controller::class, 'displayModern');
+        $router->addRoute('/test-modern', Controller::class, 'displayModern');
         //GET parameters, look at .htaccess
         //one parameter
         $router->addRoute('/test-one', Controller::class, 'display');

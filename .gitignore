@@ -1,0 +1,115 @@
+# upMVC .gitignore
+
+# Debug and testing files
+zbug/
+/zbug/
+
+# Logs
+logs/
+*.log
+
+# Vendor dependencies
+vendor/
+node_modules/
+
+# Environment files
+.env
+.env.local
+.env.production
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+*.temp
+
+# Cache files
+cache/
+*.cache
+
+# Database dumps
+*.sql
+*.db
+*.sqlite
+
+# Uploaded files (if not needed in repo)
+uploads/
+files/
+
+# Compiled files
+*.com
+*.class
+*.dll
+*.exe
+*.o
+*.so
+
+# Backup files
+*.bak
+*.backup
+*.old
+
+# Package files
+*.7z
+*.dmg
+*.gz
+*.iso
+*.jar
+*.rar
+*.tar
+*.zip
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Coverage directory used by tools like istanbul
+coverage/
+
+# Dependency directories
+jspm_packages/
+
+# Optional npm cache directory
+.npm
+
+# Optional REPL history
+.node_repl_history
+
+# Output of 'npm pack'
+*.tgz
+
+# Yarn Integrity file
+.yarn-integrity
+
+# dotenv environment variables file
+.env
+
+# Configuration files with sensitive data
+config/local.php
+config/production.php
+
+# Error logs
+error.log
+error_log
+
+# PHP specific
+composer.phar
+/vendor/

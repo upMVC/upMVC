@@ -1,5 +1,5 @@
 <?php
-namespace Dashboard;
+namespace Dashboardexample;
 
 use Common\Bmvc\BaseController;
 
@@ -14,10 +14,8 @@ class Controller extends BaseController {
             
             // Get all settings for views
             $settings = $this->model->getSettings();
-            error_log("Controller constructor - Initial settings: " . print_r($settings, true));
             
             if (empty($settings) || !isset($settings['theme'])) {
-                error_log("No settings found in database, initializing defaults");
                 // Initialize default settings in database
                 $defaults = [
                     'theme' => 'light',
@@ -33,21 +31,19 @@ class Controller extends BaseController {
                 
                 // Reload settings after initialization
                 $settings = $this->model->getSettings();
-                error_log("Settings after initialization: " . print_r($settings, true));
             }
             
             $this->view->addGlobal('settings', $settings);
-            error_log("Settings added to view globals: " . print_r($settings, true));
             
         } catch (\Exception $e) {
-            error_log("Error in Controller constructor: " . $e->getMessage());
+            error_log("CRITICAL ERROR in Dashboard Controller constructor: " . $e->getMessage());
             throw $e;
         }
     }
 
     public function index() {
         if (!$this->isAuthenticated()) {
-            header('Location: '.BASE_URL.'/dashboard/login');
+            header('Location: ' . $this->getBaseUrl() . '/dashboardexample/login');
             exit;
         }
         $this->view->render('dashboard', [
@@ -58,7 +54,7 @@ class Controller extends BaseController {
 
     public function login() {
         if ($this->isAuthenticated()) {
-            header('Location: '.BASE_URL.'/dashboard');
+            header('Location: ' . $this->getBaseUrl() . '/dashboardexample');
             exit;
         }
         
@@ -72,7 +68,7 @@ class Controller extends BaseController {
             if (is_array($result)) {
                 $_SESSION['user'] = $result;
                 $_SESSION['authenticated'] = true;
-                header('Location: '.BASE_URL.'/dashboard');
+                header('Location: ' . $this->getBaseUrl() . '/dashboardexample');
                 exit;
             }
             
@@ -91,13 +87,13 @@ class Controller extends BaseController {
 
     public function logout() {
         session_destroy();
-        header('Location: '.BASE_URL.'/dashboard/login');
+        header('Location: '.\BASE_URL.'/dashboardexample/login');
         exit;
     }
 
     public function users() {
         if (!$this->isAuthenticated() || !$this->isAdmin()) {
-            header('Location: '.BASE_URL.'/dashboard/login');
+            header('Location: '.\BASE_URL.'/dashboardexample/login');
             exit;
         }
         
@@ -110,14 +106,14 @@ class Controller extends BaseController {
 
     public function addUser() {
         if (!$this->isAuthenticated() || !$this->isAdmin()) {
-            header('Location: '.BASE_URL.'/dashboard/login');
+            header('Location: '.\BASE_URL.'/dashboardexample/login');
             exit;
         }
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $result = $this->model->createUser($_POST);
             if ($result === true) {
-                header('Location: '.BASE_URL.'/dashboard/users');
+                header('Location: '.\BASE_URL.'/dashboardexample/users');
                 exit;
             }
             // If there was an error, show it
@@ -132,7 +128,7 @@ class Controller extends BaseController {
 
     public function editUser() {
         if (!$this->isAuthenticated() || !$this->isAdmin()) {
-            header('Location: '.BASE_URL.'/dashboard/login');
+            header('Location: '.\BASE_URL.'/dashboardexample/login');
             exit;
         }
 
@@ -142,7 +138,7 @@ class Controller extends BaseController {
             
             $result = $this->model->updateUser($id, $_POST);
             if ($result === true) {
-                header('Location: '.BASE_URL.'/dashboard/users');
+                header('Location: '.\BASE_URL.'/dashboardexample/users');
                 exit;
             }
             // If there was an error, show it
@@ -157,7 +153,7 @@ class Controller extends BaseController {
 
     public function deleteUser($params) {
         if (!$this->isAuthenticated() || !$this->isAdmin()) {
-            header('Location: '.BASE_URL.'/dashboard/login');
+            header('Location: '.\BASE_URL.'/dashboardexample/login');
             exit;
         }
 
@@ -181,7 +177,7 @@ class Controller extends BaseController {
         }
       }
         
-        header('Location: '.BASE_URL.'/dashboard/users');
+        header('Location: '.\BASE_URL.'/dashboardexample/users');
         exit;
     }
 
@@ -193,16 +189,20 @@ class Controller extends BaseController {
         return isset($_SESSION['user']['role']) && $_SESSION['user']['role'] === 'admin';
     }
 
+    private function getBaseUrl() {
+        return defined('BASE_URL') ? BASE_URL : 'http://localhost/upMVC';
+    }
+
     public function settings() {
         if (!$this->isAuthenticated() || !$this->isAdmin()) {
-            header('Location: '.BASE_URL.'/dashboard/login');
+            header('Location: '.\BASE_URL.'/dashboardexample/login');
             exit;
         }
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $result = $this->model->updateSettings($_POST);
             if ($result === true) {
-                header('Location: '.BASE_URL.'/dashboard/settings');
+                header('Location: '.\BASE_URL.'/dashboardexample/settings');
                 exit;
             }
             // If there was an error, show it
