@@ -102,9 +102,31 @@ class Controller
                 if ($active === 1) {
                     $_SESSION["username"] = $row['username'];
                     $_SESSION["iduser"]   = $row['id'];
-                    $_SESSION["logged"] = true;
+                    $_SESSION["logged"] = true;           // Legacy compatibility
+                    $_SESSION['authenticated'] = true;     // Middleware compatibility
                     $this->html->validateToken();
-                    header("Location: $this->url");
+                    
+                    // DEBUG: Write to upMVC logs folder
+                    $logFile = THIS_DIR . '/logs/debug_' . date('Y-m-d') . '.log';
+                    $timestamp = date('Y-m-d H:i:s');
+                    
+                    // DEBUG: Echo the session value to screen
+                    echo "<h2>DEBUG - Session intended_url: " . ($_SESSION['intended_url'] ?? 'NULL') . "</h2>";
+                    echo "<h2>DEBUG - About to redirect to: " . ($_SESSION['intended_url'] ? ('http://localhost' . $_SESSION['intended_url']) : $this->url) . "</h2>";
+                    exit; // Stop here to see the debug
+                    
+                    file_put_contents($logFile, "[$timestamp] DEBUG Login - intended_url from session: " . ($_SESSION['intended_url'] ?? 'NULL') . "\n", FILE_APPEND);
+                    file_put_contents($logFile, "[$timestamp] DEBUG Login - this->url fallback: $this->url\n", FILE_APPEND);
+                    
+                    // Redirect to intended URL if available, otherwise home
+                    $intendedUrl = $_SESSION['intended_url'] ?? null;
+                    $redirectUrl = $intendedUrl ? ('http://localhost' . $intendedUrl) : $this->url;
+                    unset($_SESSION['intended_url']); // Clear intended URL
+                    
+                    // DEBUG: Where are we redirecting?
+                    file_put_contents($logFile, "[$timestamp] DEBUG Login - Redirecting to: $redirectUrl\n", FILE_APPEND);
+                    
+                    header("Location: " . $redirectUrl);
                 } else {
                     echo 'You have not activated your account, check your email!';
                 }

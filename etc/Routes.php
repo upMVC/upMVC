@@ -62,12 +62,13 @@ class Routes
      *
      * @param string $reqRoute
      * @param string $reqMet
+     * @param string|null $reqURI - original URI for middleware
      * @return void
      */
-    public function startRoutes(string $reqRoute, string $reqMet): void
+    public function startRoutes(string $reqRoute, string $reqMet, ?string $reqURI = null): void
     {
         $this->registerRoutes();
-        $this->dispatchRoute($reqRoute, $reqMet);
+        $this->dispatchRoute($reqRoute, $reqMet, $reqURI);
     }
 
     /**
@@ -95,10 +96,11 @@ class Routes
      *
      * @param string $reqRoute
      * @param string $reqMet
+     * @param string|null $reqURI - original URI for middleware
      * @return void
      */
-    private function dispatchRoute(string $reqRoute, string $reqMet): void
+    private function dispatchRoute(string $reqRoute, string $reqMet, ?string $reqURI = null): void
     {
-        $this->router->dispatcher($reqRoute, $reqMet);
+        $this->router->dispatcher($reqRoute, $reqMet, $reqURI);
     }
 }

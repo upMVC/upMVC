@@ -45,11 +45,25 @@ class AuthMiddleware implements MiddlewareInterface
     {
         $route = $request['route'] ?? '';
         
+        // DEBUG: Write to upMVC logs folder
+        $logFile = THIS_DIR . '/logs/debug_' . date('Y-m-d') . '.log';
+        $timestamp = date('Y-m-d H:i:s');
+        
+        file_put_contents($logFile, "[$timestamp] DEBUG AuthMiddleware - route: $route\n", FILE_APPEND);
+        file_put_contents($logFile, "[$timestamp] DEBUG AuthMiddleware - request[uri]: " . ($request['uri'] ?? 'NULL') . "\n", FILE_APPEND);
+        
         // Check if route requires authentication
         if ($this->requiresAuth($route)) {
+            file_put_contents($logFile, "[$timestamp] DEBUG AuthMiddleware - Route requires auth: $route\n", FILE_APPEND);
+            
             if (!$this->isAuthenticated()) {
                 // Store intended URL for redirect after login
-                $_SESSION['intended_url'] = $request['uri'] ?? $route;
+                // ALWAYS use the original URI from Start.php ($this->reqURI)
+                $intendedUrl = $request['uri'];  // This is $this->reqURI from Start.php
+                $_SESSION['intended_url'] = $intendedUrl;
+                
+                // DEBUG: What are we storing?
+                file_put_contents($logFile, "[$timestamp] DEBUG AuthMiddleware - Storing intended_url: $intendedUrl\n", FILE_APPEND);
                 
                 $baseUrl = defined('BASE_URL') ? BASE_URL : '';
                 header('Location: ' . $baseUrl . $this->redirectTo);
@@ -83,6 +97,10 @@ class AuthMiddleware implements MiddlewareInterface
      */
     private function isAuthenticated(): bool
     {
-        return isset($_SESSION['authenticated']) && $_SESSION['authenticated'] === true;
+        // Check both new and legacy session variables for compatibility
+        $newAuth = isset($_SESSION['authenticated']) && $_SESSION['authenticated'] === true;
+        $legacyAuth = isset($_SESSION['logged']) && $_SESSION['logged'] === true;
+        
+        return $newAuth || $legacyAuth;
     }
 }

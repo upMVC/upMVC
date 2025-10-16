@@ -1,29 +1,7 @@
 <?php
 /*
- *   Created on Tue Oct 31 2023
- *   Enhanced on October 11, 2025
- *   Copyright (c) 2023-2025 BitsHost
- *   All rights reserved.
- *
- *   Permission is hereby granted, free of charge, to any person obtaining a copy
- *   of this software and associated documentation files (the "Software"), to deal
- *   in the Software without restriction, including without limitation the rights
- *   to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- *   copies of the Software, and to permit persons to whom the Software is
- *   furnished to do so, subject to the following conditions:
- *
- *   The above copyright notice and this permission notice shall be included in all
- *   copies or substantial portions of the Software.
- *
- *   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- *   IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- *   FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- *   AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- *   LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- *   OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- *   SOFTWARE.
- *   Here you may host your app for free:
- *   https://bitshost.biz/
+ *   Simplified Router for upMVC
+ *   Removes unnecessary complexity while maintaining functionality
  */
 
 namespace upMVC;
@@ -31,35 +9,30 @@ namespace upMVC;
 use upMVC\Middleware\MiddlewareManager;
 
 /**
- * Router
- * Enhanced with middleware support
+ * Simplified Router
+ * - No route parameters (use exact routes from database)
+ * - No GET/POST wrappers (use $_GET/$_POST directly)
+ * - Reuse REQUEST_URI/METHOD from Start.php
  */
 class Router
 {
     protected $routes = [];
-    
-    /**
-     * @var MiddlewareManager
-     */
     private MiddlewareManager $middlewareManager;
+    protected $middleware = [];
 
     public function __construct()
     {
         $this->middlewareManager = new MiddlewareManager();
     }
 
-    /**
-     * Get middleware manager
-     *
-     * @return MiddlewareManager
-     */
     public function getMiddlewareManager(): MiddlewareManager
     {
         return $this->middlewareManager;
     }
-    protected $middleware = [];
-    protected $routeParams = [];
 
+    /**
+     * Add route - simple exact matching
+     */
     public function addRoute($route, $className, $methodName, array $middleware = [])
     {
         $this->routes[$route] = [
@@ -74,31 +47,40 @@ class Router
         $this->middleware[$name] = $middleware;
     }
 
-    public function dispatcher($reqRoute, $reqMet)
+    /**
+     * Simplified dispatcher - uses your existing variables from Start.php
+     * @param string $reqRoute - from $config->getReqRoute($reqURI)
+     * @param string $reqMet - from $_SERVER['REQUEST_METHOD']
+     * @param string|null $reqURI - original URI with query parameters for middleware
+     */
+    public function dispatcher($reqRoute, $reqMet, ?string $reqURI = null)
     {
-        // Create request context
+        // DEBUG: Write to upMVC logs folder
+        $logFile = THIS_DIR . '/logs/debug_' . date('Y-m-d') . '.log';
+        $timestamp = date('Y-m-d H:i:s');
+        
+        file_put_contents($logFile, "[$timestamp] DEBUG Router - reqRoute: $reqRoute\n", FILE_APPEND);
+        file_put_contents($logFile, "[$timestamp] DEBUG Router - reqMet: $reqMet\n", FILE_APPEND);
+        file_put_contents($logFile, "[$timestamp] DEBUG Router - reqURI: " . ($reqURI ?? 'NULL') . "\n", FILE_APPEND);
+        
+        // Simple request context (reuses your variables + original URI)
         $request = [
             'route' => $reqRoute,
             'method' => $reqMet,
-            'uri' => $_SERVER['REQUEST_URI'] ?? '',
-            'query_params' => $_GET,
-            'post_params' => $_POST,
-            'headers' => function_exists('getallheaders') ? getallheaders() : [],
+            'uri' => $reqURI,  // ALWAYS use the original URI from Start.php
             'timestamp' => time()
         ];
-
-        $matchedRoute = $this->matchRoute($reqRoute);
         
-        if ($matchedRoute) {
-            $route = $this->routes[$matchedRoute['route']];
-            $this->routeParams = $matchedRoute['params'];
+        // DEBUG: Let's see what we're passing to middleware
+        file_put_contents($logFile, "[$timestamp] DEBUG Router - request[uri]: " . ($request['uri'] ?? 'NULL') . "\n", FILE_APPEND);
+
+        // Simple exact route matching using your $reqRoute
+        if (isset($this->routes[$reqRoute])) {
+            $route = $this->routes[$reqRoute];
             
-            // Add matched parameters to request
-            $request['params'] = $matchedRoute['params'];
-            
-            // Execute enhanced middleware pipeline
+            // Execute middleware pipeline
             return $this->middlewareManager->execute(
-                $matchedRoute['route'],
+                $reqRoute,
                 $request,
                 function ($request) use ($route, $reqRoute, $reqMet) {
                     // Execute legacy middleware for backward compatibility
@@ -123,49 +105,19 @@ class Router
             );
         }
     }
-    
-    private function matchRoute(string $reqRoute): ?array
-    {
-        // Exact match first
-        if (isset($this->routes[$reqRoute])) {
-            return ['route' => $reqRoute, 'params' => []];
-        }
-        
-        // Pattern matching for dynamic routes
-        foreach ($this->routes as $route => $config) {
-            $pattern = preg_replace('/\{([^}]+)\}/', '([^/]+)', $route);
-            $pattern = '#^' . $pattern . '$#';
-            
-            if (preg_match($pattern, $reqRoute, $matches)) {
-                array_shift($matches); // Remove full match
-                
-                // Extract parameter names
-                preg_match_all('/\{([^}]+)\}/', $route, $paramNames);
-                $params = array_combine($paramNames[1] ?? [], $matches);
-                
-                return ['route' => $route, 'params' => $params];
-            }
-        }
-        
-        return null;
-    }
-    
-    public function getRouteParams(): array
-    {
-        return $this->routeParams;
-    }
 
+    /**
+     * Simple controller calling - controllers use $_GET/$_POST directly
+     */
     private function callController($className, $methodName, $reqRoute, $reqMet)
     {
         $this->beforeMiddleware();
         $controller = new $className();
         
-        // Inject route parameters if controller supports it
-        if (method_exists($controller, 'setRouteParams')) {
-            $controller->setRouteParams($this->routeParams);
-        }
-        
+        // Simple method call - controllers access $_GET/$_POST traditionally
+        // No parameter injection complexity
         $controller->$methodName($reqRoute, $reqMet);
+        
         $this->afterMiddleware();
     }
 
