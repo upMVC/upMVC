@@ -65,54 +65,72 @@ Rasmus Lerdorf: PHP NoFrameworks all suck!
 # Use cases:
 #### You can use the system as a standalone, as a library, as a library in the standalone version where it can be a module, you can also use it as a standalone in the standalone version /shop /blog /app /anything else - in this way, you split your app into multiple apps(shop, blog, app, anything else as separate instances of upMVC) each with their modules connected to the same or different endpoints.
 
-# Install: 
+# 📦 Installation
+
+## Option 1: Install as a Library
+
+Add upMVC to your existing project:
+
+```bash
+composer require bitshost/upmvc
+```
+
+**Post-installation steps:**
+- Copy `index.php` from vendor to your project root
+- Add `.htaccess` rules for routing
+- Configure: `/etc/Config.php`, `/etc/ConfigDatabase.php`, `/modules/mail/MailController.php`
+
+## Option 2: Install as a Standalone Project
+
+Create a new upMVC project:
+
+```bash
+# Install in new directory
+composer create-project bitshost/upmvc yourProjectName
+
+# Or install in current directory
+composer create-project bitshost/upmvc .
+```
+
+**After installation:**
+
+```bash
+# Update autoloader when adding new modules
+composer dump-autoload
+
+# Update dependencies
+composer update
+```
 
 
-## Install as a library.
+## ⚙️ Configuration
 
+Edit these files with your project settings:
 
-#### composer require bitshost/upmvc:dev-main
-#### (composer require bitshost/upmvc:dev-master - not available)
-
- (NOTE: When utilizing upMVC as a library, you need place index.php or its content in the folder/file where you wish to utilize it, as well as add .htaccess rules in your .htaccess or copy/paste rules and edit config files /vendor/upmvc/.. -> /etc/Config.php, /etc/ConfigDatabase.php, /modules/mail/MailController.php )
-
-## or
-
-## Install as a project.
-
-#### composer create-project bitshost/upmvc:dev-main yourFolderNameHere
-#### (composer create-project bitshost/upmvc:dev-master yourFolderNameHere - not available)
-#### or - current directory(include point(.))
-#### composer create-project bitshost/upmvc:dev-main .
-
-#### Comands: composer dump-autoload and/or composer update
-
-
-## Settings:
-
-		
-/etc/Config.php
-
-/etc/ConfigDatabase.php
-
-/modules/mail/MailController.php
+- **`/etc/Config.php`** - Base URL, site paths, environment settings
+- **`/etc/ConfigDatabase.php`** - Database connection parameters
+- **`/modules/mail/MailController.php`** - PHPMailer SMTP configuration
 
 #
 		
-## Add routes:
+## 🛣️ Routing System
 
+upMVC offers flexible routing at multiple levels:
 
-1 - General Routes - > etc/Routes.php
+1. **Global Routes** → `/etc/Routes.php` - Application-wide routes
+2. **Module Routes** → `/modules/yourmodule/routes/Routes.php` - Module-specific routes
+3. **Module Initialization** → `/etc/InitMods.php` - Register module routes
+4. **Namespace Registration** → `composer.json` - Add PSR-4 autoload entries
 
-2 - Specific Routes(specific routing) - > modules/yourmodule/routes/Routes.php
-
-3 - Adding module routes in Modules Initialiser - > etc/InitMods.php 
-
-4 - Adding namespaces in composer.json  =>
-
+```json
 "autoload": {
-        "psr-4": { ...  }
+    "psr-4": {
+        "YourModule\\": "modules/yourmodule/"
     }
+}
+```
+
+**After adding namespaces:** Run `composer dump-autoload`
     
 
 #
