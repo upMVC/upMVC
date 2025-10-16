@@ -55,14 +55,6 @@ class Router
      */
     public function dispatcher($reqRoute, $reqMet, ?string $reqURI = null)
     {
-        // DEBUG: Write to upMVC logs folder
-        $logFile = THIS_DIR . '/logs/debug_' . date('Y-m-d') . '.log';
-        $timestamp = date('Y-m-d H:i:s');
-        
-        file_put_contents($logFile, "[$timestamp] DEBUG Router - reqRoute: $reqRoute\n", FILE_APPEND);
-        file_put_contents($logFile, "[$timestamp] DEBUG Router - reqMet: $reqMet\n", FILE_APPEND);
-        file_put_contents($logFile, "[$timestamp] DEBUG Router - reqURI: " . ($reqURI ?? 'NULL') . "\n", FILE_APPEND);
-        
         // Simple request context (reuses your variables + original URI)
         $request = [
             'route' => $reqRoute,
@@ -70,9 +62,6 @@ class Router
             'uri' => $reqURI,  // ALWAYS use the original URI from Start.php
             'timestamp' => time()
         ];
-        
-        // DEBUG: Let's see what we're passing to middleware
-        file_put_contents($logFile, "[$timestamp] DEBUG Router - request[uri]: " . ($request['uri'] ?? 'NULL') . "\n", FILE_APPEND);
 
         // Simple exact route matching using your $reqRoute
         if (isset($this->routes[$reqRoute])) {

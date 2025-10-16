@@ -114,32 +114,18 @@ class Controller
                     $_SESSION["iduser"]   = $row['id'];
                     $_SESSION["logged"] = true;           // Legacy compatibility
                     $_SESSION['authenticated'] = true;     // Middleware compatibility
-                    // REMOVED: $this->html->validateToken(); 
-                    // This was outputting JavaScript that redirected to home, overriding PHP header!
-                    
-                    // DEBUG: Log session state
-                    $logFile = THIS_DIR . '/logs/debug_' . date('Y-m-d') . '.log';
-                    $timestamp = date('Y-m-d H:i:s');
-                    file_put_contents($logFile, "[$timestamp] DEBUG Auth Controller - Login successful\n", FILE_APPEND);
-                    file_put_contents($logFile, "[$timestamp] DEBUG Auth Controller - intended_url in session: " . ($_SESSION['intended_url'] ?? 'NULL') . "\n", FILE_APPEND);
                     
                     // Redirect to intended URL if available, otherwise home
                     $intendedUrl = $_SESSION['intended_url'] ?? null;
                     if ($intendedUrl) {
-                        // The intended_url already contains BASE_URL path (e.g., /upMVC/moda)
-                        // So just use it directly
                         $redirectUrl = $intendedUrl;
                         unset($_SESSION['intended_url']); // Clear intended URL
-                        
-                        file_put_contents($logFile, "[$timestamp] DEBUG Auth Controller - Redirecting to intended: $redirectUrl\n", FILE_APPEND);
                     } else {
                         $redirectUrl = $this->url;
-                        
-                        file_put_contents($logFile, "[$timestamp] DEBUG Auth Controller - No intended URL, redirecting to home: $redirectUrl\n", FILE_APPEND);
                     }
-                     $this->html->validateToken($redirectUrl);
-                    //header("Location: " . $redirectUrl);
-                    exit;  // CRITICAL: Stop execution after redirect
+                    
+                    $this->html->validateToken($redirectUrl);
+                    exit;
                 } else {
                     echo 'You have not activated your account, check your email!';
                 }
