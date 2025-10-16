@@ -50,7 +50,7 @@ class Start
 
             // Use already processed request data (no duplication)
             $initRoutes = new Routes($router);
-            $initRoutes->startRoutes($this->reqRoute, $this->reqMethod, $this->reqURI);
+            $initRoutes->startRoutes($this->reqRoute, $this->reqMethod, $this->getRequestURI());
 
         } catch (\Exception $e) {
             throw $e;

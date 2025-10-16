@@ -57,13 +57,19 @@ class AuthMiddleware implements MiddlewareInterface
             file_put_contents($logFile, "[$timestamp] DEBUG AuthMiddleware - Route requires auth: $route\n", FILE_APPEND);
             
             if (!$this->isAuthenticated()) {
-                // Store intended URL for redirect after login
-                // ALWAYS use the original URI from Start.php ($this->reqURI)
-                $intendedUrl = $request['uri'];  // This is $this->reqURI from Start.php
-                $_SESSION['intended_url'] = $intendedUrl;
-                
-                // DEBUG: What are we storing?
-                file_put_contents($logFile, "[$timestamp] DEBUG AuthMiddleware - Storing intended_url: $intendedUrl\n", FILE_APPEND);
+                // Store intended URL ONLY if not already set
+                // This prevents overwriting when redirecting to login page
+                if (!isset($_SESSION['intended_url'])) {
+                    // ALWAYS use the original URI from Start.php ($this->reqURI)
+                    $intendedUrl = $request['uri'];  // This is $this->reqURI from Start.php
+                    $_SESSION['intended_url'] = $intendedUrl;
+                    
+                    // DEBUG: What are we storing?
+                    file_put_contents($logFile, "[$timestamp] DEBUG AuthMiddleware - Storing intended_url: $intendedUrl\n", FILE_APPEND);
+                } else {
+                    // DEBUG: Already have intended_url, not overwriting
+                    file_put_contents($logFile, "[$timestamp] DEBUG AuthMiddleware - intended_url already set: {$_SESSION['intended_url']}\n", FILE_APPEND);
+                }
                 
                 $baseUrl = defined('BASE_URL') ? BASE_URL : '';
                 header('Location: ' . $baseUrl . $this->redirectTo);

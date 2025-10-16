@@ -66,9 +66,19 @@ class Controller
 
     private function auth()
     {
-        if (isset($_SESSION["logged"])  && $_SESSION["logged"] = true) {
-            $this->url = BASE_URL;
-            header("Location: $this->url");
+        // Fix: Use comparison (===) not assignment (=)
+        if (isset($_SESSION["logged"]) && $_SESSION["logged"] === true) {
+            // If already logged in, redirect to intended URL or home
+            $intendedUrl = $_SESSION['intended_url'] ?? null;
+            if ($intendedUrl) {
+                unset($_SESSION['intended_url']); // Clear intended URL
+                header("Location: $intendedUrl");
+                exit;  // CRITICAL: Stop execution after redirect
+            } else {
+                $this->url = BASE_URL;
+                header("Location: $this->url");
+                exit;  // CRITICAL: Stop execution after redirect
+            }
         } else {
             $this->login();
         }
@@ -104,29 +114,32 @@ class Controller
                     $_SESSION["iduser"]   = $row['id'];
                     $_SESSION["logged"] = true;           // Legacy compatibility
                     $_SESSION['authenticated'] = true;     // Middleware compatibility
-                    $this->html->validateToken();
+                    // REMOVED: $this->html->validateToken(); 
+                    // This was outputting JavaScript that redirected to home, overriding PHP header!
                     
-                    // DEBUG: Write to upMVC logs folder
+                    // DEBUG: Log session state
                     $logFile = THIS_DIR . '/logs/debug_' . date('Y-m-d') . '.log';
                     $timestamp = date('Y-m-d H:i:s');
-                    
-                    // DEBUG: Echo the session value to screen
-                    echo "<h2>DEBUG - Session intended_url: " . ($_SESSION['intended_url'] ?? 'NULL') . "</h2>";
-                    echo "<h2>DEBUG - About to redirect to: " . ($_SESSION['intended_url'] ? ('http://localhost' . $_SESSION['intended_url']) : $this->url) . "</h2>";
-                    exit; // Stop here to see the debug
-                    
-                    file_put_contents($logFile, "[$timestamp] DEBUG Login - intended_url from session: " . ($_SESSION['intended_url'] ?? 'NULL') . "\n", FILE_APPEND);
-                    file_put_contents($logFile, "[$timestamp] DEBUG Login - this->url fallback: $this->url\n", FILE_APPEND);
+                    file_put_contents($logFile, "[$timestamp] DEBUG Auth Controller - Login successful\n", FILE_APPEND);
+                    file_put_contents($logFile, "[$timestamp] DEBUG Auth Controller - intended_url in session: " . ($_SESSION['intended_url'] ?? 'NULL') . "\n", FILE_APPEND);
                     
                     // Redirect to intended URL if available, otherwise home
                     $intendedUrl = $_SESSION['intended_url'] ?? null;
-                    $redirectUrl = $intendedUrl ? ('http://localhost' . $intendedUrl) : $this->url;
-                    unset($_SESSION['intended_url']); // Clear intended URL
-                    
-                    // DEBUG: Where are we redirecting?
-                    file_put_contents($logFile, "[$timestamp] DEBUG Login - Redirecting to: $redirectUrl\n", FILE_APPEND);
-                    
-                    header("Location: " . $redirectUrl);
+                    if ($intendedUrl) {
+                        // The intended_url already contains BASE_URL path (e.g., /upMVC/moda)
+                        // So just use it directly
+                        $redirectUrl = $intendedUrl;
+                        unset($_SESSION['intended_url']); // Clear intended URL
+                        
+                        file_put_contents($logFile, "[$timestamp] DEBUG Auth Controller - Redirecting to intended: $redirectUrl\n", FILE_APPEND);
+                    } else {
+                        $redirectUrl = $this->url;
+                        
+                        file_put_contents($logFile, "[$timestamp] DEBUG Auth Controller - No intended URL, redirecting to home: $redirectUrl\n", FILE_APPEND);
+                    }
+                     $this->html->validateToken($redirectUrl);
+                    //header("Location: " . $redirectUrl);
+                    exit;  // CRITICAL: Stop execution after redirect
                 } else {
                     echo 'You have not activated your account, check your email!';
                 }
