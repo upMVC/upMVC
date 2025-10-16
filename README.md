@@ -131,6 +131,15 @@ upMVC offers flexible routing at multiple levels:
 ```
 
 **After adding namespaces:** Run `composer dump-autoload`
+
+### Quick Start: Add Your Module Routes
+
+1. Create your routes file: `/modules/yourmodule/routes/Routes.php`
+2. Define your routes using `$this->addRoute()` method
+3. Register in `/etc/InitMods.php`: `$initRoutes->yourmodule();`
+4. **That's it** - upMVC handles the rest automatically
+
+**Example:** See `/modules/test/routes/Routes.php` for reference implementation
     
 
 #
