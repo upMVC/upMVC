@@ -66,9 +66,19 @@ class Controller
 
     private function auth()
     {
-        if (isset($_SESSION["logged"])  && $_SESSION["logged"] = true) {
-            $this->url = BASE_URL;
-            header("Location: $this->url");
+        // Fix: Use comparison (===) not assignment (=)
+        if (isset($_SESSION["logged"]) && $_SESSION["logged"] === true) {
+            // If already logged in, redirect to intended URL or home
+            $intendedUrl = $_SESSION['intended_url'] ?? null;
+            if ($intendedUrl) {
+                unset($_SESSION['intended_url']); // Clear intended URL
+                header("Location: $intendedUrl");
+                exit;  // CRITICAL: Stop execution after redirect
+            } else {
+                $this->url = BASE_URL;
+                header("Location: $this->url");
+                exit;  // CRITICAL: Stop execution after redirect
+            }
         } else {
             $this->login();
         }
@@ -102,9 +112,20 @@ class Controller
                 if ($active === 1) {
                     $_SESSION["username"] = $row['username'];
                     $_SESSION["iduser"]   = $row['id'];
-                    $_SESSION["logged"] = true;
-                    $this->html->validateToken();
-                    header("Location: $this->url");
+                    $_SESSION["logged"] = true;           // Legacy compatibility
+                    $_SESSION['authenticated'] = true;     // Middleware compatibility
+                    
+                    // Redirect to intended URL if available, otherwise home
+                    $intendedUrl = $_SESSION['intended_url'] ?? null;
+                    if ($intendedUrl) {
+                        $redirectUrl = $intendedUrl;
+                        unset($_SESSION['intended_url']); // Clear intended URL
+                    } else {
+                        $redirectUrl = $this->url;
+                    }
+                    
+                    $this->html->validateToken($redirectUrl);
+                    exit;
                 } else {
                     echo 'You have not activated your account, check your email!';
                 }

@@ -1,145 +1,105 @@
 <?php
 /*
- *   Created on Tue Oct 31 2023
- *   Enhanced on October 11, 2025
- *   Copyright (c) 2023-2025 BitsHost
- *   All rights reserved.
+ *   Pure PHP Start.php for upMVC
+ *   Simple, efficient, no container complexity
  */
 
 namespace upMVC;
 
 use upMVC\Config\ConfigManager;
 use upMVC\Config\Environment;
-use upMVC\Container\Container;
 use upMVC\Exceptions\ErrorHandler;
-use upMVC\Exceptions\ConfigurationException;
 use upMVC\Middleware\AuthMiddleware;
 use upMVC\Middleware\LoggingMiddleware;
 use upMVC\Middleware\CorsMiddleware;
 
 class Start
 {
-    /**
-     * @var Container
-     */
-    private Container $container;
+    private $reqURI;      // Store for reuse
+    private $reqMethod;   // Store for reuse
+    private $reqRoute;    // Store for reuse
 
     public function __construct()
     {
-        $this->container = new Container();
         $this->bootstrapApplication();
+        $this->initializeRequest();  // Get request data once
+    }
+
+    /**
+     * Initialize request data once - pure PHP, no container
+     */
+    private function initializeRequest(): void
+    {
+        $this->reqURI = $_SERVER['REQUEST_URI'];
+        $this->reqMethod = $_SERVER['REQUEST_METHOD'];
+        
+        // Simple direct instantiation
+        $config = new Config();
+        $this->reqRoute = $config->getReqRoute($this->reqURI);
     }
 
     public function upMVC()
     {
         try {
-            // Initialize core services
-            $router = $this->container->make(Router::class);
-            $config = $this->container->make(Config::class);
+            // Pure PHP - simple and direct
+            $router = new Router();
 
-            // Setup middleware (both new and legacy)
+            // Setup middleware
             $this->setupEnhancedMiddleware($router);
-            $this->registerMiddleware($router); // Keep legacy middleware for backward compatibility
+            $this->registerMiddleware($router);
 
-            // Get request data
-            $reqURI = $_SERVER['REQUEST_URI'];
-            $reqMet = $_SERVER['REQUEST_METHOD'];
-
-            // Process request
-            $reqRoute = $config->getReqRoute($reqURI);
-
-            // Initialize and start routing
+            // Use already processed request data (no duplication)
             $initRoutes = new Routes($router);
-            $initRoutes->startRoutes($reqRoute, $reqMet);
+            $initRoutes->startRoutes($this->reqRoute, $this->reqMethod, $this->getRequestURI());
 
         } catch (\Exception $e) {
-            // Error handling is managed by ErrorHandler
             throw $e;
         }
     }
 
     /**
-     * Bootstrap the application
-     *
-     * @return void
+     * Getters for request data (if needed elsewhere)
      */
+    public function getRequestURI(): string { return $this->reqURI; }
+    public function getRequestMethod(): string { return $this->reqMethod; }
+    public function getRequestRoute(): string { return $this->reqRoute; }
+
     private function bootstrapApplication(): void
     {
-        // Load configuration
         ConfigManager::load();
 
-        // Setup error handling
         $errorHandler = new ErrorHandler(
             Environment::isDevelopment(),
             'logs/errors.log'
         );
         $errorHandler->register();
 
-        // Register core services in container
-        $this->registerCoreServices();
-
-        // Validate configuration
         try {
             ConfigManager::validate();
         } catch (\Exception $e) {
-            // Log validation error but continue with defaults
             error_log("Configuration validation warning: " . $e->getMessage());
         }
     }
 
-    /**
-     * Register core services in the dependency injection container
-     *
-     * @return void
-     */
-    private function registerCoreServices(): void
-    {
-        // Register container instance
-        $this->container->instance(Container::class, $this->container);
-
-        // Register router as singleton
-        $this->container->singleton(Router::class);
-
-        // Register config as singleton
-        $this->container->singleton(Config::class);
-
-        // Register database as singleton
-        $this->container->singleton(Database::class);
-    }
-
-    /**
-     * Setup enhanced middleware for the router
-     *
-     * @param Router $router
-     * @return void
-     */
-    private function setupEnhancedMiddleware(Router $router): void
+    private function setupEnhancedMiddleware($router): void
     {
         $middlewareManager = $router->getMiddlewareManager();
 
-        // Add global middleware
         $middlewareManager->addGlobal(new LoggingMiddleware());
         
-        // Add CORS middleware if enabled
         if (ConfigManager::get('app.cors.enabled', false)) {
             $corsConfig = ConfigManager::get('app.cors', []);
             $middlewareManager->addGlobal(new CorsMiddleware($corsConfig));
         }
 
-        // Add authentication middleware for protected routes
-        $protectedRoutes = ['/dashboard/*', '/admin/*', '/users/*'];
+        // Simplified auth - use $_SESSION['logged'] directly
+        $protectedRoutes = ['/dashboard/*', '/admin/*', '/users/*', '/moda'];
         $middlewareManager->addGlobal(new AuthMiddleware($protectedRoutes));
     }
     
-    /**
-     * Legacy middleware registration (for backward compatibility)
-     *
-     * @param Router $router
-     * @return void
-     */
-    private function registerMiddleware(Router $router): void
+    private function registerMiddleware($router): void
     {
-        // CSRF Protection Middleware
+        // Simplified CSRF - use $_POST directly
         $router->addMiddleware('csrf', function($route, $method) {
             if ($method === 'POST' && ConfigManager::get('security.csrf_protection', true)) {
                 $token = $_POST['csrf_token'] ?? '';
@@ -152,7 +112,7 @@ class Start
             return true;
         });
         
-        // Rate Limiting Middleware
+        // Simplified rate limiting
         $router->addMiddleware('rate_limit', function($route, $method) {
             $identifier = $_SERVER['REMOTE_ADDR'] ?? 'unknown';
             $limit = ConfigManager::get('security.rate_limit', 100);
@@ -165,24 +125,14 @@ class Start
             return true;
         });
         
-        // Auth Middleware
+        // Simplified auth - use existing session variable
         $router->addMiddleware('auth', function($route, $method) {
-            if (!isset($_SESSION['user_id'])) {
+            if (!isset($_SESSION['logged']) || $_SESSION['logged'] !== true) {
                 http_response_code(401);
-                header('Location: /login');
+                header('Location: /auth');
                 return false;
             }
             return true;
         });
-    }
-
-    /**
-     * Get the container instance
-     *
-     * @return Container
-     */
-    public function getContainer(): Container
-    {
-        return $this->container;
     }
 }

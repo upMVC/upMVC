@@ -196,12 +196,12 @@ class View
     }
 
     //validate token
-    public function validateToken()
+    public function validateToken($redirectUrl)
     {
     ?>
         <script>
-            location.href = "<?php echo BASE_URL; ?>/";
-        </script>"
+            location.href = "<?php echo $redirectUrl; ?>";
+        </script>
     <?php
     }
 

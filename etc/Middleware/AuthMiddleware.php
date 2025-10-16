@@ -48,8 +48,12 @@ class AuthMiddleware implements MiddlewareInterface
         // Check if route requires authentication
         if ($this->requiresAuth($route)) {
             if (!$this->isAuthenticated()) {
-                // Store intended URL for redirect after login
-                $_SESSION['intended_url'] = $request['uri'] ?? $route;
+                // Store intended URL ONLY if not already set
+                // This prevents overwriting when redirecting to login page
+                if (!isset($_SESSION['intended_url'])) {
+                    $intendedUrl = $request['uri'];
+                    $_SESSION['intended_url'] = $intendedUrl;
+                }
                 
                 $baseUrl = defined('BASE_URL') ? BASE_URL : '';
                 header('Location: ' . $baseUrl . $this->redirectTo);
@@ -83,6 +87,10 @@ class AuthMiddleware implements MiddlewareInterface
      */
     private function isAuthenticated(): bool
     {
-        return isset($_SESSION['authenticated']) && $_SESSION['authenticated'] === true;
+        // Check both new and legacy session variables for compatibility
+        $newAuth = isset($_SESSION['authenticated']) && $_SESSION['authenticated'] === true;
+        $legacyAuth = isset($_SESSION['logged']) && $_SESSION['logged'] === true;
+        
+        return $newAuth || $legacyAuth;
     }
 }

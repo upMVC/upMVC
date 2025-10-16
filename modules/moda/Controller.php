@@ -49,8 +49,9 @@ class Controller extends BaseController
             new Model('Jane Doe', 'jane@example.com')
         ];
 
-
-
+          $this->render('moda/View', ['users' => $users]);
+            echo $reqMet . " " .  $reqRoute . " ";
+/*
         if (isset($_SESSION["logged"])) {
             $this->render('moda/View', ['users' => $users]);
             echo $reqMet . " " .  $reqRoute . " ";
@@ -58,7 +59,7 @@ class Controller extends BaseController
             echo " Not Logged In! Something else.";
             header('Location: ' . BASE_URL . '/');
         }
-
+*/
         
     }
 }

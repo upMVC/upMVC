@@ -25,13 +25,30 @@ A lightweight, modern PHP 8.1+ noFramework built on Modular MVC (MMVC) architect
 ## 🚀 **Quick Navigation**
 
 ### **🎯 New to upMVC? Start Here:**
-- **[📋 First Steps Guide](FIRST-STEPS-GUIDE.md)** - Get running in 5 minutes
-- **[📁 Repository Structure Guide](REPOSITORY-STRUCTURE-GUIDE.md)** - Which repository to use
-- **[📘 How-To Guide](HOW-TO-GUIDE.md)** - Complete development guide
-- **[❓ FAQ](FAQ.md)** - Common questions and solutions
+- **[📋 First Steps Guide](docs/FIRST-STEPS-GUIDE.md)** - Get running in 5 minutes
+- **[� How-To Guide](docs/HOW-TO-GUIDE.md)** - Complete development guide
+- **[❓ FAQ](docs/FAQ.md)** - Common questions and solutions
+- **[� Documentation Index](docs/DOCUMENTATION-INDEX.md)** - Complete documentation map
 
-### **📊 Project Status:**
-- **[🎉 Final Cleanup Summary](FINAL-CLEANUP-SUMMARY.md)** - Complete project overview
+### **🏗 Architecture & Philosophy:**
+- **[🎨 Pure PHP Philosophy](docs/PHILOSOPHY_PURE_PHP.md)** - The upMVC NoFramework approach
+- **[💪 Architectural Strengths](docs/ARCHITECTURAL_STRENGTHS.md)** - What makes upMVC powerful
+- **[🛣 Routing Capabilities](docs/ROUTING_CAPABILITIES.md)** - Understanding the routing system
+- **[🔧 URL Handling Explained](docs/URL_HANDLING_EXPLAINED.md)** - Request flow and middleware
+
+### **� Bug Fixes & Improvements:**
+- **[🔐 Authentication Redirect Fix](docs/BUG_FIX_AUTH_REDIRECT.md)** - Session intended_url handling
+- **[⚙️ Assignment Operator Fix](docs/BUG_FIX_AUTH_ASSIGNMENT.md)** - Comparison vs assignment
+- **[🚪 Missing Exit Statements](docs/BUG_FIX_MISSING_EXIT.md)** - Proper redirect handling
+- **[📤 Output Before Header Fix](docs/BUG_FIX_OUTPUT_BEFORE_HEADER.md)** - Header redirect timing
+- **[🔗 Trailing Slash Fix](docs/BUG_FIX_TRAILING_SLASH.md)** - URL normalization
+- **[🧹 Debug Code Cleanup](docs/CLEANUP_DEBUG_CODE.md)** - Production-ready code
+
+### **✅ Verification & Release:**
+- **[🔍 Pre-Release Verification](docs/PRE_RELEASE_VERIFICATION.md)** - Complete verification report
+- **[🚀 Ready for Main](docs/READY_FOR_MAIN.md)** - Production readiness checklist
+- **[📋 Verification Checklist](docs/VERIFICATION_CHECKLIST.md)** - Step-by-step validation
+- **[✨ Enhancements](docs/ENHANCEMENTS.md)** - Latest improvements
 
 ### **🛠 Development:**
 - **[🐛 /zbug Folder](zbug/README.md)** - Debug files and development utilities (excluded from Git)
