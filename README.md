@@ -6,7 +6,7 @@
 
 ## 🎨 **NEW: Modern UI System**
 
-upMVC v2.0 introduces a **contemporary design system** while maintaining complete backward compatibility:
+upMVC v1.0.3 introduces a **contemporary design system** while maintaining complete backward compatibility:
 
 - **🌟 Modern BaseView**: Contemporary CSS Grid/Flexbox layouts with dark mode
 - **📱 Responsive Design**: Mobile-first approach with modern navigation
