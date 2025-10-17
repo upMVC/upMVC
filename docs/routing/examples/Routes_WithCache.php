@@ -1,19 +1,20 @@
 <?php
-/*
- * Admin Module - Routes WITH CACHE
+/**
+ * Admin Module Routes with File-Based Cache
  * 
- * This version caches routes to a file to avoid database queries on every request.
+ * This implementation caches database-generated routes to a file,
+ * avoiding database queries on every request.
  * 
- * HOW TO USE:
- * 1. Rename this file to Routes.php (backup original first!)
- * 2. Create cache directory: modules/cache/
- * 3. Routes will be cached for 1 hour (configurable)
- * 4. Cache is cleared automatically when users are created/deleted
+ * Cache is invalidated when:
+ * - Cache file doesn't exist
+ * - Cache is older than 1 hour
+ * - Manually cleared via clearCache() method
  * 
- * PERFORMANCE:
- * - First request: ~100ms (DB query + cache write)
- * - Cached requests: ~2ms (file read only)
- * - 50x faster than querying DB every time!
+ * Usage:
+ * 1. Rename this file to Routes.php (backup original first)
+ * 2. Create cache directory: mkdir modules/cache
+ * 3. Make it writable: chmod 755 modules/cache
+ * 4. Clear cache after user CRUD: Routes::clearCache()
  */
 
 namespace Admin\Routes;
@@ -23,30 +24,44 @@ use Admin\Model;
 
 class Routes
 {
-    private $model;
-    private $table = 'user';
+    /**
+     * Cache file location
+     */
     private string $cacheFile;
-    private int $cacheLifetime = 3600; // 1 hour in seconds
+    
+    /**
+     * Cache lifetime in seconds (1 hour = 3600)
+     */
+    private int $cacheLifetime = 3600;
 
     public function __construct()
     {
-        // Cache file location - system cache directory
-        $this->cacheFile = __DIR__ . '/../../../etc/storage/cache/admin_routes.php';
+        // Cache in modules/cache directory
+        $this->cacheFile = __DIR__ . '/../../cache/admin_routes.php';
     }
 
+    /**
+     * Register all admin routes
+     */
     public function routes($router)
     {
-        // Static routes (always present)
+        // ========================================
+        // STATIC ROUTES (always present)
+        // ========================================
         $router->addRoute('/admin', Controller::class, 'display');
         $router->addRoute('/admin/users', Controller::class, 'display');
         $router->addRoute('/admin/users/add', Controller::class, 'display');
 
-        // Dynamic routes (cached)
+        // ========================================
+        // DYNAMIC ROUTES (cached)
+        // ========================================
+        
+        // Check if we have a valid cache
         if ($this->isCacheValid()) {
             // Load routes from cache (FAST!)
             $this->loadCachedRoutes($router);
         } else {
-            // Cache is missing or stale - rebuild it (SLOW but only once)
+            // Cache is missing or stale - rebuild it (SLOW)
             $this->rebuildCache($router);
         }
     }
@@ -61,7 +76,7 @@ class Routes
             return false;
         }
 
-        // Check cache age
+        // Check age
         $cacheAge = time() - filemtime($this->cacheFile);
         
         // Cache is too old
@@ -73,7 +88,7 @@ class Routes
     }
 
     /**
-     * Load routes from cache file (FAST!)
+     * Load routes from cache file
      */
     private function loadCachedRoutes($router): void
     {
@@ -87,46 +102,40 @@ class Routes
     }
 
     /**
-     * Query database and rebuild route cache (SLOW but only when needed)
+     * Query database and rebuild route cache
      */
     private function rebuildCache($router): void
     {
-        $this->model = new Model();
+        // Query database for all users
+        $model = new Model();
+        $users = $model->getAllUsers();
         
-        // Get all users from database
-        $users = $this->model->getAllUsers();
-        
-        // Extract user IDs
-        $userIds = [];
-        foreach ($users as $user) {
-            $userIds[] = $user['id'];
-        }
-
         $cachedRoutes = [];
-
-        // Generate EDIT routes for each user
-        foreach ($userIds as $userId) {
-            $editRoute = [
-                'path' => '/admin/users/edit/' . $userId,
+        
+        // Generate edit and delete routes for each user
+        foreach ($users as $user) {
+            $userId = $user['id'];
+            
+            // Edit route
+            $editPath = '/admin/users/edit/' . $userId;
+            $cachedRoutes[] = [
+                'path' => $editPath,
                 'controller' => Controller::class,
                 'method' => 'display'
             ];
-            $cachedRoutes[] = $editRoute;
-            $router->addRoute($editRoute['path'], $editRoute['controller'], $editRoute['method']);
-        }
-
-        // Generate DELETE routes for each user
-        foreach ($userIds as $userId) {
-            $deleteRoute = [
-                'path' => '/admin/users/delete/' . $userId,
+            $router->addRoute($editPath, Controller::class, 'display');
+            
+            // Delete route
+            $deletePath = '/admin/users/delete/' . $userId;
+            $cachedRoutes[] = [
+                'path' => $deletePath,
                 'controller' => Controller::class,
                 'method' => 'display'
             ];
-            $cachedRoutes[] = $deleteRoute;
-            $router->addRoute($deleteRoute['path'], $deleteRoute['controller'], $deleteRoute['method']);
+            $router->addRoute($deletePath, Controller::class, 'display');
         }
 
-        // Save routes to cache file
+        // Save to cache file
         $this->saveCache($cachedRoutes);
     }
 
@@ -141,22 +150,20 @@ class Routes
             mkdir($cacheDir, 0755, true);
         }
 
-        // Generate PHP file content with metadata
+        // Generate PHP file content
         $timestamp = date('Y-m-d H:i:s');
         $routeCount = count($routes);
         
         $content = <<<PHP
 <?php
 /**
- * Auto-generated Route Cache for Admin Module
+ * Auto-generated Route Cache
  * 
  * Generated: {$timestamp}
- * Total Routes: {$routeCount}
+ * Routes: {$routeCount}
  * 
  * DO NOT EDIT THIS FILE MANUALLY!
  * It will be regenerated automatically.
- * 
- * To clear cache: Delete this file or call Routes::clearCache()
  */
 
 return 
@@ -170,17 +177,20 @@ PHP;
     }
 
     /**
-     * Clear route cache
+     * Clear route cache (call after user CRUD operations)
      * 
-     * Call this method after creating, updating, or deleting users
-     * to ensure routes stay synchronized with database.
+     * Example usage in Controller:
      * 
-     * Example in Controller:
-     *   \Admin\Routes\Routes::clearCache();
+     *   private function createUser() {
+     *       $result = $this->model->createUser($data);
+     *       if ($result) {
+     *           \Admin\Routes\Routes::clearCache();
+     *       }
+     *   }
      */
     public static function clearCache(): void
     {
-        $cacheFile = __DIR__ . '/../../../etc/storage/cache/admin_routes.php';
+        $cacheFile = __DIR__ . '/../../cache/admin_routes.php';
         
         if (file_exists($cacheFile)) {
             unlink($cacheFile);
@@ -188,26 +198,18 @@ PHP;
     }
 
     /**
-     * Get cache statistics (for debugging/monitoring)
-     * 
-     * Returns array with cache info:
-     * - exists: bool (cache file exists)
-     * - age: int (seconds since cache created)
-     * - routes: int (number of cached routes)
-     * - size: int (cache file size in bytes)
-     * - created: string (cache creation timestamp)
+     * Get cache statistics (for debugging)
      */
     public static function getCacheStats(): array
     {
-        $cacheFile = __DIR__ . '/../../../etc/storage/cache/admin_routes.php';
+        $cacheFile = __DIR__ . '/../../cache/admin_routes.php';
         
         if (!file_exists($cacheFile)) {
             return [
                 'exists' => false,
                 'age' => 0,
                 'routes' => 0,
-                'size' => 0,
-                'created' => null
+                'size' => 0
             ];
         }
 

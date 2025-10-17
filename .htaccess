@@ -23,5 +23,12 @@ RewriteRule ^usersorm/edit/([\w\d~%.:_\-]+)$ usersorm/edit?param=$1 [NC]
 RewriteRule ^usersorm/delete/([\w\d~%.:_\-]+)$ usersorm/delete?param=$1 [NC]
 RewriteRule ^usersorm/update/([\w\d~%.:_\-]+)$ usersorm/update?param=$1 [NC]
 
+#level Custom - admin module
+RewriteRule ^admin/users/edit/([\w\d~%.:_\-]+)$ admin/users/edit/$1 [NC]
+RewriteRule ^admin/users/delete/([\w\d~%.:_\-]+)$ admin/users/delete/$1 [NC]
+RewriteRule ^admin/users/add$ admin/users/add [NC]
+RewriteRule ^admin/users$ admin/users [NC]
+RewriteRule ^admin$ admin [NC]
+
 
 RewriteRule (.+) index.php [QSA,L]

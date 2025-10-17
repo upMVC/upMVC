@@ -1,26 +1,13 @@
 <?php
 /*
- * Admin Module - Controller WITH CACHE INVALIDATION
- * 
- * This version clears the route cache whenever users are created or deleted
- * to ensure routes stay synchronized with the database.
- * 
- * HOW TO USE:
- * 1. First install Routes_WITH_CACHE.php (rename to Routes.php)
- * 2. Then rename this file to Controller.php (backup original first!)
- * 3. Cache will be automatically cleared on CRUD operations
- * 
- * WHAT'S DIFFERENT:
- * - Calls Routes::clearCache() after createUser()
- * - Calls Routes::clearCache() after deleteUser()
- * - Shows cache stats in dashboard (optional)
+ * Admin Module - Controller
+ * Handles admin dashboard and user CRUD operations
  */
 
 namespace Admin;
 
 use Admin\View;
 use Admin\Model;
-use Admin\Routes\Routes;
 
 class Controller 
 {
@@ -91,21 +78,14 @@ class Controller
 
     /**
      * Display dashboard with stats
-     * 
-     * NOW INCLUDES CACHE STATISTICS!
      */
     private function dashboard()
     {
         $userCount = $this->model->getUserCount();
-        
-        // Get cache statistics for monitoring
-        $cacheStats = Routes::getCacheStats();
-        
         $data = [
             'view' => 'dashboard',
             'stats' => [
-                'userCount' => $userCount,
-                'cache' => $cacheStats  // Add cache info to dashboard
+                'userCount' => $userCount
             ]
         ];
         $this->view->render($data);
@@ -117,14 +97,9 @@ class Controller
     private function listUsers()
     {
         $users = $this->model->getAllUsers();
-        
-        // Optional: Show cache stats in user list too
-        $cacheStats = Routes::getCacheStats();
-        
         $data = [
             'view' => 'users_list',
-            'users' => $users,
-            'cache' => $cacheStats
+            'users' => $users
         ];
         $this->view->render($data);
     }
@@ -154,8 +129,6 @@ class Controller
 
     /**
      * Create new user
-     * 
-     * ⭐ CLEARS CACHE after creating user
      */
     private function createUser()
     {
@@ -169,10 +142,7 @@ class Controller
         $result = $this->model->createUser($userData);
         
         if ($result) {
-            // ⭐ CLEAR ROUTE CACHE - New user needs routes!
-            Routes::clearCache();
-            
-            $_SESSION['success'] = 'User created successfully (cache cleared)';
+            $_SESSION['success'] = 'User created successfully';
         } else {
             $_SESSION['error'] = 'Failed to create user';
         }
@@ -183,9 +153,6 @@ class Controller
 
     /**
      * Update existing user
-     * 
-     * Note: We don't clear cache on update because user ID doesn't change.
-     * If your app can change user IDs, uncomment the clearCache() call.
      */
     private function updateUser(int $userId)
     {
@@ -203,9 +170,6 @@ class Controller
         $result = $this->model->updateUser($userId, $userData);
         
         if ($result) {
-            // Optional: Clear cache if user IDs can change
-            // Routes::clearCache();
-            
             $_SESSION['success'] = 'User updated successfully';
         } else {
             $_SESSION['error'] = 'Failed to update user';
@@ -217,18 +181,13 @@ class Controller
 
     /**
      * Delete user
-     * 
-     * ⭐ CLEARS CACHE after deleting user
      */
     private function deleteUser(int $userId)
     {
         $result = $this->model->deleteUser($userId);
         
         if ($result) {
-            // ⭐ CLEAR ROUTE CACHE - Deleted user routes should disappear!
-            Routes::clearCache();
-            
-            $_SESSION['success'] = 'User deleted successfully (cache cleared)';
+            $_SESSION['success'] = 'User deleted successfully';
         } else {
             $_SESSION['error'] = 'Failed to delete user';
         }

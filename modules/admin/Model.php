@@ -1,43 +1,83 @@
 <?php
+/*
+ * Admin Module - Model
+ * Handles user CRUD operations
+ */
 
 namespace Admin;
 
 use Common\Bmvc\BaseModel;
 
-
 class Model extends BaseModel
 {
+    private string $table = 'usernou';
+
     public function __construct()
     {
         parent::__construct();
     }
-    public function getUserById($userId, $table)
+
+    /**
+     * Get all users
+     */
+    public function getAllUsers(): array
     {
-        return $this->read($userId, $table);
+        return $this->readAll($this->table);
     }
 
-    public function getAllUsers($table)
+    /**
+     * Get user by ID
+     */
+    public function getUserById(int $id): ?array
     {
-        return $this->readAll($table);
+        $user = $this->read($id, $this->table);
+        return $user ?: null;
     }
 
-    public function getUsersWithPagination($table, $page, $pageSize)
+    /**
+     * Create new user
+     */
+    public function createUser(array $data): int|false
     {
-        return $this->readWithPagination($table, $page, $pageSize);
+        // Hash password if provided
+        if (isset($data['password'])) {
+            $data['password'] = password_hash($data['password'], PASSWORD_DEFAULT);
+        }
+        
+        return $this->create($data, $this->table);
     }
 
-    public function createUser($userData, $table)
+    /**
+     * Update user
+     */
+    public function updateUser(int $id, array $data): bool
     {
-        return $this->create($userData, $table);
+        // Hash password only if provided and not empty
+        if (isset($data['password']) && !empty($data['password'])) {
+            $data['password'] = password_hash($data['password'], PASSWORD_DEFAULT);
+        } else {
+            unset($data['password']);
+        }
+        
+        return $this->update($id, $data, $this->table);
     }
 
-    public function updateUser($userId, $userData, $table)
+    /**
+     * Delete user
+     */
+    public function deleteUser(int $id): bool
     {
-        return $this->update($userId, $userData, $table);
+        return $this->delete($id, $this->table);
     }
 
-    public function deleteUser($userId, $table)
+    /**
+     * Get user count for dashboard stats
+     */
+    public function getUserCount(): int
     {
-        return $this->delete($userId, $table);
+        $stmt = $this->conn->prepare("SELECT COUNT(*) as count FROM {$this->table}");
+        $stmt->execute();
+        $result = $stmt->fetch();
+        return (int) $result['count'];
     }
 }
