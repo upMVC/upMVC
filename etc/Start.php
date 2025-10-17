@@ -93,7 +93,7 @@ class Start
         }
 
         // Simplified auth - use $_SESSION['logged'] directly
-        $protectedRoutes = ['/dashboard/*', '/admin/*', '/users/*', '/moda'];
+        $protectedRoutes = ['/dashboardexample/*', '/admin/*', '/users/*', '/moda'];
         $middlewareManager->addGlobal(new AuthMiddleware($protectedRoutes));
     }
     

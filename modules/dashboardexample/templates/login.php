@@ -3,6 +3,8 @@
         <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">
             Sign in to Dashboard
         </h2>
+        <p class="mt-2 text-center text-sm text-gray-600">
+        Login with admin@example.com / admin 123</p>
     </div>
     <?php if (isset($error)): ?>
         <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">

@@ -26,6 +26,8 @@ return array(
     'Suba\\Routes\\' => array($baseDir . '/modules/moda/modules/suba/routes'),
     'Suba\\' => array($baseDir . '/modules/moda/modules/suba'),
     'RedBeanPHP\\' => array($vendorDir . '/gabordemooij/redbean/RedBeanPHP'),
+    'Reactnb\\Routes\\' => array($baseDir . '/modules/reactnb/routes'),
+    'Reactnb\\' => array($baseDir . '/modules/reactnb'),
     'Reactcrud\\Routes\\' => array($baseDir . '/modules/reactcrud/routes'),
     'Reactcrud\\' => array($baseDir . '/modules/reactcrud'),
     'Reactb\\Routes\\' => array($baseDir . '/modules/reactb/routes'),

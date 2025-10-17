@@ -41,6 +41,8 @@ class ComposerStaticInit49502ca6970de9d65a6295b99bbb2d5b
         'R' => 
         array (
             'RedBeanPHP\\' => 11,
+            'Reactnb\\Routes\\' => 15,
+            'Reactnb\\' => 8,
             'Reactcrud\\Routes\\' => 17,
             'Reactcrud\\' => 10,
             'Reactb\\Routes\\' => 14,
@@ -170,6 +172,14 @@ class ComposerStaticInit49502ca6970de9d65a6295b99bbb2d5b
         'RedBeanPHP\\' => 
         array (
             0 => __DIR__ . '/..' . '/gabordemooij/redbean/RedBeanPHP',
+        ),
+        'Reactnb\\Routes\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/modules/reactnb/routes',
+        ),
+        'Reactnb\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/modules/reactnb',
         ),
         'Reactcrud\\Routes\\' => 
         array (
