@@ -43,6 +43,8 @@ class ComposerStaticInit49502ca6970de9d65a6295b99bbb2d5b
             'RedBeanPHP\\' => 11,
             'Reactnb\\Routes\\' => 15,
             'Reactnb\\' => 8,
+            'Reacthmr\\Routes\\' => 16,
+            'Reacthmr\\' => 9,
             'Reactcrud\\Routes\\' => 17,
             'Reactcrud\\' => 10,
             'Reactb\\Routes\\' => 14,
@@ -180,6 +182,14 @@ class ComposerStaticInit49502ca6970de9d65a6295b99bbb2d5b
         'Reactnb\\' => 
         array (
             0 => __DIR__ . '/../..' . '/modules/reactnb',
+        ),
+        'Reacthmr\\Routes\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/modules/reacthmr/routes',
+        ),
+        'Reacthmr\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/modules/reacthmr',
         ),
         'Reactcrud\\Routes\\' => 
         array (

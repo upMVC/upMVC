@@ -57,7 +57,7 @@ The modules included with upMVC (`admin`, `auth`, `email`, `react`, etc.) are **
 ---
 
 ### React Modules (`/modules/react*`)
-**Purpose:** Demonstrates **four different patterns** for integrating React/Vue/Preact  
+**Purpose:** Demonstrates **five different patterns** for integrating React/Vue/Preact  
 **Keep if:** You want to mix PHP backend with JS frontend  
 **Can delete if:** You're doing pure PHP or external SPA  
 
@@ -66,6 +66,7 @@ The modules included with upMVC (`admin`, `auth`, `email`, `react`, etc.) are **
 - **`reactb`** - Built React app embedded in PHP sections
 - **`reactcrud`** - Full React SPA with PHP backend
 - **`reactnb`** - ES modules without build (modern approach)
+- **`reacthmr`** - ES modules + Hot Module Reload (development)
 
 See **[React Integration Patterns](REACT_INTEGRATION_PATTERNS.md)** for complete guide.
 

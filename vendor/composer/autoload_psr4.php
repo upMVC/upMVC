@@ -28,6 +28,8 @@ return array(
     'RedBeanPHP\\' => array($vendorDir . '/gabordemooij/redbean/RedBeanPHP'),
     'Reactnb\\Routes\\' => array($baseDir . '/modules/reactnb/routes'),
     'Reactnb\\' => array($baseDir . '/modules/reactnb'),
+    'Reacthmr\\Routes\\' => array($baseDir . '/modules/reacthmr/routes'),
+    'Reacthmr\\' => array($baseDir . '/modules/reacthmr'),
     'Reactcrud\\Routes\\' => array($baseDir . '/modules/reactcrud/routes'),
     'Reactcrud\\' => array($baseDir . '/modules/reactcrud'),
     'Reactb\\Routes\\' => array($baseDir . '/modules/reactb/routes'),

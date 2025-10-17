@@ -2,18 +2,19 @@
 
 ## 🎯 Overview
 
-upMVC demonstrates **four different approaches** to integrating modern JavaScript frameworks (React, Vue, Preact) with PHP backend. Each pattern serves different use cases and complexity levels.
+upMVC demonstrates **five different approaches** to integrating modern JavaScript frameworks (React, Vue, Preact) with PHP backend. Each pattern serves different use cases and complexity levels.
 
 ---
 
 ## 📊 Pattern Comparison
 
-| Module | Pattern | Build Step | Use Case | Complexity |
-|--------|---------|------------|----------|------------|
-| **react** | CDN Components | ❌ No | Simple interactive widgets | Low |
-| **reactb** | Built React App (Embedded) | ✅ Yes | Full React SPA in PHP page section | Medium |
-| **reactcrud** | Built React App (Full Page) | ✅ Yes | Complete React SPA with PHP backend | High |
-| **reactnb** | ES Modules (No Build) | ❌ No | Modern JS without tooling | Medium |
+| Module | Pattern | Build Step | HMR | Use Case | Complexity |
+|--------|---------|------------|-----|----------|------------|
+| **react** | CDN Components | ❌ No | ❌ | Simple interactive widgets | Low |
+| **reactb** | Built React App (Embedded) | ✅ Yes | ⚠️ | Full React SPA in PHP page section | Medium |
+| **reactcrud** | Built React App (Full Page) | ✅ Yes | ⚠️ | Complete React SPA with PHP backend | High |
+| **reactnb** | ES Modules (No Build) | ❌ No | ❌ | Modern JS without tooling | Medium |
+| **reacthmr** | ES Modules + HMR | ❌ No | ✅ | Development with auto-reload | Medium |
 
 ---
 
@@ -627,6 +628,296 @@ public function index($reqRoute, $reqMet)
 - ✅ Medium complexity apps
 - ✅ Hate webpack/babel/npm scripts
 
+### Choose Pattern 5 (ES Modules + HMR) if:
+- ✅ Active development workflow
+- ✅ Want instant feedback (auto-reload)
+- ✅ No build tools wanted
+- ✅ Component development
+- ✅ Need fastest iteration speed
+
+---
+
+## 🔷 Pattern 5: ES Modules + HMR (`/modules/reacthmr`)
+
+### Philosophy: "Edit → Save → See Changes Instantly"
+Combines ES Modules (Pattern 4) with Hot Module Reload using Server-Sent Events. **No webpack, no Vite** - just PHP watching files and browser auto-reloading.
+
+### How It Works
+
+```
+┌──────────────┐
+│   Browser    │
+│ EventSource  │◄──────── SSE Stream
+│  /hmr        │
+└──────────────┘
+                        ┌─────────────┐
+                        │     PHP     │
+                        │  watches:   │
+                        │  *.php      │
+                        │  *.js       │
+                        │  *.html     │
+                        └─────────────┘
+```
+
+1. Browser connects to SSE endpoint
+2. PHP watches files for changes
+3. File modified → PHP sends `reload` event
+4. Browser receives event → auto-reloads
+
+**Reload time: ~1.5 seconds**
+
+### Implementation
+
+**Controller.php** - File Watching + SSE Stream:
+```php
+private function hmrStream()
+{
+    // Set SSE headers
+    header('Content-Type: text/event-stream');
+    header('Cache-Control: no-cache');
+    
+    // Store initial file hashes
+    $fileHashes = $this->getFileHashes();
+    
+    while (true) {
+        // Check for changes every second
+        $currentHashes = $this->getFileHashes();
+        
+        if ($currentHashes !== $fileHashes) {
+            // Send reload event
+            echo "event: reload\n";
+            echo "data: " . json_encode([
+                'timestamp' => time(),
+                'message' => 'Files changed - reloading...'
+            ]) . "\n\n";
+            flush();
+            
+            $fileHashes = $currentHashes;
+        }
+        
+        sleep(1);
+    }
+}
+
+private function getFileHashes(): string
+{
+    $hash = '';
+    foreach ($this->watchPaths as $path) {
+        $fullPath = THIS_DIR . '/' . $path;
+        if (is_file($fullPath)) {
+            $hash .= filemtime($fullPath);
+        }
+    }
+    return md5($hash);
+}
+```
+
+**View.php** - HMR Client:
+```php
+<script>
+// HMR Client using Server-Sent Events
+(function() {
+    const eventSource = new EventSource('<?php echo BASE_URL; ?>/reacthmr/hmr');
+    
+    eventSource.addEventListener('reload', (e) => {
+        console.log('[HMR] Reloading...');
+        
+        // Smooth fade
+        document.body.style.opacity = '0.5';
+        
+        // Reload after 300ms
+        setTimeout(() => location.reload(), 300);
+    });
+    
+    eventSource.onerror = () => {
+        console.log('[HMR] Reconnecting...');
+        eventSource.close();
+        setTimeout(connect, 2000); // Reconnect
+    };
+})();
+</script>
+```
+
+**Preact Component with HTM:**
+```php
+<script type="module">
+    import { render } from 'preact';
+    import { useState } from 'preact/hooks';
+    import { html } from 'htm/preact';
+
+    function TodoApp() {
+        const [todos, setTodos] = useState([]);
+        const [input, setInput] = useState('');
+
+        const addTodo = () => {
+            setTodos([...todos, { id: Date.now(), text: input }]);
+            setInput('');
+        };
+
+        return html`
+            <div>
+                <input value=${input} onInput=${e => setInput(e.target.value)} />
+                <button onClick=${addTodo}>Add Todo</button>
+                
+                ${todos.map(todo => html`
+                    <div key=${todo.id}>${todo.text}</div>
+                `)}
+            </div>
+        `;
+    }
+
+    render(html`<${TodoApp} />`, document.getElementById('app'));
+</script>
+```
+
+### Features
+
+**1. Real-Time Status Indicator:**
+```html
+<div id="hmr-status" class="hmr-status">
+    <span class="status-dot connected"></span>
+    <span class="status-text">HMR Connected</span>
+</div>
+```
+
+**States:**
+- 🟢 Connected - HMR active
+- 🟠 Reconnecting - Connection lost
+- 🔵 Reloading - Changes detected
+
+**2. Configurable Watch Paths:**
+```php
+private $watchPaths = [
+    'modules/reacthmr/templates/',
+    'modules/reacthmr/components/',
+    'modules/reacthmr/View.php',
+    'modules/reacthmr/Controller.php'
+];
+```
+
+**3. PHP → JS Data Flow:**
+```php
+<!-- PHP Data as JSON -->
+<script type="application/json" id="php-data">
+    <?php echo json_encode($data, JSON_PRETTY_PRINT); ?>
+</script>
+
+<script type="module">
+    const phpData = JSON.parse(
+        document.getElementById('php-data').textContent
+    );
+    
+    function UserTable() {
+        return html`
+            <table>
+                ${phpData.users.map(user => html`
+                    <tr><td>${user.name}</td></tr>
+                `)}
+            </table>
+        `;
+    }
+</script>
+```
+
+### Workflow
+
+```bash
+# 1. Visit page
+/reacthmr
+
+# 2. Open file in editor
+modules/reacthmr/View.php
+
+# 3. Make changes
+- Edit component code
+- Change styles
+- Modify text
+
+# 4. Save file
+Ctrl+S
+
+# 5. Watch browser auto-reload! ✨
+Total time: ~1.5 seconds
+```
+
+### Characteristics
+
+**Pros:**
+- ✅ Instant feedback on changes
+- ✅ No build step required
+- ✅ Simple PHP implementation
+- ✅ Works with any ES module framework
+- ✅ Auto-reconnect on disconnect
+- ✅ Smooth reload with fade effect
+- ✅ Real-time connection status
+- ✅ Fastest development iteration
+
+**Cons:**
+- ⚠️ ~1.5s reload (vs instant HMR in webpack)
+- ⚠️ Full page reload (not hot swap)
+- ⚠️ File watching overhead
+- ⚠️ Must disable in production
+- ⚠️ SSE connection may timeout on some hosts
+
+**Use When:**
+- Active component development
+- Rapid prototyping
+- UI/style tweaking
+- Learning ES modules
+- Want fastest iteration without build tools
+
+**Don't Use When:**
+- Production environment (always disable)
+- Shared hosting (SSE limitations)
+- Very large projects (file watching overhead)
+
+### Performance
+
+| Event | Time |
+|-------|------|
+| File saved | 0ms |
+| PHP detects | ~1000ms |
+| SSE sent | ~50ms |
+| Browser fade | 300ms |
+| Page reload | ~200ms |
+| **Total** | **~1.5s** |
+
+**vs Webpack HMR:**
+- Webpack: ~500ms (hot swap, no reload)
+- ReactHMR: ~1.5s (full reload)
+- Trade-off: Simplicity vs Speed
+
+### Configuration
+
+**Faster Detection:**
+```php
+sleep(0.5); // Check every 500ms instead of 1s
+```
+
+**Watch More Files:**
+```php
+private $watchPaths = [
+    'modules/reacthmr/',
+    'modules/mymodule/',
+    'common/Assets/',
+    'etc/Config.php'
+];
+```
+
+**Instant Reload (No Fade):**
+```javascript
+setTimeout(() => location.reload(), 0);
+```
+
+### Production Safety
+
+**Auto-disable in production:**
+```php
+<?php if (ENVIRONMENT === 'development'): ?>
+    <?php $this->hmrClient(); ?>
+<?php endif; ?>
+```
+
 ---
 
 ## 🔧 Workflow Patterns
@@ -660,6 +951,17 @@ public function index($reqRoute, $reqMet)
 3. Write HTM templates (JSX-like)
 4. Refresh browser to see changes
 5. No webpack, no babel, no npm build
+```
+
+### Pattern 5 Workflow (ES Modules + HMR)
+```bash
+# No build, auto-reload on save
+1. Visit /reacthmr
+2. Open View.php in editor
+3. Edit components/styles/text
+4. Save file (Ctrl+S)
+5. Watch browser auto-reload (~1.5s)
+6. Repeat!
 ```
 
 ---
@@ -757,6 +1059,14 @@ All four patterns follow upMVC's core principle:
 # See: React, Vue, Preact side-by-side, no build!
 ```
 
+### Try Pattern 5 (Development)
+```bash
+# Visit: /reacthmr
+# Edit: modules/reacthmr/View.php
+# Save: Ctrl+S
+# Watch: Browser auto-reloads! ✨
+```
+
 ---
 
 ## 🔗 Related Documentation
@@ -769,11 +1079,12 @@ All four patterns follow upMVC's core principle:
 
 ## 💡 Key Takeaways
 
-1. **Four Valid Approaches**
+1. **Five Valid Approaches**
    - CDN Components (no build)
    - Built React - Embedded (build once)
    - Built React - Full SPA (build once)
    - ES Modules (no build, modern)
+   - ES Modules + HMR (no build, auto-reload)
 
 2. **No "Right" Way**
    - Choose based on project needs
@@ -783,9 +1094,14 @@ All four patterns follow upMVC's core principle:
 3. **Build vs No Build**
    - Build = Full ecosystem, optimized
    - No Build = Faster development, simpler
-   - Pattern 4 = Best of both worlds
+   - Pattern 4/5 = Best of both worlds
 
-4. **Reference Implementations**
+4. **HMR Without Webpack**
+   - Pattern 5 shows PHP can do HMR
+   - Server-Sent Events + file watching
+   - ~1.5s reload vs manual refresh
+
+5. **Reference Implementations**
    - Study all four patterns
    - Delete what you don't need
    - Build your own variation

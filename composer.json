@@ -65,7 +65,9 @@
             "Testitems\\": "modules/testitems/",
             "Testitems\\Routes\\": "modules/testitems/routes/",
             "Reactnb\\": "modules/reactnb/",
-            "Reactnb\\Routes\\": "modules/reactnb/routes/"
+            "Reactnb\\Routes\\": "modules/reactnb/routes/",
+            "Reacthmr\\": "modules/reacthmr/",
+            "Reacthmr\\Routes\\": "modules/reacthmr/routes/"
         }
     }
 }
