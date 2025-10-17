@@ -193,8 +193,9 @@ echo "Route loading: {$time}ms";
 ## 📖 See Also
 
 - [upMVC Main Documentation](../)
-- [Module Development Guide](../MODULE_DEVELOPMENT.md) (if exists)
-- [Admin Module Example](../../modules/admin/README.md)
+- [Module Philosophy](../MODULE_PHILOSOPHY.md) - Understanding reference implementations
+- [Admin Module Example](../../modules/admin/README.md) - Cached routing in action
+- [Pure PHP Philosophy](../PHILOSOPHY_PURE_PHP.md) - The upMVC approach
 
 ## ❓ FAQ
 

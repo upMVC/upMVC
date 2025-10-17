@@ -2,11 +2,14 @@
 
 Complete admin panel with user CRUD operations for upMVC NoFramework.
 
+> **📌 Note:** This module is a **reference implementation**. You can delete it if you don't need admin functionality. It demonstrates: route caching, CRUD operations, controller-level authentication, and flash messages. See [Module Philosophy](../../docs/MODULE_PHILOSOPHY.md) for more about upMVC's modular approach.
+
 ## Features
 
 ✅ **Dashboard** - Overview with user statistics  
 ✅ **User Management** - Full CRUD operations  
-✅ **Authentication Protected** - Requires login to access  
+✅ **Authentication Protected** - Requires login to access (controller-level check)
+✅ **Cached Routes** - Database routes cached for performance  
 ✅ **Flash Messages** - Success/error notifications  
 ✅ **Clean UI** - Responsive design with inline styles  
 ✅ **Pure PHP** - No JavaScript frameworks, following upMVC philosophy  
