@@ -56,15 +56,18 @@ The modules included with upMVC (`admin`, `auth`, `email`, `react`, etc.) are **
 
 ---
 
-### React Module (`/modules/react`)
-**Purpose:** Demonstrates "PHP Islands" - integrating React/Vue  
+### React Modules (`/modules/react*`)
+**Purpose:** Demonstrates **four different patterns** for integrating React/Vue/Preact  
 **Keep if:** You want to mix PHP backend with JS frontend  
-**Can delete if:** You're doing pure PHP or full SPA  
+**Can delete if:** You're doing pure PHP or external SPA  
 
-**What it teaches:**
-- How to integrate modern JS frameworks
-- Component-based architecture
-- Hybrid PHP/JS approach
+**What they teach:**
+- **`react`** - CDN components (no build step)
+- **`reactb`** - Built React app embedded in PHP sections
+- **`reactcrud`** - Full React SPA with PHP backend
+- **`reactnb`** - ES modules without build (modern approach)
+
+See **[React Integration Patterns](REACT_INTEGRATION_PATTERNS.md)** for complete guide.
 
 ---
 
@@ -267,7 +270,7 @@ Delete auth, admin, email, react - everything!
 Look at included modules to see different approaches:
 - `auth` - Basic authentication
 - `admin` - CRUD + route caching
-- `react` - JS framework integration
+- `react*` - Four JS framework integration patterns (no build, with build, ES modules)
 
 ### Step 2: Choose Your Approach
 Pick the patterns that fit your project:
@@ -317,6 +320,7 @@ mkdir -p modules/yourmodule/{routes,templates}
 ## 🔗 Related Documentation
 
 - **[Routing Strategies](routing/ROUTING_STRATEGIES.md)** - Route caching vs pattern matching
+- **[React Integration Patterns](REACT_INTEGRATION_PATTERNS.md)** - Four ways to integrate React/Vue/Preact
 - **[Admin Module](../modules/admin/README.md)** - CRUD + cached routes example
 - **[Auth Module](../modules/auth/README.md)** - Basic authentication example
 - **[Pure PHP Philosophy](PHILOSOPHY_PURE_PHP.md)** - upMVC design principles

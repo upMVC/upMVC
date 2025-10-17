@@ -35,6 +35,7 @@ A lightweight, modern PHP 8.1+ noFramework built on Modular MVC (MMVC) architect
 ### **🏗 Architecture & Philosophy:**
 - **[🎨 Pure PHP Philosophy](docs/PHILOSOPHY_PURE_PHP.md)** - The upMVC NoFramework approach
 - **[🧩 Module Philosophy](docs/MODULE_PHILOSOPHY.md)** - Modules as reference implementations
+- **[⚛️ React Integration Patterns](docs/REACT_INTEGRATION_PATTERNS.md)** - Four ways to integrate React/Vue/Preact
 - **[💪 Architectural Strengths](docs/ARCHITECTURAL_STRENGTHS.md)** - What makes upMVC powerful
 - **[🛣 Routing Capabilities](docs/ROUTING_CAPABILITIES.md)** - Understanding the routing system
 - **[🔧 URL Handling Explained](docs/URL_HANDLING_EXPLAINED.md)** - Request flow and middleware
