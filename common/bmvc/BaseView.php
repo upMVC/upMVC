@@ -145,6 +145,9 @@ class BaseView
                         <li>
                                 <a href="<?php echo BASE_URL; ?>/reactnb">👩‍👩‍👧‍👧 NoBuild</a>
                             </li>
+                            <li>
+                                <a href="<?php echo BASE_URL; ?>/reacthmr">👩‍👩‍👧‍👧 HMR</a>
+                            </li>
                         </ul>
                     </li>
 
