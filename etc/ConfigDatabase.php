@@ -37,28 +37,37 @@ class ConfigDatabase
     // ========================================
     
     /**
-     * Database configuration array
+     * Database configuration array (FALLBACK ONLY)
      * 
-     * Stores database connection credentials and settings.
+     * ⚠️ IMPORTANT: These are FALLBACK values for development only!
      * 
-     * IMPORTANT: These are default values. Update for your environment:
-     * - Production: Use strong passwords and specific database names
-     * - Security: Consider loading from .env file instead of hardcoding
+     * HYBRID CONFIGURATION PRIORITY:
+     * 1. .env file (PREFERRED) - Database.php checks .env first
+     * 2. This file (FALLBACK) - Used only if .env values not found
      * 
-     * Structure:
-     * - db.host: Database server address
-     * - db.name: Database name
-     * - db.user: Database username
-     * - db.pass: Database password
+     * Why Hybrid?
+     * - Production: Use .env (secure, not in Git)
+     * - Development: Use this file (convenient defaults)
+     * - Testing: Easy to alter these values to verify .env is working
+     * 
+     * Current Status:
+     * - Values intentionally altered (testa, roota) to test .env priority
+     * - If you see real database connection, .env is working! ✅
+     * - If connection fails, .env might not be loaded properly
+     * 
+     * Security Best Practices:
+     * - Production: ALWAYS use .env for real credentials
+     * - Development: Keep dummy/local values here
+     * - Never commit real passwords to version control
      * 
      * @var array
      */
     private static $config = [
         'db' => [
-            'host' => '127.0.0.1',    // Database server (localhost)
-            'name' => 'test',          // Database name
-            'user' => 'root',          // Database username
-            'pass' => '',              // Database password (CHANGE IN PRODUCTION!)
+            'host' => '127.0.0.1',    // Database server (FALLBACK - .env preferred)
+            'name' => 'testa',        // Database name (FALLBACK - altered for testing)
+            'user' => 'roota',        // Database username (FALLBACK - altered for testing)
+            'pass' => '',             // Database password (FALLBACK)
         ],
     ];
 
