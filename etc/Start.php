@@ -18,6 +18,21 @@ class Start
     private $reqURI;      // Store for reuse
     private $reqMethod;   // Store for reuse
     private $reqRoute;    // Store for reuse
+    
+    /**
+     * Default protected routes requiring authentication
+     * 
+     * These routes require user authentication before access.
+     * Can be overridden via PROTECTED_ROUTES in .env (comma-separated list)
+     * 
+     * IMPORTANT: Change these according to your application's protected areas!
+     */
+    private static $defaultProtectedRoutes = [
+        '/dashboardexample/*',
+        '/admin/*',
+        '/users/*',
+        '/moda'
+    ];
 
     public function __construct()
     {
@@ -64,6 +79,25 @@ class Start
     public function getRequestMethod(): string { return $this->reqMethod; }
     public function getRequestRoute(): string { return $this->reqRoute; }
 
+    /**
+     * Get protected routes from .env or use defaults
+     * 
+     * @return array Array of protected route patterns
+     */
+    private function getProtectedRoutes(): array
+    {
+        // Check if overridden in .env
+        $envRoutes = Environment::get('PROTECTED_ROUTES', '');
+        
+        if (!empty($envRoutes)) {
+            // Parse comma-separated routes from .env
+            return array_map('trim', explode(',', $envRoutes));
+        }
+        
+        // Use default routes
+        return self::$defaultProtectedRoutes;
+    }
+
     private function bootstrapApplication(): void
     {
         ConfigManager::load();
@@ -92,8 +126,8 @@ class Start
             $middlewareManager->addGlobal(new CorsMiddleware($corsConfig));
         }
 
-        // Simplified auth - use $_SESSION['logged'] directly
-        $protectedRoutes = ['/dashboardexample/*', '/admin/*', '/users/*', '/moda'];
+        // Get protected routes (from .env or defaults)
+        $protectedRoutes = $this->getProtectedRoutes();
         $middlewareManager->addGlobal(new AuthMiddleware($protectedRoutes));
     }
     
