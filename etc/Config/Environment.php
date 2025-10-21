@@ -227,11 +227,11 @@ APP_ENV=development
 # Application Debug Mode (true/false)
 APP_DEBUG=true
 
-# Application URL
-APP_URL=https://yourdomain.com
+# Application Domain (your domain URL)
+DOMAIN_NAME=https://yourdomain.com
 
 # Application Path (empty if in root, e.g., /app if in subdirectory)
-APP_PATH=
+SITE_PATH=
 
 # Database Configuration
 DB_HOST=127.0.0.1

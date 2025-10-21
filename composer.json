@@ -63,7 +63,11 @@
             "Enhanced\\": "modules/enhanced/",
             "Enhanced\\Routes\\": "modules/enhanced/routes/",
             "Testitems\\": "modules/testitems/",
-            "Testitems\\Routes\\": "modules/testitems/routes/"
+            "Testitems\\Routes\\": "modules/testitems/routes/",
+            "Reactnb\\": "modules/reactnb/",
+            "Reactnb\\Routes\\": "modules/reactnb/routes/",
+            "Reacthmr\\": "modules/reacthmr/",
+            "Reacthmr\\Routes\\": "modules/reacthmr/routes/"
         }
     }
 }

@@ -22,6 +22,8 @@ A lightweight, modern PHP 8.1+ noFramework built on Modular MVC (MMVC) architect
 
 ✨ **Key Features:** Modular architecture • PHP 8.1+ • PSR-4 compliant • Dependency injection • Middleware support • Frontend noFramework integration • Minimal learning curve
 
+> **📌 Note:** Included modules (admin, email, auth, react, etc.) are **reference implementations** showing different approaches to common problems. After installation, **you can delete any modules** you don't need - keep only what serves your project. Each module demonstrates different techniques (middleware vs manual auth checks, cached routes, etc.) to help you choose your preferred approach. See [Module Philosophy](docs/MODULE_PHILOSOPHY.md) for details.
+
 ## 🚀 **Quick Navigation**
 
 ### **🎯 New to upMVC? Start Here:**
@@ -32,6 +34,10 @@ A lightweight, modern PHP 8.1+ noFramework built on Modular MVC (MMVC) architect
 
 ### **🏗 Architecture & Philosophy:**
 - **[🎨 Pure PHP Philosophy](docs/PHILOSOPHY_PURE_PHP.md)** - The upMVC NoFramework approach
+- **[🧩 Module Philosophy](docs/MODULE_PHILOSOPHY.md)** - Modules as reference implementations
+- **[🏝️ Islands Architecture](docs/ISLANDS_ARCHITECTURE_INDEX.md)** - **NEW!** Complete guide to PHP + React Islands
+- **[⚛️ React Integration Patterns](docs/REACT_INTEGRATION_PATTERNS.md)** - Five ways to integrate React/Vue/Preact
+- **[🔥 ReactHMR - Hot Module Reload](modules/reacthmr/README.md)** - Auto-reload without webpack
 - **[💪 Architectural Strengths](docs/ARCHITECTURAL_STRENGTHS.md)** - What makes upMVC powerful
 - **[🛣 Routing Capabilities](docs/ROUTING_CAPABILITIES.md)** - Understanding the routing system
 - **[🔧 URL Handling Explained](docs/URL_HANDLING_EXPLAINED.md)** - Request flow and middleware

@@ -81,6 +81,18 @@ class BaseView
                     </li>
                     <li>
                         <a href="<?php echo BASE_URL; ?>">🏠 Home</a>
+                         <ul>
+                        <li>
+                                <a href="<?php echo BASE_URL; ?>/admin">👩‍👩‍👧‍👧 Admin</a>
+                            </li>
+                            <li>
+                                <a href="<?php echo BASE_URL; ?>/test/modern">👩‍👩‍👧‍👧 Modern</a>
+                            </li>
+                            
+                        <li>
+                                <a href="<?php echo BASE_URL; ?>/dashboardexample">👩‍👩‍👧‍👧 Dashboard Example</a>
+                            </li>
+                        </ul>
                     </li>
                     <li>
                         <a href="<?php echo BASE_URL; ?>">🏠 Routing</a>
@@ -131,7 +143,10 @@ class BaseView
                             </li>
                             
                         <li>
-                                <a href="<?php echo BASE_URL; ?>/admin">👩‍👩‍👧‍👧 NoBuild</a>
+                                <a href="<?php echo BASE_URL; ?>/reactnb">👩‍👩‍👧‍👧 NoBuild</a>
+                            </li>
+                            <li>
+                                <a href="<?php echo BASE_URL; ?>/reacthmr">👩‍👩‍👧‍👧 HMR</a>
                             </li>
                         </ul>
                     </li>
