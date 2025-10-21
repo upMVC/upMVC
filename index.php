@@ -1,37 +1,53 @@
 <?php
-
-
-/*
- *   Created on Tue Oct 31 2023
- 
- *   Copyright (c) 2023 BitsHost
- *   All rights reserved.
-
- *   Permission is hereby granted, free of charge, to any person obtaining a copy
- *   of this software and associated documentation files (the "Software"), to deal
- *   in the Software without restriction, including without limitation the rights
- *   to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- *   copies of the Software, and to permit persons to whom the Software is
- *   furnished to do so, subject to the following conditions:
-
- *   The above copyright notice and this permission notice shall be included in all
- *   copies or substantial portions of the Software.
-
- *   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- *   IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- *   FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- *   AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- *   LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- *   OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- *   SOFTWARE.
- *   Here you may host your app for free:
- *   https://bitshost.biz/
+/**
+ * index.php - Application Entry Point
+ * 
+ * This is the main entry point for the upMVC framework.
+ * All HTTP requests are routed through this file via .htaccess.
+ * 
+ * Bootstrap Sequence:
+ * 1. Load Composer autoloader
+ * 2. Instantiate Start class (triggers configuration and initialization)
+ * 3. Execute upMVC() method (starts routing and middleware)
+ * 
+ * Requirements:
+ * - PHP 7.4 or higher
+ * - Composer dependencies installed (vendor/autoload.php)
+ * - .env file configured in /etc directory
+ * - .htaccess configured to route all requests to this file
+ * 
+ * @package upMVC
+ * @author BitsHost
+ * @copyright 2023 BitsHost
+ * @license MIT License
+ * @link https://bitshost.biz/
+ * @created Tue Oct 31 2023
  */
-//
+
+// ========================================
+// Load Dependencies
+// ========================================
 
 require_once 'vendor/autoload.php';
 
 use upMVC\Start;
 
+// ========================================
+// Start Application
+// ========================================
+
+/**
+ * Initialize and start the upMVC application
+ * 
+ * The Start constructor handles:
+ * - Configuration loading from .env
+ * - Error handler registration
+ * - Request initialization
+ * 
+ * The upMVC() method handles:
+ * - Router setup
+ * - Middleware registration
+ * - Route dispatching
+ */
 $fireUpMVC = new Start();
 $fireUpMVC->upMVC();

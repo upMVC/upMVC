@@ -1,7 +1,22 @@
 <?php
-/*
- *   Pure PHP Start.php for upMVC
- *   Simple, efficient, no container complexity
+/**
+ * Start.php - Application Bootstrap and Initialization
+ * 
+ * This class handles the complete application startup sequence including:
+ * - Configuration loading and validation
+ * - Error handling setup
+ * - Request initialization
+ * - Middleware registration
+ * - Routing setup
+ * 
+ * Pure PHP implementation - simple, efficient, no container complexity
+ * 
+ * @package upMVC
+ * @author BitsHost
+ * @copyright 2023 BitsHost
+ * @license MIT License
+ * @link https://bitshost.biz/
+ * @created Tue Oct 31 2023
  */
 
 namespace upMVC;
@@ -15,9 +30,18 @@ use upMVC\Middleware\CorsMiddleware;
 
 class Start
 {
-    private $reqURI;      // Store for reuse
-    private $reqMethod;   // Store for reuse
-    private $reqRoute;    // Store for reuse
+    // ========================================
+    // Properties
+    // ========================================
+    
+    /** @var string Cached request URI */
+    private $reqURI;
+    
+    /** @var string Cached request method (GET, POST, etc.) */
+    private $reqMethod;
+    
+    /** @var string Parsed route from URI */
+    private $reqRoute;
     
     /**
      * Default protected routes requiring authentication
@@ -26,6 +50,8 @@ class Start
      * Can be overridden via PROTECTED_ROUTES in .env (comma-separated list)
      * 
      * IMPORTANT: Change these according to your application's protected areas!
+     * 
+     * @var array
      */
     private static $defaultProtectedRoutes = [
         '/dashboardexample/*',
@@ -34,70 +60,24 @@ class Start
         '/moda'
     ];
 
+    // ========================================
+    // Initialization
+    // ========================================
+
+    /**
+     * Constructor - Bootstrap and initialize application
+     */
     public function __construct()
     {
         $this->bootstrapApplication();
-        $this->initializeRequest();  // Get request data once
+        $this->initializeRequest();
     }
 
     /**
-     * Initialize request data once - pure PHP, no container
-     */
-    private function initializeRequest(): void
-    {
-        $this->reqURI = $_SERVER['REQUEST_URI'];
-        $this->reqMethod = $_SERVER['REQUEST_METHOD'];
-        
-        // Simple direct instantiation
-        $config = new Config();
-        $this->reqRoute = $config->getReqRoute($this->reqURI);
-    }
-
-    public function upMVC()
-    {
-        try {
-            // Pure PHP - simple and direct
-            $router = new Router();
-
-            // Setup middleware
-            $this->setupEnhancedMiddleware($router);
-            $this->registerMiddleware($router);
-
-            // Use already processed request data (no duplication)
-            $initRoutes = new Routes($router);
-            $initRoutes->startRoutes($this->reqRoute, $this->reqMethod, $this->getRequestURI());
-
-        } catch (\Exception $e) {
-            throw $e;
-        }
-    }
-
-    /**
-     * Getters for request data (if needed elsewhere)
-     */
-    public function getRequestURI(): string { return $this->reqURI; }
-    public function getRequestMethod(): string { return $this->reqMethod; }
-    public function getRequestRoute(): string { return $this->reqRoute; }
-
-    /**
-     * Get protected routes from .env or use defaults
+     * Bootstrap application: Load config, setup error handling, validate
      * 
-     * @return array Array of protected route patterns
+     * @return void
      */
-    private function getProtectedRoutes(): array
-    {
-        // Check if overridden in .env
-        $envRoutes = Environment::get('PROTECTED_ROUTES', '');
-        
-        if (!empty($envRoutes)) {
-            // Parse comma-separated routes from .env
-            return array_map('trim', explode(',', $envRoutes));
-        }
-        
-        // Use default routes
-        return self::$defaultProtectedRoutes;
-    }
-
     private function bootstrapApplication(): void
     {
         ConfigManager::load();
@@ -115,25 +95,85 @@ class Start
         }
     }
 
+    /**
+     * Initialize request data once and cache for reuse
+     * 
+     * @return void
+     */
+    private function initializeRequest(): void
+    {
+        $this->reqURI = $_SERVER['REQUEST_URI'];
+        $this->reqMethod = $_SERVER['REQUEST_METHOD'];
+        
+        $config = new Config();
+        $this->reqRoute = $config->getReqRoute($this->reqURI);
+    }
+
+    // ========================================
+    // Core Application Flow
+    // ========================================
+
+    /**
+     * Main application entry point - Setup routing and middleware
+     * 
+     * @return void
+     * @throws \Exception
+     */
+    public function upMVC()
+    {
+        try {
+            $router = new Router();
+
+            // Setup middleware stack
+            $this->setupEnhancedMiddleware($router);
+            $this->registerMiddleware($router);
+
+            // Initialize and start routing
+            $initRoutes = new Routes($router);
+            $initRoutes->startRoutes($this->reqRoute, $this->reqMethod, $this->reqURI);
+
+        } catch (\Exception $e) {
+            throw $e;
+        }
+    }
+
+    // ========================================
+    // Middleware Setup
+    // ========================================
+
+    /**
+     * Setup enhanced global middleware (logging, CORS, auth)
+     * 
+     * @param Router $router The router instance
+     * @return void
+     */
     private function setupEnhancedMiddleware($router): void
     {
         $middlewareManager = $router->getMiddlewareManager();
 
+        // Global logging for all requests
         $middlewareManager->addGlobal(new LoggingMiddleware());
         
+        // Optional CORS support
         if (ConfigManager::get('app.cors.enabled', false)) {
             $corsConfig = ConfigManager::get('app.cors', []);
             $middlewareManager->addGlobal(new CorsMiddleware($corsConfig));
         }
 
-        // Get protected routes (from .env or defaults)
+        // Authentication for protected routes
         $protectedRoutes = $this->getProtectedRoutes();
         $middlewareManager->addGlobal(new AuthMiddleware($protectedRoutes));
     }
     
+    /**
+     * Register named middleware for specific routes
+     * 
+     * @param Router $router The router instance
+     * @return void
+     */
     private function registerMiddleware($router): void
     {
-        // Simplified CSRF - use $_POST directly
+        // CSRF protection for POST requests
         $router->addMiddleware('csrf', function($route, $method) {
             if ($method === 'POST' && ConfigManager::get('security.csrf_protection', true)) {
                 $token = $_POST['csrf_token'] ?? '';
@@ -146,7 +186,7 @@ class Start
             return true;
         });
         
-        // Simplified rate limiting
+        // Rate limiting by IP address
         $router->addMiddleware('rate_limit', function($route, $method) {
             $identifier = $_SERVER['REMOTE_ADDR'] ?? 'unknown';
             $limit = ConfigManager::get('security.rate_limit', 100);
@@ -159,7 +199,7 @@ class Start
             return true;
         });
         
-        // Simplified auth - use existing session variable
+        // Session-based authentication check
         $router->addMiddleware('auth', function($route, $method) {
             if (!isset($_SESSION['logged']) || $_SESSION['logged'] !== true) {
                 http_response_code(401);
@@ -168,5 +208,59 @@ class Start
             }
             return true;
         });
+    }
+
+    // ========================================
+    // Helper Methods
+    // ========================================
+
+    /**
+     * Get protected routes from .env or use defaults
+     * 
+     * @return array Array of protected route patterns
+     */
+    private function getProtectedRoutes(): array
+    {
+        $envRoutes = Environment::get('PROTECTED_ROUTES', '');
+        
+        if (!empty($envRoutes)) {
+            return array_map('trim', explode(',', $envRoutes));
+        }
+        
+        return self::$defaultProtectedRoutes;
+    }
+
+    // ========================================
+    // Public Getters
+    // ========================================
+
+    /**
+     * Get cached request URI
+     * 
+     * @return string The request URI
+     */
+    public function getRequestURI(): string 
+    { 
+        return $this->reqURI; 
+    }
+
+    /**
+     * Get cached request method
+     * 
+     * @return string The request method (GET, POST, etc.)
+     */
+    public function getRequestMethod(): string 
+    { 
+        return $this->reqMethod; 
+    }
+
+    /**
+     * Get parsed request route
+     * 
+     * @return string The parsed route
+     */
+    public function getRequestRoute(): string 
+    { 
+        return $this->reqRoute; 
     }
 }
