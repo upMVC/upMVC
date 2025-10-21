@@ -27,34 +27,65 @@
 
 namespace upMVC;
 
+use upMVC\Config\Environment;
+
 /**
  * Config
  */
 class Config
 {
-    public const SITE_PATH = '/upMVC';
-    public const DOMAIN_NAME = 'http://localhost';
+    /**
+     * Fallback configuration values
+     * Used only if .env file is missing or values are not set
+     * 
+     * IMPORTANT: Change these values according to your setup!
+     * - site_path: Should be empty '' if in root, or '/folder' if in subdirectory
+     * - domain_name: Your domain URL without trailing slash
+     */
+    private static $fallbacks = [
+        'site_path' => '/upMVC',
+        'domain_name' => 'http://localhost',
+    ];
     
+    // Legacy constants - now loaded from .env
+    // Use self::getSitePath() and self::getDomainName() instead
+    // public const SITE_PATH = '/upMVC';  // Commented out - now using .env
+    // public const DOMAIN_NAME = 'http://localhost';  // Commented out - now using .env
+    
+    /**
+     * Static configuration array
+     * These values can also be overridden via .env or ConfigManager
+     * 
+     * IMPORTANT: These are fallback defaults. For production, use .env file!
+     */
     private static $config = [
-        'debug' => true,
-        'timezone' => 'UTC',
+        'debug' => true,              // Set to false in production
+        'timezone' => 'UTC',          // Change to your timezone
         'session' => [
             'name' => 'UPMVC_SESSION',
-            'lifetime' => 3600,
-            'secure' => false,
+            'lifetime' => 3600,       // 1 hour
+            'secure' => false,        // Set true if using HTTPS
             'httponly' => true
         ],
         'cache' => [
-            'enabled' => false,
+            'enabled' => false,       // Enable in production
             'driver' => 'file',
-            'ttl' => 3600
+            'ttl' => 3600            // Cache lifetime in seconds
         ],
         'security' => [
             'csrf_protection' => true,
-            'rate_limit' => 100
+            'rate_limit' => 100      // Requests per minute
         ]
     ];
     
+    /**
+     * Get configuration value using dot notation
+     * Used internally by initConfig() to read from $config array
+     * 
+     * @param string $key Configuration key (supports dot notation like 'session.lifetime')
+     * @param mixed $default Default value if key not found
+     * @return mixed Configuration value
+     */
     public static function get(string $key, $default = null)
     {
         $parts = explode('.', $key);
@@ -70,20 +101,29 @@ class Config
         
         return $config;
     }
-    
-    public static function set(string $key, $value): void
+
+    /**
+     * Get SITE_PATH from .env or fallback
+     * Note: Fallback rarely used since .env is always loaded in bootstrapApplication()
+     *
+     * @return string
+     */
+    public static function getSitePath(): string
     {
-        $parts = explode('.', $key);
-        $config = &self::$config;
-        
-        foreach ($parts as $part) {
-            if (!isset($config[$part])) {
-                $config[$part] = [];
-            }
-            $config = &$config[$part];
-        }
-        
-        $config = $value;
+        // Environment is always available, fallback is just for safety
+        return Environment::get('SITE_PATH', self::$fallbacks['site_path']);
+    }
+
+    /**
+     * Get DOMAIN_NAME from .env or fallback
+     * Note: Fallback rarely used since .env is always loaded in bootstrapApplication()
+     *
+     * @return string
+     */
+    public static function getDomainName(): string
+    {
+        // Environment is always available, fallback is just for safety
+        return Environment::get('DOMAIN_NAME', self::$fallbacks['domain_name']);
     }
 
     /**
@@ -106,8 +146,8 @@ class Config
         // Initialize the configuration
         $this->initConfig();
 
-        // Remove the site path from the request URI
-        $urlWithoutSitePath = $this->cleanUrlSitePath(self::SITE_PATH, $reqURI);
+        // Remove the site path from the request URI - use .env value
+        $urlWithoutSitePath = $this->cleanUrlSitePath(self::getSitePath(), $reqURI);
 
         // Remove the query string from the URL
         return $this->cleanUrlQuestionMark($urlWithoutSitePath);
@@ -151,8 +191,10 @@ class Config
         }
 
         define('THIS_DIR', str_replace('\\', '/', dirname(__FILE__, 2)));
-        define('BASE_URL', self::DOMAIN_NAME . self::SITE_PATH);
-        define('SITEPATH', SELF::SITE_PATH);
+        
+        // Use .env values instead of constants
+        define('BASE_URL', self::getDomainName() . self::getSitePath());
+        define('SITEPATH', self::getSitePath());
 
         // Enhanced session configuration
         $sessionConfig = self::get('session', []);
