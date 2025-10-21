@@ -11,7 +11,7 @@
  * 3. Execute upMVC() method (starts routing and middleware)
  * 
  * Requirements:
- * - PHP 7.4 or higher
+ * - PHP 8.0 or higher
  * - Composer dependencies installed (vendor/autoload.php)
  * - .env file configured in /etc directory
  * - .htaccess configured to route all requests to this file
