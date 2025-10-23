@@ -90,11 +90,13 @@ mkdir etc
 copy vendor/bitshost/upmvc/etc/.env etc/.env
 
 # Step 4: Configure your environment
-# Edit etc/.env with your settings:
+# Edit etc/.env with required settings:
 # - SITE_PATH=/your-folder-name (e.g., /myproject)
 # - DOMAIN_NAME=localhost (or your domain)
-# - Database credentials
-# - App settings
+# 
+# Database configuration is optional (uses etc/ConfigDatabase.php fallback)
+# - Configure only when your modules need database access
+# - Framework works without database for static/API projects
 ```
 
 **That's it!** 🎉 Run with:
@@ -118,10 +120,14 @@ composer create-project bitshost/upmvc yourProjectName
 cd yourProjectName
 
 # Step 3: Configure etc/.env
-# Edit these 2 settings:
+# Edit these 2 required settings:
 # - SITE_PATH=/yourProjectName (or empty if root)
 # - DOMAIN_NAME=http://localhost
-# Optional: Configure database settings
+# 
+# Database settings are optional because upMVC has smart fallbacks:
+# - If .env database settings are missing, it uses etc/ConfigDatabase.php
+# - Framework will work even without database (for static/API projects)
+# - Configure database only when you need it for your modules
 ```
 
 **That's it!** 🎉 Run with:
@@ -145,11 +151,25 @@ composer update
 
 ## ⚙️ Configuration
 
-Edit these files with your project settings:
+upMVC uses a smart **layered configuration system** with automatic fallbacks:
 
+### Primary Configuration: `.env` file
+Edit `/etc/.env` for environment-specific settings:
+- **Required:** `SITE_PATH`, `DOMAIN_NAME`, `APP_ENV`
+- **Optional:** Database, mail, cache, session settings
+
+### Fallback System
+If `.env` is missing or incomplete, upMVC automatically falls back to:
 - **`/etc/Config.php`** - Base URL, site paths, environment settings
-- **`/etc/ConfigDatabase.php`** - Database connection parameters
+- **`/etc/ConfigDatabase.php`** - Database connection parameters (fallback credentials)
 - **`/modules/mail/MailController.php`** - PHPMailer SMTP configuration
+
+**Why fallback?** Your framework works even without `.env` - perfect for:
+- Quick testing and development
+- Static sites or API-only projects
+- Gradual configuration as you add features
+
+💡 **Tip:** Start with just `SITE_PATH` and `DOMAIN_NAME`, add database later when needed!
 
 #
 		
