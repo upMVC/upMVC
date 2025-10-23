@@ -104,20 +104,36 @@ php -S localhost:8080
 
 **Visit:** `http://localhost:8080` - All 16 modules will be automatically loaded and registered!
 
-## Option 2: Install as a Standalone Project
+## Option 2: Install as a Standalone Project (Even Simpler!)
 
-Create a new upMVC project:
+Create a complete upMVC project in **3 simple steps:**
 
 ```bash
-# Install in new directory
+# Step 1: Create project
 composer create-project bitshost/upmvc yourProjectName
+# Or in current directory:
+# composer create-project bitshost/upmvc .
 
-# Or install in current directory
-composer create-project bitshost/upmvc .
+# Step 2: Navigate to project
+cd yourProjectName
+
+# Step 3: Configure etc/.env
+# Edit these 2 settings:
+# - SITE_PATH=/yourProjectName (or empty if root)
+# - DOMAIN_NAME=http://localhost
+# Optional: Configure database settings
 ```
 
-**After installation:**
+**That's it!** 🎉 Run with:
+```bash
+php -S localhost:8081
+```
 
+**Visit:** `http://localhost:8081/yourProjectName` - Complete framework with all modules ready!
+
+**Note:** Everything is included - no copying files needed! Just configure `.env` and run.
+
+**Optional - Keep dependencies updated:**
 ```bash
 # Update autoloader when adding new modules
 composer dump-autoload
