@@ -79,7 +79,10 @@ Add upMVC to your existing project in **4 simple steps:**
 
 ```bash
 # Step 1: Install via Composer
-composer require bitshost/upmvc:^1.4
+composer require bitshost/upmvc
+# Alternative versions:
+# composer require bitshost/upmvc:^1.0  (recommended - all 1.x updates)
+# composer require bitshost/upmvc:dev-main  (bleeding edge - risky!)
 
 # Step 2: Copy essential files to project root
 copy vendor/bitshost/upmvc/index.php .
