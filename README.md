@@ -38,7 +38,8 @@ A lightweight, modern PHP 8.1+ noFramework built on Modular MVC (MMVC) architect
 - **[🏝️ Islands Architecture](docs/ISLANDS_ARCHITECTURE_INDEX.md)** - **NEW!** Complete guide to PHP + React Islands
 - **[⚛️ React Integration Patterns](docs/REACT_INTEGRATION_PATTERNS.md)** - Five ways to integrate React/Vue/Preact
 - **[🔥 ReactHMR - Hot Module Reload](modules/reacthmr/README.md)** - Auto-reload without webpack
-- **[💪 Architectural Strengths](docs/ARCHITECTURAL_STRENGTHS.md)** - What makes upMVC powerful
+- **[� Integration: upMVC + PHP CRUD API Generator](docs/INTEGRATION_PHP_CRUD_API.md)** - **NEW!** Full-stack power combo guide
+- **[�💪 Architectural Strengths](docs/ARCHITECTURAL_STRENGTHS.md)** - What makes upMVC powerful
 - **[🛣 Routing Capabilities](docs/ROUTING_CAPABILITIES.md)** - Understanding the routing system
 - **[🔧 URL Handling Explained](docs/URL_HANDLING_EXPLAINED.md)** - Request flow and middleware
 
