@@ -1,5 +1,37 @@
 # Changelog
 
+## v1.4.2 - Thrive (Library Installation Fix) (2025-10-23)
+
+### 🐛 Bug Fixes
+- **Router.php**: Fixed 404 page path for library installation compatibility
+  - Changed from `./common/404.php` to `__DIR__ . '/../common/404.php'`
+  - Now works correctly when installed via `composer require` in vendor directory
+  - Maintains compatibility with standalone installation
+
+### 📦 Installation
+This version is essential for users installing upMVC as a library:
+```bash
+composer require bitshost/upmvc:^1.4.2
+```
+
+---
+
+## v1.4.1 - Thrive (Stable Dependencies) (2025-10-23)
+
+### 🔧 Improvements
+- **Composer Dependencies**: Changed to stable versions for easier installation
+  - `minimum-stability`: Changed from "dev" to "stable"
+  - `gabordemooij/redbean`: Changed from "dev-master" to "^5.7"
+  - Added `prefer-stable: true` for better dependency resolution
+
+### 📦 Installation
+Now installs cleanly from Packagist without stability warnings:
+```bash
+composer require bitshost/upmvc:^1.4.1
+```
+
+---
+
 ## v1.4.0 - Thrive (2025-10-23)
 
 ### 🌱 Major Framework Maturity Update
