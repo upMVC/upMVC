@@ -22,6 +22,19 @@ A lightweight, modern PHP 8.1+ noFramework built on Modular MVC (MMVC) architect
 
 ✨ **Key Features:** Modular architecture • PHP 8.1+ • PSR-4 compliant • Dependency injection • Middleware support • Frontend noFramework integration • Minimal learning curve
 
+### 🚀 **Deploy Any JavaScript Framework**
+
+upMVC excels at integrating **pre-built JavaScript applications** from any framework:
+
+- **⚛️ React** - `npm run build` → deploy to module/public
+- **💚 Vue** - Production builds with Vite/Webpack
+- **🔥 Svelte** - SvelteKit or standalone builds  
+- **⚡ Any Framework** - Angular, Solid, Qwik, etc.
+
+**Your PHP module serves the built app** - no complex webpack configs, no dev servers in production. Just build your JS app locally and deploy the static files. Your Controller exposes data via API endpoints that your JS app consumes.
+
+📖 **Complete Guide:** [JavaScript Framework Integration](docs/REACT_BUILD_INTEGRATION.md) - 4 production-ready methods with full code examples
+
 > **📌 Note:** Included modules (admin, email, auth, react, etc.) are **reference implementations** showing different approaches to common problems. After installation, **you can delete any modules** you don't need - keep only what serves your project. Each module demonstrates different techniques (middleware vs manual auth checks, cached routes, etc.) to help you choose your preferred approach. See [Module Philosophy](docs/MODULE_PHILOSOPHY.md) for details.
 
 ## 🚀 **Quick Navigation**
@@ -38,8 +51,9 @@ A lightweight, modern PHP 8.1+ noFramework built on Modular MVC (MMVC) architect
 - **[🏝️ Islands Architecture](docs/ISLANDS_ARCHITECTURE_INDEX.md)** - **NEW!** Complete guide to PHP + React Islands
 - **[⚛️ React Integration Patterns](docs/REACT_INTEGRATION_PATTERNS.md)** - Five ways to integrate React/Vue/Preact
 - **[🔥 ReactHMR - Hot Module Reload](modules/reacthmr/README.md)** - Auto-reload without webpack
-- **[� Integration: upMVC + PHP CRUD API Generator](docs/INTEGRATION_PHP_CRUD_API.md)** - **NEW!** Full-stack power combo guide
-- **[�💪 Architectural Strengths](docs/ARCHITECTURAL_STRENGTHS.md)** - What makes upMVC powerful
+- **[📦 Integration: upMVC + PHP CRUD API Generator](docs/INTEGRATION_PHP_CRUD_API.md)** - **NEW!** Full-stack power combo guide
+- **[🎯 JavaScript Framework Integration](docs/REACT_BUILD_INTEGRATION.md)** - **NEW!** Deploy React, Vue, Svelte, or any JS framework build
+- **[� Architectural Strengths](docs/ARCHITECTURAL_STRENGTHS.md)** - What makes upMVC powerful
 - **[🛣 Routing Capabilities](docs/ROUTING_CAPABILITIES.md)** - Understanding the routing system
 - **[🔧 URL Handling Explained](docs/URL_HANDLING_EXPLAINED.md)** - Request flow and middleware
 
