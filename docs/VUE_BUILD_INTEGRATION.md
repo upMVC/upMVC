@@ -4,7 +4,7 @@
 
 ### The Power of Polyglot Architecture
 
-upMVC enables you to build with **Vue.js + PHP** in perfect harmony:
+upMVC isn't a framework—it's a **system architecture** that gives you complete freedom to build with **Vue.js + PHP** in perfect harmony:
 
 #### 🔐 **Layered Security Model**
 - **Layer 1: Main upMVC** - Handles authentication, authorization, session management, CSRF protection
@@ -27,6 +27,14 @@ upMVC enables you to build with **Vue.js + PHP** in perfect harmony:
 - **Vue.js** - Modern reactive UI components
 - **HTML/CSS** - Server-rendered structure
 - **Mix freely** - Best tool for each job
+
+#### 🆓 **True Freedom - No Framework Rules**
+upMVC follows the **"Direct PHP First"** principle:
+- **No forced conventions** - Write code your way
+- **No abstractions** - Direct PHP, direct database access, no ORM requirements
+- **No magic** - You see what you write, you write what you see
+- **No lock-in** - Use any library, any pattern, any architecture
+- **Freedom to choose** - Pure PHP, modern frameworks, or mix both
 
 #### 💰 **Cost & Performance Benefits**
 - **No Node.js/SSR server needed** - Serve Vue SPA with PHP

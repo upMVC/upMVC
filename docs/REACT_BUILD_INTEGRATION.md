@@ -4,7 +4,7 @@
 
 ### The Power of Polyglot Architecture
 
-upMVC isn't just a framework—it's a **system architecture** that enables you to build complex applications using the best tool for each job:
+upMVC isn't a framework—it's a **system architecture** that enables you to build complex applications using the best tool for each job:
 
 #### 🔐 **Layered Security Model**
 - **Layer 1: Main upMVC** - Handles authentication, authorization, session management, CSRF protection
@@ -29,6 +29,14 @@ Not limited to one language or framework:
 - **React/Vue/Svelte** - Modern UI components
 - **HTML/CSS** - Structure and styling
 - **Mix freely** - Use what works best for each feature
+
+#### 🆓 **True Freedom - No Framework Rules**
+upMVC follows the **"Direct PHP First"** principle:
+- **No forced conventions** - Write code your way
+- **No abstractions** - Direct PHP, direct database access, no ORM requirements
+- **No magic** - You see what you write, you write what you see
+- **No lock-in** - Use any library, any pattern, any architecture
+- **Freedom to choose** - Pure PHP, modern frameworks, or mix both
 
 #### 💰 **Cost & Performance Benefits**
 - **No Node.js servers needed** - Serve static JS bundles with PHP
