@@ -262,6 +262,6 @@ class Router
         ?>
         <meta http-equiv="refresh" content="3; URL='<?php echo BASE_URL ?>'" />
         <?php
-        include_once './common/404.php';
+        include_once __DIR__ . '/../common/404.php';
     }
 }
