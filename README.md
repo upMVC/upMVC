@@ -64,6 +64,7 @@ upMVC excels at integrating **pre-built JavaScript applications** from any frame
 - **[🎯 JavaScript Framework Integration](docs/REACT_BUILD_INTEGRATION.md)** - **NEW!** Deploy React, Vue, Svelte, or any JS framework build
 - **[⚛️ React Build Integration](docs/REACT_BUILD_INTEGRATION.md)** - Complete React deployment guide (Vite/Webpack/CRA)
 - **[💚 Vue Build Integration](docs/VUE_BUILD_INTEGRATION.md)** - **NEW!** Vue 2/3 deployment guide (Vite/Webpack/Nuxt)
+- **[🆚 Comparison with Other PHP Frameworks](docs/COMPARISON_PHP_FRAMEWORKS.md)** - **NEW!** Why upMVC is unique
 - **[💪 Architectural Strengths](docs/ARCHITECTURAL_STRENGTHS.md)** - What makes upMVC powerful
 - **[🛣 Routing Capabilities](docs/ROUTING_CAPABILITIES.md)** - Understanding the routing system
 - **[🔧 URL Handling Explained](docs/URL_HANDLING_EXPLAINED.md)** - Request flow and middleware
