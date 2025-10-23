@@ -73,18 +73,36 @@ Rasmus Lerdorf: PHP NoFrameworks all suck!
 
 # 📦 Installation
 
-## Option 1: Install as a Library
+## Option 1: Install as a Library (Recommended for existing projects)
 
-Add upMVC to your existing project:
+Add upMVC to your existing project in **4 simple steps:**
 
 ```bash
-composer require bitshost/upmvc
+# Step 1: Install via Composer
+composer require bitshost/upmvc:^1.4
+
+# Step 2: Copy essential files to project root
+copy vendor/bitshost/upmvc/index.php .
+copy vendor/bitshost/upmvc/.htaccess .
+
+# Step 3: Create etc folder and copy .env configuration
+mkdir etc
+copy vendor/bitshost/upmvc/etc/.env etc/.env
+
+# Step 4: Configure your environment
+# Edit etc/.env with your settings:
+# - SITE_PATH=/your-folder-name (e.g., /myproject)
+# - DOMAIN_NAME=localhost (or your domain)
+# - Database credentials
+# - App settings
 ```
 
-**Post-installation steps:**
-- Copy `index.php` from vendor to your project root
-- Add `.htaccess` rules for routing
-- Configure: `/etc/Config.php`, `/etc/ConfigDatabase.php`, `/modules/mail/MailController.php`
+**That's it!** 🎉 Run with:
+```bash
+php -S localhost:8080
+```
+
+**Visit:** `http://localhost:8080` - All 16 modules will be automatically loaded and registered!
 
 ## Option 2: Install as a Standalone Project
 
