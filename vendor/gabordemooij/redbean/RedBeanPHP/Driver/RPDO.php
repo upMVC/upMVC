@@ -541,7 +541,10 @@ class RPDO implements Driver
 	public function GetAll( $sql, $bindings = array() )
 	{
 		$this->runQuery( $sql, $bindings );
-		return $this->resultArray;
+
+		$result_array = $this->resultArray;
+		$this->resultArray = null;
+		return $result_array;
 	}
 
 	/**
@@ -553,7 +556,9 @@ class RPDO implements Driver
 				'fetchStyle' => \PDO::FETCH_ASSOC
 			)
 		);
-		return $this->resultArray;
+		$result_array = $this->resultArray;
+		$this->resultArray = null;
+		return $result_array;
 	}
 
 	/**
@@ -561,18 +566,32 @@ class RPDO implements Driver
 	 */
 	public function GetCol( $sql, $bindings = array() )
 	{
-		$rows = $this->GetAll( $sql, $bindings );
+		if (!defined('PDO::FETCH_COLUMN')) { //PHP 5.3
+			$rows = $this->GetAll( $sql, $bindings );
+			if ( empty( $rows ) || !is_array( $rows ) ) {
+				return array();
+			}
+			$cols = array();
+			foreach ( $rows as $row ) {
+				   $cols[] = reset( $row );
+			}
 
-		if ( empty( $rows ) || !is_array( $rows ) ) {
-			return array();
+			$result_array = $cols;
+			$this->resultArray = null;
+		} else {
+			$this->runQuery( $sql, $bindings, array(
+					'fetchStyle' => \PDO::FETCH_COLUMN
+				)
+			);
+			$result_array = $this->resultArray;
+			$this->resultArray = null;
+
+			if ( empty( $result_array ) || !is_array( $result_array ) ) {
+				return array();
+			}
 		}
 
-		$cols = array();
-		foreach ( $rows as $row ) {
-			$cols[] = reset( $row );
-		}
-
-		return $cols;
+		return $result_array;
 	}
 
 	/**
