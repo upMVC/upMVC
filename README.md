@@ -41,6 +41,9 @@ upMVC excels at integrating **pre-built JavaScript applications** from any frame
 > **🤔 Why Mix PHP with JavaScript Frameworks?**  
 > upMVC is a **system architecture**, not just a single app. **Layer 1 (Main upMVC)** handles security, auth, sessions. **Layer 2 (Modules)** are independent apps using any tech—PHP, React, Vue, Svelte. Split large monoliths into micro-frontends. Each team works independently. Deploy modules separately. One breach can't compromise the entire system. **Best of both worlds:** Server-side security + client-side reactivity. Read: [Why Mix?](docs/REACT_BUILD_INTEGRATION.md#-why-mix-php-with-javascript-frameworks)
 
+> **🆚 How is upMVC Different?**  
+> Unlike Laravel, Symfony, or other PHP frameworks, upMVC is a **system, not a framework**. No forced conventions, no ORM requirements, no framework rules. **"Direct PHP First"** principle means complete freedom. Want React in one module and Vue in another? ✅ Want to delete core modules? ✅ Want to split your app into multiple independent instances? ✅ True micro-frontends architecture that nobody else offers. Read: [Comparison with Other PHP Projects](docs/COMPARISON_PHP_FRAMEWORKS.md)
+
 > **📌 Note:** Included modules (admin, email, auth, react, etc.) are **reference implementations** showing different approaches to common problems. After installation, **you can delete any modules** you don't need - keep only what serves your project. Each module demonstrates different techniques (middleware vs manual auth checks, cached routes, etc.) to help you choose your preferred approach. See [Module Philosophy](docs/MODULE_PHILOSOPHY.md) for details.
 
 ## 🚀 **Quick Navigation**
