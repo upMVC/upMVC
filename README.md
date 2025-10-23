@@ -38,6 +38,9 @@ upMVC excels at integrating **pre-built JavaScript applications** from any frame
 - [Vue Integration](docs/VUE_BUILD_INTEGRATION.md) - Vue 2/3, Vite, Webpack, Nuxt
 - Coming soon: Svelte, Angular guides
 
+> **🤔 Why Mix PHP with JavaScript Frameworks?**  
+> upMVC is a **system architecture**, not just a single app. **Layer 1 (Main upMVC)** handles security, auth, sessions. **Layer 2 (Modules)** are independent apps using any tech—PHP, React, Vue, Svelte. Split large monoliths into micro-frontends. Each team works independently. Deploy modules separately. One breach can't compromise the entire system. **Best of both worlds:** Server-side security + client-side reactivity. Read: [Why Mix?](docs/REACT_BUILD_INTEGRATION.md#-why-mix-php-with-javascript-frameworks)
+
 > **📌 Note:** Included modules (admin, email, auth, react, etc.) are **reference implementations** showing different approaches to common problems. After installation, **you can delete any modules** you don't need - keep only what serves your project. Each module demonstrates different techniques (middleware vs manual auth checks, cached routes, etc.) to help you choose your preferred approach. See [Module Philosophy](docs/MODULE_PHILOSOPHY.md) for details.
 
 ## 🚀 **Quick Navigation**
