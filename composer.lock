@@ -4,26 +4,25 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "222e18e557cfa2d0d37c2c413cecd758",
+    "content-hash": "ecad7e4c701337b8fa52d960d3ddb711",
     "packages": [
         {
             "name": "gabordemooij/redbean",
-            "version": "dev-master",
+            "version": "v5.7.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/gabordemooij/redbean.git",
-                "reference": "599bd825f1b7e0179425a0f6f5af145b817774d2"
+                "reference": "fc08c2f9bc5a4f5074721b0d9039881be244f842"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/gabordemooij/redbean/zipball/599bd825f1b7e0179425a0f6f5af145b817774d2",
-                "reference": "599bd825f1b7e0179425a0f6f5af145b817774d2",
+                "url": "https://api.github.com/repos/gabordemooij/redbean/zipball/fc08c2f9bc5a4f5074721b0d9039881be244f842",
+                "reference": "fc08c2f9bc5a4f5074721b0d9039881be244f842",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.3.4"
             },
-            "default-branch": true,
             "type": "library",
             "autoload": {
                 "psr-4": {
@@ -48,22 +47,20 @@
             ],
             "support": {
                 "issues": "https://github.com/gabordemooij/redbean/issues",
-                "source": "https://github.com/gabordemooij/redbean/tree/master"
+                "source": "https://github.com/gabordemooij/redbean/tree/v5.7.5"
             },
-            "time": "2024-12-14T13:21:50+00:00"
+            "time": "2025-05-01T17:41:56+00:00"
         }
     ],
     "packages-dev": [],
     "aliases": [],
-    "minimum-stability": "dev",
-    "stability-flags": {
-        "gabordemooij/redbean": 20
-    },
-    "prefer-stable": false,
+    "minimum-stability": "stable",
+    "stability-flags": {},
+    "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
         "php": ">=8.1"
     },
-    "platform-dev": [],
+    "platform-dev": {},
     "plugin-api-version": "2.6.0"
 }

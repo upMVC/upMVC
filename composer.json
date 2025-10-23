@@ -2,10 +2,11 @@
     "name": "bitshost/upmvc",
     "description": "upMVC. Modular Model View Controller. A modular PHP MVC system with integrated routing for scalable and organized web applications. Built-in Namespace Support. Object-Oriented Programming (OOP).",
     "type": "project",
-    "minimum-stability": "dev",
+    "minimum-stability": "stable",
+    "prefer-stable": true,
     "require": {
         "php": ">=8.1",
-        "gabordemooij/redbean": "dev-master"
+        "gabordemooij/redbean": "^5.7"
     },
     "authors": [
         {
