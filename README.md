@@ -57,6 +57,7 @@ upMVC excels at integrating **pre-built JavaScript applications** from any frame
 ### **🏗 Architecture & Philosophy:**
 - **[🎨 Pure PHP Philosophy](docs/PHILOSOPHY_PURE_PHP.md)** - The upMVC NoFramework approach
 - **[🧩 Module Philosophy](docs/MODULE_PHILOSOPHY.md)** - Modules as reference implementations
+- **[🔄 Configuration Fallbacks](docs/CONFIGURATION_FALLBACKS.md)** - **NEW!** Three-level fallback system explained
 - **[🏝️ Islands Architecture](docs/ISLANDS_ARCHITECTURE_INDEX.md)** - **NEW!** Complete guide to PHP + React Islands
 - **[⚛️ React Integration Patterns](docs/REACT_INTEGRATION_PATTERNS.md)** - Five ways to integrate React/Vue/Preact
 - **[🔥 ReactHMR - Hot Module Reload](modules/reacthmr/README.md)** - Auto-reload without webpack
@@ -190,72 +191,25 @@ Edit `/etc/.env` for environment-specific settings:
 
 ### 🔄 Three-Level Fallback System
 
-upMVC has **three intelligent fallback mechanisms** that let you configure gradually:
+upMVC has **intelligent fallbacks** that let the framework work immediately without complete configuration:
 
-#### 1️⃣ **Path & Domain Fallbacks** (`/etc/Config.php`)
-```php
-// If .env is missing these, Config.php provides defaults:
-private static $fallbacks = [
-    'site_path' => '/upMVC',        // Your installation folder
-    'domain_name' => 'http://localhost'
-];
-```
-- **Priority:** `.env` → `Config.php` fallbacks
-- **Edit:** `.env` (production) or `Config.php` (quick dev)
-- **Used for:** BASE_URL, routing, asset paths
+1. **Path & Domain** → `.env` or `Config.php` fallbacks
+2. **Protected Routes** → `.env` or `start.php` defaults  
+3. **Database** → `.env` or `ConfigDatabase.php` fallbacks
 
-#### 2️⃣ **Protected Routes Fallbacks** (`/etc/start.php`)
-```php
-// If .env PROTECTED_ROUTES is not set, uses these defaults:
-private static $defaultProtectedRoutes = [
-    '/dashboardexample/*',
-    '/admin/*',
-    '/users/*',
-    '/moda'
-];
-```
-- **Priority:** `.env` PROTECTED_ROUTES → `start.php` defaults
-- **Edit:** `.env` (production) or `start.php` (quick dev)
-- **Used for:** Authentication middleware, route protection
+**Why?** Start coding immediately, configure gradually as you need features!
 
-#### 3️⃣ **Database Credentials Fallbacks** (`/etc/Database.php`)
-```php
-// If .env database config is missing, uses ConfigDatabase.php:
-if (!isset($_ENV['DB_HOST'])) {
-    // Fallback to ConfigDatabase::get('db.host')
-}
-```
-- **Priority:** `.env` (DB_HOST, DB_NAME, DB_USER, DB_PASS) → `ConfigDatabase.php`
-- **Edit:** `.env` (production) or `/etc/ConfigDatabase.php` (dev)
-- **Used for:** Database connections
+📖 **[Complete Fallback Documentation](docs/CONFIGURATION_FALLBACKS.md)** - Detailed guide with examples and troubleshooting
 
-### 📋 Configuration Priority Summary
+### 🔍 Quick Troubleshooting
 
-| Setting | Priority 1 | Priority 2 (Fallback) |
-|---------|-----------|----------------------|
-| **Paths** | `.env` SITE_PATH | `Config.php` $fallbacks |
-| **Domain** | `.env` DOMAIN_NAME | `Config.php` $fallbacks |
-| **Protected Routes** | `.env` PROTECTED_ROUTES | `start.php` $defaultProtectedRoutes |
-| **Database** | `.env` DB_* vars | `ConfigDatabase.php` |
+If something doesn't work as expected, check:
+1. `.env` file (highest priority)
+2. `Config.php` fallbacks (path/domain)
+3. `start.php` defaults (protected routes)
+4. `ConfigDatabase.php` (database credentials)
 
-### 🎯 Why Fallbacks?
-
-Your framework works even without `.env` - perfect for:
-- ✅ Quick testing and development
-- ✅ Static sites or API-only projects
-- ✅ Gradual configuration as you add features
-- ✅ No config errors during initial setup
-
-### 🔍 Troubleshooting Configuration Conflicts
-
-**If something doesn't work as expected, check in this order:**
-
-1. **`.env` file** - Primary config, highest priority
-2. **`Config.php` $fallbacks** - Path/domain defaults
-3. **`start.php` $defaultProtectedRoutes** - Auth route defaults
-4. **`ConfigDatabase.php`** - Database credential defaults
-
-💡 **Pro Tip:** Start with just `SITE_PATH` and `DOMAIN_NAME` in `.env`, add others as needed!
+💡 **Pro Tip:** Start with just `SITE_PATH` and `DOMAIN_NAME`, add database later when needed!
 
 #
 		
