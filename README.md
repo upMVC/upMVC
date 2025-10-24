@@ -188,18 +188,74 @@ Edit `/etc/.env` for environment-specific settings:
 - **Required:** `SITE_PATH`, `DOMAIN_NAME`, `APP_ENV`
 - **Optional:** Database, mail, cache, session settings
 
-### Fallback System
-If `.env` is missing or incomplete, upMVC automatically falls back to:
-- **`/etc/Config.php`** - Base URL, site paths, environment settings
-- **`/etc/ConfigDatabase.php`** - Database connection parameters (fallback credentials)
-- **`/modules/mail/MailController.php`** - PHPMailer SMTP configuration
+### 🔄 Three-Level Fallback System
 
-**Why fallback?** Your framework works even without `.env` - perfect for:
-- Quick testing and development
-- Static sites or API-only projects
-- Gradual configuration as you add features
+upMVC has **three intelligent fallback mechanisms** that let you configure gradually:
 
-💡 **Tip:** Start with just `SITE_PATH` and `DOMAIN_NAME`, add database later when needed!
+#### 1️⃣ **Path & Domain Fallbacks** (`/etc/Config.php`)
+```php
+// If .env is missing these, Config.php provides defaults:
+private static $fallbacks = [
+    'site_path' => '/upMVC',        // Your installation folder
+    'domain_name' => 'http://localhost'
+];
+```
+- **Priority:** `.env` → `Config.php` fallbacks
+- **Edit:** `.env` (production) or `Config.php` (quick dev)
+- **Used for:** BASE_URL, routing, asset paths
+
+#### 2️⃣ **Protected Routes Fallbacks** (`/etc/start.php`)
+```php
+// If .env PROTECTED_ROUTES is not set, uses these defaults:
+private static $defaultProtectedRoutes = [
+    '/dashboardexample/*',
+    '/admin/*',
+    '/users/*',
+    '/moda'
+];
+```
+- **Priority:** `.env` PROTECTED_ROUTES → `start.php` defaults
+- **Edit:** `.env` (production) or `start.php` (quick dev)
+- **Used for:** Authentication middleware, route protection
+
+#### 3️⃣ **Database Credentials Fallbacks** (`/etc/Database.php`)
+```php
+// If .env database config is missing, uses ConfigDatabase.php:
+if (!isset($_ENV['DB_HOST'])) {
+    // Fallback to ConfigDatabase::get('db.host')
+}
+```
+- **Priority:** `.env` (DB_HOST, DB_NAME, DB_USER, DB_PASS) → `ConfigDatabase.php`
+- **Edit:** `.env` (production) or `/etc/ConfigDatabase.php` (dev)
+- **Used for:** Database connections
+
+### 📋 Configuration Priority Summary
+
+| Setting | Priority 1 | Priority 2 (Fallback) |
+|---------|-----------|----------------------|
+| **Paths** | `.env` SITE_PATH | `Config.php` $fallbacks |
+| **Domain** | `.env` DOMAIN_NAME | `Config.php` $fallbacks |
+| **Protected Routes** | `.env` PROTECTED_ROUTES | `start.php` $defaultProtectedRoutes |
+| **Database** | `.env` DB_* vars | `ConfigDatabase.php` |
+
+### 🎯 Why Fallbacks?
+
+Your framework works even without `.env` - perfect for:
+- ✅ Quick testing and development
+- ✅ Static sites or API-only projects
+- ✅ Gradual configuration as you add features
+- ✅ No config errors during initial setup
+
+### 🔍 Troubleshooting Configuration Conflicts
+
+**If something doesn't work as expected, check in this order:**
+
+1. **`.env` file** - Primary config, highest priority
+2. **`Config.php` $fallbacks** - Path/domain defaults
+3. **`start.php` $defaultProtectedRoutes** - Auth route defaults
+4. **`ConfigDatabase.php`** - Database credential defaults
+
+💡 **Pro Tip:** Start with just `SITE_PATH` and `DOMAIN_NAME` in `.env`, add others as needed!
 
 #
 		
