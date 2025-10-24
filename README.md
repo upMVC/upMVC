@@ -189,13 +189,15 @@ Edit `/etc/.env` for environment-specific settings:
 - **Required:** `SITE_PATH`, `DOMAIN_NAME`, `APP_ENV`
 - **Optional:** Database, mail, cache, session settings
 
-### 🔄 Three-Level Fallback System
+### 🔄 Five-Level Fallback System
 
-upMVC has **intelligent fallbacks** that let the framework work immediately without complete configuration:
+upMVC has intelligent fallbacks that let the system work immediately without complete configuration:
 
 1. **Path & Domain** → `.env` or `Config.php` fallbacks
 2. **Protected Routes** → `.env` or `start.php` defaults  
 3. **Database** → `.env` or `ConfigDatabase.php` fallbacks
+4. **Session Configuration** → Config array or hardcoded defaults (lifetime, secure, httponly)
+5. **Security/Middleware** → `.env` ConfigManager or defaults (CORS, CSRF, rate limiting)
 
 **Why?** Start coding immediately, configure gradually as you need features!
 
@@ -205,9 +207,10 @@ upMVC has **intelligent fallbacks** that let the framework work immediately with
 
 If something doesn't work as expected, check:
 1. `.env` file (highest priority)
-2. `Config.php` fallbacks (path/domain)
-3. `start.php` defaults (protected routes)
+2. `Config.php` fallbacks (path/domain + session)
+3. `start.php` defaults (protected routes + security)
 4. `ConfigDatabase.php` (database credentials)
+5. `ConfigManager.php` (all .env-based defaults)
 
 💡 **Pro Tip:** Start with just `SITE_PATH` and `DOMAIN_NAME`, add database later when needed!
 

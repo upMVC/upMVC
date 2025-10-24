@@ -2,7 +2,7 @@
 
 ## Overview
 
-upMVC uses a **three-level fallback system** that allows the framework to work even without complete configuration. This enables quick testing, gradual configuration, and flexible deployment strategies.
+upMVC uses a **five-level fallback system** that allows the system to work even without complete configuration. This enables quick testing, gradual configuration, and flexible deployment strategies.
 
 **Core Philosophy:** Start simple, configure as you grow.
 
@@ -12,7 +12,7 @@ upMVC uses a **three-level fallback system** that allows the framework to work e
 
 ### Benefits
 
-✅ **Quick Start** - Framework works immediately without full configuration  
+✅ **Quick Start** - System works immediately without full configuration  
 ✅ **Gradual Configuration** - Add settings only when you need them  
 ✅ **Flexible Deployment** - Different configs for dev/staging/production  
 ✅ **No Breaking Errors** - Missing config? Fallback handles it  
@@ -34,6 +34,8 @@ upMVC uses a **three-level fallback system** that allows the framework to work e
 | **Paths & Domain** | `.env` SITE_PATH, DOMAIN_NAME | `Config.php` $fallbacks | `/etc/Config.php` |
 | **Protected Routes** | `.env` PROTECTED_ROUTES | `start.php` $defaultProtectedRoutes | `/etc/start.php` |
 | **Database Credentials** | `.env` DB_* variables | `ConfigDatabase.php` | `/etc/ConfigDatabase.php` |
+| **Session Configuration** | `Config::get('session')` | Hardcoded defaults | `/etc/Config.php` line 215 |
+| **Security/Middleware** | `.env` via ConfigManager | Hardcoded defaults | `/etc/Start.php` line 158+ |
 
 ---
 
@@ -326,6 +328,170 @@ return [
 
 ---
 
+## 4️⃣ Session Configuration Fallbacks
+
+### Location: `/etc/Config.php` (line 215)
+
+### Configuration Logic
+
+Session cookie parameters use array fallback with hardcoded defaults:
+
+```php
+$sessionConfig = self::get('session', []);
+if (isset($sessionConfig['name'])) {
+    session_name($sessionConfig['name']);
+}
+
+session_set_cookie_params([
+    'lifetime' => $sessionConfig['lifetime'] ?? 3600,      // Default: 1 hour
+    'secure' => $sessionConfig['secure'] ?? false,         // Default: HTTP allowed
+    'httponly' => $sessionConfig['httponly'] ?? true,      // Default: JS blocked
+    'samesite' => 'Strict'                                 // Always Strict
+]);
+
+session_start();
+```
+
+### Priority Logic
+
+```
+1. Config::get('session') from ConfigManager (loaded from .env)
+   ↓ (if not set)
+2. Hardcoded defaults in session_set_cookie_params()
+   - lifetime: 3600 (1 hour)
+   - secure: false (HTTP allowed)
+   - httponly: true (JavaScript cannot access)
+   - samesite: 'Strict' (no third-party cookies)
+```
+
+### Configuration Examples
+
+**.env Configuration (Production):**
+```bash
+SESSION_LIFETIME=7200                # 2 hours
+SESSION_COOKIE=myapp_session
+SESSION_SECURE=true                  # HTTPS only
+SESSION_HTTP_ONLY=true               # Block JavaScript access
+SESSION_SAME_SITE=strict
+```
+
+**Result:** Secure, long-lasting sessions for production use
+
+**.env Configuration (Development):**
+```bash
+SESSION_LIFETIME=86400               # 24 hours (stay logged in)
+SESSION_SECURE=false                 # HTTP allowed
+```
+
+**Result:** Developer-friendly with long sessions on localhost
+
+**No Configuration (Fallback):**
+- Lifetime: 3600 seconds (1 hour)
+- Secure: false (works on HTTP)
+- HTTPOnly: true (XSS protection)
+- SameSite: Strict (CSRF protection)
+
+### When to Edit
+
+**Edit `.env`:** To customize session behavior per environment  
+**Fallback:** Secure defaults work for most development cases
+
+---
+
+## 5️⃣ Security & Middleware Fallbacks
+
+### Location: `/etc/Start.php` (lines 158-192)
+
+### Configuration Logic
+
+Security features use `ConfigManager::get()` with hardcoded defaults:
+
+```php
+// CORS Support
+if (ConfigManager::get('app.cors.enabled', false)) {
+    $corsConfig = ConfigManager::get('app.cors', []);
+    $middlewareManager->addGlobal(new CorsMiddleware($corsConfig));
+}
+
+// CSRF Protection
+if ($method === 'POST' && ConfigManager::get('security.csrf_protection', true)) {
+    $token = $_POST['csrf_token'] ?? '';
+    if (!Security::validateCsrf($token)) {
+        http_response_code(403);
+        echo 'CSRF token validation failed';
+        return false;
+    }
+}
+
+// Rate Limiting
+$identifier = $_SERVER['REMOTE_ADDR'] ?? 'unknown';
+$limit = ConfigManager::get('security.rate_limit', 100);
+
+if (!Security::rateLimit($identifier, $limit)) {
+    http_response_code(429);
+    echo 'Rate limit exceeded';
+    return false;
+}
+```
+
+### Priority Logic
+
+```
+1. .env variables loaded into ConfigManager
+   ↓ (if not set)
+2. ConfigManager::get() default parameter
+   - app.cors.enabled: false (CORS disabled)
+   - app.cors: [] (empty config)
+   - security.csrf_protection: true (CSRF enabled)
+   - security.rate_limit: 100 (requests limit)
+```
+
+### Configuration Examples
+
+**.env Configuration (Production):**
+```bash
+# CORS Settings
+CORS_ENABLED=true
+CORS_ALLOWED_ORIGINS=https://yourdomain.com,https://api.yourdomain.com
+CORS_ALLOWED_METHODS=GET,POST,PUT,DELETE
+CORS_ALLOWED_HEADERS=Content-Type,Authorization
+
+# Security Settings
+CSRF_PROTECTION=true                 # Always enabled in production
+RATE_LIMIT=60                        # 60 requests per window
+```
+
+**Result:** Strict security with CORS for specific origins
+
+**.env Configuration (Development):**
+```bash
+# CORS Settings
+CORS_ENABLED=true
+CORS_ALLOWED_ORIGINS=*               # Allow all origins
+
+# Security Settings
+CSRF_PROTECTION=false                # Easier API testing
+RATE_LIMIT=1000                      # High limit for development
+```
+
+**Result:** Relaxed for development, easier testing
+
+**No Configuration (Fallback):**
+- CORS: **Disabled** (no cross-origin requests)
+- CSRF: **Enabled** (security by default)
+- Rate Limit: **100 requests** (reasonable default)
+
+### When to Edit
+
+**Edit `.env`:** 
+- Enable CORS for frontend-backend separation
+- Adjust rate limits per environment
+- Disable CSRF for API-only testing (not recommended for production)
+
+**Fallback:** Secure defaults protect against common attacks
+
+---
+
 ## 🔍 Troubleshooting Configuration Conflicts
 
 ### Problem: Settings not being applied
@@ -343,12 +509,22 @@ return [
    - Lines: ~30-33
    - Check `site_path` and `domain_name` values
 
-3. **`start.php` $defaultProtectedRoutes** (auth routes)
+3. **`Config.php` session defaults** (session behavior)
+   - Location: `/etc/Config.php`
+   - Line: ~215
+   - Check session_set_cookie_params()
+
+4. **`start.php` $defaultProtectedRoutes** (auth routes)
    - Location: `/etc/start.php`
    - Lines: ~40-46
    - Check route patterns match your needs
 
-4. **`ConfigDatabase.php`** (database)
+5. **`start.php` security settings** (CORS, CSRF, rate limit)
+   - Location: `/etc/start.php`
+   - Lines: ~158-192
+   - Check ConfigManager::get() defaults
+
+6. **`ConfigDatabase.php`** (database)
    - Location: `/etc/ConfigDatabase.php`
    - Check all `db.*` keys
 
@@ -389,6 +565,32 @@ return [
 3. Verify database server is running
 4. Test credentials with MySQL client
 5. Check firewall/port access
+```
+
+#### Issue 4: Session not persisting
+
+**Symptom:** User logs out immediately, session data lost
+
+**Solution:**
+```
+1. Check .env: SESSION_LIFETIME, SESSION_SECURE
+2. If .env missing: Defaults to 3600 seconds (1 hour)
+3. For HTTPS sites: Set SESSION_SECURE=true in .env
+4. Check session_set_cookie_params() in Config.php line 215
+5. Verify cookies are enabled in browser
+```
+
+#### Issue 5: CORS blocking requests
+
+**Symptom:** Frontend can't connect to backend API
+
+**Solution:**
+```
+1. Check .env: CORS_ENABLED=true
+2. Set CORS_ALLOWED_ORIGINS in .env
+3. Default: CORS disabled (fallback)
+4. Check ConfigManager::get('app.cors.enabled', false) in Start.php
+5. For development: Use CORS_ALLOWED_ORIGINS=*
 ```
 
 ### Debug Mode
@@ -519,6 +721,7 @@ if ($conn) {
 SITE_PATH=/upMVC
 DOMAIN_NAME=http://localhost
 APP_ENV=development
+APP_DEBUG=true
 
 # Database
 DB_HOST=localhost
@@ -528,8 +731,23 @@ DB_PASS=your_password
 DB_PORT=3306
 DB_CHARSET=utf8mb4
 
-# Security
+# Security & Routes
 PROTECTED_ROUTES=/admin/*,/users/*,/dashboard/*
+CSRF_PROTECTION=true
+RATE_LIMIT=100
+
+# Session Configuration
+SESSION_LIFETIME=3600
+SESSION_COOKIE=upmvc_session
+SESSION_SECURE=false
+SESSION_HTTP_ONLY=true
+SESSION_SAME_SITE=strict
+
+# CORS Configuration
+CORS_ENABLED=false
+CORS_ALLOWED_ORIGINS=https://yourdomain.com
+CORS_ALLOWED_METHODS=GET,POST,PUT,DELETE
+CORS_ALLOWED_HEADERS=Content-Type,Authorization
 ```
 
 ---
