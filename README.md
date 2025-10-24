@@ -68,7 +68,8 @@ upMVC excels at integrating **pre-built JavaScript applications** from any frame
 - **[🆚 Comparison with Other PHP Frameworks](docs/COMPARISON_PHP_FRAMEWORKS.md)** - **NEW!** Why upMVC is unique
 - **[💪 Architectural Strengths](docs/ARCHITECTURAL_STRENGTHS.md)** - What makes upMVC powerful
 - **[🛣 Routing Capabilities](docs/ROUTING_CAPABILITIES.md)** - Understanding the routing system
-- **[🔧 URL Handling Explained](docs/URL_HANDLING_EXPLAINED.md)** - Request flow and middleware
+- **[�️ Routing & .htaccess System](docs/ROUTING_HTACCESS.md)** - **NEW!** Complete guide with module examples (test, moda, userorm, admin)
+- **[�🔧 URL Handling Explained](docs/URL_HANDLING_EXPLAINED.md)** - Request flow and middleware
 
 ### **� Bug Fixes & Improvements:**
 - **[🔐 Authentication Redirect Fix](docs/BUG_FIX_AUTH_REDIRECT.md)** - Session intended_url handling
