@@ -419,10 +419,17 @@ class InitModsImproved
                 $this->logError("Route class not found: {$className} for module: {$moduleName}");
                 return;
             }
-            
-            // Validate method exists
-            if (!method_exists($className, 'Routes')) {
-                $this->logError("Routes method not found in class: {$className} for module: {$moduleName}");
+
+            // Determine method name in a case-insensitive, backward-compatible way
+            // Many modules define `routes($router)`, while docs may reference `Routes($router)`.
+            // PHP method names are case-insensitive, but we select explicitly for clarity.
+            $methodName = null;
+            if (method_exists($className, 'Routes')) {
+                $methodName = 'Routes';
+            } elseif (method_exists($className, 'routes')) {
+                $methodName = 'routes';
+            } else {
+                $this->logError("Routes method not found in class: {$className} for module: {$moduleName} (expected 'Routes' or 'routes')");
                 return;
             }
             
@@ -430,14 +437,14 @@ class InitModsImproved
             $routeInstance = new $className();
             
             // Validate method signature
-            $reflection = new \ReflectionMethod($className, 'Routes');
+            $reflection = new \ReflectionMethod($className, $methodName);
             if ($reflection->getNumberOfRequiredParameters() > 1) {
-                $this->logError("Routes method in {$className} has incorrect signature (too many required parameters)");
+                $this->logError("{$methodName} method in {$className} has incorrect signature (too many required parameters)");
                 return;
             }
             
-            // Execute Routes method
-            $routeInstance->Routes($router);
+            // Execute routes method
+            $routeInstance->$methodName($router);
             
             // Log success if verbose logging enabled
             if ($this->enableVerboseLogging) {

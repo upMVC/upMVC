@@ -1,5 +1,27 @@
 # Changelog
 
+## v1.4.3 - Utilities & Robustness (2025-11-08)
+
+### 🔧 Improvements
+- Module route discovery is now tolerant to both `Routes($router)` and `routes($router)` method names.
+  - `etc/InitModsImproved.php` auto-detects and invokes either variant, validates signature, and logs helpful errors.
+  - Improves developer ergonomics without requiring module code changes.
+
+### 🧹 New: Cache Maintenance CLI
+- Added `tools/cache-cli.php` with the following commands:
+  - `list` / `help` – show available commands
+  - `stats` – display module discovery and admin route cache statistics
+  - `clear:modules` – clear module discovery caches
+  - `clear:admin` – clear Admin module dynamic route cache
+  - `clear:all` – clear modules + admin caches and flush all cache stores
+- Documented in README under "Maintenance: Cache CLI" with Windows PowerShell examples.
+
+### 📚 Docs
+- Updated `README.md` with a new section describing the Cache CLI usage and affected components.
+
+### ✅ Compatibility
+- No breaking changes. Existing modules and routes continue to work as before.
+
 ## v1.4.2 - Thrive (Library Installation Fix) (2025-10-23)
 
 ### 🐛 Bug Fixes
