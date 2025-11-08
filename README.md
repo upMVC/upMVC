@@ -180,6 +180,40 @@ composer dump-autoload
 composer update
 ```
 
+## 🧹 Maintenance: Cache CLI
+
+Use the cache maintenance utility to inspect and clear caches (module discovery, admin dynamic route cache, and configured cache stores).
+
+```bash
+# List available commands
+php tools/cache-cli.php list
+
+# Show cache statistics
+php tools/cache-cli.php stats
+
+# Clear only module discovery caches
+php tools/cache-cli.php clear:modules
+
+# Clear Admin module dynamic route cache
+php tools/cache-cli.php clear:admin
+
+# Clear everything (modules + admin + cache stores)
+php tools/cache-cli.php clear:all
+```
+
+Windows PowerShell example:
+
+```powershell
+php .\tools\cache-cli.php clear:all
+```
+
+Affected components:
+- Module discovery cache used by `etc/InitModsImproved.php` in production mode.
+- Admin dynamic route cache file: `etc/storage/cache/admin_routes.php`.
+- All instantiated cache stores via `upMVC\Cache\CacheManager::clearAll()`.
+
+Exit codes: `0` success, `1` failure, `2` unknown command.
+
 
 ## ⚙️ Configuration
 
