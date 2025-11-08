@@ -24,6 +24,11 @@ Complete admin panel with user CRUD operations for upMVC NoFramework.
 /admin/users/delete/{id}    - Delete user (with confirmation)
 ```
 
+Implementation notes:
+- This module now uses the framework's parameterized routing. Routes are registered as patterns (e.g., `/admin/users/edit/{id}`) and the Router injects `$_GET['id']` at dispatch time.
+- The previous strategy (expanding one route per user and caching them to `etc/storage/cache/admin_routes.php`) has been retired. No cache is needed for these routes.
+- For compatibility, `Admin\Routes\Routes::clearCache()` and `::getCacheStats()` remain but act as no-ops/stubs in parameterized mode.
+
 ## Installation
 
 ### 1. Already configured! ✅
@@ -98,13 +103,13 @@ CREATE TABLE `user` (
 - XSS protection with `htmlspecialchars()`
 
 ### Routes (`routes/Routes.php`)
-- Dynamic route generation from database
-- Queries database for user IDs on each request
-- Creates explicit routes for each user
-- **For advanced routing strategies (caching, pattern matching)**, see:
-  - 📚 **[docs/routing/README.md](../../docs/routing/README.md)** - Complete routing guide
-  - 🚀 **[docs/routing/ROUTING_STRATEGIES.md](../../docs/routing/ROUTING_STRATEGIES.md)** - Performance comparison and migration guides
-  - 💾 **[docs/routing/examples/Routes_WithCache.php](../../docs/routing/examples/Routes_WithCache.php)** - Cache implementation example
+- Registers static admin endpoints and two parameterized routes:
+  - `/admin/users/edit/{id}`
+  - `/admin/users/delete/{id}`
+- No database query is required during route registration.
+- See also:
+  - 📚 **[docs/routing/README.md](../../docs/routing/README.md)**
+  - 🚀 **[docs/routing/ROUTING_STRATEGIES.md](../../docs/routing/ROUTING_STRATEGIES.md)**
 
 ## Customization
 
