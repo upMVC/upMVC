@@ -180,7 +180,38 @@ composer dump-autoload
 composer update
 ```
 
-## 🧹 Maintenance: Cache CLI
+## � Lightweight Parameterized Routing (Optional)
+
+You can now declare routes with simple placeholders instead of only exact paths or .htaccess rewrites.
+
+Examples:
+
+```php
+// Exact route (unchanged)
+$router->addRoute('/users', User\Controller::class, 'index');
+
+// New: parameterized routes
+$router->addParamRoute('/users/{id}', User\Controller::class, 'show');
+$router->addParamRoute('/orders/{orderId}/items/{itemId}', OrderItem\Controller::class, 'detail');
+```
+
+How it works:
+- Exact routes are checked first (fast hash lookup).
+- If no exact match, parameterized routes are evaluated (segment by segment).
+- Extracted parameters are injected into `$_GET` (e.g., `$_GET['id'] = '123'`) and also available to middleware via `$request['params']`.
+- Controllers keep their simple signature: `action($route, $method)` and read params from `$_GET`.
+
+Benefits:
+- Cleaner route declarations for resource-like URLs.
+- Fewer .htaccess patterns; less boilerplate loops.
+- Backward compatible; you can mix exact and param routes.
+
+Notes:
+- Placeholder syntax: `{name}` (letters/digits/underscore, must start with a letter/underscore).
+- Exact routes always win over parameterized routes (e.g., `/users/profile`).
+- Type validation remains in your controller (e.g., `ctype_digit($_GET['id'])`).
+
+## �🧹 Maintenance: Cache CLI
 
 Use the cache maintenance utility to inspect and clear caches (module discovery, admin dynamic route cache, and configured cache stores).
 

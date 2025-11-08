@@ -36,6 +36,27 @@ This version is essential for users installing upMVC as a library:
 composer require bitshost/upmvc:^1.4.2
 ```
 
+## v1.4.4 - Lightweight Parameterized Routing (2025-11-08)
+
+### ✨ Feature
+- Added optional parameterized routing support via `Router::addParamRoute()`.
+  - Pattern syntax: `/segment/{paramName}/more/{other}`.
+  - Extracted params injected into `$_GET` and available as `$request['params']` for middleware.
+  - Exact routes retain priority; param routes only evaluated if no exact match.
+
+### 📘 Documentation
+- README updated with "Lightweight Parameterized Routing" section including examples and usage notes.
+
+### 🧪 Examples
+- Added sample param routes to `modules/test/routes/Routes.php` (`/test/item/{id}`, `/test/pair/{first}/{second}`).
+
+### ✅ Compatibility
+- Backward compatible; existing route definitions and .htaccess rewrites continue to function.
+- No changes required for existing controllers.
+
+### 🚀 Future Enhancements (not included)
+- Optional typed placeholders (e.g., `{id:int}`) and wildcard tails (`{path+}`) may be added later.
+
 ---
 
 ## v1.4.1 - Thrive (Stable Dependencies) (2025-10-23)
