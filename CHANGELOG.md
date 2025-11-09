@@ -1,6 +1,6 @@
 # Changelog
 
-## v1.4.3 - Utilities & Robustness (2025-11-08)
+## v1.4.6 - Utilities & Robustness (2025-11-08)
 
 ### 🔧 Improvements
 - Module route discovery is now tolerant to both `Routes($router)` and `routes($router)` method names.
@@ -22,7 +22,7 @@
 ### ✅ Compatibility
 - No breaking changes. Existing modules and routes continue to work as before.
 
-## v1.4.2 - Thrive (Library Installation Fix) (2025-10-23)
+## v1.4.5 - Thrive (Library Installation Fix) (2025-10-23)
 
 ### 🐛 Bug Fixes
 - **Router.php**: Fixed 404 page path for library installation compatibility

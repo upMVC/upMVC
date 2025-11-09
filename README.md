@@ -1,4 +1,4 @@
-# 📚 upMVC noFramework v1.0.3 - Complete Documentation
+# 📚 upMVC noFramework v1.4.6 - Complete Documentation
 
 > **Modern, lightweight PHP noframework for rapid development with clean architecture**
 
