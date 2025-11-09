@@ -44,21 +44,6 @@ class Controller
      */
     public function display($reqRoute, $reqMet)
     {
-
-       
-         
-
-// Temporarily add at top of display() method:
-HelperFacade::dump(['test' => 'PSR-4 helpers working!']);
-// Should show formatted array output
-
- $userId = HelperFacade::session('user_id', 'not-set');
-        echo "Session Test: " . $userId . "<br>";
-
-// Test url() helper
-    $testUrl = HelperFacade::url('/admin/users');
-    echo "URL Helper Test: " . $testUrl . "<br>";
-        
         // Check authentication
         if (!isset($_SESSION["logged"]) || $_SESSION["logged"] !== true) {
             header('Location: ' . BASE_URL . '/auth');
