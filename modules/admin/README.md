@@ -24,10 +24,52 @@ Complete admin panel with user CRUD operations for upMVC NoFramework.
 /admin/users/delete/{id}    - Delete user (with confirmation)
 ```
 
-Implementation notes:
-- This module now uses the framework's parameterized routing. Routes are registered as patterns (e.g., `/admin/users/edit/{id}`) and the Router injects `$_GET['id']` at dispatch time.
-- The previous strategy (expanding one route per user and caching them to `etc/storage/cache/admin_routes.php`) has been retired. No cache is needed for these routes.
-- For compatibility, `Admin\Routes\Routes::clearCache()` and `::getCacheStats()` remain but act as no-ops/stubs in parameterized mode.
+## 🎓 Routing Strategy (Educational Purpose)
+
+This module demonstrates **TWO routing strategies** for educational comparison:
+
+### Current Implementation: Parameterized Routes ⭐ (Routes.php)
+
+**Used for:** Scalable applications with many users (1,000+)
+
+Routes are registered as patterns (e.g., `/admin/users/edit/{id}`):
+- No database query during route registration
+- Router injects `$_GET['id']` at dispatch time
+- Controller validates ID and checks existence
+- Memory usage: O(1) - constant regardless of user count
+- Perfect for large datasets
+
+```php
+// routes/Routes.php
+$router->addParamRoute('/admin/users/edit/{id}', Controller::class, 'display');
+$router->addParamRoute('/admin/users/delete/{id}', Controller::class, 'display');
+```
+
+### Backup Implementation: Cached Expansion (Routesc.php, Controllerc.php)
+
+**Preserved for:** Small projects, learning, security-first approach
+
+Routes are expanded and cached for each user:
+- Database query on first request or after cache expires
+- Pre-validates user IDs (invalid IDs get 404 at router level)
+- Cache file: `etc/storage/cache/admin_routes.php`
+- Memory usage: O(N) - grows with user count
+- Excellent for small admin panels (< 1,000 users)
+
+```php
+// routes/Routesc.php (backup)
+foreach ($users as $user) {
+    $router->addRoute('/admin/users/edit/' . $user['id'], Controller::class, 'display');
+}
+```
+
+**Why both?**
+- Learn different routing patterns
+- Choose based on your project scale
+- Copy Routesc.php/Controllerc.php for small projects
+- Use current implementation for large applications
+
+**Migration:** See [docs/routing/PARAMETERIZED_ROUTING.md](../../docs/routing/PARAMETERIZED_ROUTING.md) for complete guide.
 
 ## Installation
 
@@ -103,13 +145,20 @@ CREATE TABLE `user` (
 - XSS protection with `htmlspecialchars()`
 
 ### Routes (`routes/Routes.php`)
-- Registers static admin endpoints and two parameterized routes:
-  - `/admin/users/edit/{id}`
-  - `/admin/users/delete/{id}`
-- No database query is required during route registration.
-- See also:
-  - 📚 **[docs/routing/README.md](../../docs/routing/README.md)**
-  - 🚀 **[docs/routing/ROUTING_STRATEGIES.md](../../docs/routing/ROUTING_STRATEGIES.md)**
+- **Current:** Parameterized routing implementation
+  - Registers patterns: `/admin/users/edit/{id}`, `/admin/users/delete/{id}`
+  - No database query required during route registration
+  - Scalable to millions of users
+  
+- **Backup (Routesc.php):** Cached expansion implementation  
+  - Pre-generates routes for each user from database
+  - Caches to `etc/storage/cache/admin_routes.php`
+  - Security-first: only valid user IDs get routes
+  - Ideal for small projects (< 1,000 users)
+
+**Learn more:**
+  - 📚 **[docs/routing/PARAMETERIZED_ROUTING.md](../../docs/routing/PARAMETERIZED_ROUTING.md)** - Complete parameterized routing guide
+  - 🚀 **[docs/routing/ROUTING_STRATEGIES.md](../../docs/routing/ROUTING_STRATEGIES.md)** - Performance comparison and migration guides
 
 ## Customization
 
