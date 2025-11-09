@@ -50,9 +50,15 @@ upMVC excels at integrating **pre-built JavaScript applications** from any frame
 
 ### **🎯 New to upMVC? Start Here:**
 - **[📋 First Steps Guide](docs/FIRST-STEPS-GUIDE.md)** - Get running in 5 minutes
-- **[� How-To Guide](docs/HOW-TO-GUIDE.md)** - Complete development guide
+- **[📘 How-To Guide](docs/HOW-TO-GUIDE.md)** - Complete development guide
 - **[❓ FAQ](docs/FAQ.md)** - Common questions and solutions
-- **[� Documentation Index](docs/DOCUMENTATION-INDEX.md)** - Complete documentation map
+- **[📚 Documentation Index](docs/DOCUMENTATION-INDEX.md)** - Complete documentation map
+
+### **🗺️ Routing System (Complete Guide):**
+- **[🌟 THE COMPLETE PICTURE](docs/routing/THE_COMPLETE_PICTURE.md)** - ⭐⭐⭐ **START HERE!** Everything from .htaccess to controller - Why each piece exists, when to use each strategy
+- **[📖 Routing Documentation](docs/routing/README.md)** - Complete routing documentation hub
+- **[📋 Routing Guide](docs/routing/ROUTING_GUIDE.md)** - All 5 routing types with decision tree
+- **[🚀 Router V2 Examples](docs/routing/ROUTER_V2_EXAMPLES.md)** - Type casting, validation, named routes
 
 ### **🏗 Architecture & Philosophy:**
 - **[🎨 Pure PHP Philosophy](docs/PHILOSOPHY_PURE_PHP.md)** - The upMVC NoFramework approach
@@ -89,7 +95,8 @@ upMVC excels at integrating **pre-built JavaScript applications** from any frame
 - **[🐛 /zbug Folder](zbug/README.md)** - Debug files and development utilities (excluded from Git)
 
 ### **🚀 Router v2.0 - Enhanced Routing:**
-- **[Complete Routing Guide](docs/routing/ROUTING_GUIDE.md)** - ⭐ **NEW!** Unified guide covering all 5 routing types, decision tree, when to use each
+- **[🌟 THE COMPLETE PICTURE](docs/routing/THE_COMPLETE_PICTURE.md)** - ⭐⭐⭐ **Everything explained** - .htaccess, Router, all 5 strategies, when to use each
+- **[Complete Routing Guide](docs/routing/ROUTING_GUIDE.md)** - Unified guide covering all 5 routing types, decision tree, when to use each
 - **[Router v2.0 Examples](docs/routing/ROUTER_V2_EXAMPLES.md)** - Complete Router V2 usage guide (type casting, validation, named routes, grouping)
 - **[Router v2.0 Changelog](docs/routing/ROUTER_V2_CHANGELOG.md)** - What's new in v2.0
 - **[Implementation Report](docs/routing/ROUTER_V2_IMPLEMENTATION_COMPLETE.md)** - Technical implementation details
