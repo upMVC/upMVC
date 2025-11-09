@@ -4,7 +4,9 @@ Complete guide to routing strategies in upMVC.
 
 ## 🎯 Quick Start
 
-**NEW:** **[ROUTING_GUIDE.md](ROUTING_GUIDE.md)** - ⭐ **Complete Unified Routing Guide** - All routing types, when to use each, decision tree, Router V2 features, and migration guides
+**🌟 START HERE:** **[THE_COMPLETE_PICTURE.md](THE_COMPLETE_PICTURE.md)** - ⭐⭐⭐ **Everything explained from .htaccess to controller** - Why each piece exists, when to use each routing strategy, complete visual flow
+
+**Then read:** **[ROUTING_GUIDE.md](ROUTING_GUIDE.md)** - ⭐ Complete unified routing guide - All routing types, decision tree, Router V2 features, and migration guides
 
 ## 📚 Documentation
 
