@@ -41,6 +41,23 @@ class Router
     protected $routes = [];
     
     /**
+     * Registered parameterized routes
+     * 
+     * Each item structure:
+     * [
+     *   'pattern' => '/users/{id}',
+     *   'segments' => ['users','{id}'],
+     *   'params' => ['id'],
+     *   'className' => Controller::class,
+     *   'methodName' => 'show',
+     *   'middleware' => []
+     * ]
+     * 
+     * @var array
+     */
+    protected $paramRoutes = [];
+    
+    /**
      * Middleware manager for global middleware pipeline
      * 
      * @var MiddlewareManager
@@ -103,6 +120,38 @@ class Router
             'className' => $className, 
             'methodName' => $methodName,
             'middleware' => $middleware
+        ];
+    }
+    
+    /**
+     * Add a parameterized route with simple placeholders
+     * 
+     * Example: /users/{id}, /orders/{orderId}/items/{itemId}
+     * Placeholders are names enclosed in curly braces.
+     * 
+     * @param string $pattern Route pattern with placeholders
+     * @param string $className Controller class
+     * @param string $methodName Controller method
+     * @param array $middleware Optional named middleware list
+     * @return void
+     */
+    public function addParamRoute(string $pattern, string $className, string $methodName, array $middleware = []): void
+    {
+        $trimmed = trim($pattern, '/');
+        $segments = $trimmed === '' ? [] : explode('/', $trimmed);
+        $params = [];
+        foreach ($segments as $seg) {
+            if (preg_match('/^{([a-zA-Z_][a-zA-Z0-9_]*)}$/', $seg, $m)) {
+                $params[] = $m[1];
+            }
+        }
+        $this->paramRoutes[] = [
+            'pattern' => $pattern,
+            'segments' => $segments,
+            'params' => $params,
+            'className' => $className,
+            'methodName' => $methodName,
+            'middleware' => $middleware,
         ];
     }
     
@@ -177,6 +226,39 @@ class Router
                 }
             );
         } else {
+            // Try parameterized routes if no exact match was found
+            $match = $this->matchParamRoute($reqRoute);
+            if ($match !== null) {
+                $route = $match['route'];
+                $params = $match['params'];
+
+                // Enrich request context with extracted params
+                $request['params'] = $params;
+
+                return $this->middlewareManager->execute(
+                    $reqRoute,
+                    $request,
+                    function ($request) use ($route, $reqRoute, $reqMet, $params) {
+                        // Execute route-specific named middleware
+                        foreach ($route['middleware'] ?? [] as $middlewareName) {
+                            if (isset($this->middleware[$middlewareName])) {
+                                $result = $this->middleware[$middlewareName]($reqRoute, $reqMet);
+                                if ($result === false) return;
+                            }
+                        }
+
+                        // Inject params into $_GET non-destructively
+                        foreach ($params as $k => $v) {
+                            if (!array_key_exists($k, $_GET)) {
+                                $_GET[$k] = $v;
+                            }
+                        }
+
+                        return $this->callController($route['className'], $route['methodName'], $reqRoute, $reqMet);
+                    }
+                );
+            }
+
             // Route not found - execute middleware for 404 as well
             return $this->middlewareManager->execute(
                 $reqRoute,
@@ -186,6 +268,46 @@ class Router
                 }
             );
         }
+    }
+    
+    // ========================================
+    // Parameterized Route Matching
+    // ========================================
+    
+    /**
+     * Attempt to match a request route against parameterized routes
+     * 
+     * @param string $reqRoute The requested route (e.g., '/users/123')
+     * @return array|null ['route' => routeDefArray, 'params' => ['id' => '123']] or null
+     */
+    private function matchParamRoute(string $reqRoute): ?array
+    {
+        $path = trim($reqRoute, '/');
+        $reqSegments = $path === '' ? [] : explode('/', $path);
+        $reqCount = count($reqSegments);
+
+        foreach ($this->paramRoutes as $route) {
+            $patSegments = $route['segments'];
+            if (count($patSegments) !== $reqCount) {
+                continue; // simple length check for MVP
+            }
+
+            $captured = [];
+            $ok = true;
+            foreach ($patSegments as $i => $seg) {
+                $reqSeg = $reqSegments[$i];
+                if (preg_match('/^{([a-zA-Z_][a-zA-Z0-9_]*)}$/', $seg, $m)) {
+                    $captured[$m[1]] = $reqSeg;
+                } else {
+                    if ($seg !== $reqSeg) { $ok = false; break; }
+                }
+            }
+
+            if ($ok) {
+                return ['route' => $route, 'params' => $captured];
+            }
+        }
+        return null;
     }
 
     // ========================================

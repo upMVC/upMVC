@@ -54,6 +54,13 @@ class Routes
         $router->addRoute('/test', Controller::class, 'display');
         $router->addRoute('/test/subpage', Controller::class, 'display');
         
+        // Parameterized route examples (new feature)
+        // Access via /test/item/123 -> Controller::display receives route & method; id available as $_GET['id']
+        if (method_exists($router, 'addParamRoute')) {
+            $router->addParamRoute('/test/item/{id}', Controller::class, 'display');
+            $router->addParamRoute('/test/pair/{first}/{second}', Controller::class, 'display');
+        }
+        
         // Modern view routes
         $router->addRoute('/test/modern', Controller::class, 'displayModern');
         $router->addRoute('/test-modern', Controller::class, 'displayModern');

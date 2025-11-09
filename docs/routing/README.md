@@ -4,7 +4,8 @@ Complete guide to routing strategies in upMVC.
 
 ## 📚 Documentation
 
-### Main Guide
+### Main Guides
+- **[PARAMETERIZED_ROUTING.md](PARAMETERIZED_ROUTING.md)** - ⭐ NEW! Complete guide to lightweight parameterized routing with admin module examples
 - **[ROUTING_STRATEGIES.md](ROUTING_STRATEGIES.md)** - Complete guide covering all three routing approaches, performance analysis, and implementation examples
 
 ## 📁 Examples
@@ -29,10 +30,12 @@ Start
   │
   ├─ < 100 records? → Dynamic DB (simple)
   │
-  ├─ 100-100k records? → Cached DB (recommended)
+  ├─ 100-1,000 records? → Cached DB (recommended)
   │
-  └─ > 100k records? → Pattern Matching (scalable)
+  └─ > 1,000 records? → Parameterized Routes ⭐ NEW! (scalable, efficient)
 ```
+
+**NEW in v1.4.4:** Lightweight parameterized routing with `{placeholder}` syntax. See [PARAMETERIZED_ROUTING.md](PARAMETERIZED_ROUTING.md) for complete guide.
 
 ### Installation Guides
 
@@ -107,8 +110,10 @@ public function display()
 | Approach | Request Time | Best For |
 |----------|-------------|----------|
 | **Dynamic DB** | 100ms | Development, < 100 records |
-| **Cached DB** | 2ms | Production, 100-100k records |
-| **Pattern Matching** | 0.5ms | High-scale, > 100k records |
+| **Cached DB** | 2ms | Production, 100-1,000 records |
+| **Parameterized Routes** | 0.5ms | ⭐ NEW! High-scale, > 1,000 records, dynamic data |
+
+**Learn more:** [PARAMETERIZED_ROUTING.md](PARAMETERIZED_ROUTING.md) - Complete guide with admin module examples
 
 ## 🔍 Detailed Documentation
 
