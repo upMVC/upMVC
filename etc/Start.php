@@ -93,6 +93,9 @@ class Start
         } catch (\Exception $e) {
             error_log("Configuration validation warning: " . $e->getMessage());
         }
+        
+        // Load global helper functions (route(), url(), redirect(), etc.)
+        require_once __DIR__ . '/helpers_functions.php';
     }
 
     /**

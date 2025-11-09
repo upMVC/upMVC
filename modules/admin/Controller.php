@@ -5,13 +5,13 @@
  * This version demonstrates Router v2.0 controller integration:
  * - Type-safe params: $_GET['id'] is already int (no casting needed)
  * - Simplified validation: Router rejects invalid IDs before controller
- * - Named route usage: Helpers::route() for URL generation
+ * - Named route usage: route() global function for URL generation
  * 
  * ROUTER V2 BENEFITS IN CONTROLLER:
  * ✅ No manual type casting: $_GET['id'] is already int
  * ✅ No regex validation: Router validated before reaching here
  * ✅ Cleaner code: Less boilerplate, more business logic
- * ✅ URL generation: Use Helpers::route() instead of hardcoded paths
+ * ✅ Global helpers: route(), url(), redirect() - clean procedural API
  * 
  * COMPARISON WITH OTHER IMPLEMENTATIONS:
  * - Controllerc.php: Cache-based with regex route matching
@@ -26,7 +26,6 @@ namespace Admin;
 use Admin\View;
 use Admin\Model;
 use Admin\Routes\Routes;
-use upMVC\Helpers;
 
 class Controller 
 {
@@ -150,8 +149,8 @@ class Controller
     {
         $users = $this->model->getAllUsers();
         
-        // Note: View can use Helpers::route() for edit/delete URLs
-        // Example: Helpers::route('admin.user.edit', ['id' => $user['id']])
+        // Note: View can use route() for edit/delete URLs
+        // Example: route('admin.user.edit', ['id' => $user['id']])
         
         $data = [
             'view' => 'users_list',
@@ -171,8 +170,8 @@ class Controller
             if (!$user) {
                 $_SESSION['error'] = 'User not found';
                 
-                // Router V2: Use Helpers::url() for clean redirects
-                header('Location: ' . Helpers::url('/admin/users'));
+                // Router V2: Use global url() helper
+                header('Location: ' . url('/admin/users'));
                 exit;
             }
         }
@@ -207,8 +206,8 @@ class Controller
             $_SESSION['error'] = 'Failed to create user';
         }
 
-        // Router V2: Clean URL generation
-        header('Location: ' . Helpers::url('/admin/users'));
+        // Router V2: Global url() helper
+        header('Location: ' . url('/admin/users'));
         exit;
     }
 
@@ -236,7 +235,8 @@ class Controller
             $_SESSION['error'] = 'Failed to update user';
         }
 
-        header('Location: ' . Helpers::url('/admin/users'));
+        // Router V2: Global url() helper
+        header('Location: ' . url('/admin/users'));
         exit;
     }
 
@@ -255,7 +255,8 @@ class Controller
             $_SESSION['error'] = 'Failed to delete user';
         }
 
-        header('Location: ' . Helpers::url('/admin/users'));
+        // Router V2: Global url() helper
+        header('Location: ' . url('/admin/users'));
         exit;
     }
 }
