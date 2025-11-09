@@ -10,6 +10,7 @@ class ComposerStaticInit49502ca6970de9d65a6295b99bbb2d5b
         'u' => 
         array (
             'upMVC\\Middleware\\' => 17,
+            'upMVC\\Helpers\\' => 14,
             'upMVC\\Exceptions\\' => 17,
             'upMVC\\Events\\' => 13,
             'upMVC\\Container\\' => 16,
@@ -98,6 +99,10 @@ class ComposerStaticInit49502ca6970de9d65a6295b99bbb2d5b
         'upMVC\\Middleware\\' => 
         array (
             0 => __DIR__ . '/../..' . '/etc/Middleware',
+        ),
+        'upMVC\\Helpers\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/etc/Helpers',
         ),
         'upMVC\\Exceptions\\' => 
         array (

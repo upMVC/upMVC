@@ -27,6 +27,7 @@ use upMVC\Exceptions\ErrorHandler;
 use upMVC\Middleware\AuthMiddleware;
 use upMVC\Middleware\LoggingMiddleware;
 use upMVC\Middleware\CorsMiddleware;
+use upMVC\Helpers\HelperFacade;
 
 class Start
 {
@@ -123,6 +124,9 @@ class Start
     {
         try {
             $router = new Router();
+            
+            // Initialize HelperFacade with router instance (PSR-4 autoloaded)
+            HelperFacade::setRouter($router);
 
             // Setup middleware stack
             $this->setupEnhancedMiddleware($router);

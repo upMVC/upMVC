@@ -1,68 +1,93 @@
 <?php
-/*
- * Admin Module - Routes WITH CACHE
+/**
+ * Admin Module Routes - ROUTER V2 ENHANCED
  * 
- * This version caches routes to a file to avoid database queries on every request.
+ * This version demonstrates Router v2.0 capabilities:
+ * - Type hints: {id:int} for automatic type casting
+ * - Validation: Regex constraints for security
+ * - Named routes: ->name() for URL generation
+ * - Performance: Prefix grouping optimization
  * 
- * HOW TO USE:
- * 1. Rename this file to Routes.php (backup original first!)
- * 2. Create cache directory: modules/cache/
- * 3. Routes will be cached for 1 hour (configurable)
- * 4. Cache is cleared automatically when users are created/deleted
+ * ROUTER V2 FEATURES USED:
+ * ✅ Type Casting: {id:int} auto-casts to integer
+ * ✅ Validation: '\d+' ensures only numeric IDs
+ * ✅ Named Routes: route('admin.user.edit', ['id' => 5])
+ * ✅ Security: Invalid IDs rejected at router level
  * 
- * PERFORMANCE:
- * - First request: ~100ms (DB query + cache write)
- * - Cached requests: ~2ms (file read only)
- * - 50x faster than querying DB every time!
+ * COMPARISON WITH OTHER IMPLEMENTATIONS:
+ * - Routesc.php: Cache-based expansion (DB query → expand → cache)
+ * - Routesd.php: Basic param routing (no type hints or constraints)
+ * - Routes.php: THIS FILE - Full Router V2 features
+ * 
+ * @see docs/routing/ROUTER_V2_EXAMPLES.md
+ * @see docs/routing/PARAMETERIZED_ROUTING.md
  */
 
 namespace Admin\Routes;
 
-use Admin\Controller; // import target controller for route registrations
+use Admin\Controller;
 
 class Routes
 {
     /**
-     * Parameterized routing version.
-     * Collapses thousands of expanded user-specific edit/delete routes
-     * into two lightweight param patterns.
-     *
-     * Backward compatibility: public static clearCache() & getCacheStats()
-     * remain (returning stub data) so existing Controller calls don't break.
+     * Router v2.0 enhanced parameterized routing.
+     * 
+     * Benefits over previous versions:
+     * - Type safety: Auto-cast params to int/float/bool
+     * - Security: Regex validation prevents invalid input
+     * - Refactor-safe: Named routes for URL generation
+     * - Performance: No database queries, no cache files
      */
-
-    public function __construct()
-    {
-        // No cache file needed anymore.
-    }
 
     public function routes($router)
     {
-        // Static routes
+        // ========================================
+        // Static Routes
+        // ========================================
+        
         $router->addRoute('/admin', Controller::class, 'display');
         $router->addRoute('/admin/users', Controller::class, 'display');
         $router->addRoute('/admin/users/add', Controller::class, 'display');
 
-        // Parameterized routes (replace expanded cached routes)
+        // ========================================
+        // Parameterized Routes - Router V2 Enhanced
+        // ========================================
+        
         if (method_exists($router, 'addParamRoute')) {
-            $router->addParamRoute('/admin/users/edit/{id}', Controller::class, 'display');
-            $router->addParamRoute('/admin/users/delete/{id}', Controller::class, 'display');
-        } else {
-            // Fallback: keep legacy behavior (could optionally throw)
-            // NOTE: We intentionally do NOT regenerate per-ID routes.
+            // Edit User Route
+            // ✅ {id:int} - Auto-casts to integer in $_GET['id']
+            // ✅ '\d+' - Only numeric IDs accepted (security)
+            // ✅ name() - Generate URLs: route('admin.user.edit', ['id' => 123])
+            $router->addParamRoute(
+                '/admin/users/edit/{id:int}',
+                Controller::class,
+                'display',
+                [],
+                ['id' => '\d+']  // Validation: only digits
+            )->name('admin.user.edit');
+
+            // Delete User Route
+            // Same Router V2 features as edit route
+            $router->addParamRoute(
+                '/admin/users/delete/{id:int}',
+                Controller::class,
+                'display',
+                [],
+                ['id' => '\d+']  // Validation: only digits
+            )->name('admin.user.delete');
         }
     }
 
     /**
-     * Legacy API stub - kept to avoid fatal errors if old controller code calls it.
+     * Legacy compatibility stub - no cache in Router V2
      */
     public static function clearCache(): void
     {
-        // No-op: param routing requires no cache.
+        // Router V2 uses parameterized routing - no cache needed
     }
 
     /**
-     * Legacy API stub - returns synthetic stats reflecting param mode.
+     * Legacy compatibility stub - returns Router V2 mode info
      */
     public static function getCacheStats(): array
     {
@@ -72,7 +97,7 @@ class Routes
             'routes' => 0,
             'size' => 0,
             'created' => null,
-            'mode' => 'parameterized'
+            'mode' => 'router-v2-enhanced'
         ];
     }
 }

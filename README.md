@@ -1,4 +1,4 @@
-# 📚 upMVC noFramework v1.4.6 - Complete Documentation
+# 📚 upMVC noFramework v1.4.7 - Complete Documentation
 
 > **Modern, lightweight PHP noframework for rapid development with clean architecture**
 
@@ -50,9 +50,15 @@ upMVC excels at integrating **pre-built JavaScript applications** from any frame
 
 ### **🎯 New to upMVC? Start Here:**
 - **[📋 First Steps Guide](docs/FIRST-STEPS-GUIDE.md)** - Get running in 5 minutes
-- **[� How-To Guide](docs/HOW-TO-GUIDE.md)** - Complete development guide
+- **[📘 How-To Guide](docs/HOW-TO-GUIDE.md)** - Complete development guide
 - **[❓ FAQ](docs/FAQ.md)** - Common questions and solutions
-- **[� Documentation Index](docs/DOCUMENTATION-INDEX.md)** - Complete documentation map
+- **[📚 Documentation Index](docs/DOCUMENTATION-INDEX.md)** - Complete documentation map
+
+### **🗺️ Routing System (Complete Guide):**
+- **[🌟 THE COMPLETE PICTURE](docs/routing/THE_COMPLETE_PICTURE.md)** - ⭐⭐⭐ **START HERE!** Everything from .htaccess to controller - Why each piece exists, when to use each strategy
+- **[📖 Routing Documentation](docs/routing/README.md)** - Complete routing documentation hub
+- **[📋 Routing Guide](docs/routing/ROUTING_GUIDE.md)** - All 5 routing types with decision tree
+- **[🚀 Router V2 Examples](docs/routing/ROUTER_V2_EXAMPLES.md)** - Type casting, validation, named routes
 
 ### **🏗 Architecture & Philosophy:**
 - **[🎨 Pure PHP Philosophy](docs/PHILOSOPHY_PURE_PHP.md)** - The upMVC NoFramework approach
@@ -87,6 +93,63 @@ upMVC excels at integrating **pre-built JavaScript applications** from any frame
 
 ### **🛠 Development:**
 - **[🐛 /zbug Folder](zbug/README.md)** - Debug files and development utilities (excluded from Git)
+
+### **🚀 Router v2.0 - Enhanced Routing:**
+- **[🌟 THE COMPLETE PICTURE](docs/routing/THE_COMPLETE_PICTURE.md)** - ⭐⭐⭐ **Everything explained** - .htaccess, Router, all 5 strategies, when to use each
+- **[Complete Routing Guide](docs/routing/ROUTING_GUIDE.md)** - Unified guide covering all 5 routing types, decision tree, when to use each
+- **[Router v2.0 Examples](docs/routing/ROUTER_V2_EXAMPLES.md)** - Complete Router V2 usage guide (type casting, validation, named routes, grouping)
+- **[Router v2.0 Changelog](docs/routing/ROUTER_V2_CHANGELOG.md)** - What's new in v2.0
+- **[Implementation Report](docs/routing/ROUTER_V2_IMPLEMENTATION_COMPLETE.md)** - Technical implementation details
+- **[Parameterized Routing Guide](docs/routing/PARAMETERIZED_ROUTING.md)** - Full parameterized routing documentation
+- **[Evaluation Report](docs/routing/PARAMETERIZED_ROUTING_EVALUATION.md)** - Grade: A+ (90/100)
+- **[Future Recommendations](docs/routing/PARAMETERIZED_ROUTING_RECOMMENDATIONS.md)** - v2.1+ roadmap
+- **[Helpers Class Usage](docs/routing/HELPERS_CLASS_USAGE.md)** - OOP helper methods guide
+- **[Helper Functions Guide](docs/routing/HELPER_FUNCTIONS_GUIDE.md)** - ⭐ **NEW!** PSR-4 modular helper system
+
+### **🏗️ PSR-4 Helper Architecture (v1.4.7):**
+upMVC now features a modern PSR-4 compliant modular helper system:
+- **Modular Structure:** Each helper in its own class (RouteHelper, UrlHelper, FormHelper, etc.)
+- **Facade Pattern:** Unified access via `HelperFacade`
+- **Auto-loaded:** No manual `require_once` needed
+- **Type-Safe:** Router V2 integration for named routes
+- **Scalable:** Easy to add new helpers
+- **[View Helper Classes](etc/Helpers/)** - PSR-4 helper architecture
+
+### **🎯 Routing Features:**
+
+upMVC provides **5 routing strategies** for different scenarios:
+
+1. **Simple Static Routes** - Fixed URLs (`/about`, `/contact`)
+2. **Parameterized Routes** - URL placeholders (`/users/{id}`)
+3. **Router V2 Enhanced** - Type casting + validation + named routes ⭐ **NEW!**
+4. **Database-Driven Routes** - Dynamic routes from DB
+5. **Cached Database Routes** - DB routes with file caching
+
+**Router V2 Enhanced Features (v1.4.7):**
+- ✅ **Type Casting:** `{id:int}`, `{price:float}`, `{active:bool}` - automatic type conversion
+- ✅ **Validation:** Regex constraints at router level (`['id' => '\d+']`)
+- ✅ **Named Routes:** Generate URLs from route names (`route('user.edit', ['id' => 5])`)
+- ✅ **Route Grouping:** Auto-prefix optimization for organized routes
+
+**Quick Example:**
+```php
+// Router V2 - Type-safe with validation
+$router->addParamRoute('/users/{id:int}', User\Controller::class, 'show', [], [
+    'id' => '\d+'
+])->name('user.show');
+
+// Controller - no manual casting needed!
+public function show() {
+    $id = $_GET['id']; // Already an integer!
+    $user = $this->model->getUserById($id);
+    // ...
+}
+
+// Generate URLs with named routes
+$url = HelperFacade::route('user.show', ['id' => 123]); // /users/123
+```
+
+**See:** [Complete Routing Guide](docs/routing/ROUTING_GUIDE.md) for decision tree and when to use each type
 
 Demo: https://upmvc.com/demo/
 	
