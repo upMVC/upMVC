@@ -1,24 +1,19 @@
 <?php
-/**
- * Admin Module Controller - ROUTER V2 ENHANCED
+/*
+ * Admin Module - Controller WITH CACHE INVALIDATION
  * 
- * This version demonstrates Router v2.0 controller integration:
- * - Type-safe params: $_GET['id'] is already int (no casting needed)
- * - Simplified validation: Router rejects invalid IDs before controller
- * - Named route usage: Helpers::route() for URL generation
+ * This version clears the route cache whenever users are created or deleted
+ * to ensure routes stay synchronized with the database.
  * 
- * ROUTER V2 BENEFITS IN CONTROLLER:
- * ✅ No manual type casting: $_GET['id'] is already int
- * ✅ No regex validation: Router validated before reaching here
- * ✅ Cleaner code: Less boilerplate, more business logic
- * ✅ URL generation: Use Helpers::route() instead of hardcoded paths
+ * HOW TO USE:
+ * 1. First install Routes_WITH_CACHE.php (rename to Routes.php)
+ * 2. Then rename this file to Controller.php (backup original first!)
+ * 3. Cache will be automatically cleared on CRUD operations
  * 
- * COMPARISON WITH OTHER IMPLEMENTATIONS:
- * - Controllerc.php: Cache-based with regex route matching
- * - Controllerd.php: Basic param with manual validation
- * - Controller.php: THIS FILE - Router V2 enhanced (cleanest)
- * 
- * @see docs/routing/ROUTER_V2_EXAMPLES.md
+ * WHAT'S DIFFERENT:
+ * - Calls Routes::clearCache() after createUser()
+ * - Calls Routes::clearCache() after deleteUser()
+ * - Shows cache stats in dashboard (optional)
  */
 
 namespace Admin;
@@ -26,7 +21,6 @@ namespace Admin;
 use Admin\View;
 use Admin\Model;
 use Admin\Routes\Routes;
-use upMVC\Helpers;
 
 class Controller 
 {
@@ -54,10 +48,7 @@ class Controller
     }
 
     /**
-     * Route handler - Router V2 Enhanced
-     * 
-     * Notice: No regex matching needed!
-     * Router v2.0 already validated and type-cast parameters.
+     * Route handler
      */
     private function handleRoute($reqRoute, $reqMet)
     {
@@ -80,24 +71,14 @@ class Controller
                 return;
         }
 
-        // ========================================
-        // Parameterized Routes - Router V2 Enhanced
-        // ========================================
-        
-        // Edit User Route
-        // Router V2 benefits:
-        // - $_GET['id'] is already int (no casting)
-        // - '\d+' validation already passed (no ctype_digit check)
-        // - Invalid IDs rejected before reaching here
+        // Parameterized routes (captured by Router) – use injected $_GET['id']
         if (strpos($reqRoute, '/admin/users/edit/') === 0) {
-            $userId = $_GET['id'] ?? null;  // Already int from Router V2!
-            
-            // Simplified null check (type validation already done by router)
-            if ($userId === null) {
-                $this->view->render(['view' => 'error', 'message' => 'Invalid user ID']);
+            $id = $_GET['id'] ?? null;
+            if ($id === null || !ctype_digit((string)$id)) {
+                $this->view->render(['view' => 'error', 'message' => 'Invalid user id']);
                 return;
             }
-            
+            $userId = (int)$id;
             if ($reqMet === 'POST') {
                 $this->updateUser($userId);
             } else {
@@ -106,16 +87,13 @@ class Controller
             return;
         }
 
-        // Delete User Route
-        // Same Router V2 benefits as edit route
         if (strpos($reqRoute, '/admin/users/delete/') === 0) {
-            $userId = $_GET['id'] ?? null;  // Already int from Router V2!
-            
-            if ($userId === null) {
-                $this->view->render(['view' => 'error', 'message' => 'Invalid user ID']);
+            $id = $_GET['id'] ?? null;
+            if ($id === null || !ctype_digit((string)$id)) {
+                $this->view->render(['view' => 'error', 'message' => 'Invalid user id']);
                 return;
             }
-            
+            $userId = (int)$id;
             $this->deleteUser($userId);
             return;
         }
@@ -126,16 +104,21 @@ class Controller
 
     /**
      * Display dashboard with stats
+     * 
+     * NOW INCLUDES CACHE STATISTICS!
      */
     private function dashboard()
     {
         $userCount = $this->model->getUserCount();
         
+        // Get cache statistics for monitoring
+        $cacheStats = Routes::getCacheStats();
+        
         $data = [
             'view' => 'dashboard',
             'stats' => [
                 'userCount' => $userCount,
-                'routingMode' => 'Router V2 Enhanced'
+                'cache' => $cacheStats  // Add cache info to dashboard
             ]
         ];
         $this->view->render($data);
@@ -143,19 +126,18 @@ class Controller
 
     /**
      * List all users
-     * 
-     * Router V2 enhancement: Uses named routes for URL generation
      */
     private function listUsers()
     {
         $users = $this->model->getAllUsers();
         
-        // Note: View can use Helpers::route() for edit/delete URLs
-        // Example: Helpers::route('admin.user.edit', ['id' => $user['id']])
+        // Optional: Show cache stats in user list too
+        $cacheStats = Routes::getCacheStats();
         
         $data = [
             'view' => 'users_list',
-            'users' => $users
+            'users' => $users,
+            'cache' => $cacheStats
         ];
         $this->view->render($data);
     }
@@ -170,9 +152,7 @@ class Controller
             $user = $this->model->getUserById($userId);
             if (!$user) {
                 $_SESSION['error'] = 'User not found';
-                
-                // Router V2: Use Helpers::url() for clean redirects
-                header('Location: ' . Helpers::url('/admin/users'));
+                header('Location: ' . BASE_URL . '/admin/users');
                 exit;
             }
         }
@@ -188,7 +168,7 @@ class Controller
     /**
      * Create new user
      * 
-     * Router V2: No cache invalidation needed (no cache!)
+     * ⭐ CLEARS CACHE after creating user
      */
     private function createUser()
     {
@@ -207,13 +187,15 @@ class Controller
             $_SESSION['error'] = 'Failed to create user';
         }
 
-        // Router V2: Clean URL generation
-        header('Location: ' . Helpers::url('/admin/users'));
+        header('Location: ' . BASE_URL . '/admin/users');
         exit;
     }
 
     /**
      * Update existing user
+     * 
+     * Note: We don't clear cache on update because user ID doesn't change.
+     * If your app can change user IDs, uncomment the clearCache() call.
      */
     private function updateUser(int $userId)
     {
@@ -231,19 +213,22 @@ class Controller
         $result = $this->model->updateUser($userId, $userData);
         
         if ($result) {
+            // Optional: Clear cache if user IDs can change
+            // Routes::clearCache();
+            
             $_SESSION['success'] = 'User updated successfully';
         } else {
             $_SESSION['error'] = 'Failed to update user';
         }
 
-        header('Location: ' . Helpers::url('/admin/users'));
+        header('Location: ' . BASE_URL . '/admin/users');
         exit;
     }
 
     /**
      * Delete user
      * 
-     * Router V2: No cache invalidation needed (no cache!)
+     * ⭐ CLEARS CACHE after deleting user
      */
     private function deleteUser(int $userId)
     {
@@ -255,7 +240,7 @@ class Controller
             $_SESSION['error'] = 'Failed to delete user';
         }
 
-        header('Location: ' . Helpers::url('/admin/users'));
+        header('Location: ' . BASE_URL . '/admin/users');
         exit;
     }
 }
