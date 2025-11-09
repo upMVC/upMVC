@@ -76,4 +76,3 @@ class Routes
         ];
     }
 }
-// Stray legacy lines removed.
