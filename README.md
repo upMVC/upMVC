@@ -88,6 +88,14 @@ upMVC excels at integrating **pre-built JavaScript applications** from any frame
 ### **🛠 Development:**
 - **[🐛 /zbug Folder](zbug/README.md)** - Debug files and development utilities (excluded from Git)
 
+### **🚀 Router v2.0 - Enhanced Routing:**
+- **[Router v2.0 Changelog](docs/routing/ROUTER_V2_CHANGELOG.md)** - **NEW!** What's new in v2.0
+- **[Router v2.0 Examples](docs/routing/ROUTER_V2_EXAMPLES.md)** - **NEW!** Complete usage guide
+- **[Implementation Report](docs/routing/ROUTER_V2_IMPLEMENTATION_COMPLETE.md)** - **NEW!** Technical details
+- **[Parameterized Routing Guide](docs/routing/PARAMETERIZED_ROUTING.md)** - Full documentation
+- **[Evaluation Report](docs/routing/PARAMETERIZED_ROUTING_EVALUATION.md)** - Grade: A+ (90/100)
+- **[Future Recommendations](docs/routing/PARAMETERIZED_ROUTING_RECOMMENDATIONS.md)** - v2.1+ roadmap
+
 Demo: https://upmvc.com/demo/
 	
 

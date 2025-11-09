@@ -48,14 +48,42 @@ class Router
      *   'pattern' => '/users/{id}',
      *   'segments' => ['users','{id}'],
      *   'params' => ['id'],
+     *   'types' => ['id' => 'int'],
+     *   'constraints' => ['id' => '\d+'],
      *   'className' => Controller::class,
      *   'methodName' => 'show',
-     *   'middleware' => []
+     *   'middleware' => [],
+     *   'name' => 'user.show'
      * ]
      * 
      * @var array
      */
     protected $paramRoutes = [];
+    
+    /**
+     * Parameterized routes grouped by first segment for optimization
+     * 
+     * Format: ['users' => [route1, route2], 'products' => [route3]]
+     * 
+     * @var array
+     */
+    protected $paramRoutesByPrefix = [];
+    
+    /**
+     * Named routes registry for URL generation
+     * 
+     * Format: ['user.show' => routeData, 'post.edit' => routeData]
+     * 
+     * @var array
+     */
+    protected $namedRoutes = [];
+    
+    /**
+     * Last registered route (for chaining)
+     * 
+     * @var array|null
+     */
+    protected $lastRoute = null;
     
     /**
      * Middleware manager for global middleware pipeline
@@ -126,33 +154,123 @@ class Router
     /**
      * Add a parameterized route with simple placeholders
      * 
-     * Example: /users/{id}, /orders/{orderId}/items/{itemId}
-     * Placeholders are names enclosed in curly braces.
+     * Example: /users/{id:int}, /orders/{orderId}/items/{itemId}
+     * Placeholders support type hints: {id:int}, {price:float}, {active:bool}
      * 
      * @param string $pattern Route pattern with placeholders
      * @param string $className Controller class
      * @param string $methodName Controller method
      * @param array $middleware Optional named middleware list
-     * @return void
+     * @param array $constraints Optional regex constraints ['id' => '\d+']
+     * @return self For method chaining (->name())
      */
-    public function addParamRoute(string $pattern, string $className, string $methodName, array $middleware = []): void
+    public function addParamRoute(
+        string $pattern, 
+        string $className, 
+        string $methodName, 
+        array $middleware = [],
+        array $constraints = []
+    ): self
     {
         $trimmed = trim($pattern, '/');
         $segments = $trimmed === '' ? [] : explode('/', $trimmed);
         $params = [];
+        $types = [];
+        
+        // Extract first segment for prefix grouping
+        $prefix = $segments[0] ?? '';
+        
+        // Parse segments for params and type hints
         foreach ($segments as $seg) {
-            if (preg_match('/^{([a-zA-Z_][a-zA-Z0-9_]*)}$/', $seg, $m)) {
-                $params[] = $m[1];
+            // Match {name:type} or {name}
+            if (preg_match('/^{([a-zA-Z_][a-zA-Z0-9_]*)(?::([a-z]+))?}$/', $seg, $m)) {
+                $paramName = $m[1];
+                $paramType = $m[2] ?? 'string';
+                
+                $params[] = $paramName;
+                $types[$paramName] = $paramType;
             }
         }
-        $this->paramRoutes[] = [
+        
+        $routeData = [
             'pattern' => $pattern,
             'segments' => $segments,
             'params' => $params,
+            'types' => $types,
+            'constraints' => $constraints,
             'className' => $className,
             'methodName' => $methodName,
             'middleware' => $middleware,
+            'name' => null,  // Set via name() method
         ];
+        
+        // Store in main array
+        $this->paramRoutes[] = $routeData;
+        
+        // Store in prefix-grouped array for optimization
+        if (!isset($this->paramRoutesByPrefix[$prefix])) {
+            $this->paramRoutesByPrefix[$prefix] = [];
+        }
+        $this->paramRoutesByPrefix[$prefix][] = $routeData;
+        
+        // Keep reference for chaining
+        $this->lastRoute = &$this->paramRoutes[count($this->paramRoutes) - 1];
+        
+        return $this;
+    }
+    
+    /**
+     * Assign a name to the last registered parameterized route
+     * 
+     * Enables URL generation via route() helper
+     * 
+     * @param string $name Route name (e.g., 'user.show', 'post.edit')
+     * @return self For method chaining
+     * 
+     * @example
+     * $router->addParamRoute('/users/{id}', Controller::class, 'show')->name('user.show');
+     */
+    public function name(string $name): self
+    {
+        if ($this->lastRoute !== null) {
+            $this->lastRoute['name'] = $name;
+            $this->namedRoutes[$name] = $this->lastRoute;
+        }
+        return $this;
+    }
+    
+    /**
+     * Generate URL from named route
+     * 
+     * @param string $name Route name
+     * @param array $params Parameters to inject
+     * @return string Generated URL
+     * @throws \RuntimeException If route not found or missing params
+     * 
+     * @example
+     * $router->route('user.show', ['id' => 123]); // Returns: /users/123
+     */
+    public function route(string $name, array $params = []): string
+    {
+        if (!isset($this->namedRoutes[$name])) {
+            throw new \RuntimeException("Route '{$name}' not found");
+        }
+        
+        $route = $this->namedRoutes[$name];
+        $pattern = $route['pattern'];
+        
+        // Replace placeholders with values
+        foreach ($params as $key => $value) {
+            // Match both {key} and {key:type}
+            $pattern = preg_replace('/{' . $key . '(?::[a-z]+)?}/', $value, $pattern);
+        }
+        
+        // Check for unreplaced placeholders
+        if (preg_match('/{[^}]+}/', $pattern)) {
+            throw new \RuntimeException("Missing parameters for route '{$name}'");
+        }
+        
+        return $pattern;
     }
     
     /**
@@ -247,10 +365,11 @@ class Router
                             }
                         }
 
-                        // Inject params into $_GET non-destructively
+                        // Inject params into $_GET with type casting
                         foreach ($params as $k => $v) {
                             if (!array_key_exists($k, $_GET)) {
-                                $_GET[$k] = $v;
+                                $type = $route['types'][$k] ?? 'string';
+                                $_GET[$k] = $this->castParam($v, $type);
                             }
                         }
 
@@ -277,6 +396,9 @@ class Router
     /**
      * Attempt to match a request route against parameterized routes
      * 
+     * Uses prefix-based optimization for better performance
+     * Validates against constraints if provided
+     * 
      * @param string $reqRoute The requested route (e.g., '/users/123')
      * @return array|null ['route' => routeDefArray, 'params' => ['id' => '123']] or null
      */
@@ -285,21 +407,47 @@ class Router
         $path = trim($reqRoute, '/');
         $reqSegments = $path === '' ? [] : explode('/', $path);
         $reqCount = count($reqSegments);
+        
+        // Optimization: Get prefix and check only matching group
+        $prefix = $reqSegments[0] ?? '';
+        $routesToCheck = $this->paramRoutesByPrefix[$prefix] ?? [];
+        
+        // Fallback: If no prefix match, check all routes
+        if (empty($routesToCheck)) {
+            $routesToCheck = $this->paramRoutes;
+        }
 
-        foreach ($this->paramRoutes as $route) {
+        foreach ($routesToCheck as $route) {
             $patSegments = $route['segments'];
             if (count($patSegments) !== $reqCount) {
-                continue; // simple length check for MVP
+                continue;
             }
 
             $captured = [];
             $ok = true;
+            
             foreach ($patSegments as $i => $seg) {
                 $reqSeg = $reqSegments[$i];
-                if (preg_match('/^{([a-zA-Z_][a-zA-Z0-9_]*)}$/', $seg, $m)) {
-                    $captured[$m[1]] = $reqSeg;
+                
+                // Match {name:type} or {name}
+                if (preg_match('/^{([a-zA-Z_][a-zA-Z0-9_]*)(?::[a-z]+)?}$/', $seg, $m)) {
+                    $paramName = $m[1];
+                    
+                    // Validate against constraint if provided
+                    if (isset($route['constraints'][$paramName])) {
+                        $pattern = $route['constraints'][$paramName];
+                        if (!preg_match('/^' . $pattern . '$/', $reqSeg)) {
+                            $ok = false;
+                            break;
+                        }
+                    }
+                    
+                    $captured[$paramName] = $reqSeg;
                 } else {
-                    if ($seg !== $reqSeg) { $ok = false; break; }
+                    if ($seg !== $reqSeg) { 
+                        $ok = false; 
+                        break; 
+                    }
                 }
             }
 
@@ -307,7 +455,36 @@ class Router
                 return ['route' => $route, 'params' => $captured];
             }
         }
+        
         return null;
+    }
+    
+    /**
+     * Cast parameter value to specified type
+     * 
+     * @param mixed $value Value to cast
+     * @param string $type Target type (int, float, bool, string)
+     * @return mixed Casted value
+     */
+    private function castParam($value, string $type)
+    {
+        switch ($type) {
+            case 'int':
+            case 'integer':
+                return (int)$value;
+                
+            case 'float':
+            case 'double':
+                return (float)$value;
+                
+            case 'bool':
+            case 'boolean':
+                return filter_var($value, FILTER_VALIDATE_BOOLEAN);
+                
+            case 'string':
+            default:
+                return (string)$value;
+        }
     }
 
     // ========================================

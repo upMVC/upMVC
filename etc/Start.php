@@ -123,6 +123,9 @@ class Start
     {
         try {
             $router = new Router();
+            
+            // Initialize Helpers with router instance
+            Helpers::setRouter($router);
 
             // Setup middleware stack
             $this->setupEnhancedMiddleware($router);
