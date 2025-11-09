@@ -94,8 +94,9 @@ class Start
             error_log("Configuration validation warning: " . $e->getMessage());
         }
         
-        // Load global helper functions (route(), url(), redirect(), etc.)
-        require_once __DIR__ . '/helpers_functions.php';
+        // Load global helper functions (both OOP class and procedural functions)
+        // File contains: Helpers class + route(), url(), redirect(), etc.
+        require_once __DIR__ . '/helpers.php';
     }
 
     /**
