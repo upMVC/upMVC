@@ -137,10 +137,14 @@ redirect('user.edit', ['id' => $userId]);
 // - IDE support: Autocomplete route names
 ```
 
-**Helper Functions:**
+**Helper Class Methods:**
 ```php
-route('user.show', ['id' => 123]);  // Generate URL
-redirect('user.show', ['id' => 123]); // Redirect to route
+Helpers::route('user.show', ['id' => 123]);  // Generate URL
+Helpers::redirect('user.show', ['id' => 123]); // Redirect to route
+
+// Or with use statement
+use upMVC\Helpers;
+Helpers::route('user.show', ['id' => 123]);
 ```
 
 ---
@@ -159,25 +163,41 @@ redirect('user.show', ['id' => 123]); // Redirect to route
    - Enhanced `matchParamRoute()` with validation and grouping
    - Added `castParam()` method for type casting
 
-2. **etc/Start.php** (NEW)
-   - Load `etc/helpers.php` in bootstrap
-   - Make `$router` globally available
+2. **etc/Start.php**
+   - Initialize Helpers class with router instance
+   - Clean OOP dependency injection (no globals)
 
 3. **etc/helpers.php** (NEW)
-   - `route()` - Generate URL from named route
-   - `url()` - Generate full URL with BASE_URL
-   - `redirect()` - Redirect to URL or named route
-   - `csrf_field()` - Generate CSRF hidden input
-   - Plus 10+ more helper functions
+   - OOP Helpers class with static methods
+   - PSR-4 autoloaded (no manual includes)
+   - `Helpers::route()` - Generate URL from named route
+   - `Helpers::url()` - Generate full URL with BASE_URL
+   - `Helpers::redirect()` - Redirect to URL or named route
+   - `Helpers::csrfField()` - Generate CSRF hidden input
+   - Plus 10+ more helper methods
 
-4. **tests/RouterEnhancedTest.php** (NEW)
+4. **zbug/test_helpers.php** (NEW)
+   - Simple test suite for Helpers class
+   - Validates OOP implementation
+
+5. **zbug/RouterEnhancedTest.php** (NEW)
    - Comprehensive test suite for all enhancements
    - 15+ test cases covering all features
 
-5. **docs/routing/ROUTER_V2_EXAMPLES.md** (NEW)
+6. **docs/routing/ROUTER_V2_EXAMPLES.md** (NEW)
    - Complete usage examples
    - Real-world scenarios
    - Migration guide
+
+7. **docs/routing/HELPERS_CLASS_USAGE.md** (NEW)
+   - Complete Helpers class documentation
+   - Usage examples for all methods
+   - Migration from procedural to OOP
+
+8. **docs/routing/HELPERS_OOP_CONVERSION.md** (NEW)
+   - Explanation of OOP conversion
+   - Benefits and rationale
+   - Testing instructions
 
 ---
 
@@ -314,10 +334,15 @@ None. All features tested and working.
 
 ## 📚 Documentation
 
+**Core Documentation:**
 - [Parameterized Routing Guide](docs/routing/PARAMETERIZED_ROUTING.md)
 - [Router v2.0 Examples](docs/routing/ROUTER_V2_EXAMPLES.md)
 - [Evaluation Report](docs/routing/PARAMETERIZED_ROUTING_EVALUATION.md)
 - [Recommendations](docs/routing/PARAMETERIZED_ROUTING_RECOMMENDATIONS.md)
+
+**Helpers Class Documentation:**
+- [Helpers Class Usage Guide](docs/routing/HELPERS_CLASS_USAGE.md)
+- [Helpers OOP Conversion](docs/routing/HELPERS_OOP_CONVERSION.md)
 
 ---
 

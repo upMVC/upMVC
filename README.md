@@ -95,6 +95,8 @@ upMVC excels at integrating **pre-built JavaScript applications** from any frame
 - **[Parameterized Routing Guide](docs/routing/PARAMETERIZED_ROUTING.md)** - Full documentation
 - **[Evaluation Report](docs/routing/PARAMETERIZED_ROUTING_EVALUATION.md)** - Grade: A+ (90/100)
 - **[Future Recommendations](docs/routing/PARAMETERIZED_ROUTING_RECOMMENDATIONS.md)** - v2.1+ roadmap
+- **[Helpers Class Usage](docs/routing/HELPERS_CLASS_USAGE.md)** - **NEW!** OOP helper methods guide
+- **[Helpers OOP Conversion](docs/routing/HELPERS_OOP_CONVERSION.md)** - **NEW!** Why OOP over procedural
 
 Demo: https://upmvc.com/demo/
 	
