@@ -7,6 +7,7 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'upMVC\\Middleware\\' => array($baseDir . '/etc/Middleware'),
+    'upMVC\\Helpers\\' => array($baseDir . '/etc/Helpers'),
     'upMVC\\Exceptions\\' => array($baseDir . '/etc/Exceptions'),
     'upMVC\\Events\\' => array($baseDir . '/etc/Events'),
     'upMVC\\Container\\' => array($baseDir . '/etc/Container'),

@@ -26,6 +26,7 @@
             "Common\\Assets\\": "common/assets/",
             "Common\\Bmvc\\": "common/bmvc/",
             "upMVC\\": "etc/",
+            "upMVC\\Helpers\\": "etc/Helpers/",
             "upMVC\\Middleware\\": "etc/Middleware/",
             "upMVC\\Container\\": "etc/Container/",
             "upMVC\\Exceptions\\": "etc/Exceptions/",

@@ -1,5 +1,159 @@
 # Changelog
 
+## v1.4.7 - PSR-4 Helper Architecture (2025-11-09)
+
+### 🏗️ Architecture: PSR-4 Modular Helper System
+
+Refactored the monolithic helper system into a modern PSR-4 compliant modular architecture.
+
+**What changed:**
+- Replaced single `etc/helpers.php` file with organized `etc/Helpers/` namespace
+- Implemented Facade pattern for clean helper access
+- Each helper responsibility now in its own class
+- PSR-4 autoloading replaces manual `require_once`
+- Follows PHP-FIG standards and best practices
+
+**New Structure:**
+```
+etc/Helpers/
+├── HelperFacade.php      # Main entry point (facade pattern)
+├── RouteHelper.php       # Named routes & redirection
+├── UrlHelper.php         # URL & asset generation
+├── FormHelper.php        # Form helpers & CSRF
+├── DataHelper.php        # Session, config, env access
+├── ResponseHelper.php    # Views, JSON, HTTP responses
+└── DebugHelper.php       # dd(), dump() utilities
+```
+
+**Benefits:**
+- ✅ PSR-4 compliant - autoloaded, no manual require
+- ✅ Single Responsibility - each helper has one purpose
+- ✅ Scalable - easy to add new helper classes
+- ✅ Maintainable - organized by functionality
+- ✅ Testable - individual helper classes can be unit tested
+- ✅ Clean dependencies - facade delegates to specialists
+
+**Usage:**
+```php
+// In etc/Start.php (PSR-4 autoloaded)
+use upMVC\Helpers\HelperFacade;
+HelperFacade::setRouter($router);
+
+// In controllers/views
+HelperFacade::route('user.edit', ['id' => 5]);
+HelperFacade::url('/path/to/resource');
+HelperFacade::redirect('/dashboard');
+HelperFacade::view('admin/users', ['users' => $users]);
+HelperFacade::dd($variable);
+```
+
+**Helper Classes:**
+
+1. **HelperFacade** - Main entry point
+   - Delegates to specialized helpers
+   - Provides unified API
+   - Manages Router dependency injection
+
+2. **RouteHelper** - Routing functionality
+   - `route($name, $params)` - Generate named route URLs
+   - `redirect($to, $params, $status)` - HTTP redirects
+
+3. **UrlHelper** - URL generation
+   - `url($path)` - Generate full URLs with BASE_URL
+   - `asset($path)` - Generate asset URLs
+
+4. **FormHelper** - Form utilities
+   - `old($key, $default)` - Repopulate form fields
+   - `csrfToken()` - Get CSRF token
+   - `csrfField()` - Generate CSRF hidden field
+
+5. **DataHelper** - Data access
+   - `session($key, $default)` - Access session data
+   - `config($key, $default)` - Access configuration
+   - `env($key, $default)` - Access environment variables
+   - `request($key, $default)` - Access request data
+
+6. **ResponseHelper** - HTTP responses
+   - `view($path, $data)` - Render views
+   - `abort($code, $message)` - HTTP error responses
+   - `json($data, $status)` - JSON responses
+
+7. **DebugHelper** - Development utilities
+   - `dd(...$vars)` - Dump and die
+   - `dump(...$vars)` - Dump variables
+
+### 🔧 Technical Details
+
+**Composer Autoload:**
+```json
+"autoload": {
+    "psr-4": {
+        "upMVC\\Helpers\\": "etc/Helpers/",
+        "upMVC\\": "common/",
+        // ... other namespaces
+    }
+}
+```
+
+**Dependency Injection:**
+```php
+// Router instance injected into facade
+HelperFacade::setRouter($router);
+
+// Facade delegates to RouteHelper with router
+RouteHelper::setRouter($router);
+```
+
+**Design Patterns:**
+- Facade Pattern: Single entry point delegates to specialists
+- Single Responsibility: Each class handles one concern
+- Static Factory: Convenient static method access
+- Dependency Injection: Router injected, not hard-coded
+
+### 📦 Files Changed
+
+**New:**
+- `etc/Helpers/HelperFacade.php` - Main facade class
+- `etc/Helpers/RouteHelper.php` - Routing helper
+- `etc/Helpers/UrlHelper.php` - URL helper
+- `etc/Helpers/FormHelper.php` - Form helper
+- `etc/Helpers/DataHelper.php` - Data access helper
+- `etc/Helpers/ResponseHelper.php` - Response helper
+- `etc/Helpers/DebugHelper.php` - Debug helper
+
+**Modified:**
+- `composer.json` - Added `upMVC\\Helpers\\` PSR-4 namespace
+- `etc/Start.php` - Uses `HelperFacade` via PSR-4 (no require_once)
+
+**Deleted:**
+- `etc/helpers.php` - Replaced by modular structure
+
+### ✅ Compatibility
+
+- **100% backward compatible** - Same API via HelperFacade
+- **No controller changes required** - Same method signatures
+- **Autoloaded automatically** - Composer handles class loading
+- **Easier to extend** - Add new helper classes as needed
+
+### 🎓 Educational Value
+
+This refactoring demonstrates:
+1. **PSR-4 Standards** - Following PHP-FIG autoloading standard
+2. **Facade Pattern** - Clean delegation to specialized classes
+3. **Single Responsibility** - Each class has one job
+4. **Modular Architecture** - Organized by functionality
+5. **Dependency Injection** - Router injected, not coupled
+
+### 🚀 Future Enhancements
+
+Possible additions:
+- Global function wrappers (procedural API: `route()`, `url()`, etc.)
+- Additional helpers (CacheHelper, ValidationHelper, etc.)
+- Helper service providers for DI container
+- Unit tests for each helper class
+
+---
+
 ## v1.4.6 - Utilities & Robustness (2025-11-08)
 
 ### 🔧 Improvements

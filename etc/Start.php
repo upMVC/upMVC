@@ -27,6 +27,7 @@ use upMVC\Exceptions\ErrorHandler;
 use upMVC\Middleware\AuthMiddleware;
 use upMVC\Middleware\LoggingMiddleware;
 use upMVC\Middleware\CorsMiddleware;
+use upMVC\Helpers\HelperFacade;
 
 class Start
 {
@@ -93,10 +94,6 @@ class Start
         } catch (\Exception $e) {
             error_log("Configuration validation warning: " . $e->getMessage());
         }
-        
-        // Load global helper functions (both OOP class and procedural functions)
-        // File contains: Helpers class + route(), url(), redirect(), etc.
-        require_once __DIR__ . '/helpers.php';
     }
 
     /**
@@ -128,8 +125,8 @@ class Start
         try {
             $router = new Router();
             
-            // Initialize Helpers with router instance
-            Helpers::setRouter($router);
+            // Initialize HelperFacade with router instance (PSR-4 autoloaded)
+            HelperFacade::setRouter($router);
 
             // Setup middleware stack
             $this->setupEnhancedMiddleware($router);

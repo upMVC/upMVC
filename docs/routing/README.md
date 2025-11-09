@@ -2,11 +2,17 @@
 
 Complete guide to routing strategies in upMVC.
 
+## 🎯 Quick Start
+
+**NEW:** **[ROUTING_GUIDE.md](ROUTING_GUIDE.md)** - ⭐ **Complete Unified Routing Guide** - All routing types, when to use each, decision tree, Router V2 features, and migration guides
+
 ## 📚 Documentation
 
 ### Main Guides
-- **[PARAMETERIZED_ROUTING.md](PARAMETERIZED_ROUTING.md)** - ⭐ NEW! Complete guide to lightweight parameterized routing with admin module examples
-- **[ROUTING_STRATEGIES.md](ROUTING_STRATEGIES.md)** - Complete guide covering all three routing approaches, performance analysis, and implementation examples
+- **[ROUTING_GUIDE.md](ROUTING_GUIDE.md)** - ⭐ **NEW!** Complete unified guide covering all 5 routing types with decision tree
+- **[ROUTER_V2_EXAMPLES.md](ROUTER_V2_EXAMPLES.md)** - ⭐ Router V2 enhanced features (type casting, validation, named routes)
+- **[PARAMETERIZED_ROUTING.md](PARAMETERIZED_ROUTING.md)** - Complete guide to lightweight parameterized routing with admin module examples
+- **[ROUTING_STRATEGIES.md](ROUTING_STRATEGIES.md)** - Detailed guide covering routing approaches, performance analysis, and implementation examples
 
 ## 📁 Examples
 
@@ -23,19 +29,35 @@ All working code examples are in the `examples/` directory:
 
 ## 🎯 Quick Start
 
-### Choose Your Approach
+**NEW:** **[ROUTING_GUIDE.md](ROUTING_GUIDE.md)** - ⭐ **Complete Unified Routing Guide** - All routing types, when to use each, decision tree, Router V2 features, and migration guides
+
+### Choose Your Routing Type
+
+upMVC offers **5 routing strategies**. Use the decision tree:
 
 ```
-Start
-  │
-  ├─ < 100 records? → Dynamic DB (simple)
-  │
-  ├─ 100-1,000 records? → Cached DB (recommended)
-  │
-  └─ > 1,000 records? → Parameterized Routes ⭐ NEW! (scalable, efficient)
+How many records?
+│
+├─ 0 (Static pages) → Simple Static Routes
+│
+├─ < 100 records
+│  ├─ Development? → Database-Driven (no cache)
+│  └─ Production? → Cached Database Routes
+│
+├─ 100-1,000 records
+│  ├─ Need type safety? → Router V2 Enhanced ⭐
+│  ├─ Security-first? → Cached Database Routes
+│  └─ Default → Parameterized Routing (Basic)
+│
+└─ > 1,000 records
+   ├─ Need type safety? → Router V2 Enhanced ⭐
+   └─ Default → Parameterized Routing (Basic)
 ```
 
-**NEW in v1.4.4:** Lightweight parameterized routing with `{placeholder}` syntax. See [PARAMETERIZED_ROUTING.md](PARAMETERIZED_ROUTING.md) for complete guide.
+**Need type safety, validation, or named routes at any scale?**  
+→ Use **[Router V2 Enhanced](ROUTING_GUIDE.md#router-v2-enhanced-features)** ⭐
+
+**See:** [ROUTING_GUIDE.md](ROUTING_GUIDE.md) for complete decision tree and examples
 
 ### Installation Guides
 
@@ -107,13 +129,15 @@ public function display()
 
 ## 📊 Performance Comparison
 
-| Approach | Request Time | Best For |
-|----------|-------------|----------|
-| **Dynamic DB** | 100ms | Development, < 100 records |
-| **Cached DB** | 2ms | Production, 100-1,000 records |
-| **Parameterized Routes** | 0.5ms | ⭐ NEW! High-scale, > 1,000 records, dynamic data |
+| Approach | Request Time | Memory | Best For |
+|----------|-------------|---------|----------|
+| **Simple Static** | 0.1ms | 10KB | Fixed pages |
+| **Parameterized Routes** | 0.5ms | 20KB | ⭐ 1,000+ records, dynamic data |
+| **Router V2 Enhanced** | 0.6ms | 25KB | ⭐ Type-safe apps, APIs |
+| **Dynamic DB** | 100ms | 50KB | Development, < 100 records |
+| **Cached DB** | 2ms | 500KB-2MB | Production, 100-10,000 records |
 
-**Learn more:** [PARAMETERIZED_ROUTING.md](PARAMETERIZED_ROUTING.md) - Complete guide with admin module examples
+**Learn more:** [ROUTING_GUIDE.md](ROUTING_GUIDE.md) - Complete guide with decision tree, Router V2 features, and migration guides
 
 ## 🔍 Detailed Documentation
 
