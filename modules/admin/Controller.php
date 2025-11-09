@@ -5,13 +5,13 @@
  * This version demonstrates Router v2.0 controller integration:
  * - Type-safe params: $_GET['id'] is already int (no casting needed)
  * - Simplified validation: Router rejects invalid IDs before controller
- * - Named route usage: route() global function for URL generation
+ * - Named route usage: HelperFacade for URL generation
  * 
  * ROUTER V2 BENEFITS IN CONTROLLER:
  * ✅ No manual type casting: $_GET['id'] is already int
  * ✅ No regex validation: Router validated before reaching here
  * ✅ Cleaner code: Less boilerplate, more business logic
- * ✅ Global helpers: route(), url(), redirect() - clean procedural API
+ * ✅ PSR-4 helpers: HelperFacade::url(), HelperFacade::redirect()
  * 
  * COMPARISON WITH OTHER IMPLEMENTATIONS:
  * - Controllerc.php: Cache-based with regex route matching
@@ -26,6 +26,7 @@ namespace Admin;
 use Admin\View;
 use Admin\Model;
 use Admin\Routes\Routes;
+use upMVC\Helpers\HelperFacade;
 
 class Controller 
 {
@@ -43,6 +44,21 @@ class Controller
      */
     public function display($reqRoute, $reqMet)
     {
+
+       
+         
+
+// Temporarily add at top of display() method:
+HelperFacade::dump(['test' => 'PSR-4 helpers working!']);
+// Should show formatted array output
+
+ $userId = HelperFacade::session('user_id', 'not-set');
+        echo "Session Test: " . $userId . "<br>";
+
+// Test url() helper
+    $testUrl = HelperFacade::url('/admin/users');
+    echo "URL Helper Test: " . $testUrl . "<br>";
+        
         // Check authentication
         if (!isset($_SESSION["logged"]) || $_SESSION["logged"] !== true) {
             header('Location: ' . BASE_URL . '/auth');
@@ -170,8 +186,8 @@ class Controller
             if (!$user) {
                 $_SESSION['error'] = 'User not found';
                 
-                // Router V2: Use global url() helper
-                header('Location: ' . url('/admin/users'));
+                // Router V2: Use HelperFacade helper
+                header('Location: ' . HelperFacade::url('/admin/users'));
                 exit;
             }
         }
@@ -206,8 +222,8 @@ class Controller
             $_SESSION['error'] = 'Failed to create user';
         }
 
-        // Router V2: Global url() helper
-        header('Location: ' . url('/admin/users'));
+        // Router V2: HelperFacade helper
+        header('Location: ' . HelperFacade::url('/admin/users'));
         exit;
     }
 
@@ -235,8 +251,8 @@ class Controller
             $_SESSION['error'] = 'Failed to update user';
         }
 
-        // Router V2: Global url() helper
-        header('Location: ' . url('/admin/users'));
+        // Router V2: HelperFacade helper
+        header('Location: ' . HelperFacade::url('/admin/users'));
         exit;
     }
 
@@ -255,8 +271,8 @@ class Controller
             $_SESSION['error'] = 'Failed to delete user';
         }
 
-        // Router V2: Global url() helper
-        header('Location: ' . url('/admin/users'));
+        // Router V2: HelperFacade helper
+        header('Location: ' . HelperFacade::url('/admin/users'));
         exit;
     }
 }
