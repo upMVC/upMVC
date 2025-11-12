@@ -11,7 +11,7 @@
 ### ✅ All 4 Router V2 Enhancements - COMPLETE!
 
 1. ✅ **Type Casting** - Auto-cast params with `{id:int}`, `{price:float}`, `{active:bool}`
-2. ✅ **Validation Patterns** - Regex constraints for security: `['id' => '\d+']`
+2. ✅ **Validation Patterns** - Regex constraints for security: `['id' => '\\d+']`
 3. ✅ **Named Routes** - URL generation with `->name()` and `Helpers::route()`
 4. ✅ **Route Grouping** - Automatic prefix-based optimization for performance
 
@@ -82,7 +82,7 @@ $userId = $_GET['id'];       // int 123 - auto-casted!
 ```php
 // Only accept numeric IDs
 $router->addParamRoute('/users/{id:int}', Controller::class, 'show', [], [
-    'id' => '\d+'  // Validates at router level
+    'id' => '\\d+'  // Validates at router level
 ]);
 
 // Invalid requests (like /users/abc or /users/../etc/passwd) get 404 BEFORE controller
@@ -131,14 +131,14 @@ $router->addParamRoute('/products/{id}', ...);
 
 **Performance:**
 - 10 routes: Same speed
-- 100 routes: **50x faster**
-- 1000 routes: **100x faster**
+- 100 routes: 50x faster
+- 1000 routes: 100x faster
 
 ---
 
 ## 🎓 Admin Module - Educational Implementation
 
-The admin module now demonstrates **THREE routing strategies**:
+The admin module now demonstrates THREE routing strategies:
 
 ### Strategy 1: Router V2 Enhanced ⭐⭐⭐ (Current)
 
@@ -152,7 +152,7 @@ $router->addParamRoute(
     Controller::class,
     'display',
     [],
-    ['id' => '\d+']                  // Validation
+    ['id' => '\\d+']                  // Validation
 )->name('admin.user.edit');          // Named route
 
 // Controller.php - Clean!
@@ -345,7 +345,7 @@ $user = $this->model->getById($userId);
 ```php
 // Routes - Enhanced
 $router->addParamRoute('/users/{id:int}', Controller::class, 'show', [], [
-    'id' => '\d+'
+    'id' => '\\d+'
 ])->name('user.show');
 
 // Controller - Clean!
@@ -367,7 +367,7 @@ $user = $this->model->getById($userId);
 
 ## 🎯 Educational Value
 
-This implementation preserves **THREE routing strategies** in the admin module:
+This implementation preserves THREE routing strategies in the admin module:
 
 1. **Router V2 Enhanced** - Latest, cleanest, recommended
 2. **Basic Param** - Learning, understanding fundamentals

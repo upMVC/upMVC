@@ -31,7 +31,7 @@
 ### 1. ✅ Validation Patterns
 ```php
 $router->addParamRoute('/users/{id}', Controller::class, 'show', [], [
-    'id' => '\d+'  // Only digits
+    'id' => '\\d+'  // Only digits
 ]);
 ```
 

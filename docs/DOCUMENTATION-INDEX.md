@@ -64,3 +64,12 @@ All critical issues have been resolved:
 ---
 
 **🚀 Ready to build amazing applications with upMVC? Start with the [First Steps Guide](FIRST-STEPS-GUIDE.md)!**
+
+---
+
+## 🚦 Release & Status
+
+- [CHANGELOG.md](CHANGELOG.md) — Version history and detailed changes
+- [PROGRESS.md](PROGRESS.md) — Ongoing development progress log
+- [READY_TO_PUSH.md](READY_TO_PUSH.md) — Pre-merge checklist for Router v2.0
+- [ROUTER_V2_STATUS.md](ROUTER_V2_STATUS.md) — Implementation status and verification

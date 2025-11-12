@@ -336,33 +336,6 @@ Admin module now teaches:
 4. **Migration path** - docs show step-by-step conversion
 5. **Trade-offs** - security vs scalability vs complexity
 
-### � Future Enhancements (not included)
-
-Possible additions for later versions:
-- Typed placeholders: `{id:int}`, `{slug:alpha}`
-- Wildcard tails: `{path+}` for catch-all segments
-- Optional segments: `{locale?}` with defaults
-- Regex constraints: `{id:\d+}`
-- Route naming: `route('user.edit', ['id' => 5])`
-
-### 📦 Files Changed
-
-**New:**
-- `docs/routing/PARAMETERIZED_ROUTING.md` - Complete guide
-
-**Modified:**
-- `etc/Router.php` - Added addParamRoute() and matchParamRoute()
-- `modules/admin/routes/Routes.php` - Parameterized implementation
-- `modules/admin/Controller.php` - Param-based route handling
-- `modules/test/routes/Routes.php` - Added param examples
-- `docs/routing/README.md` - Updated with param routing info
-- `modules/admin/README.md` - Dual strategy documentation
-- `README.md` - Added param routing section
-
-**Preserved (Educational):**
-- `modules/admin/routes/Routesc.php` - Cache-based backup
-- `modules/admin/Controllerc.php` - Cache-based backup
-
 ---
 
 ## v1.4.1 - Thrive (Stable Dependencies) (2025-10-23)
