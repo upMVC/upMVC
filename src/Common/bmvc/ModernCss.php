@@ -690,8 +690,6 @@ body .modern-nav.compact,
 <?php
     }
 }
-?>
-
 
 
 

@@ -152,6 +152,16 @@ class Environment
                 list($key, $value) = explode('=', $line, 2);
                 $key = trim($key);
                 $value = trim($value);
+                
+                // Strip inline comments (# not inside quotes)
+                // Split on # but only if not inside quotes
+                if (strpos($value, '#') !== false) {
+                    // Simple approach: remove everything after # unless value starts with quote
+                    if (!preg_match('/^["\']/', $value)) {
+                        $value = explode('#', $value)[0];
+                        $value = trim($value);
+                    }
+                }
 
                 // Remove quotes from value
                 $value = self::parseValue($value);

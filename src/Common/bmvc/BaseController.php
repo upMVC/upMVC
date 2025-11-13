@@ -85,7 +85,7 @@ class BaseController
         $data['errors'] = $this->errors;
         
         extract($data);
-        include_once "./modules/$view.php";
+        include_once THIS_DIR . "/modules/$view.php";
     }
     
     protected function isPost(): bool

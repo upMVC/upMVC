@@ -143,6 +143,45 @@ class Config
         return Environment::get('DOMAIN_NAME', self::$fallbacks['domain_name']);
     }
 
+    /**
+     * Get the full base URL (domain + site path)
+     * 
+     * Replacement for BASE_URL constant.
+     * 
+     * @return string The full base URL without trailing slash
+     * 
+     * @example
+     * // Returns: 'http://localhost/upMVC'
+     */
+    public static function getBaseUrl(): string
+    {
+        return rtrim(self::getDomainName(), '/') . self::getSitePath();
+    }
+
+    /**
+     * Get the application root directory path
+     * 
+     * Replacement for THIS_DIR constant.
+     * 
+     * @return string The absolute path to the application root
+     */
+    public static function getAppDir(): string
+    {
+        return dirname(__DIR__, 2); // Goes up from src/Etc/ to root
+    }
+
+    /**
+     * Get the site path (alias for backward compatibility)
+     * 
+     * Replacement for SITEPATH constant.
+     * 
+     * @return string The site path
+     */
+    public static function getSitePathConstant(): string
+    {
+        return self::getSitePath();
+    }
+
     // ========================================
     // Request Processing
     // ========================================

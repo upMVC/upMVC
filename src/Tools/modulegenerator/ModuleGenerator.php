@@ -1739,11 +1739,11 @@ MD;
         return "<!-- Register view template -->";
     }
 
-    private function getDashboardViewTemplate(): string
-    {
-        return "<!-- Dashboard view template -->";
-    }
 }
+
+
+
+
 
 
 

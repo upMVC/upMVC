@@ -26,7 +26,7 @@
  *   https://bitshost.biz/
  */
 
-namespace App\Modules\moda;
+namespace App\Modules\Moda;
 
 use App\Common\Bmvc\BaseController;
 //use App\Modules\moda\Model

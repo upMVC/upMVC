@@ -102,9 +102,9 @@ class Routes
      */
     private function registerRoutes(): void
     {
-        // Example: Register system-level routes
-        $this->router->addRoute('/abba', Controller::class, 'display');
-        $this->router->addRoute('/abbac', AnythingElse::class, 'display');
+        // Example: Register system-level routes (commented out - using InitModsImproved instead)
+        // $this->router->addRoute('/abba', Controller::class, 'display');
+        // $this->router->addRoute('/abbac', AnythingElse::class, 'display');
         
         // Example: Add home route (uncomment and adjust as needed)
         // $this->router->addRoute('/', \New\Controller::class, 'display');

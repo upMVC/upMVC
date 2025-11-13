@@ -1,11 +1,15 @@
 <?php
 namespace App\Tools\CrudGenerator;
+
 use PDO;
+use PDOException;
 
 class CrudModuleGenerator
 {
     private string $moduleName;
     private array $fields;
+    private string $tableName;
+    private string $routeName;
 
     /**
      * Expected format for fields:

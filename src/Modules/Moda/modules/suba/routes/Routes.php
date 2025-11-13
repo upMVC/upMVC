@@ -26,9 +26,9 @@
  *   https://bitshost.biz/
  */
 
-namespace App\Modules\suba\Routes;
+namespace App\Modules\Moda\Modules\Suba\Routes;
 
-use App\Modules\suba\Controller;
+use App\Modules\Moda\Modules\Suba\Controller;
 
 class Routes
 {

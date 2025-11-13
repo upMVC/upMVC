@@ -26,7 +26,7 @@
  *   https://bitshost.biz/
  */
 
-namespace App\Modules\suba;
+namespace App\Modules\Moda\Modules\Suba;
 
 use App\Common\Bmvc\BaseModel;
 

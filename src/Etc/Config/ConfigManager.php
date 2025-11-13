@@ -25,11 +25,6 @@ class ConfigManager
     private static array $config = [];
 
     /**
-     * @var array
-     */
-    private static array $configFiles = [];
-
-    /**
      * @var bool
      */
     private static bool $loaded = false;
@@ -131,7 +126,6 @@ class ConfigManager
 
         foreach ($configFiles as $name => $file) {
             if (file_exists($file)) {
-                self::$configFiles[$name] = $file;
                 self::loadConfigFile($name, $file);
             }
         }

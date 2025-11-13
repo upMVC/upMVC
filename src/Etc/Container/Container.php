@@ -234,11 +234,16 @@ class Container
                 throw new Exception("Cannot resolve union type parameter [{$name}] - no concrete type found.");
             }
         } else {
-            $typeName = $type->getName();
+            // Handle ReflectionNamedType
+            if ($type instanceof \ReflectionNamedType) {
+                $typeName = $type->getName();
+            } else {
+                throw new Exception("Unsupported type for parameter [{$name}].");
+            }
         }
 
         // Built-in types
-        if ($type->isBuiltin()) {
+        if ($type instanceof \ReflectionNamedType && $type->isBuiltin()) {
             if ($parameter->isDefaultValueAvailable()) {
                 return $parameter->getDefaultValue();
             }

@@ -26,11 +26,11 @@
  *   https://bitshost.biz/
  */
 
-namespace App\Modules\suba;
+namespace App\Modules\Moda\Modules\Suba;
 
 use App\Common\Bmvc\BaseController;
-use App\Modules\suba\Model;
-use App\Modules\suba\View;
+use App\Modules\Moda\Modules\Suba\Model;
+use App\Modules\Moda\Modules\Suba\View;
 
 class Controller extends BaseController
 {

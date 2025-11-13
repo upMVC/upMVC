@@ -26,9 +26,9 @@
  *   https://bitshost.biz/
  */
 
-namespace App\Modules\moda\Routes;
+namespace App\Modules\Moda\Routes;
 
-use App\Modules\moda\Controller;
+use App\Modules\Moda\Controller;
 
 
 /**

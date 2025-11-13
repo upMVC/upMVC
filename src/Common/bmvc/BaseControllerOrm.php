@@ -42,7 +42,8 @@ class BaseControllerOrm
     /**
      * Redirect to another URL
      *
-     * @param string $path
+     * @param string $reqRoute The route to redirect to
+     * @param string $reqMet The request method
      * @return void
      */
     protected function redirect($reqRoute, $reqMet)

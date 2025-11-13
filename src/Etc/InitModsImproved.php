@@ -149,7 +149,7 @@ class InitModsImproved
             echo "Environment: " . Environment::get('APP_ENV', 'production') . "<br>";
             echo "Use Cache: " . ($this->useCache ? 'YES' : 'NO') . "<br>";
             echo "Submodule Discovery: " . ($this->enableSubmoduleDiscovery ? 'ENABLED' : 'DISABLED') . "<br>";
-            echo "Debug Output: " . ($this->enableDebugOutput ? 'ENABLED' : 'DISABLED') . "<br>";
+            echo "Debug Output: ENABLED<br>";
             echo "Modules Path: " . $this->modulesPath . "<br>";
             echo "</div>";
         }
@@ -282,12 +282,12 @@ class InitModsImproved
         
         // Discover submodules (if enabled)
         if ($this->enableSubmoduleDiscovery) {
-            $subModules = glob($this->modulesPath . '/*/modules/*/routes/Routes.php');
+            $subModules = glob($this->modulesPath . '/*/Modules/*/routes/Routes.php');
             foreach ($subModules as $routeFile) {
                 $moduleData[] = $this->createModuleData($routeFile, 'sub');
             }
             
-            $deepSubModules = glob($this->modulesPath . '/*/modules/*/modules/*/routes/Routes.php');
+            $deepSubModules = glob($this->modulesPath . '/*/Modules/*/Modules/*/routes/Routes.php');
             foreach ($deepSubModules as $routeFile) {
                 $moduleData[] = $this->createModuleData($routeFile, 'deep');
             }
@@ -465,8 +465,6 @@ class InitModsImproved
             
         } catch (\TypeError $e) {
             $this->logError("Type error in module {$moduleName}: " . $e->getMessage());
-        } catch (\ArgumentCountError $e) {
-            $this->logError("Argument error in module {$moduleName}: " . $e->getMessage());
         } catch (\ParseError $e) {
             $this->logError("Parse error in route file {$routeFile}: " . $e->getMessage());
         } catch (\Error $e) {
@@ -563,7 +561,7 @@ class InitModsImproved
             'verbose_logging_enabled' => $this->enableVerboseLogging,
             'screen_output_enabled' => $this->enableDebugOutput,
             'modules_path' => $this->modulesPath,
-            'environment' => Environment::current(),
+            'environment' => Environment::get('APP_ENV', 'production'),
             'cache_key' => 'discovered_modules'
         ];
     }

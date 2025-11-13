@@ -269,8 +269,8 @@ public function readWithAdvancedPagination(string $table, int $page = 1, int $pa
     try {
         // Get total count with filters
         $totalQuery = "SELECT COUNT(*) FROM $table $where";
-        $total = R::getCell($totalQuery);
-        $totalPages = ceil($total / $pageSize);
+        $total = (int) R::getCell($totalQuery);
+        $totalPages = $pageSize > 0 ? (int) ceil($total / $pageSize) : 0;
 
         // Get paginated data with filters and ordering
         $query = "SELECT * FROM $table $where $orderBy LIMIT :offset, :pageSize";

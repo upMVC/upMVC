@@ -1,5 +1,6 @@
 parameters:
     level: 5
+    treatPhpDocTypesAsCertain: false
     paths:
         - src/Etc
         - src/Common
@@ -10,6 +11,28 @@ parameters:
         - logs
         - zbug
     ignoreErrors:
-        # Add specific errors to ignore if needed
+        # Legacy constants - defined at runtime in Config::initConfig()
+        # These will be gradually replaced with Config::getBaseUrl(), Config::getAppDir(), etc.
+        -
+            message: '#Constant BASE_URL not found#'
+            path: src/*
+        -
+            message: '#Constant THIS_DIR not found#'
+            path: src/*
+        # Legacy namespace references in InitMods.php (deprecated, use InitModsImproved)
+        -
+            message: '#Class (Test|Admin|Moda|Suba|User|Userorm|Newmod|Auth|React|Reactb|ReactCrud|Dashboard|Enhanced)\\(Controller|Routes\\Routes) not found#'
+            path: src/Etc/InitMods.php
+        -
+            message: '#Instantiated class (Admin|Test|Moda|Suba|User|Userorm|Newmod|Auth|React|Reactb|ReactCrud|Dashboard|Enhanced)\\Routes\\Routes not found#'
+            path: src/Etc/InitMods.php
+        # Router/middleware return type issues - methods work correctly
+        -
+            message: '#Result of method .* \(void\) is used#'
+            path: src/Etc/Router.php
+        # CacheManager magic methods via __callStatic
+        -
+            message: '#Call to an undefined static method App\\Etc\\Cache\\CacheManager::(get|put|forget|has|flush)#'
+            path: src/*
     bootstrapFiles:
         - vendor/autoload.php

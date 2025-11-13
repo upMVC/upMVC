@@ -36,7 +36,7 @@ use PDO;
 class BaseModel
 {
     /**
-     * @var PDO
+     * @var PDO|null
      */
     protected $conn;
 
@@ -209,7 +209,7 @@ class BaseModel
      * Sanitizes the input data to prevent SQL injection and XSS attacks.
      *
      * @param mixed $input The input data to be sanitized.
-     * @return string The sanitized input.
+     * @return mixed The sanitized input (string for strings, array for arrays, original for others).
      */
     private function sanitize($input)
     {

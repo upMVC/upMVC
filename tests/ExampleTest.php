@@ -22,6 +22,6 @@ class ExampleTest extends TestCase
 
     public function testAutoloaderWorks(): void
     {
-        $this->assertTrue(class_exists('upMVC\\Start'));
+        $this->assertTrue(class_exists('App\\Etc\\Start'));
     }
 }

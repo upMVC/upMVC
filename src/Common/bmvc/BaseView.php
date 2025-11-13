@@ -155,7 +155,7 @@ class BaseView
                         <a href="<?php echo BASE_URL; ?>/auth">👩‍👩‍👧‍👧 Authentication</a>
                     </li>
                     <?php
-                    if (isset($_SESSION["logged"]) && $_SESSION["logged"] = true) {
+                    if (isset($_SESSION["logged"]) && $_SESSION["logged"] == true) {
                     ?>
                         <li>
                             <a href="<?php echo BASE_URL; ?>/logout">👩‍👩‍👧‍👧 Logout</a>
