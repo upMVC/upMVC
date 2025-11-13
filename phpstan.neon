@@ -1,10 +1,10 @@
 parameters:
     level: 5
     paths:
-        - etc
-        - common
-        - modules
-        - tools
+        - src/Etc
+        - src/Common
+        - src/Modules
+        - src/Tools
     excludePaths:
         - vendor
         - logs

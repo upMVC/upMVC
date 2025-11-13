@@ -13,304 +13,40 @@ class ComposerStaticInit49502ca6970de9d65a6295b99bbb2d5b
     );
 
     public static $prefixLengthsPsr4 = array (
-        'u' => 
-        array (
-            'upMVC\\Middleware\\' => 17,
-            'upMVC\\Helpers\\' => 14,
-            'upMVC\\Exceptions\\' => 17,
-            'upMVC\\Events\\' => 13,
-            'upMVC\\Container\\' => 16,
-            'upMVC\\Config\\' => 13,
-            'upMVC\\Cache\\' => 12,
-            'upMVC\\' => 6,
-        ),
-        'U' => 
-        array (
-            'Userorm\\Routes\\' => 15,
-            'Userorm\\' => 8,
-            'User\\Routes\\' => 12,
-            'User\\' => 5,
-        ),
-        'T' => 
-        array (
-            'Tools\\ModuleGenerator\\' => 22,
-            'Tools\\ModuleGeneratorEnhanced\\' => 30,
-            'Testitems\\Routes\\' => 17,
-            'Testitems\\' => 10,
-            'Test\\Routes\\' => 12,
-            'Test\\' => 5,
-        ),
-        'S' => 
-        array (
-            'Suba\\Routes\\' => 12,
-            'Suba\\' => 5,
-        ),
         'R' => 
         array (
             'RedBeanPHP\\' => 11,
-            'Reactnb\\Routes\\' => 15,
-            'Reactnb\\' => 8,
-            'Reacthmr\\Routes\\' => 16,
-            'Reacthmr\\' => 9,
-            'Reactcrud\\Routes\\' => 17,
-            'Reactcrud\\' => 10,
-            'Reactb\\Routes\\' => 14,
-            'Reactb\\' => 7,
-            'React\\Routes\\' => 13,
-            'React\\Component\\' => 16,
-            'React\\' => 6,
         ),
         'P' => 
         array (
             'PhpParser\\' => 10,
-            'PHPMailer\\PHPMailer\\' => 20,
-        ),
-        'N' => 
-        array (
-            'Newmod\\Routes\\' => 14,
-            'Newmod\\' => 7,
-        ),
-        'M' => 
-        array (
-            'Moda\\Routes\\' => 12,
-            'Moda\\' => 5,
-            'Mail\\' => 5,
-        ),
-        'E' => 
-        array (
-            'Enhanced\\Routes\\' => 16,
-            'Enhanced\\' => 9,
         ),
         'D' => 
         array (
             'DeepCopy\\' => 9,
-            'Dashboardexample\\Routes\\' => 24,
-            'Dashboardexample\\' => 17,
-            'Dashboard\\Routes\\' => 17,
-            'Dashboard\\' => 10,
-        ),
-        'C' => 
-        array (
-            'Common\\Bmvc\\' => 12,
-            'Common\\Assets\\' => 14,
         ),
         'A' => 
         array (
-            'Auth\\Routes\\' => 12,
-            'Auth\\' => 5,
-            'Admin\\Routes\\' => 13,
-            'Admin\\' => 6,
+            'App\\' => 4,
         ),
     );
 
     public static $prefixDirsPsr4 = array (
-        'upMVC\\Middleware\\' => 
-        array (
-            0 => __DIR__ . '/../..' . '/etc/Middleware',
-        ),
-        'upMVC\\Helpers\\' => 
-        array (
-            0 => __DIR__ . '/../..' . '/etc/Helpers',
-        ),
-        'upMVC\\Exceptions\\' => 
-        array (
-            0 => __DIR__ . '/../..' . '/etc/Exceptions',
-        ),
-        'upMVC\\Events\\' => 
-        array (
-            0 => __DIR__ . '/../..' . '/etc/Events',
-        ),
-        'upMVC\\Container\\' => 
-        array (
-            0 => __DIR__ . '/../..' . '/etc/Container',
-        ),
-        'upMVC\\Config\\' => 
-        array (
-            0 => __DIR__ . '/../..' . '/etc/Config',
-        ),
-        'upMVC\\Cache\\' => 
-        array (
-            0 => __DIR__ . '/../..' . '/etc/Cache',
-        ),
-        'upMVC\\' => 
-        array (
-            0 => __DIR__ . '/../..' . '/etc',
-        ),
-        'Userorm\\Routes\\' => 
-        array (
-            0 => __DIR__ . '/../..' . '/modules/userorm/routes',
-        ),
-        'Userorm\\' => 
-        array (
-            0 => __DIR__ . '/../..' . '/modules/userorm',
-        ),
-        'User\\Routes\\' => 
-        array (
-            0 => __DIR__ . '/../..' . '/modules/user/routes',
-        ),
-        'User\\' => 
-        array (
-            0 => __DIR__ . '/../..' . '/modules/user',
-        ),
-        'Tools\\ModuleGenerator\\' => 
-        array (
-            0 => __DIR__ . '/../..' . '/tools/modulegenerator',
-        ),
-        'Tools\\ModuleGeneratorEnhanced\\' => 
-        array (
-            0 => __DIR__ . '/../..' . '/tools/modulegenerator-enhanced',
-        ),
-        'Testitems\\Routes\\' => 
-        array (
-            0 => __DIR__ . '/../..' . '/modules/testitems/routes',
-        ),
-        'Testitems\\' => 
-        array (
-            0 => __DIR__ . '/../..' . '/modules/testitems',
-        ),
-        'Test\\Routes\\' => 
-        array (
-            0 => __DIR__ . '/../..' . '/modules/test/routes',
-        ),
-        'Test\\' => 
-        array (
-            0 => __DIR__ . '/../..' . '/modules/test',
-        ),
-        'Suba\\Routes\\' => 
-        array (
-            0 => __DIR__ . '/../..' . '/modules/moda/modules/suba/routes',
-        ),
-        'Suba\\' => 
-        array (
-            0 => __DIR__ . '/../..' . '/modules/moda/modules/suba',
-        ),
         'RedBeanPHP\\' => 
         array (
             0 => __DIR__ . '/..' . '/gabordemooij/redbean/RedBeanPHP',
-        ),
-        'Reactnb\\Routes\\' => 
-        array (
-            0 => __DIR__ . '/../..' . '/modules/reactnb/routes',
-        ),
-        'Reactnb\\' => 
-        array (
-            0 => __DIR__ . '/../..' . '/modules/reactnb',
-        ),
-        'Reacthmr\\Routes\\' => 
-        array (
-            0 => __DIR__ . '/../..' . '/modules/reacthmr/routes',
-        ),
-        'Reacthmr\\' => 
-        array (
-            0 => __DIR__ . '/../..' . '/modules/reacthmr',
-        ),
-        'Reactcrud\\Routes\\' => 
-        array (
-            0 => __DIR__ . '/../..' . '/modules/reactcrud/routes',
-        ),
-        'Reactcrud\\' => 
-        array (
-            0 => __DIR__ . '/../..' . '/modules/reactcrud',
-        ),
-        'Reactb\\Routes\\' => 
-        array (
-            0 => __DIR__ . '/../..' . '/modules/reactb/routes',
-        ),
-        'Reactb\\' => 
-        array (
-            0 => __DIR__ . '/../..' . '/modules/reactb',
-        ),
-        'React\\Routes\\' => 
-        array (
-            0 => __DIR__ . '/../..' . '/modules/react/routes',
-        ),
-        'React\\Component\\' => 
-        array (
-            0 => __DIR__ . '/../..' . '/modules/react/etc',
-        ),
-        'React\\' => 
-        array (
-            0 => __DIR__ . '/../..' . '/modules/react',
         ),
         'PhpParser\\' => 
         array (
             0 => __DIR__ . '/..' . '/nikic/php-parser/lib/PhpParser',
         ),
-        'PHPMailer\\PHPMailer\\' => 
-        array (
-            0 => __DIR__ . '/../..' . '/modules/mail/phpmailer',
-        ),
-        'Newmod\\Routes\\' => 
-        array (
-            0 => __DIR__ . '/../..' . '/modules/newmod/routes',
-        ),
-        'Newmod\\' => 
-        array (
-            0 => __DIR__ . '/../..' . '/modules/newmod',
-        ),
-        'Moda\\Routes\\' => 
-        array (
-            0 => __DIR__ . '/../..' . '/modules/moda/routes',
-        ),
-        'Moda\\' => 
-        array (
-            0 => __DIR__ . '/../..' . '/modules/moda',
-        ),
-        'Mail\\' => 
-        array (
-            0 => __DIR__ . '/../..' . '/modules/mail',
-        ),
-        'Enhanced\\Routes\\' => 
-        array (
-            0 => __DIR__ . '/../..' . '/modules/enhanced/routes',
-        ),
-        'Enhanced\\' => 
-        array (
-            0 => __DIR__ . '/../..' . '/modules/enhanced',
-        ),
         'DeepCopy\\' => 
         array (
             0 => __DIR__ . '/..' . '/myclabs/deep-copy/src/DeepCopy',
         ),
-        'Dashboardexample\\Routes\\' => 
+        'App\\' => 
         array (
-            0 => __DIR__ . '/../..' . '/modules/dashboardexample/routes',
-        ),
-        'Dashboardexample\\' => 
-        array (
-            0 => __DIR__ . '/../..' . '/modules/dashboardexample',
-        ),
-        'Dashboard\\Routes\\' => 
-        array (
-            0 => __DIR__ . '/../..' . '/modules/dashboard/routes',
-        ),
-        'Dashboard\\' => 
-        array (
-            0 => __DIR__ . '/../..' . '/modules/dashboard',
-        ),
-        'Common\\Bmvc\\' => 
-        array (
-            0 => __DIR__ . '/../..' . '/common/bmvc',
-        ),
-        'Common\\Assets\\' => 
-        array (
-            0 => __DIR__ . '/../..' . '/common/assets',
-        ),
-        'Auth\\Routes\\' => 
-        array (
-            0 => __DIR__ . '/../..' . '/modules/auth/routes',
-        ),
-        'Auth\\' => 
-        array (
-            0 => __DIR__ . '/../..' . '/modules/auth',
-        ),
-        'Admin\\Routes\\' => 
-        array (
-            0 => __DIR__ . '/../..' . '/modules/admin/routes',
-        ),
-        'Admin\\' => 
-        array (
-            0 => __DIR__ . '/../..' . '/modules/admin',
+            0 => __DIR__ . '/../..' . '/src',
         ),
     );
 
