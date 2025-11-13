@@ -1,0 +1,15 @@
+parameters:
+    level: 5
+    paths:
+        - etc
+        - common
+        - modules
+        - tools
+    excludePaths:
+        - vendor
+        - logs
+        - zbug
+    ignoreErrors:
+        # Add specific errors to ignore if needed
+    bootstrapFiles:
+        - vendor/autoload.php
