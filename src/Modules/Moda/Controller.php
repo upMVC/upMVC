@@ -49,7 +49,7 @@ class Controller extends BaseController
             new Model('Jane Doe', 'jane@example.com')
         ];
 
-          $this->render('moda/View', ['users' => $users]);
+          $this->render('Moda/View', ['users' => $users]);
             echo $reqMet . " " .  $reqRoute . " ";
 /*
         if (isset($_SESSION["logged"])) {

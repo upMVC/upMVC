@@ -28,7 +28,7 @@
 
 namespace App\Modules\Newmod\Routes;
 
-use App\Modules\newmod\Controller;
+use App\Modules\Newmod\Controller;
 
 
 /**
