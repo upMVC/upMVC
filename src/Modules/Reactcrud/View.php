@@ -58,6 +58,11 @@ class View extends BaseView
             <link href="<?php echo \BASE_URL; ?>/crud/css" rel="stylesheet">
             <link href="<?php echo \BASE_URL; ?>/crud/cssb" rel="stylesheet">
 
+            <script>
+                // Set API URL dynamically BEFORE React loads
+                window.__API_URL__ = "<?php echo \BASE_URL; ?>/apiUsers";
+            </script>
+
             <?php $this->menu() ?>
 
         </head>
