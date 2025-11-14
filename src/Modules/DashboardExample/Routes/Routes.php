@@ -2,7 +2,7 @@
 
 namespace App\Modules\DashboardExample\Routes;
 
-use App\Modules\dashboardexample\Controller;
+use App\Modules\DashboardExample\Controller;
 
 class Routes
 {

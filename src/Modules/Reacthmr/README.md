@@ -26,7 +26,7 @@ http://localhost/reacthmr
 
 ### 2. Open File in Editor
 ```
-modules/reacthmr/View.php
+Modules/Reacthmr/View.php
 ```
 
 ### 3. Make a Change
@@ -158,10 +158,10 @@ private function hmrStream()
 **Watched Paths:**
 ```php
 private $watchPaths = [
-    'modules/reacthmr/templates/',
-    'modules/reacthmr/components/',
-    'modules/reacthmr/View.php',
-    'modules/reacthmr/Controller.php'
+    'Modules/Reacthmr/templates/',
+    'Modules/Reacthmr/components/',
+    'Modules/Reacthmr/View.php',
+    'Modules/Reacthmr/Controller.php'
 ];
 ```
 
@@ -286,7 +286,7 @@ setTimeout(() => location.reload(), 0);
 **Watch Specific Files Only:**
 ```php
 private $watchPaths = [
-    'modules/reacthmr/View.php' // Only watch View
+    'Modules/Reacthmr/View.php' // Only watch View
 ];
 ```
 
@@ -300,7 +300,7 @@ Edit `Controller.php`:
 
 ```php
 private $watchPaths = [
-    'modules/reacthmr/',           // Entire module
+    'Modules/Reacthmr/',           // Entire module
     'common/Assets/',              // Common assets
     'etc/Config.php',              // Config file
     'modules/mymodule/View.php'    // Specific file
@@ -453,7 +453,7 @@ sleep(0.5); // Instead of sleep(1)
 **Watch fewer files:**
 ```php
 private $watchPaths = [
-    'modules/reacthmr/View.php' // Only this file
+    'Modules/Reacthmr/View.php' // Only this file
 ];
 ```
 
@@ -478,7 +478,7 @@ flush();
 
 ```php
 private $watchPaths = [
-    'modules/reacthmr/',
+    'Modules/Reacthmr/',
     'modules/reactnb/',      // Watch another module
     'modules/mymodule/'      // Watch your module
 ];
@@ -583,7 +583,7 @@ Watch configuration files:
 
 ```php
 private $watchPaths = [
-    'modules/reacthmr/',
+    'Modules/Reacthmr/',
     'etc/Config.php',  // Config changes trigger reload
 ];
 ```

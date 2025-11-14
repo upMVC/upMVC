@@ -3,6 +3,9 @@
 # Debug and testing files
 zbug/
 /zbug/
+tests/
+/tests/
+.phpunit.cache/
 
 # Logs
 logs/

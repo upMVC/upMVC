@@ -93,7 +93,7 @@ class View
             <div class="instructions">
                 <h2>🚀 Try It Yourself</h2>
                 <ol>
-                    <li>Open <code>modules/reacthmr/View.php</code> in your editor</li>
+                    <li>Open <code>Modules/Reacthmr/View.php</code> in your editor</li>
                     <li>Change some text or component code below</li>
                     <li>Save the file now</li>
                     <li>Watch this page auto-reload! ✨</li>
@@ -102,10 +102,10 @@ class View
                 <div class="code-block">
                     <strong>Watched Files:</strong>
                     <ul>
-                        <li>modules/reacthmr/View.php</li>
-                        <li>modules/reacthmr/Controller.php</li>
-                        <li>modules/reacthmr/components/*.js</li>
-                        <li>modules/reacthmr/templates/*.html</li>
+                        <li>Modules/Reacthmr/View.php</li>
+                        <li>Modules/Reacthmr/Controller.php</li>
+                        <li>Modules/Reacthmr/components/*.js</li>
+                        <li>Modules/Reacthmr/templates/*.html</li>
                     </ul>
                 </div>
             </div>

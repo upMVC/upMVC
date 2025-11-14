@@ -65,8 +65,8 @@ class ConfigDatabase
     private static $config = [
         'db' => [
             'host' => '127.0.0.1',    // Database server (FALLBACK - .env preferred)
-            'name' => 'testa',        // Database name (FALLBACK - altered for testing)
-            'user' => 'roota',        // Database username (FALLBACK - altered for testing)
+            'name' => 'test',        // Database name (FALLBACK - altered for testing)
+            'user' => 'root',        // Database username (FALLBACK - altered for testing)
             'pass' => '',             // Database password (FALLBACK)
         ],
     ];

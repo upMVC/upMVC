@@ -44,8 +44,8 @@ class Config
      * @var array
      */
     private static $fallbacks = [
-        'site_path' => '/upMVC',
-        'domain_name' => 'http://localhost/',
+        'site_path' => '/upMVC/public',
+        'domain_name' => 'http://localhost',
     ];
     
     /**
