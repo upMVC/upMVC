@@ -1,9 +1,9 @@
 <?php
-/**
-   Created on Tue Oct 31 2023
+/*
+ *   Created on Tue Oct 31 2023
  
-   Copyright (c) 2023 BitsHost
-   All rights reserved.
+ *   Copyright (c) 2023 BitsHost
+ *   All rights reserved.
 
  *   Permission is hereby granted, free of charge, to any person obtaining a copy
  *   of this software and associated documentation files (the "Software"), to deal
@@ -23,30 +23,35 @@
  *   OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  *   SOFTWARE.
  *   Here you may host your app for free:
-     https://bitshost.biz/
+ *   https://bitshost.biz/
  */
 
-namespace App\Modules\newmod\Routes;
+namespace App\Modules\Moda\Modules\Suba;
 
-use App\Modules\newmod\Controller;
+use App\Common\Bmvc\BaseController;
+use App\Modules\Moda\Modules\Suba\Model;
+use App\Modules\Moda\Modules\Suba\View;
 
-
-/**
- * ModaRoutes
- */
-class Routes
+class Controller extends BaseController
 {
-
-
-    /**
-     * Routes
-     *
-     * @param  mixed $router
-     * @return void
-     */
-    public function routes($router)
+    public function display($reqRoute, $reqMet)
     {
-        $router->addRoute('/new', Controller::class, 'display');
+        $users = [
+            new Model('John Doe', 'john@example.com'),
+            new Model('Jane Doe', 'jane@example.com')
+        ];
+
+
+
+       
+        if (isset($_SESSION["logged"])) {
+            $this->render('Moda/Modules/Suba/View', ['users' => $users]);
+            echo $reqMet . " " .  $reqRoute . " ";
+        } else {
+            echo " Not Logged In! Something else.";
+            header('Location: ' . BASE_URL . '/');
+        }
+   
     }
 }
 

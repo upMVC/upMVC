@@ -35,7 +35,7 @@
  *	Manage elements of the the table users.
  */
 
-namespace App\Modules\newmod;
+namespace App\Modules\Newmod;
 
 use App\Etc\Database;
 use PDO;

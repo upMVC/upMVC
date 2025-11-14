@@ -253,7 +253,7 @@ class ModuleGenerator
 
         try {
             // Get database configuration
-            require_once __DIR__ . '/../../etc/ConfigDatabase.php';
+            require_once __DIR__ . '/../../Etc/ConfigDatabase.php';
             
             $host = \upMVC\ConfigDatabase::get('db.host', '127.0.0.1');
             $dbname = \upMVC\ConfigDatabase::get('db.name', 'test');

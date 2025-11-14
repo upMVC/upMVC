@@ -61,7 +61,7 @@ class Controller
     }
     private function comp($reqMet)
     {
-        require_once THIS_DIR . "/modules/react/etc/component.js";
+        require_once THIS_DIR . "/Modules/React/etc/component.js";
         //$newComponent = new Component();
         //$newComponent->componentOne();
     }

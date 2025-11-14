@@ -30,7 +30,7 @@
      https://bitshost.biz/
  */
 
-namespace App\Modules\newmod;
+namespace App\Modules\Newmod;
 
 //use App\Modules\newmod\Model
 //use App\Modules\newmod\View

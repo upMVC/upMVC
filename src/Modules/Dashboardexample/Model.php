@@ -1,5 +1,5 @@
 <?php
-namespace App\Modules\dashboardexample;
+namespace App\Modules\DashboardExample;
 
 use App\Common\Bmvc\BaseModel;
 use App\Etc\Database;

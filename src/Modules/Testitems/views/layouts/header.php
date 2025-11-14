@@ -10,7 +10,7 @@
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Enhanced Module CSS -->
-    <link rel="stylesheet" href="<?php echo BASE_URL ?? ''; ?>/modules/TestItems/assets/css/style.css">
+    <link rel="stylesheet" href="<?php echo BASE_URL ?? ''; ?>/Modules/TestItems/assets/css/style.css">
     
     <?php if ($debug_mode ?? false): ?>
     <!-- Debug Mode Indicator -->

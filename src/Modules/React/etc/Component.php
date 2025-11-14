@@ -33,7 +33,7 @@ class Component
     public function componentOne()
     {
 
-        require_once(THIS_DIR."/modules/react/etc/component.js");
+        require_once(THIS_DIR."/Modules/React/etc/component.js");
        /*echo "'use strict';
 
             const e = React.createElement;

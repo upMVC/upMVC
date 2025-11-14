@@ -5,7 +5,7 @@
  *   Enhanced Module Example - Demonstrates new upMVC features
  */
 
-namespace App\Modules\enhanced;
+namespace App\Modules\Enhanced;
 
 use App\Common\Bmvc\BaseController;
 use App\Etc\Cache\CacheManager;

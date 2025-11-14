@@ -10,9 +10,9 @@
  * - Configurable via .env settings
  * 
  * Module Discovery Patterns:
- * - Primary: modules/STAR/routes/Routes.php
- * - Submodules: modules/STAR/modules/STAR/routes/Routes.php
- * - Deep: modules/STAR/modules/STAR/modules/STAR/routes/Routes.php
+ * - Primary: Modules/STAR/Routes/Routes.php
+ * - Submodules: Modules/STAR/Modules/STAR/Routes/Routes.php
+ * - Deep: Modules/STAR/Modules/STAR/Modules/STAR/Routes/Routes.php
  * 
  * Configuration (.env):
  * - ROUTE_ERROR_HANDLING: Enable/disable error handling (default: true)
@@ -260,8 +260,8 @@ class InitModsImproved
      * Discover all modules in the modules directory
      * 
      * Scans filesystem for module route files in hierarchical structure:
-     * - Primary modules (modules/name/routes/Routes.php)
-     * - Submodules (modules/parent/modules/child/routes/Routes.php)
+     * - Primary modules (Modules/name/Routes/Routes.php)
+     * - Submodules (Modules/parent/Modules/child/Routes/Routes.php)
      * - Deep modules (3+ levels deep)
      * 
      * @return array Array of module data structures
@@ -271,7 +271,7 @@ class InitModsImproved
         $moduleData = [];
         
         // Discover primary modules
-        $primaryModules = glob($this->modulesPath . '/*/routes/Routes.php');
+        $primaryModules = glob($this->modulesPath . '/*/Routes/Routes.php');
         foreach ($primaryModules as $routeFile) {
             $moduleData[] = $this->createModuleData($routeFile, 'primary');
         }
@@ -282,12 +282,12 @@ class InitModsImproved
         
         // Discover submodules (if enabled)
         if ($this->enableSubmoduleDiscovery) {
-            $subModules = glob($this->modulesPath . '/*/Modules/*/routes/Routes.php');
+            $subModules = glob($this->modulesPath . '/*/Modules/*/Routes/Routes.php');
             foreach ($subModules as $routeFile) {
                 $moduleData[] = $this->createModuleData($routeFile, 'sub');
             }
             
-            $deepSubModules = glob($this->modulesPath . '/*/Modules/*/Modules/*/routes/Routes.php');
+            $deepSubModules = glob($this->modulesPath . '/*/Modules/*/Modules/*/Routes/Routes.php');
             foreach ($deepSubModules as $routeFile) {
                 $moduleData[] = $this->createModuleData($routeFile, 'deep');
             }
@@ -323,13 +323,13 @@ class InitModsImproved
         // Build class name based on module type
         switch ($type) {
             case 'primary':
-                // Example: modules/admin/routes/Routes.php -> App\Modules\Admin\Routes\Routes
+                // Example: Modules/Admin/Routes/Routes.php -> App\Modules\Admin\Routes\Routes
                 $moduleName = basename(dirname(dirname($routeFile)));
                 $className = 'App\\Modules\\' . ucfirst($moduleName) . '\\Routes\\Routes';
                 break;
                 
             case 'sub':
-                // Example: modules/moda/modules/suba/routes/Routes.php -> App\Modules\Moda\Modules\Suba\Routes\Routes
+                // Example: Modules/Moda/Modules/Suba/Routes/Routes.php -> App\Modules\Moda\Modules\Suba\Routes\Routes
                 $parts = explode('/', $relativePath);
                 $subModuleName = end($parts);
                 $parentName = $parts[0] ?? '';
@@ -337,7 +337,7 @@ class InitModsImproved
                 break;
                 
             case 'deep':
-                // Example: modules/parent/modules/child/modules/grandchild/routes/Routes.php
+                // Example: Modules/Parent/Modules/Child/Modules/Grandchild/Routes/Routes.php
                 $parts = explode('/', $relativePath);
                 $deepModuleName = end($parts);
                 // Build full namespace path

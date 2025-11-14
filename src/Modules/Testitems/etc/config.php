@@ -24,7 +24,7 @@ return [
     'routes' => [
         'base_route' => 'testitemss',
         'namespace' => 'TestItems\\Routes',
-        'auto_discovery_path' => 'routes/Routes.php'
+        'auto_discovery_path' => 'Routes/Routes.php'
     ],
     
     'database' => [

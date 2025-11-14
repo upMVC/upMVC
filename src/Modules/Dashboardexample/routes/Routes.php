@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\dashboardexample\Routes;
+namespace App\Modules\DashboardExample\Routes;
 
 use App\Modules\dashboardexample\Controller;
 

@@ -5,7 +5,7 @@
  *   Enhanced Module Example - View
  */
 
-namespace App\Modules\enhanced;
+namespace App\Modules\Enhanced;
 
 use App\Common\Bmvc\BaseView;
 

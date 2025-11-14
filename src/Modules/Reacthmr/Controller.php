@@ -21,10 +21,10 @@ use App\Modules\Reacthmr\Model;
 class Controller 
 {
     private $watchPaths = [
-        'modules/reacthmr/templates/',
-        'modules/reacthmr/components/',
-        'modules/reacthmr/View.php',
-        'modules/reacthmr/Controller.php'
+        'Modules/Reacthmr/templates/',
+        'Modules/Reacthmr/components/',
+        'Modules/Reacthmr/View.php',
+        'Modules/Reacthmr/Controller.php'
     ];
 
     public function display($reqRoute, $reqMet)
@@ -221,7 +221,7 @@ class Controller
         $file = basename($file);
         
         // Read component file
-        $componentPath = THIS_DIR . '/modules/reacthmr/components/' . $file;
+        $componentPath = THIS_DIR . '/Modules/Reacthmr/components/' . $file;
         
         if (file_exists($componentPath)) {
             readfile($componentPath);

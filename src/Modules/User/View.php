@@ -41,10 +41,10 @@ class View
         $this->title = "Create Users";
         $view->startHead($this->title);
         echo "<style>";
-        require THIS_DIR . "/modules/user/etc/styles.css";
+        require THIS_DIR . "/Modules/User/etc/styles.css";
         echo "</style>";
         echo "<script>";
-        include THIS_DIR . "/modules/user/etc/script.js";
+        include THIS_DIR . "/Modules/User/etc/script.js";
         echo "</script>";
         $view->endHead();
         $view->startBody($this->title);
@@ -74,10 +74,10 @@ class View
         $this->title = "Read Users";
         $view->startHead($this->title);
         echo "<style>";
-        require THIS_DIR . "/modules/user/etc/styles.css";
+        require THIS_DIR . "/Modules/User/etc/styles.css";
         echo "</style>";
         echo "<script>";
-        include THIS_DIR . "/modules/user/etc/script.js";
+        include THIS_DIR . "/Modules/User/etc/script.js";
         echo "</script>";
         $view->endHead();
         $view->startBody($this->title);
@@ -134,10 +134,10 @@ class View
         $this->title = "Update Users";
         $view->startHead($this->title);
         echo "<style>";
-        require THIS_DIR . "/modules/user/etc/styles.css";
+        require THIS_DIR . "/Modules/User/etc/styles.css";
         echo "</style>";
         echo "<script>";
-        include THIS_DIR . "/modules/user/etc/script.js";
+        include THIS_DIR . "/Modules/User/etc/script.js";
         echo "</script>";
         $view->endHead();
         $view->startBody($this->title);
