@@ -862,6 +862,7 @@ class Model extends BaseModel
 
     public function __construct()
     {
+        parent::__construct(); // Initialize database connection
         // Enhanced: Respect environment caching settings
         \$this->enableCaching = \\App\\Etc\\Config\\Environment::get('ROUTE_USE_CACHE', 'true') === 'true';
     }
@@ -923,6 +924,7 @@ class Model extends BaseModel
 
     public function __construct()
     {
+        parent::__construct(); // Initialize database connection
         \$this->enableCaching = \\App\\Etc\\Config\\Environment::get('ROUTE_USE_CACHE', 'true') === 'true';
     }
 
@@ -1121,6 +1123,7 @@ class Model extends BaseModel
 
     public function __construct()
     {
+        parent::__construct(); // Initialize database connection
         \$this->enableCaching = \\App\\Etc\\Config\\Environment::get('ROUTE_USE_CACHE', 'true') === 'true';
     }
 

@@ -41,6 +41,7 @@ class Model extends BaseModel
 
     public function __construct()
     {
+        parent::__construct(); // Initialize database connection
         $this->enableCaching = \App\Etc\Config\Environment::get('ROUTE_USE_CACHE', 'true') === 'true';
     }
 
