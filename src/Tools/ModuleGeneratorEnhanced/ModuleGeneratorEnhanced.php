@@ -39,7 +39,7 @@ class ModuleGeneratorEnhanced
         }
         
         // Load environment for enhanced features
-        if (class_exists('upMVC\\Config\\Environment')) {
+        if (class_exists('App\\Etc\\Config\\Environment')) {
             try {
                 Environment::load();
             } catch (Exception $e) {
@@ -106,7 +106,7 @@ class ModuleGeneratorEnhanced
         }
 
         // Check environment configuration (if available)
-        if ($this->useEnhancedFeatures && class_exists('upMVC\\Config\\Environment')) {
+        if ($this->useEnhancedFeatures && class_exists('App\\Etc\\Config\\Environment')) {
             try {
                 $submoduleDiscovery = Environment::get('ROUTE_SUBMODULE_DISCOVERY', 'true');
                 if ($this->config['type'] === 'submodule' && !filter_var($submoduleDiscovery, FILTER_VALIDATE_BOOLEAN)) {
@@ -344,7 +344,6 @@ class Controller extends BaseController
 
     public function __construct()
     {
-        parent::__construct();
         \$this->model = new Model();
         \$this->view = new View();
         
@@ -386,7 +385,7 @@ class Controller extends BaseController
             'content' => 'This module was generated with the enhanced upMVC module generator.',
             'tech_info' => [
                 'auto_discovery' => 'Enabled via InitModsImproved.php',
-                'environment' => \\upMVC\\Config\\Environment::current(),
+                'environment' => \\App\\Etc\\Config\\Environment::current(),
                 'caching' => \$this->isCachingEnabled() ? 'Enabled' : 'Disabled',
                 'generated_at' => date('Y-m-d H:i:s')
             ]
@@ -427,7 +426,7 @@ class Controller extends BaseController
      */
     private function isCachingEnabled(): bool
     {
-        return \\upMVC\\Config\\Environment::get('ROUTE_USE_CACHE', 'true') === 'true';
+        return \\App\\Etc\\Config\\Environment::get('ROUTE_USE_CACHE', 'true') === 'true';
     }
 }
 PHP;
@@ -500,7 +499,7 @@ class Routes
 {$routesString}
         
         // Enhanced: Environment-specific routes
-        if (\\upMVC\\Config\\Environment::isDevelopment()) {
+        if (\\App\\Etc\\Config\\Environment::isDevelopment()) {
             \$router->addRoute('/{$this->config['route_name']}/debug', Controller::class, 'debug');
         }
     }
@@ -597,10 +596,8 @@ class Model extends BaseModel
 
     public function __construct()
     {
-        parent::__construct();
-        
         // Enhanced: Respect environment caching settings
-        \$this->enableCaching = \\upMVC\\Config\\Environment::get('ROUTE_USE_CACHE', 'true') === 'true';
+        \$this->enableCaching = \\App\\Etc\\Config\\Environment::get('ROUTE_USE_CACHE', 'true') === 'true';
     }
 
     /**
@@ -677,8 +674,8 @@ class View extends BaseView
     public function render(string \$template, array \$data = []): void
     {
         // Enhanced: Add environment data
-        \$data['app_env'] = \\upMVC\\Config\\Environment::current();
-        \$data['debug_mode'] = \\upMVC\\Config\\Environment::isDevelopment();
+        \$data['app_env'] = \\App\\Etc\\Config\\Environment::current();
+        \$data['debug_mode'] = \\App\\Etc\\Config\\Environment::isDevelopment();
         \$data['module_name'] = '{$this->namespace}';
         
         // Extract data for template
@@ -1665,6 +1662,7 @@ MD;
         echo "📄 Generated: " . str_replace(__DIR__ . '/../../', '', $filePath) . "\n";
     }
 }
+
 
 
 

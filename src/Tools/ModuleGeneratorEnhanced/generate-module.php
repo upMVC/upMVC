@@ -11,7 +11,7 @@
  * Usage: php generate-module.php
  */
 
-require_once __DIR__ . '/../../vendor/autoload.php';
+require_once __DIR__ . '/../../../vendor/autoload.php';
 
 use App\Tools\ModuleGeneratorEnhanced\ModuleGeneratorEnhanced;
 
