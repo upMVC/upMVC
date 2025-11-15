@@ -161,20 +161,20 @@ if(in_array($_GET['orderBy'], $fieldsNames)){
 				}
 				// Continue to list
 
-				//-----------------------------------------------------------------------------------------
-				// List
-				//-----------------------------------------------------------------------------------------
-			case 'edit-list':
-				// Display items list for edition
+			//-----------------------------------------------------------------------------------------
+			// List
+			//-----------------------------------------------------------------------------------------
+		case 'edit-list':
+			// Display items list for edition
+			$message = [];
+			$nbItems = 0;
 
-				try {
-					$nbItems = $dataUsers->getList(($page * ITEMS_PER_PAGE) - ITEMS_PER_PAGE, ITEMS_PER_PAGE, $orderBy, $order);
-				} catch (Exception $e) {
-					$message['type'] = 'danger';
-					$message['text'] = 'Error retrieving data';
-				}
-
-				$revertOrder = 'ASC';
+			try {
+				$nbItems = $dataUsers->getList(($page * ITEMS_PER_PAGE) - ITEMS_PER_PAGE, ITEMS_PER_PAGE, $orderBy, $order);
+			} catch (Exception $e) {
+				$message['type'] = 'danger';
+				$message['text'] = 'Error retrieving data';
+			}				$revertOrder = 'ASC';
 				if ($order == 'ASC') {
 					$revertOrder = 'DESC';
 				}
@@ -185,39 +185,40 @@ if(in_array($_GET['orderBy'], $fieldsNames)){
 				break;
 
 
-				//-----------------------------------------------------------------------------------------
-				// Display details
-				//-----------------------------------------------------------------------------------------
-			case 'view':
-				// Display selected trainings
-				try {
-					$dataUsers->get();
-				} catch (Exception $e) {
-					$message['type'] = 'danger';
-					$message['text'] = 'Error retrieving data';
-				}
-				$HTMLUsers->displayDetails($dataUsers, $message);
-				break;
-
-				//-----------------------------------------------------------------------------------------
+			//-----------------------------------------------------------------------------------------
+			// Display details
+			//-----------------------------------------------------------------------------------------
+		case 'view':
+			// Display selected trainings
+			$message = [];
+			
+			try {
+				$dataUsers->get();
+			} catch (Exception $e) {
+				$message['type'] = 'danger';
+				$message['text'] = 'Error retrieving data';
+			}
+			$HTMLUsers->displayDetails($dataUsers, $message);
+			break;				//-----------------------------------------------------------------------------------------
 				// Display List
-				//-----------------------------------------------------------------------------------------
-			default:
-				// Display items list
-				try {
-					$nbItems = $dataUsers->getList(($page * ITEMS_PER_PAGE) - ITEMS_PER_PAGE, ITEMS_PER_PAGE, $orderBy, $order);
-				} catch (Exception $e) {
-					$message['type'] = 'danger';
-					$message['text'] = 'Error retrieving data';
-				}
+		//-----------------------------------------------------------------------------------------
+		default:
+			// Display items list
+			$message = [];
+			$nbItems = 0;
+			
+			try {
+				$nbItems = $dataUsers->getList(($page * ITEMS_PER_PAGE) - ITEMS_PER_PAGE, ITEMS_PER_PAGE, $orderBy, $order);
+			} catch (Exception $e) {
+				$message['type'] = 'danger';
+				$message['text'] = 'Error retrieving data';
+			}
 
-				$revertOrder = 'ASC';
-				if ($order == 'ASC') {
-					$revertOrder = 'DESC';
-				}
-				$HTMLUsers->displayList($dataUsers->list, '?option=users&', $fieldsNames[$orderBy - 1], $revertOrder, $message);
-
-				$nbPages = ceil($nbItems / ITEMS_PER_PAGE);
+			$revertOrder = 'ASC';
+			if ($order == 'ASC') {
+				$revertOrder = 'DESC';
+			}
+			$HTMLUsers->displayList($dataUsers->list, '?option=users&', $fieldsNames[$orderBy - 1], $revertOrder, $message);				$nbPages = ceil($nbItems / ITEMS_PER_PAGE);
 				$HTMLUsers->pagination($nbPages, $page, "?option=users&");
 				break;
 		}

@@ -11,13 +11,11 @@ use App\Common\Bmvc\BaseController;
  */
 class Controller extends BaseController
 {
-    private $model;
     private $view;
 
     public function __construct()
     {
         parent::__construct();
-        $this->model = new Model();
         $this->view = new View();
         
                 // Enhanced: Middleware integration ready

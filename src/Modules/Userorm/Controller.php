@@ -99,7 +99,8 @@ class Controller extends BaseControllerOrm
     {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             $array = \explode('/', trim($reqRoute, '/'));
-            return $this->redirect($array[0], $reqMet);
+            $this->redirect($array[0], $reqMet);
+            return;
         }
 
         $userData = [
@@ -117,7 +118,7 @@ class Controller extends BaseControllerOrm
             $_SESSION['error'] = 'Error creating user';
         }
         $array = \explode('/', trim($reqRoute, '/'));
-        return $this->redirect($array[0], $reqMet);
+        $this->redirect($array[0], $reqMet);
     }
 
     /**
@@ -135,7 +136,8 @@ class Controller extends BaseControllerOrm
         if (!$user) {
             $_SESSION['error'] = 'User not found';
             $array = \explode('/', trim($reqRoute, '/'));
-            return $this->redirect($array[0], $reqMet);
+            $this->redirect($array[0], $reqMet);
+            return;
         }
 
         return $this->view($this->viewPath . 'edit', ['user' => $user]);
@@ -147,7 +149,8 @@ class Controller extends BaseControllerOrm
     private function update($reqRoute, $reqMet)
     {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            return $this->redirect($reqRoute, $reqMet);
+            $this->redirect($reqRoute, $reqMet);
+            return;
         }
         $id = $_GET['param'];
         $userData = [
@@ -168,7 +171,7 @@ class Controller extends BaseControllerOrm
             $_SESSION['error'] = 'Error updating user';
         }
         $array = \explode('/', trim($reqRoute, '/'));
-        return $this->redirect($array[0], $reqMet);
+        $this->redirect($array[0], $reqMet);
     }
 
     /**
@@ -186,7 +189,7 @@ class Controller extends BaseControllerOrm
         }
 
         $array = \explode('/', trim($reqRoute, '/'));
-        return $this->redirect($array[0], $reqMet);
+        $this->redirect($array[0], $reqMet);
     }
 }
 
