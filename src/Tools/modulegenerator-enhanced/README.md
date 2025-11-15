@@ -1,11 +1,35 @@
 # Enhanced Module Generator for upMVC
 
+## 📁 Project Structure
+
+```
+modulegenerator-enhanced/
+├── ModuleGeneratorEnhanced.php    # Core generator class
+├── generate-module.php            # Main CLI script
+├── generate.bat                   # Windows batch launcher
+├── README.md                      # This file
+├── docs/                          # Documentation files
+│   ├── INDEX.md                   # Documentation index
+│   ├── QUICK-REFERENCE.md         # Quick start guide
+│   ├── CRUD-EXAMPLE.md            # CRUD examples
+│   ├── COMPARISON.md              # Legacy vs Enhanced
+│   ├── NAMESPACE-FIX-VERIFIED.md  # PSR-4 namespace docs
+│   ├── NAMING-CONVENTION-FIX.md   # Naming standards
+│   └── PROJECT-COMPLETION-SUMMARY.md
+└── tests/                         # Test files
+    ├── README.md                  # Test documentation
+    ├── test-generator.php         # Main test suite
+    ├── quick-test.php             # Quick validation
+    └── ...                        # Other test files
+```
+
 ## Overview
 This is the next-generation module generator for upMVC that leverages the enhanced features:
+- **PSR-4 Compliant** - Generates modules in `src/Modules/` with `App\Modules\` namespace
 - **InitModsImproved.php** - Uses automatic route discovery with caching
 - **Submodule Support** - Creates modules with nested submodule capabilities  
 - **Environment Integration** - Respects .env configuration settings
-- **Modern Architecture** - PSR-4 compliant with improved error handling
+- **Modern Architecture** - Full PSR-4 compliance with improved error handling
 
 ## Differences from Legacy Generator
 
@@ -291,10 +315,22 @@ In development, disable caching:
 ROUTE_USE_CACHE=false
 ```
 
+## 📚 Documentation
+
+### Quick Links
+- **[Quick Reference](docs/QUICK-REFERENCE.md)** - Fast commands and examples
+- **[CRUD Examples](docs/CRUD-EXAMPLE.md)** - Complete CRUD module tutorials
+- **[Comparison Guide](docs/COMPARISON.md)** - Legacy vs Enhanced differences
+- **[All Documentation](docs/INDEX.md)** - Complete documentation index
+
+### Testing
+See [tests/README.md](tests/README.md) for information about running tests and validation.
+
 ## Support
 
 For issues or questions:
-1. Check this README
+1. Check this README and [documentation](docs/INDEX.md)
 2. Review generated module structure
-3. Enable debug output for troubleshooting
-4. Compare with legacy generator output if needed
+3. Run tests in [tests/](tests/) folder
+4. Enable debug output for troubleshooting
+5. Compare with legacy generator output if needed
