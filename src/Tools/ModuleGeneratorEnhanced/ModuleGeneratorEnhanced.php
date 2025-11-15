@@ -385,7 +385,7 @@ class Controller extends BaseController
             'content' => 'This module was generated with the enhanced upMVC module generator.',
             'tech_info' => [
                 'auto_discovery' => 'Enabled via InitModsImproved.php',
-                'environment' => \\App\\Etc\\Config\\Environment::current(),
+                'environment' => \\App\\Etc\\Config\\Environment::get('APP_ENV', 'production'),
                 'caching' => \$this->isCachingEnabled() ? 'Enabled' : 'Disabled',
                 'generated_at' => date('Y-m-d H:i:s')
             ]
@@ -674,7 +674,7 @@ class View extends BaseView
     public function render(string \$template, array \$data = []): void
     {
         // Enhanced: Add environment data
-        \$data['app_env'] = \\App\\Etc\\Config\\Environment::current();
+        \$data['app_env'] = \\App\\Etc\\Config\\Environment::get('APP_ENV', 'production');
         \$data['debug_mode'] = \\App\\Etc\\Config\\Environment::isDevelopment();
         \$data['module_name'] = '{$this->namespace}';
         

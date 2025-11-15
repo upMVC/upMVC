@@ -1,0 +1,102 @@
+/* Enhanced App\Modules\TestApi Module Styles */
+
+:root {
+    --App\Modules\TestApi-primary: #007bff;
+    --App\Modules\TestApi-secondary: #6c757d;
+    --App\Modules\TestApi-success: #28a745;
+    --App\Modules\TestApi-info: #17a2b8;
+    --App\Modules\TestApi-warning: #ffc107;
+    --App\Modules\TestApi-danger: #dc3545;
+}
+
+.App\Modules\TestApi-container {
+    padding: 20px 0;
+}
+
+.App\Modules\TestApi-card {
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    border: none;
+    border-radius: 12px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.App\Modules\TestApi-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 15px rgba(0,0,0,0.15);
+}
+
+/* Enhanced debugging styles */
+.debug-mode {
+    border: 3px dashed var(--App\Modules\TestApi-warning) !important;
+}
+
+.debug-info {
+    background: linear-gradient(45deg, #fff3cd, #fefefe);
+    border-left: 4px solid var(--App\Modules\TestApi-warning);
+    padding: 15px;
+    margin: 15px 0;
+}
+
+/* Enhanced responsive design */
+@media (max-width: 768px) {
+    .App\Modules\TestApi-container {
+        padding: 10px 0;
+    }
+    
+    .App\Modules\TestApi-card {
+        margin-bottom: 15px;
+    }
+}
+
+/* Enhanced animations */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.App\Modules\TestApi-fade-in {
+    animation: fadeInUp 0.6s ease;
+}
+
+/* Enhanced loading states */
+.App\Modules\TestApi-loading {
+    position: relative;
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+.App\Modules\TestApi-loading::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 20px;
+    height: 20px;
+    margin: -10px 0 0 -10px;
+    border: 2px solid var(--App\Modules\TestApi-primary);
+    border-top: 2px solid transparent;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* Enhanced error states */
+.App\Modules\TestApi-error {
+    border-color: var(--App\Modules\TestApi-danger) !important;
+    box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25);
+}
+
+/* Enhanced success states */
+.App\Modules\TestApi-success {
+    border-color: var(--App\Modules\TestApi-success) !important;
+    box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.25);
+}

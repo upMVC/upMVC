@@ -1,0 +1,102 @@
+/* Enhanced App\Modules\TestParent Module Styles */
+
+:root {
+    --App\Modules\TestParent-primary: #007bff;
+    --App\Modules\TestParent-secondary: #6c757d;
+    --App\Modules\TestParent-success: #28a745;
+    --App\Modules\TestParent-info: #17a2b8;
+    --App\Modules\TestParent-warning: #ffc107;
+    --App\Modules\TestParent-danger: #dc3545;
+}
+
+.App\Modules\TestParent-container {
+    padding: 20px 0;
+}
+
+.App\Modules\TestParent-card {
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    border: none;
+    border-radius: 12px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.App\Modules\TestParent-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 15px rgba(0,0,0,0.15);
+}
+
+/* Enhanced debugging styles */
+.debug-mode {
+    border: 3px dashed var(--App\Modules\TestParent-warning) !important;
+}
+
+.debug-info {
+    background: linear-gradient(45deg, #fff3cd, #fefefe);
+    border-left: 4px solid var(--App\Modules\TestParent-warning);
+    padding: 15px;
+    margin: 15px 0;
+}
+
+/* Enhanced responsive design */
+@media (max-width: 768px) {
+    .App\Modules\TestParent-container {
+        padding: 10px 0;
+    }
+    
+    .App\Modules\TestParent-card {
+        margin-bottom: 15px;
+    }
+}
+
+/* Enhanced animations */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.App\Modules\TestParent-fade-in {
+    animation: fadeInUp 0.6s ease;
+}
+
+/* Enhanced loading states */
+.App\Modules\TestParent-loading {
+    position: relative;
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+.App\Modules\TestParent-loading::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 20px;
+    height: 20px;
+    margin: -10px 0 0 -10px;
+    border: 2px solid var(--App\Modules\TestParent-primary);
+    border-top: 2px solid transparent;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* Enhanced error states */
+.App\Modules\TestParent-error {
+    border-color: var(--App\Modules\TestParent-danger) !important;
+    box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25);
+}
+
+/* Enhanced success states */
+.App\Modules\TestParent-success {
+    border-color: var(--App\Modules\TestParent-success) !important;
+    box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.25);
+}
