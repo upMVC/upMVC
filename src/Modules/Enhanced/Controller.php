@@ -9,6 +9,7 @@ namespace App\Modules\Enhanced;
 
 use App\Common\Bmvc\BaseController;
 use App\Etc\Cache\CacheManager;
+use App\Etc\Cache\FileCache;
 use App\Etc\Events\EventDispatcher;
 use App\Etc\Events\UserRegistered;
 use App\Etc\Container\Container;
@@ -65,7 +66,7 @@ class Controller extends BaseController
 
         } catch (\Exception $e) {
             // Enhanced error handling will catch this
-            throw new \upMVC\Exceptions\DatabaseException(
+            throw new \Exception(
                 'Error in enhanced module: ' . $e->getMessage()
             );
         }
@@ -151,7 +152,7 @@ class Controller extends BaseController
             $fileCache = CacheManager::store('file');
             
             // Type check and method check for FileCache specific functionality
-            if ($fileCache instanceof \upMVC\Cache\FileCache && method_exists($fileCache, 'getStats')) {
+            if ($fileCache instanceof FileCache && method_exists($fileCache, 'getStats')) {
                 return $fileCache->getStats();
             }
             
