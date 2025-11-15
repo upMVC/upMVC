@@ -622,19 +622,19 @@ class Controller extends BaseController
     public function store(\$reqRoute, \$reqMet): void
     {
         if (\$reqMet !== 'POST') {
-            header('Location: /' . strtolower('{$this->namespace}'));
+            header('Location: ' . BASE_URL . '/{$this->config['route_name']}');
             exit;
         }
 
         \$data = \$this->getPostData();
         
-        if (\$this->model->create(\$data)) {
+        if (\$this->model->createItem(\$data)) {
             \$_SESSION['success'] = '{$this->namespace} created successfully!';
         } else {
             \$_SESSION['error'] = 'Failed to create {$this->namespace}';
         }
         
-        header('Location: /' . strtolower('{$this->namespace}'));
+        header('Location: ' . BASE_URL . '/{$this->config['route_name']}');
         exit;
     }
 
@@ -645,14 +645,14 @@ class Controller extends BaseController
     {
         \$id = filter_input(INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT);
         if (!\$id) {
-            header('Location: /' . strtolower('{$this->namespace}'));
+            header('Location: ' . BASE_URL . '/{$this->config['route_name']}');
             exit;
         }
 
         \$item = \$this->model->getById(\$id);
         if (!\$item) {
             \$_SESSION['error'] = '{$this->namespace} not found';
-            header('Location: /' . strtolower('{$this->namespace}'));
+            header('Location: ' . BASE_URL . '/{$this->config['route_name']}');
             exit;
         }
 
@@ -672,26 +672,26 @@ class Controller extends BaseController
     public function update(\$reqRoute, \$reqMet): void
     {
         if (\$reqMet !== 'POST') {
-            header('Location: /' . strtolower('{$this->namespace}'));
+            header('Location: ' . BASE_URL . '/{$this->config['route_name']}');
             exit;
         }
 
         \$id = filter_input(INPUT_POST, 'id', FILTER_SANITIZE_NUMBER_INT);
         if (!\$id) {
             \$_SESSION['error'] = 'Invalid ID';
-            header('Location: /' . strtolower('{$this->namespace}'));
+            header('Location: ' . BASE_URL . '/{$this->config['route_name']}');
             exit;
         }
 
         \$data = \$this->getPostData();
         
-        if (\$this->model->update(\$id, \$data)) {
+        if (\$this->model->updateItem(\$id, \$data)) {
             \$_SESSION['success'] = '{$this->namespace} updated successfully!';
         } else {
             \$_SESSION['error'] = 'Failed to update {$this->namespace}';
         }
         
-        header('Location: /' . strtolower('{$this->namespace}'));
+        header('Location: ' . BASE_URL . '/{$this->config['route_name']}');
         exit;
     }
 
@@ -702,17 +702,17 @@ class Controller extends BaseController
     {
         \$id = filter_input(INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT);
         if (!\$id) {
-            header('Location: /' . strtolower('{$this->namespace}'));
+            header('Location: ' . BASE_URL . '/{$this->config['route_name']}');
             exit;
         }
 
-        if (\$this->model->delete(\$id)) {
+        if (\$this->model->deleteItem(\$id)) {
             \$_SESSION['success'] = '{$this->namespace} deleted successfully!';
         } else {
             \$_SESSION['error'] = 'Failed to delete {$this->namespace}';
         }
         
-        header('Location: /' . strtolower('{$this->namespace}'));
+        header('Location: ' . BASE_URL . '/{$this->config['route_name']}');
         exit;
     }
 
@@ -991,9 +991,9 @@ class Model extends BaseModel
     }
 
     /**
-     * Create new item
+     * Create new item (calls parent with table)
      */
-    public function create(array \$data): bool
+    public function createItem(array \$data): bool
     {
         if (!\$this->checkConnection()) {
             \$_SESSION['warning'] = 'Demo mode: Database not connected. Changes will not be saved.';
@@ -1001,7 +1001,8 @@ class Model extends BaseModel
         }
 
         try {
-            return \$this->insert(\$this->table, \$data);
+            \$result = parent::create(\$data, \$this->table);
+            return \$result !== false;
         } catch (\\Exception \$e) {
             error_log("Error creating {$this->namespace}: " . \$e->getMessage());
             return false;
@@ -1009,9 +1010,9 @@ class Model extends BaseModel
     }
 
     /**
-     * Update existing item
+     * Update existing item (calls parent with table)
      */
-    public function update(int \$id, array \$data): bool
+    public function updateItem(int \$id, array \$data): bool
     {
         if (!\$this->checkConnection()) {
             \$_SESSION['warning'] = 'Demo mode: Database not connected. Changes will not be saved.';
@@ -1019,7 +1020,7 @@ class Model extends BaseModel
         }
 
         try {
-            return \$this->updateRecord(\$this->table, \$id, \$data);
+            return parent::update(\$id, \$data, \$this->table);
         } catch (\\Exception \$e) {
             error_log("Error updating {$this->namespace}: " . \$e->getMessage());
             return false;
@@ -1027,9 +1028,9 @@ class Model extends BaseModel
     }
 
     /**
-     * Delete item
+     * Delete item (calls parent with table)
      */
-    public function delete(int \$id): bool
+    public function deleteItem(int \$id): bool
     {
         if (!\$this->checkConnection()) {
             \$_SESSION['warning'] = 'Demo mode: Database not connected. Changes will not be saved.';
@@ -1037,7 +1038,7 @@ class Model extends BaseModel
         }
 
         try {
-            return \$this->deleteRecord(\$this->table, \$id);
+            return parent::delete(\$id, \$this->table);
         } catch (\\Exception \$e) {
             error_log("Error deleting {$this->namespace}: " . \$e->getMessage());
             return false;
@@ -1049,7 +1050,7 @@ class Model extends BaseModel
      */
     private function checkConnection(): bool
     {
-        return \$this->db !== null && \$this->db instanceof \\PDO;
+        return \$this->conn !== null && \$this->conn instanceof \\PDO;
     }
 
     /**
@@ -1154,7 +1155,7 @@ class Model extends BaseModel
      */
     private function checkConnection(): bool
     {
-        return \$this->db !== null && \$this->db instanceof \\PDO;
+        return \$this->conn !== null && \$this->conn instanceof \\PDO;
     }
 
     /**

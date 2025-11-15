@@ -118,9 +118,9 @@ class Model extends BaseModel
     }
 
     /**
-     * Create new item
+     * Create new item (calls parent with table)
      */
-    public function create(array $data): bool
+    public function createItem(array $data): bool
     {
         if (!$this->checkConnection()) {
             $_SESSION['warning'] = 'Demo mode: Database not connected. Changes will not be saved.';
@@ -128,7 +128,8 @@ class Model extends BaseModel
         }
 
         try {
-            return $this->insert($this->table, $data);
+            $result = parent::create($data, $this->table);
+            return $result !== false;
         } catch (\Exception $e) {
             error_log("Error creating App\Modules\Product: " . $e->getMessage());
             return false;
@@ -136,9 +137,9 @@ class Model extends BaseModel
     }
 
     /**
-     * Update existing item
+     * Update existing item (calls parent with table)
      */
-    public function update(int $id, array $data): bool
+    public function updateItem(int $id, array $data): bool
     {
         if (!$this->checkConnection()) {
             $_SESSION['warning'] = 'Demo mode: Database not connected. Changes will not be saved.';
@@ -146,7 +147,7 @@ class Model extends BaseModel
         }
 
         try {
-            return $this->updateRecord($this->table, $id, $data);
+            return parent::update($id, $data, $this->table);
         } catch (\Exception $e) {
             error_log("Error updating App\Modules\Product: " . $e->getMessage());
             return false;
@@ -154,9 +155,9 @@ class Model extends BaseModel
     }
 
     /**
-     * Delete item
+     * Delete item (calls parent with table)
      */
-    public function delete(int $id): bool
+    public function deleteItem(int $id): bool
     {
         if (!$this->checkConnection()) {
             $_SESSION['warning'] = 'Demo mode: Database not connected. Changes will not be saved.';
@@ -164,7 +165,7 @@ class Model extends BaseModel
         }
 
         try {
-            return $this->deleteRecord($this->table, $id);
+            return parent::delete($id, $this->table);
         } catch (\Exception $e) {
             error_log("Error deleting App\Modules\Product: " . $e->getMessage());
             return false;
@@ -176,7 +177,7 @@ class Model extends BaseModel
      */
     private function checkConnection(): bool
     {
-        return $this->db !== null && $this->db instanceof \PDO;
+        return $this->conn !== null && $this->conn instanceof \PDO;
     }
 
     /**

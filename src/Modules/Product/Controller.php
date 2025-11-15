@@ -117,19 +117,19 @@ class Controller extends BaseController
     public function store($reqRoute, $reqMet): void
     {
         if ($reqMet !== 'POST') {
-            header('Location: /' . strtolower('App\Modules\Product'));
+            header('Location: ' . BASE_URL . '/product');
             exit;
         }
 
         $data = $this->getPostData();
         
-        if ($this->model->create($data)) {
+        if ($this->model->createItem($data)) {
             $_SESSION['success'] = 'App\Modules\Product created successfully!';
         } else {
             $_SESSION['error'] = 'Failed to create App\Modules\Product';
         }
         
-        header('Location: /' . strtolower('App\Modules\Product'));
+        header('Location: ' . BASE_URL . '/product');
         exit;
     }
 
@@ -140,14 +140,14 @@ class Controller extends BaseController
     {
         $id = filter_input(INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT);
         if (!$id) {
-            header('Location: /' . strtolower('App\Modules\Product'));
+            header('Location: ' . BASE_URL . '/product');
             exit;
         }
 
         $item = $this->model->getById($id);
         if (!$item) {
             $_SESSION['error'] = 'App\Modules\Product not found';
-            header('Location: /' . strtolower('App\Modules\Product'));
+            header('Location: ' . BASE_URL . '/product');
             exit;
         }
 
@@ -167,26 +167,26 @@ class Controller extends BaseController
     public function update($reqRoute, $reqMet): void
     {
         if ($reqMet !== 'POST') {
-            header('Location: /' . strtolower('App\Modules\Product'));
+            header('Location: ' . BASE_URL . '/product');
             exit;
         }
 
         $id = filter_input(INPUT_POST, 'id', FILTER_SANITIZE_NUMBER_INT);
         if (!$id) {
             $_SESSION['error'] = 'Invalid ID';
-            header('Location: /' . strtolower('App\Modules\Product'));
+            header('Location: ' . BASE_URL . '/product');
             exit;
         }
 
         $data = $this->getPostData();
         
-        if ($this->model->update($id, $data)) {
+        if ($this->model->updateItem($id, $data)) {
             $_SESSION['success'] = 'App\Modules\Product updated successfully!';
         } else {
             $_SESSION['error'] = 'Failed to update App\Modules\Product';
         }
         
-        header('Location: /' . strtolower('App\Modules\Product'));
+        header('Location: ' . BASE_URL . '/product');
         exit;
     }
 
@@ -197,17 +197,17 @@ class Controller extends BaseController
     {
         $id = filter_input(INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT);
         if (!$id) {
-            header('Location: /' . strtolower('App\Modules\Product'));
+            header('Location: ' . BASE_URL . '/product');
             exit;
         }
 
-        if ($this->model->delete($id)) {
+        if ($this->model->deleteItem($id)) {
             $_SESSION['success'] = 'App\Modules\Product deleted successfully!';
         } else {
             $_SESSION['error'] = 'Failed to delete App\Modules\Product';
         }
         
-        header('Location: /' . strtolower('App\Modules\Product'));
+        header('Location: ' . BASE_URL . '/product');
         exit;
     }
 
