@@ -218,24 +218,20 @@ class Controller
     {
         $this->html = new View();
         $user = new Model();
-        if (isset($_GET)) {
-            if (!empty($_GET['token'])) {
-                $token       = $_GET['token'];
-                $user->token = $token;
-                $stmt     = $user->readUserToken();
-                $result = $stmt->rowCount();
-                if ($result === 0) {
-                    $this->html->tokenInvalid();
-                } else {
-                    $user->state = 1;
-                    $user->setActiveUser();
-                    $this->html->tokenValid();
-                }
+        if (!empty($_GET['token'])) {
+            $token       = $_GET['token'];
+            $user->token = $token;
+            $stmt     = $user->readUserToken();
+            $result = $stmt->rowCount();
+            if ($result === 0) {
+                $this->html->tokenInvalid();
             } else {
-                $this->html->tokenNull();
+                $user->state = 1;
+                $user->setActiveUser();
+                $this->html->tokenValid();
             }
         } else {
-            echo "No value!";
+            $this->html->tokenNull();
         }
     }
 }

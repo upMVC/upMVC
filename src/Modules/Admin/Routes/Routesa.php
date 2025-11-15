@@ -12,7 +12,6 @@ use App\Modules\Admin\Model;
 class Routes
 {
     private $model;
-    private $table = 'user';
 
     public function routes($router)
     {

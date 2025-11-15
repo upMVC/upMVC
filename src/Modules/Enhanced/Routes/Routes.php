@@ -7,7 +7,7 @@
 
 namespace App\Modules\Enhanced\Routes;
 
-use App\Modules\enhanced\Controller;
+use App\Modules\Enhanced\Controller;
 
 /**
  * Enhanced Routes

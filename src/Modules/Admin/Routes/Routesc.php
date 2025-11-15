@@ -13,7 +13,6 @@ use App\Modules\Admin\Model;
 class Routesc
 {
     private $model;
-    private $table = 'user';
     private string $cacheFile;
     private int $cacheLifetime = 3600; // 1 hour
 
