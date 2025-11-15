@@ -22,7 +22,7 @@ class BaseControllerOrm
         }
 
         // Convert view path to file path
-        $viewFile = \THIS_DIR . '/modules/' . str_replace('/', '/', $viewPath) . '.php';
+        $viewFile = \THIS_DIR . '/Modules/' . str_replace('/', '/', $viewPath) . '.php';
 
         // Check if view exists
         if (!file_exists($viewFile)) {

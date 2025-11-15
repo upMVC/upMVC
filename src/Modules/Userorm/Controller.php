@@ -8,7 +8,7 @@ class Controller extends BaseControllerOrm
 {
     private $model;
     private $table = 'users';
-    private $viewPath = 'userorm/views/';
+    private $viewPath = 'Userorm/views/';
 
     public function __construct()
     {
