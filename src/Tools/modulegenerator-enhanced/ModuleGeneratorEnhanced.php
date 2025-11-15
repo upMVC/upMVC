@@ -124,6 +124,22 @@ class ModuleGeneratorEnhanced
         }
     }
 
+    /**
+     * Get the module name from namespace (e.g., App\Modules\Products → Products)
+     */
+    private function getModuleName(): string
+    {
+        return $this->config['name'];
+    }
+
+    /**
+     * Get the web-accessible path for assets (e.g., src/Modules/Products)
+     */
+    private function getModuleWebPath(): string
+    {
+        return 'src/Modules/' . $this->getModuleName();
+    }
+
     private function validateConfig(array $config): array
     {
         $required = ['name', 'type'];
@@ -154,7 +170,7 @@ class ModuleGeneratorEnhanced
     {
         $directories = [
             $this->modulePath,
-            $this->modulePath . '/routes',  // Required for auto-discovery
+            $this->modulePath . '/Routes',  // PSR-4: capital R for auto-discovery
             $this->modulePath . '/views',
             $this->modulePath . '/views/layouts',
             $this->modulePath . '/etc',
@@ -219,7 +235,7 @@ class ModuleGeneratorEnhanced
     {
         // This is the KEY difference - routes are auto-discovered by InitModsImproved!
         $template = $this->getEnhancedRoutesTemplate();
-        $this->writeFile('/routes/Routes.php', $template);
+        $this->writeFile('/Routes/Routes.php', $template);
         
         echo "🔄 Routes will be auto-discovered by InitModsImproved.php (no manual registration needed)\n";
     }
@@ -248,7 +264,7 @@ use {$this->namespace}\\Modules\\Example\\Controller;
  * Example Submodule Routes
  * 
  * This submodule will be auto-discovered by InitModsImproved.php
- * Location: modules/{$this->namespace}/modules/Example/routes/Routes.php
+ * Location: src/Modules/{$this->getModuleName()}/Modules/Example/Routes/Routes.php
  */
 class Routes
 {
@@ -262,10 +278,8 @@ class Routes
     }
 }
 PHP;
-
-        file_put_contents($exampleSubmodule . '/routes/Routes.php', $submoduleRoutes);
         
-        // Create example submodule controller
+        file_put_contents($exampleSubmodule . '/Routes/Routes.php', $submoduleRoutes);        // Create example submodule controller
         $submoduleController = <<<PHP
 <?php
 namespace {$this->namespace}\\Modules\\Example;
@@ -754,7 +768,7 @@ PHP;
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Enhanced Module CSS -->
-    <link rel="stylesheet" href="<?php echo BASE_URL ?? ''; ?>/modules/{$this->namespace}/assets/css/style.css">
+    <link rel="stylesheet" href="<?php echo BASE_URL ?? ''; ?>/{$this->getModuleWebPath()}/assets/css/style.css">
     
     <?php if (\$debug_mode ?? false): ?>
     <!-- Debug Mode Indicator -->
@@ -820,7 +834,7 @@ HTML;
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <!-- Enhanced Module JS -->
-    <script src="<?php echo BASE_URL ?? ''; ?>/modules/{$this->namespace}/assets/js/script.js"></script>
+    <script src="<?php echo BASE_URL ?? ''; ?>/{$this->getModuleWebPath()}/assets/js/script.js"></script>
     
     <?php if (\$debug_mode ?? false): ?>
     <script>
@@ -895,7 +909,7 @@ HTML;
                             <div class="card-body">
                                 <p><strong>Environment:</strong> <span class="badge bg-secondary"><?php echo \$app_env; ?></span></p>
                                 <p><strong>Auto-Discovery:</strong> <span class="badge bg-success">Enabled via InitModsImproved.php</span></p>
-                                <p><strong>Module Path:</strong> <code>modules/{$this->namespace}/</code></p>
+                                <p><strong>Module Path:</strong> <code>{$this->getModuleWebPath()}/</code></p>
                                 <a href="<?php echo BASE_URL ?? ''; ?>/{$this->config['route_name']}/api" class="btn btn-sm btn-outline-primary">
                                     <i class="fas fa-code"></i> Test API Endpoint
                                 </a>
@@ -1435,7 +1449,7 @@ This is an enhanced API module for {$this->namespace} with auto-discovery capabi
 ## Auto-Discovery
 This module is automatically discovered by `InitModsImproved.php`. No manual registration required!
 
-**Discovery path:** `modules/{$this->namespace}/routes/Routes.php`
+**Discovery path:** `{$this->getModuleWebPath()}/Routes/Routes.php`
 
 ## Enhanced Features
 
@@ -1509,11 +1523,11 @@ Get debug information (development only).
 {
     "debug": true,
     "environment": "development",
-    "module_path": "modules/{$this->namespace}/",
+    "module_path": "{$this->getModuleWebPath()}/",
     "auto_discovery": {
         "enabled": true,
         "discovered_by": "InitModsImproved.php",
-        "route_file": "routes/Routes.php"
+        "route_file": "Routes/Routes.php"
     },
     "cache_status": {
         "enabled": true,
