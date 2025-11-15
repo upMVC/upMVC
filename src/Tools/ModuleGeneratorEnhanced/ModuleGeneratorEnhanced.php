@@ -577,14 +577,25 @@ class Controller extends BaseController
                 \$this->update(\$reqRoute, \$reqMet);
                 return;
             default:
-                // Show list
-                \$items = \$this->model->getAll();
+                // Show list with pagination
+                \$page = filter_input(INPUT_GET, 'page', FILTER_SANITIZE_NUMBER_INT) ?: 1;
+                \$pageSize = 10;
+                
+                \$items = \$this->model->getAllPaginated(\$page, \$pageSize);
+                \$totalItems = \$this->model->getTotalCount();
+                \$totalPages = ceil(\$totalItems / \$pageSize);
                 
                 \$data = [
                     'title' => '{$this->namespace} Management',
                     'items' => \$items,
                     'fields' => \$this->fields,
-                    'module' => '{$this->namespace}'
+                    'module' => '{$this->namespace}',
+                    'pagination' => [
+                        'current_page' => \$page,
+                        'total_pages' => \$totalPages,
+                        'total_items' => \$totalItems,
+                        'page_size' => \$pageSize
+                    ]
                 ];
                 
                 \$this->view->render('index', \$data);
@@ -632,7 +643,7 @@ class Controller extends BaseController
      */
     public function edit(\$reqRoute, \$reqMet): void
     {
-        \$id = \$_GET['id'] ?? null;
+        \$id = filter_input(INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT);
         if (!\$id) {
             header('Location: /' . strtolower('{$this->namespace}'));
             exit;
@@ -665,7 +676,7 @@ class Controller extends BaseController
             exit;
         }
 
-        \$id = \$_POST['id'] ?? null;
+        \$id = filter_input(INPUT_POST, 'id', FILTER_SANITIZE_NUMBER_INT);
         if (!\$id) {
             \$_SESSION['error'] = 'Invalid ID';
             header('Location: /' . strtolower('{$this->namespace}'));
@@ -689,7 +700,7 @@ class Controller extends BaseController
      */
     public function delete(\$reqRoute, \$reqMet): void
     {
-        \$id = \$_GET['id'] ?? null;
+        \$id = filter_input(INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT);
         if (!\$id) {
             header('Location: /' . strtolower('{$this->namespace}'));
             exit;
@@ -706,14 +717,24 @@ class Controller extends BaseController
     }
 
     /**
-     * Extract POST data for configured fields
+     * Extract POST data for configured fields with proper sanitization
      */
     private function getPostData(): array
     {
         \$data = [];
         foreach (\$this->fields as \$field) {
             \$fieldName = \$field['name'];
-            \$data[\$fieldName] = \$_POST[\$fieldName] ?? '';
+            \$htmlType = \$field['html_type'];
+            
+            // Determine filter type based on html_type
+            \$filter = FILTER_SANITIZE_SPECIAL_CHARS;
+            if (in_array(\$htmlType, ['number', 'range'])) {
+                \$filter = FILTER_SANITIZE_NUMBER_INT;
+            } elseif (\$htmlType === 'email') {
+                \$filter = FILTER_SANITIZE_EMAIL;
+            }
+            
+            \$data[\$fieldName] = filter_input(INPUT_POST, \$fieldName, \$filter) ?? '';
         }
         return \$data;
     }
@@ -910,6 +931,41 @@ class Model extends BaseModel
         } catch (\\Exception \$e) {
             error_log("Error reading {$this->namespace}: " . \$e->getMessage());
             return \$this->getDemoData();
+        }
+    }
+
+    /**
+     * Get paginated items
+     */
+    public function getAllPaginated(int \$page = 1, int \$pageSize = 10): array
+    {
+        if (!\$this->checkConnection()) {
+            \$demoData = \$this->getDemoData();
+            return array_slice(\$demoData, (\$page - 1) * \$pageSize, \$pageSize);
+        }
+
+        try {
+            return \$this->readWithPagination(\$this->table, \$page, \$pageSize) ?? [];
+        } catch (\\Exception \$e) {
+            error_log("Error reading {$this->namespace}: " . \$e->getMessage());
+            return [];
+        }
+    }
+
+    /**
+     * Get total count for pagination
+     */
+    public function getTotalCount(): int
+    {
+        if (!\$this->checkConnection()) {
+            return count(\$this->getDemoData());
+        }
+
+        try {
+            \$all = \$this->readAll(\$this->table) ?? [];
+            return count(\$all);
+        } catch (\\Exception \$e) {
+            return 0;
         }
     }
 
@@ -1763,6 +1819,40 @@ HTML;
         <div class="alert alert-info">
             <i class="fas fa-info-circle"></i> No items found. <a href="?action=create">Create your first item</a>.
         </div>
+        <?php endif; ?>
+        
+        <?php if (isset($pagination) && $pagination['total_pages'] > 1): ?>
+        <nav aria-label="Page navigation" class="mt-3">
+            <ul class="pagination justify-content-center">
+                <?php if ($pagination['current_page'] > 1): ?>
+                <li class="page-item">
+                    <a class="page-link" href="?page=<?php echo $pagination['current_page'] - 1; ?>">
+                        <i class="fas fa-chevron-left"></i> Previous
+                    </a>
+                </li>
+                <?php endif; ?>
+                
+                <?php for ($i = 1; $i <= $pagination['total_pages']; $i++): ?>
+                <li class="page-item <?php echo $i === $pagination['current_page'] ? 'active' : ''; ?>">
+                    <a class="page-link" href="?page=<?php echo $i; ?>"><?php echo $i; ?></a>
+                </li>
+                <?php endfor; ?>
+                
+                <?php if ($pagination['current_page'] < $pagination['total_pages']): ?>
+                <li class="page-item">
+                    <a class="page-link" href="?page=<?php echo $pagination['current_page'] + 1; ?>">
+                        Next <i class="fas fa-chevron-right"></i>
+                    </a>
+                </li>
+                <?php endif; ?>
+            </ul>
+            <div class="text-center text-muted">
+                <small>
+                    Showing page <?php echo $pagination['current_page']; ?> of <?php echo $pagination['total_pages']; ?>
+                    (<?php echo $pagination['total_items']; ?> total items)
+                </small>
+            </div>
+        </nav>
         <?php endif; ?>
     </div>
 </div>

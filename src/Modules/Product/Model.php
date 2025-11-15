@@ -62,6 +62,41 @@ class Model extends BaseModel
     }
 
     /**
+     * Get paginated items
+     */
+    public function getAllPaginated(int $page = 1, int $pageSize = 10): array
+    {
+        if (!$this->checkConnection()) {
+            $demoData = $this->getDemoData();
+            return array_slice($demoData, ($page - 1) * $pageSize, $pageSize);
+        }
+
+        try {
+            return $this->readWithPagination($this->table, $page, $pageSize) ?? [];
+        } catch (\Exception $e) {
+            error_log("Error reading App\Modules\Product: " . $e->getMessage());
+            return [];
+        }
+    }
+
+    /**
+     * Get total count for pagination
+     */
+    public function getTotalCount(): int
+    {
+        if (!$this->checkConnection()) {
+            return count($this->getDemoData());
+        }
+
+        try {
+            $all = $this->readAll($this->table) ?? [];
+            return count($all);
+        } catch (\Exception $e) {
+            return 0;
+        }
+    }
+
+    /**
      * Get item by ID
      */
     public function getById(int $id): ?array

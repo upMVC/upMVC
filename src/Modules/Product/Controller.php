@@ -72,14 +72,25 @@ class Controller extends BaseController
                 $this->update($reqRoute, $reqMet);
                 return;
             default:
-                // Show list
-                $items = $this->model->getAll();
+                // Show list with pagination
+                $page = filter_input(INPUT_GET, 'page', FILTER_SANITIZE_NUMBER_INT) ?: 1;
+                $pageSize = 10;
+                
+                $items = $this->model->getAllPaginated($page, $pageSize);
+                $totalItems = $this->model->getTotalCount();
+                $totalPages = ceil($totalItems / $pageSize);
                 
                 $data = [
                     'title' => 'App\Modules\Product Management',
                     'items' => $items,
                     'fields' => $this->fields,
-                    'module' => 'App\Modules\Product'
+                    'module' => 'App\Modules\Product',
+                    'pagination' => [
+                        'current_page' => $page,
+                        'total_pages' => $totalPages,
+                        'total_items' => $totalItems,
+                        'page_size' => $pageSize
+                    ]
                 ];
                 
                 $this->view->render('index', $data);
@@ -127,7 +138,7 @@ class Controller extends BaseController
      */
     public function edit($reqRoute, $reqMet): void
     {
-        $id = $_GET['id'] ?? null;
+        $id = filter_input(INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT);
         if (!$id) {
             header('Location: /' . strtolower('App\Modules\Product'));
             exit;
@@ -160,7 +171,7 @@ class Controller extends BaseController
             exit;
         }
 
-        $id = $_POST['id'] ?? null;
+        $id = filter_input(INPUT_POST, 'id', FILTER_SANITIZE_NUMBER_INT);
         if (!$id) {
             $_SESSION['error'] = 'Invalid ID';
             header('Location: /' . strtolower('App\Modules\Product'));
@@ -184,7 +195,7 @@ class Controller extends BaseController
      */
     public function delete($reqRoute, $reqMet): void
     {
-        $id = $_GET['id'] ?? null;
+        $id = filter_input(INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT);
         if (!$id) {
             header('Location: /' . strtolower('App\Modules\Product'));
             exit;
@@ -201,14 +212,24 @@ class Controller extends BaseController
     }
 
     /**
-     * Extract POST data for configured fields
+     * Extract POST data for configured fields with proper sanitization
      */
     private function getPostData(): array
     {
         $data = [];
         foreach ($this->fields as $field) {
             $fieldName = $field['name'];
-            $data[$fieldName] = $_POST[$fieldName] ?? '';
+            $htmlType = $field['html_type'];
+            
+            // Determine filter type based on html_type
+            $filter = FILTER_SANITIZE_SPECIAL_CHARS;
+            if (in_array($htmlType, ['number', 'range'])) {
+                $filter = FILTER_SANITIZE_NUMBER_INT;
+            } elseif ($htmlType === 'email') {
+                $filter = FILTER_SANITIZE_EMAIL;
+            }
+            
+            $data[$fieldName] = filter_input(INPUT_POST, $fieldName, $filter) ?? '';
         }
         return $data;
     }
