@@ -23,16 +23,19 @@ class ModuleGeneratorEnhanced
     public function __construct(array $config)
     {
         $this->config = $this->validateConfig($config);
-        $this->namespace = $this->config['namespace'];
         
-        // upMVC convention: directory names are lowercase, namespaces are PascalCase
-        $directoryName = $this->config['directory_name'];
+        // PSR-4: All modules must use App\Modules\ namespace
+        $moduleName = $this->config['name'];
+        $this->namespace = 'App\\Modules\\' . $moduleName;
+        
+        // PSR-4 convention: src/Modules/ModuleName/
+        $directoryName = $moduleName;
         
         // Handle submodule paths
         if ($this->config['type'] === 'submodule' && !empty($this->config['parent_module'])) {
-            $this->modulePath = __DIR__ . '/../../modules/' . $this->config['parent_module'] . '/modules/' . $directoryName;
+            $this->modulePath = __DIR__ . '/../../Modules/' . $this->config['parent_module'] . '/Modules/' . $directoryName;
         } else {
-            $this->modulePath = __DIR__ . '/../../modules/' . $directoryName;
+            $this->modulePath = __DIR__ . '/../../Modules/' . $directoryName;
         }
         
         // Load environment for enhanced features
@@ -79,11 +82,12 @@ class ModuleGeneratorEnhanced
                 $this->generateSubmoduleStructure();
             }
             
-            // Update composer autoload
-            $this->updateComposerAutoload();
+            // NO NEED to update composer.json - PSR-4 "App\\": "src/" handles everything!
+            // Just run: composer dump-autoload
             
             echo "✅ Enhanced module generation completed successfully!\n";
             echo "🔍 Module will be auto-discovered by InitModsImproved.php\n";
+            echo "📦 Run 'composer dump-autoload' to update autoloader\n";
             
             return true;
             
@@ -133,16 +137,15 @@ class ModuleGeneratorEnhanced
             throw new Exception("Invalid module type: {$config['type']}. Valid types: " . implode(', ', $this->validTypes));
         }
 
-        // Set defaults with enhanced features
-        // upMVC convention: namespace is module name with only first letter capitalized
-        $config['namespace'] = $config['namespace'] ?? ucfirst(strtolower($config['name']));
-        $config['directory_name'] = $config['directory_name'] ?? strtolower($config['name']); // upMVC convention: lowercase directories
+        // PSR-4: Module name becomes the folder and class name (PascalCase)
+        // Namespace is always: App\Modules\{ModuleName}
+        $config['name'] = ucfirst($config['name']); // Ensure PascalCase
         $config['table_name'] = $config['table_name'] ?? strtolower($config['name']) . 's';
-        $config['route_name'] = $config['route_name'] ?? strtolower($config['name']) . 's';
+        $config['route_name'] = $config['route_name'] ?? strtolower($config['name']);
         $config['fields'] = $config['fields'] ?? [];
-        $config['use_middleware'] = $config['use_middleware'] ?? true; // Enhanced: default true
-        $config['enable_caching'] = $config['enable_caching'] ?? true; // Enhanced: caching support
-        $config['create_submodules'] = $config['create_submodules'] ?? false; // Enhanced: submodule support
+        $config['use_middleware'] = $config['use_middleware'] ?? true;
+        $config['enable_caching'] = $config['enable_caching'] ?? true;
+        $config['create_submodules'] = $config['create_submodules'] ?? false;
 
         return $config;
     }
@@ -162,7 +165,7 @@ class ModuleGeneratorEnhanced
 
         // Add submodule directories if enabled
         if ($this->config['create_submodules'] ?? false) {
-            $directories[] = $this->modulePath . '/modules';  // For submodules
+            $directories[] = $this->modulePath . '/Modules';  // PSR-4: capital M for submodules
         }
 
         foreach ($directories as $dir) {
@@ -229,10 +232,10 @@ class ModuleGeneratorEnhanced
 
         echo "📦 Creating submodule structure...\n";
         
-        // Create example submodule
-        $exampleSubmodule = $this->modulePath . '/modules/Example';
+        // Create example submodule (PSR-4: capital M)
+        $exampleSubmodule = $this->modulePath . '/Modules/Example';
         mkdir($exampleSubmodule, 0755, true);
-        mkdir($exampleSubmodule . '/routes', 0755, true);
+        mkdir($exampleSubmodule . '/Routes', 0755, true);
         
         // Create example submodule routes
         $submoduleRoutes = <<<PHP
@@ -301,32 +304,6 @@ PHP;
         file_put_contents($exampleSubmodule . '/Controller.php', $submoduleController);
         
         echo "✅ Created example submodule with auto-discovery support\n";
-    }
-
-    private function updateComposerAutoload(): void
-    {
-        $composerFile = __DIR__ . '/../../composer.json';
-        if (!file_exists($composerFile)) {
-            echo "⚠️  composer.json not found - skipping autoload update\n";
-            return;
-        }
-
-        $composer = json_decode(file_get_contents($composerFile), true);
-        $directoryName = $this->config['directory_name'];
-        
-        // Add namespace for main module (namespace -> directory)
-        $composer['autoload']['psr-4'][$this->namespace . '\\'] = "modules/{$directoryName}/";
-        
-        // Add namespace for routes
-        $composer['autoload']['psr-4'][$this->namespace . '\\Routes\\'] = "modules/{$directoryName}/routes/";
-        
-        // Add namespace for submodules if enabled
-        if ($this->config['create_submodules'] ?? false) {
-            $composer['autoload']['psr-4'][$this->namespace . '\\Modules\\'] = "modules/{$directoryName}/modules/";
-        }
-        
-        file_put_contents($composerFile, json_encode($composer, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
-        echo "📝 Updated composer.json autoload configuration\n";
     }
 
     // Enhanced template methods with modern features
