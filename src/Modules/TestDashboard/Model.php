@@ -4,9 +4,7 @@ namespace App\Modules\TestDashboard;
 use App\Common\Bmvc\BaseModel;
 
 /**
- * Enhanced App\Modules\TestDashboard Model
- * 
- * Features caching and enhanced error handling
+ * Enhanced App\Modules\TestDashboard Dashboard Model
  */
 class Model extends BaseModel
 {
@@ -15,38 +13,52 @@ class Model extends BaseModel
 
     public function __construct()
     {
-        // Enhanced: Respect environment caching settings
         $this->enableCaching = \App\Etc\Config\Environment::get('ROUTE_USE_CACHE', 'true') === 'true';
     }
 
     /**
-     * Enhanced data retrieval with caching
+     * Get dashboard statistics
      */
-    public function getEnhancedData($id = null): array
+    public function getDashboardStats(): array
     {
-        $cacheKey = "{$this->table}_data_" . ($id ?: 'all');
-        
-        if ($this->enableCaching && $cached = $this->getFromCache($cacheKey)) {
-            return $cached;
-        }
-        
-        $data = $id ? $this->read($id, $this->table) : $this->readAll($this->table);
-        
-        if ($this->enableCaching) {
-            $this->putInCache($cacheKey, $data, 3600);
-        }
-        
-        return $data;
+        return [
+            'total_items' => $this->getTotalCount(),
+            'active_items' => $this->getActiveCount(),
+            'recent_activity' => $this->getRecentActivityCount(),
+            'pending_items' => $this->getPendingCount()
+        ];
     }
 
-    private function getFromCache(string $key): mixed
+    /**
+     * Get recent items
+     */
+    public function getRecentItems(int $limit = 10): array
     {
-        // Implementation depends on your cache system
-        return null;
+        // Implement based on your database structure
+        return $this->readAll($this->table, $limit);
     }
 
-    private function putInCache(string $key, mixed $data, int $ttl): void
+    private function getTotalCount(): int
     {
-        // Implementation depends on your cache system
+        // Placeholder - implement with actual DB query
+        return 0;
+    }
+
+    private function getActiveCount(): int
+    {
+        // Placeholder - implement with actual DB query
+        return 0;
+    }
+
+    private function getRecentActivityCount(): int
+    {
+        // Placeholder - implement with actual DB query
+        return 0;
+    }
+
+    private function getPendingCount(): int
+    {
+        // Placeholder - implement with actual DB query
+        return 0;
     }
 }

@@ -211,6 +211,7 @@ class ModuleGeneratorEnhanced
         $template = match($this->config['type']) {
             'crud' => $this->getEnhancedCrudModelTemplate(),
             'auth' => $this->getEnhancedAuthModelTemplate(),
+            'dashboard' => $this->getEnhancedDashboardModelTemplate(),
             default => $this->getEnhancedBasicModelTemplate()
         };
 
@@ -221,7 +222,7 @@ class ModuleGeneratorEnhanced
     {
         $template = match($this->config['type']) {
             'crud' => $this->getEnhancedCrudViewTemplate(),
-            'dashboard' => $this->getEnhancedDashboardViewTemplate(),
+            'dashboard' => $this->getEnhancedDashboardViewClassTemplate(),
             default => $this->getEnhancedBasicViewTemplate()
         };
 
@@ -439,10 +440,13 @@ PHP;
         
         switch ($this->config['type']) {
             case 'crud':
-                $routes[] = "        // Main CRUD routes";
+                $routes[] = "        // CRUD routes - full Create, Read, Update, Delete";
                 $routes[] = "        \$router->addRoute('/{$this->config['route_name']}', Controller::class, 'display');";
-                $routes[] = "        \$router->addRoute('/{$this->config['route_name']}/api', Controller::class, 'api');";
-                $routes[] = "        \$router->addRoute('/{$this->config['route_name']}/search', Controller::class, 'search');";
+                $routes[] = "        \$router->addRoute('/{$this->config['route_name']}/create', Controller::class, 'create');";
+                $routes[] = "        \$router->addRoute('/{$this->config['route_name']}/store', Controller::class, 'store');";
+                $routes[] = "        \$router->addRoute('/{$this->config['route_name']}/edit', Controller::class, 'edit');";
+                $routes[] = "        \$router->addRoute('/{$this->config['route_name']}/update', Controller::class, 'update');";
+                $routes[] = "        \$router->addRoute('/{$this->config['route_name']}/delete', Controller::class, 'delete');";
                 break;
             case 'api':
                 $routes[] = "        // RESTful API routes";
@@ -521,8 +525,200 @@ PHP;
     // Additional enhanced templates
     private function getEnhancedCrudControllerTemplate(): string
     {
-        // Implementation for enhanced CRUD controller with auto-discovery
-        return $this->getEnhancedBasicControllerTemplate() . "\n// Enhanced CRUD methods would be added here";
+        $fieldsArray = var_export($this->config['fields'] ?? [], true);
+        
+        return <<<PHP
+<?php
+namespace {$this->namespace};
+
+use App\Common\\Bmvc\\BaseController;
+
+/**
+ * Enhanced {$this->namespace} CRUD Controller
+ * 
+ * Auto-discovered by InitModsImproved.php
+ * Full CRUD operations: Create, Read, Update, Delete
+ */
+class Controller extends BaseController
+{
+    private \$model;
+    private \$view;
+    private array \$fields;
+
+    public function __construct()
+    {
+        \$this->model = new Model();
+        \$this->view = new View();
+        \$this->fields = {$fieldsArray};
+    }
+
+    /**
+     * Display list of all items (READ)
+     */
+    public function display(\$reqRoute, \$reqMet): void
+    {
+        // Handle action-based routing
+        \$action = \$_GET['action'] ?? 'index';
+        
+        switch (\$action) {
+            case 'create':
+                \$this->create(\$reqRoute, \$reqMet);
+                return;
+            case 'edit':
+                \$this->edit(\$reqRoute, \$reqMet);
+                return;
+            case 'delete':
+                \$this->delete(\$reqRoute, \$reqMet);
+                return;
+            case 'store':
+                \$this->store(\$reqRoute, \$reqMet);
+                return;
+            case 'update':
+                \$this->update(\$reqRoute, \$reqMet);
+                return;
+            default:
+                // Show list
+                \$items = \$this->model->getAll();
+                
+                \$data = [
+                    'title' => '{$this->namespace} Management',
+                    'items' => \$items,
+                    'fields' => \$this->fields,
+                    'module' => '{$this->namespace}'
+                ];
+                
+                \$this->view->render('index', \$data);
+        }
+    }
+
+    /**
+     * Show create form
+     */
+    public function create(\$reqRoute, \$reqMet): void
+    {
+        \$data = [
+            'title' => 'Create New {$this->namespace}',
+            'fields' => \$this->fields,
+            'action' => 'store'
+        ];
+        
+        \$this->view->render('form', \$data);
+    }
+
+    /**
+     * Store new item (CREATE)
+     */
+    public function store(\$reqRoute, \$reqMet): void
+    {
+        if (\$reqMet !== 'POST') {
+            header('Location: /' . strtolower('{$this->namespace}'));
+            exit;
+        }
+
+        \$data = \$this->getPostData();
+        
+        if (\$this->model->create(\$data)) {
+            \$_SESSION['success'] = '{$this->namespace} created successfully!';
+        } else {
+            \$_SESSION['error'] = 'Failed to create {$this->namespace}';
+        }
+        
+        header('Location: /' . strtolower('{$this->namespace}'));
+        exit;
+    }
+
+    /**
+     * Show edit form
+     */
+    public function edit(\$reqRoute, \$reqMet): void
+    {
+        \$id = \$_GET['id'] ?? null;
+        if (!\$id) {
+            header('Location: /' . strtolower('{$this->namespace}'));
+            exit;
+        }
+
+        \$item = \$this->model->getById(\$id);
+        if (!\$item) {
+            \$_SESSION['error'] = '{$this->namespace} not found';
+            header('Location: /' . strtolower('{$this->namespace}'));
+            exit;
+        }
+
+        \$data = [
+            'title' => 'Edit {$this->namespace}',
+            'fields' => \$this->fields,
+            'item' => \$item,
+            'action' => 'update'
+        ];
+        
+        \$this->view->render('form', \$data);
+    }
+
+    /**
+     * Update existing item (UPDATE)
+     */
+    public function update(\$reqRoute, \$reqMet): void
+    {
+        if (\$reqMet !== 'POST') {
+            header('Location: /' . strtolower('{$this->namespace}'));
+            exit;
+        }
+
+        \$id = \$_POST['id'] ?? null;
+        if (!\$id) {
+            \$_SESSION['error'] = 'Invalid ID';
+            header('Location: /' . strtolower('{$this->namespace}'));
+            exit;
+        }
+
+        \$data = \$this->getPostData();
+        
+        if (\$this->model->update(\$id, \$data)) {
+            \$_SESSION['success'] = '{$this->namespace} updated successfully!';
+        } else {
+            \$_SESSION['error'] = 'Failed to update {$this->namespace}';
+        }
+        
+        header('Location: /' . strtolower('{$this->namespace}'));
+        exit;
+    }
+
+    /**
+     * Delete item (DELETE)
+     */
+    public function delete(\$reqRoute, \$reqMet): void
+    {
+        \$id = \$_GET['id'] ?? null;
+        if (!\$id) {
+            header('Location: /' . strtolower('{$this->namespace}'));
+            exit;
+        }
+
+        if (\$this->model->delete(\$id)) {
+            \$_SESSION['success'] = '{$this->namespace} deleted successfully!';
+        } else {
+            \$_SESSION['error'] = 'Failed to delete {$this->namespace}';
+        }
+        
+        header('Location: /' . strtolower('{$this->namespace}'));
+        exit;
+    }
+
+    /**
+     * Extract POST data for configured fields
+     */
+    private function getPostData(): array
+    {
+        \$data = [];
+        foreach (\$this->fields as \$field) {
+            \$fieldName = \$field['name'];
+            \$data[\$fieldName] = \$_POST[\$fieldName] ?? '';
+        }
+        return \$data;
+    }
+}
+PHP;
     }
 
     private function getEnhancedApiControllerTemplate(): string
@@ -539,8 +735,48 @@ PHP;
 
     private function getEnhancedDashboardControllerTemplate(): string
     {
-        // Implementation for enhanced Dashboard controller
-        return $this->getEnhancedBasicControllerTemplate() . "\n// Enhanced Dashboard methods would be added here";
+        return <<<PHP
+<?php
+namespace {$this->namespace};
+
+use App\Common\\Bmvc\\BaseController;
+
+/**
+ * Enhanced {$this->namespace} Dashboard Controller
+ * 
+ * Auto-discovered by InitModsImproved.php
+ */
+class Controller extends BaseController
+{
+    private \$model;
+    private \$view;
+
+    public function __construct()
+    {
+        \$this->model = new Model();
+        \$this->view = new View();
+    }
+
+    /**
+     * Display dashboard - auto-routed
+     */
+    public function display(\$reqRoute, \$reqMet): void
+    {
+        \$data = [
+            'title' => '{$this->namespace} Dashboard',
+            'stats' => \$this->model->getDashboardStats(),
+            'recent_items' => \$this->model->getRecentItems(5),
+            'route_info' => [
+                'current_route' => \$reqRoute,
+                'method' => \$reqMet,
+                'module' => '{$this->namespace}'
+            ]
+        ];
+        
+        \$this->view->render('dashboard', \$data);
+    }
+}
+PHP;
     }
 
     private function getEnhancedSubmoduleControllerTemplate(): string
@@ -636,14 +872,289 @@ PHP;
 
     private function getEnhancedCrudModelTemplate(): string
     {
-        // Enhanced CRUD model implementation
-        return $this->getEnhancedBasicModelTemplate() . "\n// Enhanced CRUD methods would be added here";
+        $fieldsArrayCode = var_export($this->config['fields'] ?? [], true);
+        
+        return <<<PHP
+<?php
+namespace {$this->namespace};
+
+use App\Common\\Bmvc\\BaseModel;
+
+/**
+ * Enhanced {$this->namespace} CRUD Model
+ * 
+ * Full database operations with graceful fallback
+ */
+class Model extends BaseModel
+{
+    protected \$table = '{$this->config['table_name']}';
+    protected \$enableCaching = true;
+    private array \$configuredFields = {$fieldsArrayCode};
+
+    public function __construct()
+    {
+        \$this->enableCaching = \\App\\Etc\\Config\\Environment::get('ROUTE_USE_CACHE', 'true') === 'true';
+    }
+
+    /**
+     * Get all items
+     */
+    public function getAll(): array
+    {
+        if (!\$this->checkConnection()) {
+            return \$this->getDemoData();
+        }
+
+        try {
+            return \$this->readAll(\$this->table) ?? [];
+        } catch (\\Exception \$e) {
+            error_log("Error reading {$this->namespace}: " . \$e->getMessage());
+            return \$this->getDemoData();
+        }
+    }
+
+    /**
+     * Get item by ID
+     */
+    public function getById(int \$id): ?array
+    {
+        if (!\$this->checkConnection()) {
+            \$demoData = \$this->getDemoData();
+            foreach (\$demoData as \$item) {
+                if (\$item['id'] == \$id) return \$item;
+            }
+            return null;
+        }
+
+        try {
+            return \$this->read(\$id, \$this->table);
+        } catch (\\Exception \$e) {
+            error_log("Error reading {$this->namespace}: " . \$e->getMessage());
+            return null;
+        }
+    }
+
+    /**
+     * Create new item
+     */
+    public function create(array \$data): bool
+    {
+        if (!\$this->checkConnection()) {
+            \$_SESSION['warning'] = 'Demo mode: Database not connected. Changes will not be saved.';
+            return true; // Simulate success
+        }
+
+        try {
+            return \$this->insert(\$this->table, \$data);
+        } catch (\\Exception \$e) {
+            error_log("Error creating {$this->namespace}: " . \$e->getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * Update existing item
+     */
+    public function update(int \$id, array \$data): bool
+    {
+        if (!\$this->checkConnection()) {
+            \$_SESSION['warning'] = 'Demo mode: Database not connected. Changes will not be saved.';
+            return true; // Simulate success
+        }
+
+        try {
+            return \$this->updateRecord(\$this->table, \$id, \$data);
+        } catch (\\Exception \$e) {
+            error_log("Error updating {$this->namespace}: " . \$e->getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * Delete item
+     */
+    public function delete(int \$id): bool
+    {
+        if (!\$this->checkConnection()) {
+            \$_SESSION['warning'] = 'Demo mode: Database not connected. Changes will not be saved.';
+            return true; // Simulate success
+        }
+
+        try {
+            return \$this->deleteRecord(\$this->table, \$id);
+        } catch (\\Exception \$e) {
+            error_log("Error deleting {$this->namespace}: " . \$e->getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * Check if database connection is available
+     */
+    private function checkConnection(): bool
+    {
+        return \$this->db !== null && \$this->db instanceof \\PDO;
+    }
+
+    /**
+     * Get demo data for testing without database
+     */
+    private function getDemoData(): array
+    {
+        \$demoData = [];
+        for (\$i = 1; \$i <= 3; \$i++) {
+            \$row = ['id' => \$i, 'created_at' => date('Y-m-d H:i:s')];
+            
+            // Generate demo data for each configured field
+            foreach (\$this->configuredFields as \$field) {
+                \$fieldName = \$field['name'];
+                
+                if (stripos(\$fieldName, 'name') !== false || stripos(\$fieldName, 'title') !== false) {
+                    \$row[\$fieldName] = "Demo {\$fieldName} {\$i}";
+                } elseif (stripos(\$fieldName, 'description') !== false) {
+                    \$row[\$fieldName] = "This is demo data. Configure database in .env to persist changes.";
+                } elseif (stripos(\$fieldName, 'price') !== false) {
+                    \$row[\$fieldName] = number_format(rand(10, 999), 2);
+                } elseif (stripos(\$fieldName, 'status') !== false) {
+                    \$row[\$fieldName] = \$i === 3 ? 'inactive' : 'active';
+                } else {
+                    \$row[\$fieldName] = "Sample {\$i}";
+                }
+            }
+            
+            \$demoData[] = \$row;
+        }
+        
+        return \$demoData;
+    }
+}
+PHP;
     }
 
     private function getEnhancedAuthModelTemplate(): string
     {
         // Enhanced Auth model implementation
         return $this->getEnhancedBasicModelTemplate() . "\n// Enhanced Auth methods would be added here";
+    }
+
+    private function getEnhancedDashboardModelTemplate(): string
+    {
+        return <<<PHP
+<?php
+namespace {$this->namespace};
+
+use App\Common\\Bmvc\\BaseModel;
+
+/**
+ * Enhanced {$this->namespace} Dashboard Model
+ */
+class Model extends BaseModel
+{
+    protected \$table = '{$this->config['table_name']}';
+    protected \$enableCaching = true;
+
+    public function __construct()
+    {
+        \$this->enableCaching = \\App\\Etc\\Config\\Environment::get('ROUTE_USE_CACHE', 'true') === 'true';
+    }
+
+    /**
+     * Get dashboard statistics
+     */
+    public function getDashboardStats(): array
+    {
+        // Return demo stats if no database connection
+        if (!\$this->checkConnection()) {
+            return \$this->getDemoStats();
+        }
+
+        return [
+            'total_items' => \$this->getTotalCount(),
+            'active_items' => \$this->getActiveCount(),
+            'recent_activity' => \$this->getRecentActivityCount(),
+            'pending_items' => \$this->getPendingCount()
+        ];
+    }
+
+    /**
+     * Get recent items
+     */
+    public function getRecentItems(int \$limit = 10): array
+    {
+        // Return demo data if no database connection
+        if (!\$this->checkConnection()) {
+            return \$this->getDemoItems(\$limit);
+        }
+
+        try {
+            return \$this->readAll(\$this->table, \$limit) ?? [];
+        } catch (\\Exception \$e) {
+            return \$this->getDemoItems(\$limit);
+        }
+    }
+
+    /**
+     * Check if database connection is available
+     */
+    private function checkConnection(): bool
+    {
+        return \$this->db !== null && \$this->db instanceof \\PDO;
+    }
+
+    /**
+     * Get demo statistics for display
+     */
+    private function getDemoStats(): array
+    {
+        return [
+            'total_items' => 127,
+            'active_items' => 98,
+            'recent_activity' => 23,
+            'pending_items' => 6
+        ];
+    }
+
+    /**
+     * Get demo items for display
+     */
+    private function getDemoItems(int \$limit): array
+    {
+        \$demoItems = [
+            ['id' => 1, 'title' => 'Sample Dashboard Item 1', 'name' => 'Demo Item 1', 'status' => 'active', 'created_at' => date('Y-m-d H:i:s', strtotime('-2 days'))],
+            ['id' => 2, 'title' => 'Sample Dashboard Item 2', 'name' => 'Demo Item 2', 'status' => 'active', 'created_at' => date('Y-m-d H:i:s', strtotime('-1 day'))],
+            ['id' => 3, 'title' => 'Sample Dashboard Item 3', 'name' => 'Demo Item 3', 'status' => 'pending', 'created_at' => date('Y-m-d H:i:s', strtotime('-3 hours'))],
+            ['id' => 4, 'title' => 'Sample Dashboard Item 4', 'name' => 'Demo Item 4', 'status' => 'active', 'created_at' => date('Y-m-d H:i:s', strtotime('-1 hour'))],
+            ['id' => 5, 'title' => 'Sample Dashboard Item 5', 'name' => 'Demo Item 5', 'status' => 'active', 'created_at' => date('Y-m-d H:i:s')],
+        ];
+
+        return array_slice(\$demoItems, 0, \$limit);
+    }
+
+    private function getTotalCount(): int
+    {
+        // Implement with actual DB query
+        return 0;
+    }
+
+    private function getActiveCount(): int
+    {
+        // Implement with actual DB query
+        return 0;
+    }
+
+    private function getRecentActivityCount(): int
+    {
+        // Implement with actual DB query
+        return 0;
+    }
+
+    private function getPendingCount(): int
+    {
+        // Implement with actual DB query
+        return 0;
+    }
+}
+PHP;
     }
 
     private function getEnhancedBasicViewTemplate(): string
@@ -719,14 +1230,116 @@ PHP;
 
     private function getEnhancedCrudViewTemplate(): string
     {
-        // Enhanced CRUD view implementation
-        return $this->getEnhancedBasicViewTemplate() . "\n// Enhanced CRUD view methods would be added here";
+        return <<<PHP
+<?php
+namespace {$this->namespace};
+
+use App\Common\\Bmvc\\BaseView;
+
+/**
+ * Enhanced {$this->namespace} CRUD View
+ */
+class View extends BaseView
+{
+    private \$layoutPath;
+    
+    public function __construct()
+    {
+        \$this->layoutPath = __DIR__ . '/views/layouts/';
     }
 
-    private function getEnhancedDashboardViewTemplate(): string
+    /**
+     * Render view template
+     */
+    public function render(string \$template, array \$data = []): void
     {
-        // Enhanced Dashboard view implementation
-        return $this->getEnhancedBasicViewTemplate() . "\n// Enhanced Dashboard view methods would be added here";
+        \$data['app_env'] = \\App\\Etc\\Config\\Environment::get('APP_ENV', 'production');
+        \$data['debug_mode'] = \\App\\Etc\\Config\\Environment::isDevelopment();
+        \$data['module_name'] = '{$this->namespace}';
+        
+        extract(\$data);
+        
+        include \$this->layoutPath . 'header.php';
+        
+        \$templateFile = __DIR__ . "/views/{\$template}.php";
+        if (file_exists(\$templateFile)) {
+            include \$templateFile;
+        } else {
+            echo "<div class='alert alert-danger'>Template {\$template} not found</div>";
+        }
+        
+        include \$this->layoutPath . 'footer.php';
+    }
+
+    /**
+     * Render flash messages
+     */
+    public function renderFlashMessages(): void
+    {
+        if (isset(\$_SESSION['success'])) {
+            echo "<div class='alert alert-success alert-dismissible fade show'>";
+            echo "<i class='fas fa-check-circle'></i> " . htmlspecialchars(\$_SESSION['success']);
+            echo "<button type='button' class='btn-close' data-bs-dismiss='alert'></button>";
+            echo "</div>";
+            unset(\$_SESSION['success']);
+        }
+        
+        if (isset(\$_SESSION['error'])) {
+            echo "<div class='alert alert-danger alert-dismissible fade show'>";
+            echo "<i class='fas fa-exclamation-circle'></i> " . htmlspecialchars(\$_SESSION['error']);
+            echo "<button type='button' class='btn-close' data-bs-dismiss='alert'></button>";
+            echo "</div>";
+            unset(\$_SESSION['error']);
+        }
+    }
+}
+PHP;
+    }
+
+    private function getEnhancedDashboardViewClassTemplate(): string
+    {
+        return <<<PHP
+<?php
+namespace {$this->namespace};
+
+use App\Common\\Bmvc\\BaseView;
+
+/**
+ * Enhanced {$this->namespace} Dashboard View
+ */
+class View extends BaseView
+{
+    private \$layoutPath;
+    
+    public function __construct()
+    {
+        \$this->layoutPath = __DIR__ . '/views/layouts/';
+    }
+
+    /**
+     * Enhanced render method for dashboard
+     */
+    public function render(string \$template, array \$data = []): void
+    {
+        \$data['app_env'] = \\App\\Etc\\Config\\Environment::get('APP_ENV', 'production');
+        \$data['debug_mode'] = \\App\\Etc\\Config\\Environment::isDevelopment();
+        \$data['module_name'] = '{$this->namespace}';
+        
+        extract(\$data);
+        
+        include \$this->layoutPath . 'header.php';
+        
+        \$templateFile = __DIR__ . "/views/{\$template}.php";
+        if (file_exists(\$templateFile)) {
+            include \$templateFile;
+        } else {
+            echo "<div class='alert alert-danger'>Template {\$template} not found</div>";
+        }
+        
+        include \$this->layoutPath . 'footer.php';
+    }
+}
+PHP;
     }
 
     // Enhanced template generation methods
@@ -739,10 +1352,11 @@ PHP;
         // Generate enhanced view files based on type
         switch ($this->config['type']) {
             case 'crud':
-                $this->writeFile('/views/index.php', $this->getEnhancedBasicIndexViewTemplate());
+                $this->writeFile('/views/index.php', $this->getEnhancedCrudIndexViewTemplate());
+                $this->writeFile('/views/form.php', $this->getEnhancedCrudFormViewTemplate());
                 break;
             case 'dashboard':
-                $this->writeFile('/views/dashboard.php', $this->getEnhancedBasicIndexViewTemplate());
+                $this->writeFile('/views/dashboard.php', $this->getEnhancedDashboardViewTemplate());
                 break;
             default:
                 $this->writeFile('/views/index.php', $this->getEnhancedBasicIndexViewTemplate());
@@ -953,6 +1567,270 @@ HTML;
                         <i class="fas fa-arrow-left"></i> Back to Module
                     </a>
                 </div>
+            </div>
+        </div>
+    </div>
+</div>
+HTML;
+    }
+
+    private function getEnhancedDashboardViewTemplate(): string
+    {
+        return <<<HTML
+<div class="row">
+    <div class="col-md-12 mb-4">
+        <h2><i class="fas fa-tachometer-alt"></i> <?php echo \$title; ?></h2>
+    </div>
+</div>
+
+<!-- Stats Cards -->
+<div class="row mb-4">
+    <div class="col-md-3">
+        <div class="card border-0 shadow-sm bg-primary text-white">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="card-subtitle mb-2 text-white-50">Total Items</h6>
+                        <h2 class="mb-0"><?php echo \$stats['total_items'] ?? 0; ?></h2>
+                    </div>
+                    <i class="fas fa-database fa-3x opacity-50"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card border-0 shadow-sm bg-success text-white">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="card-subtitle mb-2 text-white-50">Active</h6>
+                        <h2 class="mb-0"><?php echo \$stats['active_items'] ?? 0; ?></h2>
+                    </div>
+                    <i class="fas fa-check-circle fa-3x opacity-50"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card border-0 shadow-sm bg-info text-white">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="card-subtitle mb-2 text-white-50">Recent Activity</h6>
+                        <h2 class="mb-0"><?php echo \$stats['recent_activity'] ?? 0; ?></h2>
+                    </div>
+                    <i class="fas fa-chart-line fa-3x opacity-50"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card border-0 shadow-sm bg-warning text-dark">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="card-subtitle mb-2">Pending</h6>
+                        <h2 class="mb-0"><?php echo \$stats['pending_items'] ?? 0; ?></h2>
+                    </div>
+                    <i class="fas fa-clock fa-3x opacity-50"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Recent Items -->
+<div class="row">
+    <div class="col-md-12">
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-white">
+                <h5 class="mb-0"><i class="fas fa-list"></i> Recent Items</h5>
+            </div>
+            <div class="card-body">
+                <?php if (!empty(\$recent_items)): ?>
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Title</th>
+                                <th>Status</th>
+                                <th>Date</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach (\$recent_items as \$item): ?>
+                            <tr>
+                                <td><?php echo \$item['id'] ?? '—'; ?></td>
+                                <td><?php echo htmlspecialchars(\$item['title'] ?? \$item['name'] ?? 'N/A'); ?></td>
+                                <td>
+                                    <span class="badge bg-success">Active</span>
+                                </td>
+                                <td><?php echo date('M d, Y', strtotime(\$item['created_at'] ?? 'now')); ?></td>
+                                <td>
+                                    <button class="btn btn-sm btn-outline-primary">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                </div>
+                <?php else: ?>
+                <div class="alert alert-info mb-0">
+                    <i class="fas fa-info-circle"></i> No items found. This is a demo dashboard.
+                </div>
+                <?php endif; ?>
+            </div>
+        </div>
+    </div>
+</div>
+
+<?php if (\$debug_mode ?? false): ?>
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card border-warning">
+            <div class="card-header bg-warning text-dark">
+                <h6 class="mb-0"><i class="fas fa-bug"></i> Debug Information</h6>
+            </div>
+            <div class="card-body">
+                <p><strong>Environment:</strong> <span class="badge bg-secondary"><?php echo \$app_env; ?></span></p>
+                <p><strong>Module:</strong> <code><?php echo \$module_name; ?></code></p>
+                <p><strong>Stats:</strong> <code><?php print_r(\$stats); ?></code></p>
+            </div>
+        </div>
+    </div>
+</div>
+<?php endif; ?>
+HTML;
+    }
+
+    private function getEnhancedCrudIndexViewTemplate(): string
+    {
+        return <<<'HTML'
+<div class="row mb-3">
+    <div class="col-md-6">
+        <h2><i class="fas fa-list"></i> <?php echo $title; ?></h2>
+    </div>
+    <div class="col-md-6 text-end">
+        <a href="?action=create" class="btn btn-primary">
+            <i class="fas fa-plus"></i> Create New
+        </a>
+    </div>
+</div>
+
+<?php $this->renderFlashMessages(); ?>
+
+<div class="card border-0 shadow-sm">
+    <div class="card-body">
+        <?php if (!empty($items)): ?>
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <?php foreach ($fields as $field): ?>
+                        <th><?php echo ucfirst($field['name']); ?></th>
+                        <?php endforeach; ?>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($items as $item): ?>
+                    <tr>
+                        <td><?php echo $item['id']; ?></td>
+                        <?php foreach ($fields as $field): ?>
+                        <td><?php echo htmlspecialchars($item[$field['name']] ?? '—'); ?></td>
+                        <?php endforeach; ?>
+                        <td>
+                            <a href="?action=edit&id=<?php echo $item['id']; ?>" class="btn btn-sm btn-outline-primary">
+                                <i class="fas fa-edit"></i> Edit
+                            </a>
+                            <a href="?action=delete&id=<?php echo $item['id']; ?>" 
+                               class="btn btn-sm btn-outline-danger"
+                               onclick="return confirm('Are you sure you want to delete this item?')">
+                                <i class="fas fa-trash"></i> Delete
+                            </a>
+                        </td>
+                    </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
+        <?php else: ?>
+        <div class="alert alert-info">
+            <i class="fas fa-info-circle"></i> No items found. <a href="?action=create">Create your first item</a>.
+        </div>
+        <?php endif; ?>
+    </div>
+</div>
+HTML;
+    }
+
+    private function getEnhancedCrudFormViewTemplate(): string
+    {
+        return <<<'HTML'
+<div class="row">
+    <div class="col-md-8 mx-auto">
+        <h2><i class="fas fa-edit"></i> <?php echo $title; ?></h2>
+        
+        <?php $this->renderFlashMessages(); ?>
+        
+        <div class="card border-0 shadow-sm">
+            <div class="card-body">
+                <form method="POST" action="?action=<?php echo $action; ?>">
+                    <?php if (isset($item['id'])): ?>
+                    <input type="hidden" name="id" value="<?php echo $item['id']; ?>">
+                    <?php endif; ?>
+                    
+                    <?php foreach ($fields as $field): ?>
+                    <div class="mb-3">
+                        <label for="<?php echo $field['name']; ?>" class="form-label">
+                            <?php echo ucfirst(str_replace('_', ' ', $field['name'])); ?>
+                        </label>
+                        
+                        <?php if ($field['html_type'] === 'textarea'): ?>
+                        <textarea 
+                            class="form-control" 
+                            id="<?php echo $field['name']; ?>" 
+                            name="<?php echo $field['name']; ?>"
+                            rows="4"
+                            required><?php echo htmlspecialchars($item[$field['name']] ?? ''); ?></textarea>
+                        
+                        <?php elseif ($field['html_type'] === 'select'): ?>
+                        <select 
+                            class="form-select" 
+                            id="<?php echo $field['name']; ?>" 
+                            name="<?php echo $field['name']; ?>"
+                            required>
+                            <option value="">Select...</option>
+                            <option value="active" <?php echo ($item[$field['name']] ?? '') === 'active' ? 'selected' : ''; ?>>Active</option>
+                            <option value="inactive" <?php echo ($item[$field['name']] ?? '') === 'inactive' ? 'selected' : ''; ?>>Inactive</option>
+                        </select>
+                        
+                        <?php else: ?>
+                        <input 
+                            type="<?php echo $field['html_type']; ?>" 
+                            class="form-control" 
+                            id="<?php echo $field['name']; ?>" 
+                            name="<?php echo $field['name']; ?>"
+                            value="<?php echo htmlspecialchars($item[$field['name']] ?? ''); ?>"
+                            required>
+                        <?php endif; ?>
+                    </div>
+                    <?php endforeach; ?>
+                    
+                    <div class="d-flex justify-content-between">
+                        <a href="?" class="btn btn-secondary">
+                            <i class="fas fa-arrow-left"></i> Cancel
+                        </a>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save"></i> Save
+                        </button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
@@ -1621,10 +2499,17 @@ MD;
             $pdo = new PDO("mysql:host={$host};dbname={$dbname}", $username, $password);
             $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
+            // Create table
             $sql = $this->generateTableSQL();
             $pdo->exec($sql);
             
             echo "✅ Database table '{$this->config['table_name']}' created successfully\n";
+            
+            // Insert sample data
+            $sampleDataCount = $this->insertSampleData($pdo);
+            if ($sampleDataCount > 0) {
+                echo "✅ Inserted {$sampleDataCount} sample records for testing\n";
+            }
             
         } catch (PDOException $e) {
             echo "❌ Database error: " . $e->getMessage() . "\n";
@@ -1647,6 +2532,91 @@ MD;
         return "CREATE TABLE IF NOT EXISTS `{$this->config['table_name']}` (\n  " . 
                implode(",\n  ", $fields) . 
                "\n) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;";
+    }
+
+    private function insertSampleData(PDO $pdo): int
+    {
+        try {
+            $inserted = 0;
+            $sampleData = $this->generateSampleData();
+            
+            foreach ($sampleData as $row) {
+                $columns = array_keys($row);
+                $placeholders = array_map(fn($col) => ":{$col}", $columns);
+                
+                $sql = "INSERT INTO `{$this->config['table_name']}` (" . 
+                       implode(', ', array_map(fn($col) => "`{$col}`", $columns)) . 
+                       ") VALUES (" . implode(', ', $placeholders) . ")";
+                
+                $stmt = $pdo->prepare($sql);
+                foreach ($row as $key => $value) {
+                    $stmt->bindValue(":{$key}", $value);
+                }
+                
+                if ($stmt->execute()) {
+                    $inserted++;
+                }
+            }
+            
+            return $inserted;
+        } catch (PDOException $e) {
+            echo "⚠️  Could not insert sample data: " . $e->getMessage() . "\n";
+            return 0;
+        }
+    }
+
+    private function generateSampleData(): array
+    {
+        $sampleData = [];
+        $count = 5; // Generate 5 sample records
+        
+        for ($i = 1; $i <= $count; $i++) {
+            $row = [];
+            
+            foreach ($this->config['fields'] as $field) {
+                $fieldName = $field['name'];
+                $sqlType = strtoupper($field['sql_type']);
+                
+                // Generate appropriate sample data based on field type
+                if (strpos($sqlType, 'VARCHAR') !== false || strpos($sqlType, 'TEXT') !== false) {
+                    if (strpos($fieldName, 'name') !== false || strpos($fieldName, 'title') !== false) {
+                        $row[$fieldName] = "Sample {$this->config['name']} {$i}";
+                    } elseif (strpos($fieldName, 'description') !== false) {
+                        $row[$fieldName] = "This is a sample description for {$this->config['name']} item {$i}. You can edit or delete this record.";
+                    } elseif (strpos($fieldName, 'email') !== false) {
+                        $row[$fieldName] = "sample{$i}@example.com";
+                    } else {
+                        $row[$fieldName] = "Sample data {$i}";
+                    }
+                } elseif (strpos($sqlType, 'INT') !== false) {
+                    $row[$fieldName] = rand(1, 100);
+                } elseif (strpos($sqlType, 'DECIMAL') !== false || strpos($sqlType, 'FLOAT') !== false) {
+                    if (strpos($fieldName, 'price') !== false) {
+                        $row[$fieldName] = number_format(rand(10, 999) + (rand(0, 99) / 100), 2, '.', '');
+                    } else {
+                        $row[$fieldName] = number_format(rand(1, 100) + (rand(0, 99) / 100), 2, '.', '');
+                    }
+                } elseif (strpos($sqlType, 'ENUM') !== false) {
+                    // Extract enum values
+                    if (preg_match('/ENUM\((.*?)\)/i', $sqlType, $matches)) {
+                        $enumValues = array_map(fn($v) => trim($v, " '\""), explode(',', $matches[1]));
+                        $row[$fieldName] = $enumValues[array_rand($enumValues)];
+                    } else {
+                        $row[$fieldName] = 'active';
+                    }
+                } elseif (strpos($sqlType, 'DATE') !== false || strpos($sqlType, 'TIMESTAMP') !== false) {
+                    $row[$fieldName] = date('Y-m-d H:i:s', strtotime("-{$i} days"));
+                } elseif (strpos($sqlType, 'BOOL') !== false || strpos($sqlType, 'TINYINT(1)') !== false) {
+                    $row[$fieldName] = rand(0, 1);
+                } else {
+                    $row[$fieldName] = "Sample {$i}";
+                }
+            }
+            
+            $sampleData[] = $row;
+        }
+        
+        return $sampleData;
     }
 
     private function writeFile(string $relativePath, string $content): void

@@ -137,6 +137,19 @@ class ModuleGeneratorEnhancedCLI
             $config['create_table'] = $this->confirm("🗄️  Create database table automatically? (y/n): ");
         }
         
+        if ($config['type'] === 'dashboard') {
+            echo "\n📊 Dashboard modules can track specific data types.\n";
+            if ($this->confirm("Would you like to define fields for dashboard tracking? (y/n): ", false)) {
+                $config['fields'] = $this->getCrudFields();
+            } else {
+                // Default dashboard fields
+                $config['fields'] = [
+                    ['name' => 'title', 'sql_type' => 'VARCHAR(255)', 'html_type' => 'text'],
+                    ['name' => 'status', 'sql_type' => 'ENUM("active","inactive")', 'html_type' => 'select'],
+                ];
+            }
+        }
+        
         // Enhanced features
         $config['use_middleware'] = $this->confirm("🔒 Enable middleware integration? (y/n): ", true);
         $config['create_submodules'] = $this->confirm("📦 Create submodule structure? (y/n): ", false);
