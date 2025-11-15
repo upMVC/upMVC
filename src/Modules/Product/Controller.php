@@ -124,7 +124,10 @@ class Controller extends BaseController
         $data = $this->getPostData();
         
         if ($this->model->createItem($data)) {
-            $_SESSION['success'] = 'App\Modules\Product created successfully!';
+            // Only set success if not in demo mode (check if warning was set)
+            if (!isset($_SESSION['warning'])) {
+                $_SESSION['success'] = 'App\Modules\Product created successfully!';
+            }
         } else {
             $_SESSION['error'] = 'Failed to create App\Modules\Product';
         }
@@ -181,7 +184,10 @@ class Controller extends BaseController
         $data = $this->getPostData();
         
         if ($this->model->updateItem($id, $data)) {
-            $_SESSION['success'] = 'App\Modules\Product updated successfully!';
+            // Only set success if not in demo mode (check if warning was set)
+            if (!isset($_SESSION['warning'])) {
+                $_SESSION['success'] = 'App\Modules\Product updated successfully!';
+            }
         } else {
             $_SESSION['error'] = 'Failed to update App\Modules\Product';
         }
@@ -202,7 +208,10 @@ class Controller extends BaseController
         }
 
         if ($this->model->deleteItem($id)) {
-            $_SESSION['success'] = 'App\Modules\Product deleted successfully!';
+            // Only set success if not in demo mode (check if warning was set)
+            if (!isset($_SESSION['warning'])) {
+                $_SESSION['success'] = 'App\Modules\Product deleted successfully!';
+            }
         } else {
             $_SESSION['error'] = 'Failed to delete App\Modules\Product';
         }

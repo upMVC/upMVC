@@ -629,7 +629,10 @@ class Controller extends BaseController
         \$data = \$this->getPostData();
         
         if (\$this->model->createItem(\$data)) {
-            \$_SESSION['success'] = '{$this->namespace} created successfully!';
+            // Only set success if not in demo mode (check if warning was set)
+            if (!isset(\$_SESSION['warning'])) {
+                \$_SESSION['success'] = '{$this->namespace} created successfully!';
+            }
         } else {
             \$_SESSION['error'] = 'Failed to create {$this->namespace}';
         }
@@ -686,7 +689,10 @@ class Controller extends BaseController
         \$data = \$this->getPostData();
         
         if (\$this->model->updateItem(\$id, \$data)) {
-            \$_SESSION['success'] = '{$this->namespace} updated successfully!';
+            // Only set success if not in demo mode (check if warning was set)
+            if (!isset(\$_SESSION['warning'])) {
+                \$_SESSION['success'] = '{$this->namespace} updated successfully!';
+            }
         } else {
             \$_SESSION['error'] = 'Failed to update {$this->namespace}';
         }
@@ -707,7 +713,10 @@ class Controller extends BaseController
         }
 
         if (\$this->model->deleteItem(\$id)) {
-            \$_SESSION['success'] = '{$this->namespace} deleted successfully!';
+            // Only set success if not in demo mode (check if warning was set)
+            if (!isset(\$_SESSION['warning'])) {
+                \$_SESSION['success'] = '{$this->namespace} deleted successfully!';
+            }
         } else {
             \$_SESSION['error'] = 'Failed to delete {$this->namespace}';
         }
