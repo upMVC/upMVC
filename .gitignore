@@ -7,6 +7,10 @@ tests/
 /tests/
 .phpunit.cache/
 
+# Internal planning and features (top secret)
+vault/
+/vault/**
+
 # Logs
 logs/
 *.log
