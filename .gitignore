@@ -3,6 +3,13 @@
 # Debug and testing files
 zbug/
 /zbug/
+tests/
+/tests/
+.phpunit.cache/
+
+# Internal planning and features (top secret)
+vault/
+/vault/**
 
 # Logs
 logs/

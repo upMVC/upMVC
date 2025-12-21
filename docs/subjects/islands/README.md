@@ -1,0 +1,7 @@
+# Islands Architecture
+
+Links — sorted by date pending Git history:
+
+- [ISLANDS_ARCHITECTURE.md](../../ISLANDS_ARCHITECTURE.md)
+- [ISLANDS_ARCHITECTURE_INDEX.md](../../ISLANDS_ARCHITECTURE_INDEX.md)
+- [ISLANDS_DOCUMENTATION_SUMMARY.md](../../ISLANDS_DOCUMENTATION_SUMMARY.md)

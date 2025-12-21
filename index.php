@@ -30,7 +30,8 @@
 
 require_once 'vendor/autoload.php';
 
-use upMVC\Start;
+//use upMVC\Start;
+use App\Etc\Start;
 
 // ========================================
 // Start Application

@@ -1,0 +1,9 @@
+# Bug Fixes
+
+Links — sorted by date pending Git history:
+
+- [BUG_FIX_AUTH_ASSIGNMENT.md](../../BUG_FIX_AUTH_ASSIGNMENT.md)
+- [BUG_FIX_AUTH_REDIRECT.md](../../BUG_FIX_AUTH_REDIRECT.md)
+- [BUG_FIX_MISSING_EXIT.md](../../BUG_FIX_MISSING_EXIT.md)
+- [BUG_FIX_OUTPUT_BEFORE_HEADER.md](../../BUG_FIX_OUTPUT_BEFORE_HEADER.md)
+- [BUG_FIX_TRAILING_SLASH.md](../../BUG_FIX_TRAILING_SLASH.md)

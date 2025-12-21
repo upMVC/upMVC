@@ -1,0 +1,102 @@
+/* Enhanced App\Modules\TestDashboard Module Styles */
+
+:root {
+    --App\Modules\TestDashboard-primary: #007bff;
+    --App\Modules\TestDashboard-secondary: #6c757d;
+    --App\Modules\TestDashboard-success: #28a745;
+    --App\Modules\TestDashboard-info: #17a2b8;
+    --App\Modules\TestDashboard-warning: #ffc107;
+    --App\Modules\TestDashboard-danger: #dc3545;
+}
+
+.App\Modules\TestDashboard-container {
+    padding: 20px 0;
+}
+
+.App\Modules\TestDashboard-card {
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    border: none;
+    border-radius: 12px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.App\Modules\TestDashboard-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 15px rgba(0,0,0,0.15);
+}
+
+/* Enhanced debugging styles */
+.debug-mode {
+    border: 3px dashed var(--App\Modules\TestDashboard-warning) !important;
+}
+
+.debug-info {
+    background: linear-gradient(45deg, #fff3cd, #fefefe);
+    border-left: 4px solid var(--App\Modules\TestDashboard-warning);
+    padding: 15px;
+    margin: 15px 0;
+}
+
+/* Enhanced responsive design */
+@media (max-width: 768px) {
+    .App\Modules\TestDashboard-container {
+        padding: 10px 0;
+    }
+    
+    .App\Modules\TestDashboard-card {
+        margin-bottom: 15px;
+    }
+}
+
+/* Enhanced animations */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.App\Modules\TestDashboard-fade-in {
+    animation: fadeInUp 0.6s ease;
+}
+
+/* Enhanced loading states */
+.App\Modules\TestDashboard-loading {
+    position: relative;
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+.App\Modules\TestDashboard-loading::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 20px;
+    height: 20px;
+    margin: -10px 0 0 -10px;
+    border: 2px solid var(--App\Modules\TestDashboard-primary);
+    border-top: 2px solid transparent;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* Enhanced error states */
+.App\Modules\TestDashboard-error {
+    border-color: var(--App\Modules\TestDashboard-danger) !important;
+    box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25);
+}
+
+/* Enhanced success states */
+.App\Modules\TestDashboard-success {
+    border-color: var(--App\Modules\TestDashboard-success) !important;
+    box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.25);
+}
