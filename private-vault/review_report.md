@@ -125,3 +125,8 @@ This section captures an additional review focused specifically on the current u
 **Final Note:**
 
 From the perspective of architecture, security in the core flow, and documentation consistency, the upMVC v2.0 branch is suitable for a tagged release on GitHub. The remaining items are incremental improvements rather than release blockers.
+
+must - 
+Wire Config::initConfig() to APP_DEBUG.
+Clarify the canonical entrypoint in README.
+Design a persistent rate-limit backend for higher-scale setups.
