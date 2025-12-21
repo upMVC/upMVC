@@ -221,9 +221,14 @@ composer create-project bitshost/upmvc yourProjectName
 # Step 2: Navigate to project
 cd yourProjectName
 
+# (Recommended v2.0) If you use public/ as web server document root:
+# cd public
+
 # Step 3: Configure etc/.env
 # Edit these 2 required settings:
-# - SITE_PATH=/yourProjectName (or empty if root)
+# - SITE_PATH=/yourProjectName          # if document root is project root
+#   or SITE_PATH=/yourProjectName/public # if document root points to public/
+#   or SITE_PATH=                       # if the app is at domain root
 # - DOMAIN_NAME=http://localhost
 # 
 # Database settings are optional because upMVC has smart fallbacks:
@@ -232,12 +237,18 @@ cd yourProjectName
 # - Configure database only when you need it for your modules
 ```
 
-**That's it!** 🎉 Run with:
+**That's it!** 🎉 Run with (choose one):
 ```bash
+# A) Serve from project root (uses index.php in root)
 php -S localhost:8081
+
+# B) Recommended v2.0: serve public/ as document root
+php -S localhost:8081 -t public
 ```
 
-**Visit:** `http://localhost:8081/yourProjectName` - Complete framework with all modules ready!
+**Visit:**
+- If using root as document root: `http://localhost:8081/yourProjectName`
+- If using public/ as document root: `http://localhost:8081` (or adjust for SITE_PATH)
 
 **Note:** Everything is included - no copying files needed! Just configure `.env` and run.
 
