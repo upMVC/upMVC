@@ -54,7 +54,7 @@ public function display($reqRoute, $reqMet)
 - **[🧩 Module Philosophy](docs/MODULE_PHILOSOPHY.md)** - Modules as reference implementations
 ```
 
-### 3. Updated: `modules/admin/README.md`
+### 3. Updated: `src/Modules/Admin/README.md`
 
 **Added at top:**
 ```markdown
@@ -73,7 +73,7 @@ public function display($reqRoute, $reqMet)
 **Updated See Also section:**
 ```markdown
 - [Module Philosophy](../MODULE_PHILOSOPHY.md) - Understanding reference implementations
-- [Admin Module Example](../../modules/admin/README.md) - Cached routing in action
+- [Admin Module Example](../../src/Modules/Admin/README.md) - Cached routing in action
 ```
 
 ## 🎯 Key Messages Communicated

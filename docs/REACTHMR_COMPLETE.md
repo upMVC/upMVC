@@ -364,9 +364,9 @@ Context switches: 0
 
 | Resource | Location |
 |----------|----------|
-| **Module** | `modules/reacthmr/` |
+| **Module** | `src/Modules/Reacthmr/` |
 | **Demo** | `/reacthmr` |
-| **README** | `modules/reacthmr/README.md` |
+| **README** | `src/Modules/Reacthmr/README.md` |
 | **Implementation** | `docs/REACTHMR_IMPLEMENTATION.md` |
 | **Quick Summary** | `docs/REACTHMR_QUICK_SUMMARY.md` |
 | **Visual Guide** | `docs/REACTHMR_VISUAL_GUIDE.md` |

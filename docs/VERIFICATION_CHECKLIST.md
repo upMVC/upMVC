@@ -5,31 +5,31 @@
 
 ## ✅ Verification Categories
 
-### 1. Core System Files
-- [ ] `index.php` - Entry point
-- [ ] `Routes.php` - Route definitions
-- [ ] `etc/Config.php` - Configuration
-- [ ] `etc/Start.php` - Bootstrap
-- [ ] `etc/Router.php` - Routing logic
-- [ ] `etc/InitModsImproved.php` - Module initialization
+### 1. Core System Files (v2.0 layout)
+- [ ] `public/index.php` - HTTP entry point
+- [ ] `src/Etc/Routes.php` - Core route definitions
+- [ ] `src/Etc/Config.php` - Configuration
+- [ ] `src/Etc/Start.php` - Bootstrap
+- [ ] `src/Etc/Router.php` - Routing logic
+- [ ] `src/Etc/InitModsImproved.php` - Module initialization
 
-### 2. Middleware System
-- [ ] `etc/Middleware/MiddlewareInterface.php`
-- [ ] `etc/Middleware/MiddlewareManager.php`
-- [ ] `etc/Middleware/AuthMiddleware.php`
-- [ ] `etc/Middleware/LoggingMiddleware.php`
-- [ ] `etc/Middleware/CorsMiddleware.php`
+### 2. Middleware System (v2.0 layout)
+- [ ] `src/Etc/Middleware/MiddlewareInterface.php`
+- [ ] `src/Etc/Middleware/MiddlewareManager.php`
+- [ ] `src/Etc/Middleware/AuthMiddleware.php`
+- [ ] `src/Etc/Middleware/LoggingMiddleware.php`
+- [ ] `src/Etc/Middleware/CorsMiddleware.php`
 
 ### 3. Auth Module (Recently Fixed)
-- [ ] `modules/auth/Controller.php`
-- [ ] `modules/auth/View.php`
-- [ ] `modules/auth/Model.php`
-- [ ] `modules/auth/routes/Routes.php`
+- [ ] `src/Modules/Auth/Controller.php`
+- [ ] `src/Modules/Auth/View.php`
+- [ ] `src/Modules/Auth/Model.php`
+- [ ] `src/Modules/Auth/routes/Routes.php`
 
-### 4. Common Components
-- [ ] `common/Bmvc/BaseView.php`
-- [ ] `common/Bmvc/BaseController.php`
-- [ ] Error handlers (404.php, 500.php)
+### 4. Common Components (v2.0 layout)
+- [ ] `src/Common/Bmvc/BaseView.php`
+- [ ] `src/Common/Bmvc/BaseController.php`
+- [ ] Error handlers (`src/Common/errors/404.php`, `src/Common/errors/500.php`)
 
 ### 5. Documentation
 - [ ] README.md - Accurate and up-to-date

@@ -128,12 +128,12 @@ php tools/modulegenerator-enhanced/generate.php create hello
 
 ### **Manual Creation:**
 
-#### **1. Create Directory:**
+#### **1. Create Directory (v2.0 layout):**
 ```bash
-mkdir -p modules/hello/routes
+mkdir -p src/Modules/Hello/routes
 ```
 
-#### **2. Create Controller (`modules/hello/Controller.php`):**
+#### **2. Create Controller (`src/Modules/Hello/Controller.php`):**
 ```php
 <?php
 namespace Hello;
@@ -149,7 +149,7 @@ class Controller
 }
 ```
 
-#### **3. Create Routes (`modules/hello/routes/Routes.php`):**
+#### **3. Create Routes (`src/Modules/Hello/routes/Routes.php`):**
 ```php
 <?php
 namespace Hello\Routes;
@@ -164,13 +164,13 @@ class Routes
 ```
 
 #### **4. Update Composer Autoloading:**
-Add to `composer.json` in the `autoload` section:
+Add to `composer.json` in the `autoload` section (v2.0 layout):
 ```json
 {
     "autoload": {
         "psr-4": {
-            "Hello\\": "modules/hello/",
-            "Hello\\Routes\\": "modules/hello/routes/"
+            "Hello\\": "src/Modules/Hello/",
+            "Hello\\Routes\\": "src/Modules/Hello/routes/"
         }
     }
 }
@@ -205,26 +205,29 @@ Time: 2025-10-13 15:30:45
 
 ## 📊 **Step 8: Explore the NoFramework**
 
-### **Understanding the Structure:**
+### **Understanding the Structure (v2.0):**
 ```
 your-app/
-├── index.php           # ← Entry point
+├── public/
+│   └── index.php       # ← HTTP entry point (document root)
+├── src/
+│   ├── Etc/           # ← Core noFramework files
+│   │   ├── Start.php  # ← Application bootstrap
+│   │   ├── Router.php # ← URL routing
+│   │   └── Config.php # ← Configuration
+│   ├── Modules/       # ← Your application modules
+│   │   └── Hello/     # ← Your first module!
+│   └── Common/        # ← Shared base classes (controllers/views/models)
 ├── composer.json       # ← Dependencies & autoloading
-├── etc/               # ← Core noFramework files
-│   ├── Start.php      # ← Application bootstrap
-│   ├── Router.php     # ← URL routing
-│   └── Config.php     # ← Configuration
-├── modules/           # ← Your application modules
-│   └── hello/         # ← Your first module!
-└── vendor/            # ← Composer dependencies
+└── vendor/             # ← Composer dependencies
 ```
 
-### **Key Files to Know:**
-- **`index.php`** - Application entry point
-- **`etc/Start.php`** - NoFramework initialization  
-- **`etc/Router.php`** - URL routing system
-- **`modules/*/Controller.php`** - Handle requests
-- **`modules/*/routes/Routes.php`** - Define URLs
+### **Key Files to Know (v2.0):**
+- **`public/index.php`** - HTTP entry point
+- **`src/Etc/Start.php`** - NoFramework initialization  
+- **`src/Etc/Router.php`** - URL routing system
+- **`src/Modules/*/Controller.php`** - Handle requests
+- **`src/Modules/*/routes/Routes.php`** - Define URLs
 
 ---
 
@@ -281,7 +284,7 @@ composer dump-autoload
 ```
 
 #### **Database connection issues**
-Check `etc/ConfigDatabase.php` credentials and ensure database exists.
+Check `src/Etc/ConfigDatabase.php` credentials and ensure database exists.
 
 ---
 
@@ -292,10 +295,10 @@ Check `etc/ConfigDatabase.php` credentials and ensure database exists.
 2. **❓ FAQ.md** - Common questions and solutions
 3. **📊 REPOSITORY-STRUCTURE-GUIDE.md** - Understanding different repositories
 
-### **Example Code Locations:**
-- **Demo modules:** `modules/test/`, `modules/enhanced/`
-- **Configuration examples:** `etc/Config.php`, `etc/ConfigDatabase.php`
-- **Advanced features:** `modules/enhanced/Controller.php`
+### **Example Code Locations (v2.0 layout):**
+- **Demo modules:** `src/Modules/Test/`, `src/Modules/Enhanced/`
+- **Configuration examples:** `src/Etc/Config.php`, `src/Etc/ConfigDatabase.php`
+- **Advanced features:** `src/Modules/Enhanced/Controller.php`
 
 ---
 

@@ -123,10 +123,10 @@ RouteHelper::setRouter($router);
 
 **Modified:**
 - `composer.json` - Added `upMVC\\Helpers\\` PSR-4 namespace
-- `etc/Start.php` - Uses `HelperFacade` via PSR-4 (no require_once)
+- `src/Etc/Start.php` - Uses `HelperFacade` via PSR-4 (no require_once)
 
 **Deleted:**
-- `etc/helpers.php` - Replaced by modular structure
+- `etc/helpers.php` - Replaced by modular structure (moved under `src/Etc/Helpers/`)
 
 ### ✅ Compatibility
 

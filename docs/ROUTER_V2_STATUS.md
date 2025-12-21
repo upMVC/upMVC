@@ -23,19 +23,19 @@
 
 | File | Status | Changes | Purpose |
 |------|--------|---------|---------|
-| `etc/Router.php` | ✅ Enhanced | +207 lines | Core Router V2 implementation |
-| `etc/helpers.php` | ✅ New | +195 lines | Helper class with `route()` method |
-| `etc/Start.php` | ✅ Updated | +3 lines | Initialize `Helpers::setRouter()` |
+| `src/Etc/Router.php` | ✅ Enhanced | +207 lines | Core Router V2 implementation |
+| `src/Etc/helpers.php` | ✅ New | +195 lines | Helper class with `route()` method |
+| `src/Etc/Start.php` | ✅ Updated | +3 lines | Initialize `Helpers::setRouter()` |
 
 ### Admin Module - Router V2 Demonstration
 
 | File | Status | Changes | Purpose |
 |------|--------|---------|---------|
-| `modules/admin/routes/Routes.php` | ✅ Enhanced | Updated | Router V2 with type hints + validation + named routes |
-| `modules/admin/routes/Routesd.php` | ✅ New | +78 lines | Backup: Basic param routing (no type hints) |
-| `modules/admin/Controller.php` | ✅ Enhanced | Updated | Clean Router V2 integration (no casting) |
-| `modules/admin/Controllerd.php` | ✅ New | +246 lines | Backup: Basic param controller (manual validation) |
-| `modules/admin/README.md` | ✅ Enhanced | +145 lines | Documents all 3 routing strategies |
+| `src/Modules/Admin/routes/Routes.php` | ✅ Enhanced | Updated | Router V2 with type hints + validation + named routes |
+| `src/Modules/Admin/routes/Routesd.php` | ✅ New | +78 lines | Backup: Basic param routing (no type hints) |
+| `src/Modules/Admin/Controller.php` | ✅ Enhanced | Updated | Clean Router V2 integration (no casting) |
+| `src/Modules/Admin/Controllerd.php` | ✅ New | +246 lines | Backup: Basic param controller (manual validation) |
+| `src/Modules/Admin/README.md` | ✅ Enhanced | +145 lines | Documents all 3 routing strategies |
 
 ### Documentation
 

@@ -10,6 +10,7 @@ tests/
 # Internal planning and features (top secret)
 vault/
 /vault/**
+private-vault/
 
 # Logs
 logs/

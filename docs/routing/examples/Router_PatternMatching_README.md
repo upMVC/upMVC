@@ -13,14 +13,14 @@ This is a production-ready Router implementation that supports pattern matching 
 
 ## Installation
 
-Replace `etc/Router.php` with this file:
+Replace `src/Etc/Router.php` with this file (v2.0 layout):
 
 ```powershell
 # Backup original
-Copy-Item etc/Router.php etc/Router_BACKUP.php
+Copy-Item src/Etc/Router.php src/Etc/Router_BACKUP.php
 
 # Install pattern matching router
-Copy-Item docs/routing/examples/Router_PatternMatching.php etc/Router.php -Force
+Copy-Item docs/routing/examples/Router_PatternMatching.php src/Etc/Router.php -Force
 ```
 
 ## Usage Examples
