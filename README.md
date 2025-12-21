@@ -165,6 +165,13 @@ Rasmus Lerdorf: PHP NoFrameworks all suck!
 
 # 📦 Installation
 
+> **Entry Point (Standalone Projects)**  
+> When you create a new project with `composer create-project bitshost/upmvc`,
+> the canonical HTTP entry point is `public/index.php`. The root `index.php`
+> is kept for library-style installs (when you copy the file into an existing
+> project root). For a clean standalone deployment, point your web server
+> document root to the `public/` directory.
+
 ## Option 1: Install as a Library (Recommended for existing projects)
 
 Add upMVC to your existing project in **4 simple steps:**

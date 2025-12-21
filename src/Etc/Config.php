@@ -24,6 +24,7 @@
 namespace App\Etc;
 
 use App\Etc\Config\Environment;
+use App\Etc\Config\ConfigManager;
 
 class Config
 {
@@ -233,11 +234,23 @@ class Config
      */
     private function initConfig(): void
     {
-        // Set timezone
-        date_default_timezone_set(self::get('timezone', 'UTC'));
+        // Ensure modern configuration is loaded so APP_DEBUG / app.debug is available
+        if (class_exists(ConfigManager::class)) {
+            ConfigManager::load();
+        }
+
+        // Set timezone (prefer app.timezone if available, fallback to legacy config)
+        $timezone = method_exists(ConfigManager::class, 'get')
+            ? (ConfigManager::get('app.timezone', self::get('timezone', 'UTC')))
+            : self::get('timezone', 'UTC');
+        date_default_timezone_set($timezone);
         
-        // Error reporting based on debug mode
-        if (self::get('debug', false)) {
+        // Error reporting based on debug mode (prefer APP_DEBUG / app.debug)
+        $debug = method_exists(ConfigManager::class, 'get')
+            ? (bool) ConfigManager::get('app.debug', self::get('debug', false))
+            : (bool) self::get('debug', false);
+
+        if ($debug) {
             error_reporting(E_ALL);
             ini_set('display_errors', 1);
         } else {
