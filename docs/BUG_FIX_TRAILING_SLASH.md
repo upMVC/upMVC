@@ -10,7 +10,7 @@ Date: October 16, 2025
 
 ### The Real Bug
 
-**File:** `modules/auth/View.php` - Line 202
+**File:** `src/Modules/Auth/View.php` - Line 202
 
 ```php
 // WRONG (with trailing slash)

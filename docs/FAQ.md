@@ -94,12 +94,12 @@ public const DOMAIN_NAME = 'https://yourdomain.com';
 
 ### **Q: My new module isn't loading, why?**
 **A:** Check these steps:
-1. **Namespace matches directory:** 
+1. **Namespace matches directory (v2.0 layout):** 
    - Namespace: `MyModule`
-   - Directory: `modules/mymodule/`
+   - Directory: `src/Modules/Mymodule/`
 2. **Added to composer.json:**
    ```json
-   "MyModule\\": "modules/mymodule/"
+   "MyModule\\": "src/Modules/Mymodule/"
    ```
 3. **Regenerated autoloader:**
    ```bash
@@ -116,30 +116,30 @@ public const DOMAIN_NAME = 'https://yourdomain.com';
 
 ### **Q: How do I rename an existing module?**
 **A:** Follow these steps:
-1. **Rename directory:** `modules/oldname/` → `modules/newname/`
+1. **Rename directory:** `src/Modules/Oldname/` → `src/Modules/Newname/`
 2. **Update namespace in all PHP files:** `namespace OldName;` → `namespace NewName;`
 3. **Update composer.json:**
    ```json
-   "NewName\\": "modules/newname/"
+   "NewName\\": "src/Modules/Newname/"
    ```
 4. **Regenerate autoloader:** `composer dump-autoload`
 5. **Update any hard-coded references**
 
 ### **Q: Can I delete demonstration modules?**
-**A:** **Yes!** Modules in `/modules/` are optional demonstration code. Safe to remove:
-- `modules/enhanced/` - Advanced features demo
-- `modules/test/` - Testing examples
-- `modules/react*/` - React integration examples
+**A:** **Yes!** Modules in `/src/Modules/` are optional demonstration code. Safe to remove:
+- `src/Modules/Enhanced/` - Advanced features demo
+- `src/Modules/Test/` - Testing examples
+- `src/Modules/React*/` - React integration examples
 - Keep only modules you're actually using
 
 ### **Q: How do I create nested modules?**
-**A:** upMVC supports nested modules:
+**A:** upMVC supports nested modules (v2.0 layout):
 ```
-modules/
-├── parent/
+src/Modules/
+├── Parent/
 │   ├── Controller.php          # namespace Parent;
-│   └── modules/
-│       └── child/
+│   └── Modules/
+│       └── Child/
 │           ├── Controller.php  # namespace Parent\Child;
 │           └── routes/Routes.php
 ```

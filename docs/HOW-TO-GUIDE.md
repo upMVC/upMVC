@@ -112,16 +112,16 @@ php tools/modulegenerator-enhanced/generate.php create blog
 
 ### **Manual Module Creation:**
 
-#### **1. Create Module Structure:**
+#### **1. Create Module Structure (v2.0 layout):**
 ```
-modules/mymodule/
+src/Modules/Mymodule/
 ├── Controller.php
 ├── Model.php
 ├── View.php
 └── routes/Routes.php
 ```
 
-#### **2. Controller (`modules/mymodule/Controller.php`):**
+#### **2. Controller (`src/Modules/Mymodule/Controller.php`):**
 ```php
 <?php
 namespace Mymodule;
@@ -153,7 +153,7 @@ class Controller
 }
 ```
 
-#### **3. Model (`modules/mymodule/Model.php`):**
+#### **3. Model (`src/Modules/Mymodule/Model.php`):**
 ```php
 <?php
 namespace Mymodule;
@@ -188,7 +188,7 @@ class Model
 }
 ```
 
-#### **4. View (`modules/mymodule/View.php`):**
+#### **4. View (`src/Modules/Mymodule/View.php`):**
 ```php
 <?php
 namespace Mymodule;
@@ -235,7 +235,7 @@ class View
 }
 ```
 
-#### **5. Routes (`modules/mymodule/routes/Routes.php`):**
+#### **5. Routes (`src/Modules/Mymodule/routes/Routes.php`):**
 ```php
 <?php
 namespace Mymodule\Routes;
@@ -251,14 +251,14 @@ class Routes
 }
 ```
 
-### **6. Update Composer Autoloading:**
-Add to `composer.json`:
+### **6. Update Composer Autoloading (v2.0 layout):**
+Add to `composer.json` (mapping your module into `src/Modules`):
 ```json
 {
     "autoload": {
         "psr-4": {
-            "Mymodule\\": "modules/mymodule/",
-            "Mymodule\\Routes\\": "modules/mymodule/routes/"
+            "Mymodule\\": "src/Modules/Mymodule/",
+            "Mymodule\\Routes\\": "src/Modules/Mymodule/routes/"
         }
     }
 }

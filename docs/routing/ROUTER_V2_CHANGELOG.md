@@ -365,7 +365,7 @@ None. All features tested and working.
    ```
 
 2. **Review changes:**
-   - Check `etc/Router.php`
+   - Check `src/Etc/Router.php`
    - Try examples from `docs/routing/ROUTER_V2_EXAMPLES.md`
    - Run tests: `vendor/bin/phpunit`
 

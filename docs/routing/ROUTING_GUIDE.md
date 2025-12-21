@@ -641,7 +641,7 @@ if (file_exists($cacheFile)) {
 }
 ```
 
-**See:** `modules/admin/README.md` for complete comparison
+**See:** `src/Modules/Admin/README.md` for complete comparison
 
 ---
 
@@ -655,12 +655,12 @@ if (file_exists($cacheFile)) {
 - **[HELPER_FUNCTIONS_GUIDE.md](HELPER_FUNCTIONS_GUIDE.md)** - Helper functions for routing
 
 ### Examples
-- **[modules/admin/](../../modules/admin/)** - All 3 strategies demonstrated
+- **[src/Modules/Admin/](../../src/Modules/Admin/)** - All 3 strategies demonstrated
 - **[docs/routing/examples/](examples/)** - Working code examples
 
 ### Helpers
-- **[HelperFacade](../../etc/Helpers/HelperFacade.php)** - PSR-4 helper facade
-- **[RouteHelper](../../etc/Helpers/RouteHelper.php)** - Named route generation
+- **[HelperFacade](../../src/Etc/Helpers/HelperFacade.php)** - PSR-4 helper facade
+- **[RouteHelper](../../src/Etc/Helpers/RouteHelper.php)** - Named route generation
 
 ---
 

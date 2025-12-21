@@ -227,17 +227,17 @@ if ($this->requiresAuth($route)) {
 
 ## 9. Files Modified (Summary)
 
-### Core Files:
-- `etc/Start.php` - No changes needed ✅
-- `etc/Router.php` - Debug code removed ✅
-- `etc/Routes.php` - No changes needed ✅
+### Core Files (v2.0 layout):
+- `src/Etc/Start.php` - No changes needed ✅
+- `src/Etc/Router.php` - Debug code removed ✅
+- `src/Etc/Routes.php` - No changes needed ✅
 
-### Middleware:
-- `etc/Middleware/AuthMiddleware.php` - Debug removed, logic fixed ✅
+### Middleware (v2.0 layout):
+- `src/Etc/Middleware/AuthMiddleware.php` - Debug removed, logic fixed ✅
 
-### Auth Module:
-- `modules/auth/Controller.php` - All 4 bugs fixed, debug removed ✅
-- `modules/auth/View.php` - Trailing slash removed ✅
+### Auth Module (v2.0 layout):
+- `src/Modules/Auth/Controller.php` - All 4 bugs fixed, debug removed ✅
+- `src/Modules/Auth/View.php` - Trailing slash removed ✅
 
 ### Documentation:
 - `docs/PHILOSOPHY_PURE_PHP.md` - Created/Updated ✅

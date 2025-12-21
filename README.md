@@ -1,4 +1,4 @@
-# 📚 upMVC noFramework v1.4.7 - Complete Documentation
+# 📚 upMVC noFramework v2.0 - Complete Documentation
 
 > **Modern, lightweight PHP noframework for rapid development with clean architecture**
 
@@ -165,7 +165,7 @@ Rasmus Lerdorf: PHP NoFrameworks all suck!
 
 # 📦 Installation
 
-> **Entry Point (Standalone Projects)**  
+> **Entry Point (Standalone Projects, v2.0)**  
 > When you create a new project with `composer create-project bitshost/upmvc`,
 > the canonical HTTP entry point is `public/index.php`. The root `index.php`
 > is kept for library-style installs (when you copy the file into an existing

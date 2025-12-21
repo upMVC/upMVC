@@ -14,7 +14,7 @@ The modules included with upMVC (`admin`, `auth`, `email`, `react`, etc.) are **
 
 ## 🗂 What Each Module Demonstrates
 
-### Authentication Module (`/modules/auth`)
+### Authentication Module (`/src/Modules/Auth`)
 **Purpose:** Shows basic login/logout implementation  
 **Keep if:** You need simple username/password authentication  
 **Can delete if:** You're using OAuth, LDAP, or external auth  
@@ -27,7 +27,7 @@ The modules included with upMVC (`admin`, `auth`, `email`, `react`, etc.) are **
 
 ---
 
-### Admin Module (`/modules/admin`)
+### Admin Module (`/src/Modules/Admin`)
 **Purpose:** Demonstrates CRUD operations with **cached database routing**  
 **Keep if:** You need a user management dashboard  
 **Can delete if:** You don't need admin functionality  
@@ -44,7 +44,7 @@ The modules included with upMVC (`admin`, `auth`, `email`, `react`, etc.) are **
 
 ---
 
-### Email Module (`/modules/mail`)
+### Email Module (`/src/Modules/Mail`)
 **Purpose:** Shows email sending functionality  
 **Keep if:** Your app sends emails  
 **Can delete if:** You use external email services  
@@ -56,7 +56,7 @@ The modules included with upMVC (`admin`, `auth`, `email`, `react`, etc.) are **
 
 ---
 
-### React Modules (`/modules/react*`)
+### React Modules (`/src/Modules/React*`)
 **Purpose:** Demonstrates **five different patterns** for integrating React/Vue/Preact  
 **Keep if:** You want to mix PHP backend with JS frontend  
 **Can delete if:** You're doing pure PHP or external SPA  
@@ -78,7 +78,7 @@ upMVC demonstrates **two different ways** to protect routes. Choose the one that
 
 ### Approach 1: Manual Session Check (Simple)
 
-**Example:** `modules/react/Controller.php`
+**Example:** `src/Modules/React/Controller.php`
 
 ```php
 private function main($reqMet, $reqRoute)
@@ -146,7 +146,7 @@ function matchesPattern($uri, $pattern) {
 }
 ```
 
-**Controller:** `modules/admin/Controller.php`
+**Controller:** `src/Modules/Admin/Controller.php`
 
 ```php
 public function display($reqRoute, $reqMet)

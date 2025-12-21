@@ -18,10 +18,10 @@
 ### ✅ Tests (in `/zbug/`)
 - `RouterEnhancedTest.php` - Test suite for all enhancements
 
-### ✅ Core Files (modified)
-- `etc/Router.php` - All 4 enhancements implemented
-- `etc/Start.php` - Initializes Helpers class with router
-- `etc/helpers.php` - OOP Helpers class with static methods
+### ✅ Core Files (modified, v2.0 layout)
+- `src/Etc/Router.php` - All 4 enhancements implemented
+- `src/Etc/Start.php` - Initializes Helpers class with router
+- `src/Etc/helpers.php` - OOP Helpers class with static methods
 - `README.md` - Updated with Router v2.0 section
 
 ---
