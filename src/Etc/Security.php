@@ -101,8 +101,14 @@ class Security
      * Tracks requests per identifier (IP address, user ID, etc.) within
      * a time window. Automatically resets counter after time window expires.
      * 
-     * NOTE: In-memory storage. For production multi-server setups,
-     * implement Redis or database-backed rate limiting.
+     * Storage strategy:
+     * - If a session is available, use $_SESSION for persistence across
+     *   requests (suitable for typical PHP-FPM deployments).
+     * - Otherwise, fall back to the in-memory static array, which is
+     *   process-local and mainly useful for long-running workers.
+     * 
+     * For multi-server environments or strict rate limiting, consider
+     * replacing the session storage with Redis or a database-backed store.
      * 
      * @param string $identifier Unique identifier (IP, user ID, etc.)
      * @param int $maxRequests Maximum requests allowed (default: 100)
@@ -126,13 +132,22 @@ class Security
     {
         $now = time();
         $key = md5($identifier);
-        
-        // Initialize tracking for new identifier
-        if (!isset(self::$rateLimits[$key])) {
-            self::$rateLimits[$key] = ['count' => 0, 'reset' => $now + $timeWindow];
+
+        // Prefer session-backed storage when a session is active
+        $storage =& self::$rateLimits;
+        if (session_status() === PHP_SESSION_ACTIVE) {
+            if (!isset($_SESSION['upmvc_rate_limits']) || !is_array($_SESSION['upmvc_rate_limits'])) {
+                $_SESSION['upmvc_rate_limits'] = [];
+            }
+            $storage =& $_SESSION['upmvc_rate_limits'];
         }
         
-        $limit = &self::$rateLimits[$key];
+        // Initialize tracking for new identifier
+        if (!isset($storage[$key])) {
+            $storage[$key] = ['count' => 0, 'reset' => $now + $timeWindow];
+        }
+        
+        $limit =& $storage[$key];
         
         // Reset counter if time window expired
         if ($now > $limit['reset']) {
