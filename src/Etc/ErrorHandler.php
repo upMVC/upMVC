@@ -52,6 +52,24 @@ class ErrorHandler
     // ========================================
     // Registration
     // ========================================
+
+    /**
+     * Override the default logs directory path.
+     *
+     * Accepts absolute or relative paths. A trailing directory
+     * separator is automatically added when missing.
+     *
+     * @param string $path
+     * @return void
+     */
+    public static function setLogPath(string $path): void
+    {
+        $path = rtrim($path, "\\/");
+        if ($path === '') {
+            $path = 'logs';
+        }
+        self::$logPath = $path . DIRECTORY_SEPARATOR;
+    }
     
     /**
      * Register global error handlers

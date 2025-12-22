@@ -173,9 +173,10 @@ class Database
      * 
      * Connection uses credentials from hybrid config (see loadConfig()).
      * 
-     * On connection failure, outputs error message and returns null.
-     * 
-     * @return PDO|null PDO connection object or null on failure
+    * On connection failure, a PDOException is thrown.
+    * 
+    * @return PDO|null PDO connection object or null on failure
+    * @throws PDOException
      * 
      * @example
      * // Basic usage
@@ -216,7 +217,8 @@ class Database
             );
             
         } catch (PDOException $exception) {
-            echo "Database could not be connected: " . $exception->getMessage();
+            // Let the global error handler or caller manage connection failures
+            throw $exception;
         }
         
         return $this->conn;

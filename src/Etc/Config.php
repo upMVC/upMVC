@@ -277,7 +277,27 @@ class Config
         ]);
         
         session_start();
-        
+
+        // Route all framework error logs into a single location.
+        // LOG_PATH in .env can override the default (relative to app root).
+        $defaultLogPath = self::getAppDir() . '/src/logs';
+        $envLogPath = Environment::get('LOG_PATH', '');
+
+        if ($envLogPath !== '') {
+            // Treat non-absolute paths as relative to application root
+            $isWindowsAbs = (bool) preg_match('/^[A-Za-z]:[\\\\\/]/', $envLogPath);
+            $isUnixAbs = str_starts_with($envLogPath, '/');
+
+            if ($isWindowsAbs || $isUnixAbs) {
+                $logPath = $envLogPath;
+            } else {
+                $logPath = self::getAppDir() . '/' . ltrim($envLogPath, "\\/");
+            }
+        } else {
+            $logPath = $defaultLogPath;
+        }
+
+        ErrorHandler::setLogPath($logPath);
         ErrorHandler::register();
     }
 

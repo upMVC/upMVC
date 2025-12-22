@@ -14,7 +14,7 @@ upMVC v1.0.3 introduces a **contemporary design system** while maintaining compl
 - **🎯 Zero Breaking Changes**: Drop-in replacement for existing BaseView
 
 **Quick Demo:** `/test` (original) vs `/test/modern` (new design)
-**Documentation:** [Modern BaseView Guide](MODERN_BASEVIEW_GUIDE.md) | [Demo Instructions](MODERN_DEMO.md)
+**Documentation:** [Modern BaseView Guide](docs/MODERN_BASEVIEW_GUIDE.md) | [Demo Instructions](docs/MODERN_DEMO.md)
 
 ## 🌟 **What is upMVC?**
 

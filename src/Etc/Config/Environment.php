@@ -300,6 +300,9 @@ MAIL_FROM_NAME="${APP_NAME}"
 LOG_CHANNEL=file
 LOG_LEVEL=debug
 
+# Log path (relative to app root or absolute)
+LOG_PATH=src/logs
+
 ENV;
 
         file_put_contents(self::$envFile, $template);

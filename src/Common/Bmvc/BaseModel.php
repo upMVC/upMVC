@@ -46,6 +46,13 @@ class BaseModel
     public function __construct()
     {
         $this->conn = (new Database())->getConnection();
+
+        // Ensure we never operate with a null connection
+        if ($this->conn === null) {
+            throw new \RuntimeException(
+                'Database connection could not be established. Please check DB_* settings in .env or ConfigDatabase. '
+            );
+        }
     }
 
     /**
