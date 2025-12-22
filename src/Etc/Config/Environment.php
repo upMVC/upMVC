@@ -54,13 +54,15 @@ class Environment
             self::createDefaultEnvFile();
         }
 
+        // Mark as loaded before parsing to avoid recursive load() calls
+        // triggered by variable substitution (e.g. ${APP_NAME}) in values
+        self::$loaded = true;
+
         // Load .env file
         self::loadEnvFile(self::$envFile);
 
         // Load system environment variables
         self::loadSystemVars();
-
-        self::$loaded = true;
     }
 
     /**
