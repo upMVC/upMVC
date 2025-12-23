@@ -6,6 +6,7 @@
 |----------|---------|-------------|--------|
 | **[📋 FIRST-STEPS-GUIDE.md](FIRST-STEPS-GUIDE.md)** | Get started in 5 minutes | 5-15 min | ✅ Ready |
 | **[📁 REPOSITORY-STRUCTURE-GUIDE.md](REPOSITORY-STRUCTURE-GUIDE.md)** | Choose the right repository | 10 min | ✅ Ready |
+| **[🏗 CORE_AREAS_AND_CONFIGURATION.md](CORE_AREAS_AND_CONFIGURATION.md)** | Understand src/Etc, Modules, Tools, Common | 15-30 min | ✅ Ready |
 | **[📘 HOW-TO-GUIDE.md](HOW-TO-GUIDE.md)** | Complete development guide | 30-60 min | ✅ Ready |
 | **[❓ FAQ.md](FAQ.md)** | Common questions & troubleshooting | As needed | ✅ Ready |
 
