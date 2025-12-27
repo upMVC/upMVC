@@ -187,12 +187,8 @@ composer require bitshost/upmvc
 copy vendor/bitshost/upmvc/index.php .
 copy vendor/bitshost/upmvc/.htaccess .
 
-# Step 3: Create etc folder and copy .env configuration
-mkdir etc
-copy vendor/bitshost/upmvc/etc/.env etc/.env
-
-# Step 4: Configure your environment
-# Edit etc/.env with required settings:
+# Step 3: Configure your environment (.env)
+# Edit vendor/bitshost/upmvc/src/Etc/.env with required settings:
 # - SITE_PATH=/your-folder-name (e.g., /myproject)
 # - DOMAIN_NAME=localhost (or your domain)
 # 
