@@ -1,4 +1,4 @@
-# upMVC v2.0 - Ready for Main Branch Release
+# upMVC v2.0.0 "Islands" - Ready for Main Branch Release
 
 ## 🎉 Status: PRODUCTION READY
 
@@ -134,7 +134,7 @@ Before final release, test these scenarios:
 - [x] Documentation updated
 - [x] Philosophy clarified
 
-### 2. Git Operations:
+### 2. Git Operations (updated for v2.0.0):
 ```bash
 # 1. Review changes
 git status
@@ -159,8 +159,8 @@ git push origin feature/auth-fixes
 # 6. After review and merge, tag release
 git checkout main
 git pull
-git tag -a v2.0 -m "upMVC v2.0 - Production Ready"
-git push origin v2.0
+git tag -a v2.0.0 -m "upMVC v2.0.0 \"Islands\" - Production Ready"
+git push origin v2.0.0
 ```
 
 ### 3. Post-Deployment:

@@ -1,5 +1,89 @@
 # Changelog
 
+## v2.0.0 - Islands Release (2025-12-28)
+
+### 🌍 Islands Architecture & NoFramework Identity
+
+- Formalized the **Islands Architecture** direction for upMVC, with clear documentation of how PHP modules, React/Vue "islands", and micro‑frontends coexist.
+- Clarified the **NoFramework** philosophy across docs (pure PHP + simple OOP, no heavy container/ORM requirements).
+- Updated high‑level docs to speak to the target audience: developers who want structure without framework bloat.
+
+**Key docs:**
+- ISLANDS_ARCHITECTURE_INDEX.md – Islands overview and mental model
+- ISLANDS_ARCHITECTURE.md – Deep dive into architecture
+- ISLANDS_DOCUMENTATION_SUMMARY.md – Concise summary and navigation
+- PHILOSOPHY_PURE_PHP.md – NoFramework positioning and principles
+
+### 🔐 Auth, Middleware & Core Stability (v2.0 line)
+
+- Fixed multiple critical authentication issues:
+  - Intended URL handling in AuthMiddleware (no overwrite, reliable redirect).
+  - Assignment vs comparison bug in auth checks.
+  - Missing `exit` calls after redirects.
+  - Trailing slash issues in redirect helpers.
+- Removed all leftover debug code from production paths (router, auth module, middleware).
+- Verified core request flow, URL handling and error behaviour via dedicated verification docs.
+
+**Key docs:**
+- READY_FOR_MAIN.md – v2.0 production‑readiness report
+- PRE_RELEASE_VERIFICATION.md – Pre‑release verification checklist
+- VERIFICATION_CHECKLIST.md – Code verification checklist (v2.0 layout)
+- BUG_FIX_*.md, CLEANUP_DEBUG_CODE.md, URL_HANDLING_EXPLAINED.md – Detailed fix reports
+
+### 🚦 Router v2.0 & Parameterized Routing (Version 2.0.0)
+
+- Shipped **Router v2.0** with four major enhancements while keeping existing routes working:
+  - **Type casting** – `{id:int}`, `{price:float}`, `{active:bool}` auto‑cast to correct types.
+  - **Validation patterns** – Regex constraints at router level for safer parameter handling.
+  - **Named routes** – `->name()` and helper support for refactor‑safe URL generation.
+  - **Route grouping** – Prefix‑based optimization for large route sets.
+- Added a full educational package: changelog, examples, implementation report, evaluation and recommendations.
+
+**Key docs:**
+- routing/ROUTER_V2_CHANGELOG.md – Router v2.0 changelog & migration guide
+- routing/ROUTER_V2_EXAMPLES.md – Practical usage and migration examples
+- routing/ROUTER_V2_IMPLEMENTATION_COMPLETE.md – Implementation report & merge instructions
+- routing/PARAMETERIZED_ROUTING.md – In‑depth parameterized routing guide
+- ROUTER_V2_STATUS.md – Overall status and recommended tagging (`v2.0.0`)
+
+### 🧰 Helper System & Developer Experience (v1.4.7 → folded into v2 line)
+
+- Introduced a modern **PSR‑4 modular helper system** and integrated it into the v2 codebase:
+  - Replaced the monolithic `helpers.php` with dedicated helper classes (RouteHelper, UrlHelper, FormHelper, DataHelper, ResponseHelper, DebugHelper).
+  - Added `HelperFacade` (or equivalent) as a clean entry point, wired from Start/Router.
+  - All helpers are now PSR‑4 autoloaded and easier to test and extend.
+- Improved documentation around configuration, environment handling, and core areas.
+
+**Key docs:**
+- CORE_AREAS_AND_CONFIGURATION.md – Core areas and config map
+- CONFIGURATION_FALLBACKS.md, CONFIG_SIMPLE_EXPLANATION.md – Env/config behaviour
+- COMPONENT_LIBRARY.md – Modern component patterns and UI pieces
+
+### 📊 CRUD, Dashboard & Admin Enhancements
+
+- Implemented a modern CRUD + Dashboard flow with pagination, flash messages and demo‑data fallbacks.
+- Added a robust dashboard module with stats widgets and recent‑items listings.
+- Documented the CRUD/dashboard implementation and moved the detailed report under docs.
+
+**Key docs:**
+- docs/CHANGELOG-CRUD-PAGINATION.md – Full CRUD & dashboard report
+- CHANGELOG-CRUD-PAGINATION.md (root) – Pointer to the detailed docs file
+
+### ✅ Quality, Verification & Tooling
+
+- Established a **pre‑release verification pipeline** for the v2 line, including:
+  - Manual checklists for core files, middleware, auth, and routes.
+  - Guidance for running PHPUnit tests (including RouterEnhanced tests).
+  - Git workflows for merging feature branches (auth fixes, router v2) into `main`.
+- Added maintenance tooling and docs for cache cleanup and module discovery.
+
+**Key docs & tools:**
+- PRE_RELEASE_VERIFICATION.md, READY_FOR_MAIN.md, VERIFICATION_CHECKLIST.md
+- ROUTER_V2_STATUS.md and routing/ROUTER_V2_* docs
+- tools/cache-cli.php – Cache maintenance CLI (modules/admin caches)
+
+---
+
 ## v1.4.7 - PSR-4 Helper Architecture (2025-11-09)
 
 ### 🏗️ Architecture: PSR-4 Modular Helper System
