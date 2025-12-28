@@ -363,31 +363,42 @@ If something doesn't work as expected, check:
 		
 ## 🛣️ Routing System
 
-upMVC offers flexible routing at multiple levels:
+upMVC v2 uses a **Router v2.0 + auto-discovery** model – you configure the core router once and let modules register themselves.
 
-1. **Global Routes** → `/etc/Routes.php` - Application-wide routes
-2. **Module Routes** → `/modules/yourmodule/routes/Routes.php` - Module-specific routes
-3. **Module Initialization** → `/etc/InitMods.php` - Register module routes
-4. **Namespace Registration** → `composer.json` - Add PSR-4 autoload entries
+### Core Routing Flow
+
+1. **Global Routes** → `src/Etc/Routes.php`
+   - Application-wide routes (health, home, system-level endpoints).
+2. **Router v2.0** → `src/Etc/Router.php`
+   - Exact routes + parameterized routes (typed, validated, named).
+3. **Module Auto‑Discovery** → `src/Etc/InitModsImproved.php`
+   - Scans `src/Modules/*` and automatically wires module routes.
+
+### Autoloading (Composer)
+
+Composer now handles everything via a **single PSR‑4 root**:
 
 ```json
 "autoload": {
     "psr-4": {
-        "YourModule\\": "modules/yourmodule/"
+        "App\\": "src/"
     }
 }
 ```
 
-**After adding namespaces:** Run `composer dump-autoload`
+- No per‑module namespace entries needed.
+- After adding new modules, run: `composer dump-autoload`
 
-### Quick Start: Add Your Module Routes
+### Quick Start: Add a Module with Routes
 
-1. Create your routes file: `/modules/yourmodule/routes/Routes.php`
-2. Define your routes using `$this->addRoute()` method
-3. Register in `/etc/InitMods.php`: `$initRoutes->yourmodule();`
-4. **That's it** - upMVC handles the rest automatically
+1. Create your module under `src/Modules/Yourmodule/` (Controller, View, etc.).
+2. Expose routes from the module via its `Routes`/`routes` method (see docs and examples).
+3. Ensure `InitModsImproved` is in use – it will auto‑discover and register the module.
+4. Visit the module URL; Router v2.0 + middleware handle the rest.
 
-**Example:** See `/modules/test/routes/Routes.php` for reference implementation
+**Examples & Guides:**
+- See the `test`, `admin`, and example modules under `src/Modules/*`.
+- Read: `docs/routing/ROUTING_GUIDE.md`, `docs/routing/ROUTER_V2_EXAMPLES.md`, and `docs/routing/ROUTER_V2_CHANGELOG.md`.
     
 
 #
