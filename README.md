@@ -386,7 +386,8 @@ Composer now handles everything via a **single PSR‑4 root**:
 }
 ```
 
-- No per‑module namespace entries needed.
+- No per‑module namespace entries needed **in composer.json** – all modules live under the single `App\` tree.
+- Inside your module code you still declare normal namespaces like `App\Modules\Blog`, `App\Modules\Shop`, etc. – Composer autoload will resolve them automatically.
 - After adding new modules, run: `composer dump-autoload`
 
 ### Quick Start: Add a Module with Routes
