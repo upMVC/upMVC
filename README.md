@@ -1,8 +1,10 @@
-# 📚 upMVC noFramework v2.0 - Complete Documentation
+# 📚 upMVC noFramework v2.0.0 "Islands" – Complete Documentation
 
-> **Modern, lightweight PHP noframework for rapid development with clean architecture**
+> **Modern, lightweight PHP NoFramework with Islands Architecture for real-world PHP + JS systems**
 
-**Status: ✅ Production Ready** | **PHP 8.1+** | **PSR-4 Compliant** | **MIT License**
+**Status: ✅ Production Ready (v2.0.0 "Islands")** | **PHP 8.1+** | **PSR-4 Compliant** | **MIT License**
+
+**New in 2.0.0 "Islands":** Hardened auth & middleware, Router v2.0 (typed & validated routes with names), PSR-4 helpers, CRUD + dashboard path, and a fully documented PHP + React/Vue *Islands Architecture*.
 
 ## 🎨 **NEW: Modern UI System**
 
