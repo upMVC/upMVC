@@ -70,14 +70,14 @@ class Controller
         if (isset($_SESSION["logged"]) && $_SESSION["logged"] === true) {
             // If already logged in, redirect to intended URL or home
             $intendedUrl = $_SESSION['intended_url'] ?? null;
-            if ($intendedUrl) {
-                unset($_SESSION['intended_url']); // Clear intended URL
+            unset($_SESSION['intended_url']);
+            if ($intendedUrl && str_starts_with($intendedUrl, BASE_URL)) {
                 header("Location: $intendedUrl");
-                exit;  // CRITICAL: Stop execution after redirect
+                exit;
             } else {
                 $this->url = BASE_URL;
                 header("Location: $this->url");
-                exit;  // CRITICAL: Stop execution after redirect
+                exit;
             }
         } else {
             $this->login();
@@ -86,13 +86,52 @@ class Controller
 
     private function login()
     {
+        $loginError = null;
+
+        // Process POST before any HTML output so session cookie can be set
+        if ($_POST) {
+            $users           = new Model();
+            $users->username = $_POST['username'] ?? '';
+            $inputPassword   = $_POST['password'] ?? '';
+            $stmt            = $users->readUserLogin();
+            $row             = $stmt ? $stmt->fetch(PDO::FETCH_ASSOC) : false;
+
+            if ($row && password_verify($inputPassword, $row['password'])) {
+                if (intval($row['state']) === 1) {
+                    session_regenerate_id(true);
+                    $_SESSION['username']      = $row['username'];
+                    $_SESSION['iduser']        = $row['id'];
+                    $_SESSION['logged']        = true;
+                    $_SESSION['authenticated'] = true;
+
+                    $intendedUrl = $_SESSION['intended_url'] ?? null;
+                    unset($_SESSION['intended_url']);
+                    $redirectUrl = ($intendedUrl && str_starts_with($intendedUrl, BASE_URL))
+                        ? $intendedUrl
+                        : $this->url;
+
+                    header('Location: ' . $redirectUrl);
+                    exit;
+                } else {
+                    $loginError = 'Account not activated. Check your email!';
+                }
+            } else {
+                $loginError = 'Invalid username or password.';
+            }
+        }
+
+        // Render login form (GET request or failed POST)
         $view        = new BaseView();
-        $this->html = new View();
+        $this->html  = new View();
         $this->title = "Login Page";
         $view->startHead($this->title);
         $this->html->cssLogin();
         $view->endHead();
         $view->startBody($this->title);
+
+        if ($loginError !== null) {
+            echo '<p style="color:red;text-align:center">' . htmlspecialchars($loginError) . '</p>';
+        }
 
         $this->html->login();
         $this->html->validate();
@@ -100,41 +139,6 @@ class Controller
         $view->endBody();
         $view->startFooter();
         $view->endFooter();
-
-        $users = new Model();
-        if ($_POST) {
-            $users->username = $_POST['username'];
-            $users->password     = $_POST['password'];
-            //$users->tokenSession = $token
-            $stmt            = $users->readUserLogin();
-            if ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                $active = intval($row['state']);
-                if ($active === 1) {
-                    $_SESSION["username"] = $row['username'];
-                    $_SESSION["iduser"]   = $row['id'];
-                    $_SESSION["logged"] = true;           // Legacy compatibility
-                    $_SESSION['authenticated'] = true;     // Middleware compatibility
-                    
-                    // Redirect to intended URL if available, otherwise home
-                    $intendedUrl = $_SESSION['intended_url'] ?? null;
-                    if ($intendedUrl) {
-                        $redirectUrl = $intendedUrl;
-                        unset($_SESSION['intended_url']); // Clear intended URL
-                    } else {
-                        $redirectUrl = $this->url;
-                    }
-                    
-                    $this->html->validateToken($redirectUrl);
-                    exit;
-                } else {
-                    echo 'You have not activated your account, check your email!';
-                }
-            } else {
-                echo "Try again!";
-            }
-        } else {
-            echo "Out!";
-        }
     }
 
     private function logout()
@@ -201,17 +205,11 @@ class Controller
         $view->endFooter();
     }
 
-    private function tokenGenerator($tokenLength)
+    private function tokenGenerator(int $tokenLength): string
     {
-        $char = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-        $token     = '';
-        $n         = 0;
-        while ($n < $tokenLength) {
-            $position = rand(0, strlen($char) - 1);
-            $token .= $char[$position];
-            $n++;
-        }
-        return $token;
+        // random_bytes gives cryptographically secure random data; bin2hex doubles the length
+        $bytes = (int) ceil($tokenLength / 2);
+        return substr(bin2hex(random_bytes($bytes)), 0, $tokenLength);
     }
 
     private function accountActivation()

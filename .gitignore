@@ -12,6 +12,13 @@ vault/
 /vault/**
 private-vault/
 
+# Database seed data (test/ghost data — never commit to production)
+database/saas-seed.sql
+
+# Local tools folder (DB managers, one-off scripts, local helpers)
+# Committed schema/migrations live in /database — this is for local tooling only
+tools/
+
 # Logs
 logs/
 *.log

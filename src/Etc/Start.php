@@ -27,6 +27,9 @@ use App\Etc\Exceptions\ErrorHandler;
 use App\Etc\Middleware\AuthMiddleware;
 use App\Etc\Middleware\LoggingMiddleware;
 use App\Etc\Middleware\CorsMiddleware;
+use App\Etc\Middleware\JwtAuthMiddleware;
+use App\Etc\Middleware\TenantMiddleware;
+use App\Etc\Middleware\PlanGateMiddleware;
 use App\Etc\Helpers\HelperFacade;
 
 class Start
@@ -212,6 +215,12 @@ class Start
             }
             return true;
         });
+
+        // JWT bearer token verification — sets $GLOBALS['current_user']
+        $router->addMiddleware('jwt', new JwtAuthMiddleware());
+
+        // Tenant resolution + validation — sets $GLOBALS['current_tenant']
+        $router->addMiddleware('tenant', new TenantMiddleware());
     }
 
     // ========================================

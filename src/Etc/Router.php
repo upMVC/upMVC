@@ -292,6 +292,34 @@ class Router
         $this->middleware[$name] = $middleware;
     }
 
+    /**
+     * Execute a single named middleware entry.
+     *
+     * Supports colon-argument syntax for parameterised middleware:
+     *   'feature:efactura'  → resolves to PlanGateMiddleware('efactura')
+     *
+     * @param string $name    Middleware name, optionally with ':arg' suffix
+     * @param string $route   Current route
+     * @param string $method  HTTP method
+     * @return bool  false = abort the request, true = continue
+     */
+    private function runNamedMiddleware(string $name, string $route, string $method): bool
+    {
+        // Handle 'feature:X' parameterised syntax
+        if (str_starts_with($name, 'feature:')) {
+            $feature = substr($name, strlen('feature:'));
+            $gate = new \App\Etc\Middleware\PlanGateMiddleware($feature);
+            return $gate($route, $method);
+        }
+
+        if (isset($this->middleware[$name])) {
+            $result = $this->middleware[$name]($route, $method);
+            return $result !== false;
+        }
+
+        return true; // Unknown middleware name — pass through
+    }
+
     // ========================================
     // Request Dispatching
     // ========================================
@@ -332,14 +360,9 @@ class Router
                 $reqRoute,
                 $request,
                 function ($request) use ($route, $reqRoute, $reqMet) {
-                    // Execute route-specific middleware for backward compatibility
                     foreach ($route['middleware'] ?? [] as $middlewareName) {
-                        if (isset($this->middleware[$middlewareName])) {
-                            $result = $this->middleware[$middlewareName]($reqRoute, $reqMet);
-                            if ($result === false) return;
-                        }
+                        if (!$this->runNamedMiddleware($middlewareName, $reqRoute, $reqMet)) return;
                     }
-                    
                     return $this->callController($route['className'], $route['methodName'], $reqRoute, $reqMet);
                 }
             );
@@ -357,12 +380,8 @@ class Router
                     $reqRoute,
                     $request,
                     function ($request) use ($route, $reqRoute, $reqMet, $params) {
-                        // Execute route-specific named middleware
                         foreach ($route['middleware'] ?? [] as $middlewareName) {
-                            if (isset($this->middleware[$middlewareName])) {
-                                $result = $this->middleware[$middlewareName]($reqRoute, $reqMet);
-                                if ($result === false) return;
-                            }
+                            if (!$this->runNamedMiddleware($middlewareName, $reqRoute, $reqMet)) return;
                         }
 
                         // Inject params into $_GET with type casting

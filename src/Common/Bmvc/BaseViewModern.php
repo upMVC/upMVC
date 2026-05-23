@@ -69,9 +69,9 @@ class BaseViewModern
                     <div class="nav-dropdown">
                         <button class="nav-dropdown-toggle">More ▼</button>
                         <div class="nav-dropdown-menu">
-                            <a href="<?php echo BASE_URL; ?>/test-one" class="dropdown-link">📝 Single Param</a>
-                            <a href="<?php echo BASE_URL; ?>/test-one/two" class="dropdown-link">📋 Multi Param</a>
-                            <a href="<?php echo BASE_URL; ?>/newmod" class="dropdown-link">⚡ Enhanced CRUD</a>
+                            <a href="<?php echo BASE_URL; ?>/test/item/42" class="dropdown-link">📝 Single Param</a>
+                            <a href="<?php echo BASE_URL; ?>/test/pair/hello/world" class="dropdown-link">📋 Multi Param</a>
+                            <a href="<?php echo BASE_URL; ?>/new" class="dropdown-link">⚡ Enhanced CRUD</a>
                             <a href="<?php echo BASE_URL; ?>/reactb" class="dropdown-link">� React Alt</a>
                             <a href="<?php echo BASE_URL; ?>/admin" class="dropdown-link">🚫 No-Build JS</a>
                             <div class="dropdown-divider"></div>

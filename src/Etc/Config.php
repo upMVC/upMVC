@@ -1,24 +1,66 @@
 <?php
 /**
  * Config.php - Application Configuration Management
- * 
- * This class provides centralized configuration management for upMVC:
- * - Loads configuration from .env file (via Environment class)
- * - Provides fallback values for safety
- * - Manages session, cache, security settings
- * - Handles URL/path processing for routing
- * 
- * Configuration Priority:
- * 1. .env file (highest priority)
- * 2. ConfigManager settings
- * 3. Fallback array in this class (lowest priority)
- * 
+ *
+ * Configuration Priority (highest → lowest):
+ *   1. src/Etc/.env           ← CHANGE THIS for your install
+ *   2. $config array below    ← session, timezone, debug flags
+ *   3. $fallbacks array below ← last-resort path/domain defaults
+ *
+ * ============================================================
+ * NEW INSTALLATION CHECKLIST — everything you need to change
+ * ============================================================
+ *
+ * STEP 1 — src/Etc/.env  (copy .env.example if it doesn't exist)
+ * ---------------------------------------------------------------
+ *   DOMAIN_NAME=http://localhost        → your domain, no trailing slash
+ *                                         e.g. https://myapp.com
+ *
+ *   SITE_PATH=/upMVC/public             → subfolder path, or empty '' for domain root
+ *                                         e.g. /myapp/public  OR  (leave blank)
+ *
+ *   DB_HOST=localhost                   → database host
+ *   DB_NAME=test                        → your database name
+ *   DB_USER=root                        → your database user
+ *   DB_PASS=                            → your database password
+ *
+ *   SESSION_LIFETIME=3600               → seconds before session expires
+ *   SESSION_SECURE=false                → set true if site runs on HTTPS
+ *
+ *   APP_KEY=                            → run: php -r "echo bin2hex(random_bytes(32));"
+ *
+ * STEP 2 — $fallbacks array  (this file, ~line 65)
+ * ---------------------------------------------------------------
+ *   These are used ONLY when .env is missing or a key is absent.
+ *   Match them to your STEP 1 values so the app works even without .env.
+ *
+ *   'site_path'   => '/upMVC/public'    → same as SITE_PATH above
+ *   'domain_name' => 'http://localhost' → same as DOMAIN_NAME above
+ *
+ * STEP 3 — $config array  (this file, ~line 80)
+ * ---------------------------------------------------------------
+ *   'debug'            => true          → set FALSE in production
+ *   'timezone'         => 'UTC'         → e.g. 'Europe/Bucharest'
+ *   'session.secure'   => false         → true if HTTPS
+ *   'session.lifetime' => 3600          → must match SESSION_LIFETIME in .env
+ *
+ * STEP 4 — src/Etc/Start.php  ($defaultProtectedRoutes, ~line 61)
+ * ---------------------------------------------------------------
+ *   List the URL prefixes that require a logged-in session.
+ *   Override without touching code by adding to .env:
+ *   PROTECTED_ROUTES=/admin/*,/dashboard/*,/account/*
+ *
+ * STEP 5 — src/Etc/ConfigDatabase.php  (DB fallbacks)
+ * ---------------------------------------------------------------
+ *   Only relevant when running WITHOUT .env (e.g. quick local test).
+ *   Keep these as dummy values in version control.
+ *
+ * ============================================================
+ *
  * @package upMVC
  * @author BitsHost
  * @copyright 2023 BitsHost
  * @license MIT License
- * @link https://bitshost.biz/
- * @created Tue Oct 31 2023
  */
 
 namespace App\Etc;
@@ -32,51 +74,35 @@ class Config
     // Configuration Arrays
     // ========================================
     
-    /**
-     * Fallback configuration values for path and domain
-     * 
-     * Used only if .env file is missing or values are not set.
-     * In normal operation, .env values are always used.
-     * 
-     * IMPORTANT: Change these values according to your setup!
-     * - site_path: Should be empty '' if in root, or '/folder' if in subdirectory
-     * - domain_name: Your domain URL without trailing slash
-     * 
-     * @var array
-     */
+    // -------------------------------------------------------
+    // STEP 2 — Fallback path & domain (match your .env values)
+    // -------------------------------------------------------
     private static $fallbacks = [
-        'site_path' => '/upMVC/public',
-        'domain_name' => 'http://localhost',
+        'site_path'   => '/upMVC/public',    // SITE_PATH in .env   — '' for root, '/folder/public' for subfolder
+        'domain_name' => 'http://localhost', // DOMAIN_NAME in .env — no trailing slash
     ];
     
-    /**
-     * Static configuration array
-     * 
-     * These values can also be overridden via .env or ConfigManager.
-     * These are fallback defaults for application settings.
-     * 
-     * IMPORTANT: For production, use .env file to override these values!
-     * 
-     * @var array
-     */
+    // -------------------------------------------------------
+    // STEP 3 — App settings (debug, timezone, session, cache)
+    // -------------------------------------------------------
     private static $config = [
-        'debug' => true,              // Set to false in production
-        'timezone' => 'UTC',          // Change to your timezone
-        'session' => [
-            'name' => 'UPMVC_SESSION',
-            'lifetime' => 3600,       // 1 hour
-            'secure' => false,        // Set true if using HTTPS
-            'httponly' => true
+        'debug'    => true,             // ← FALSE in production
+        'timezone' => 'UTC',            // ← e.g. 'Europe/Bucharest'
+        'session'  => [
+            'name'     => 'UPMVC_SESSION',
+            'lifetime' => 3600,         // ← match SESSION_LIFETIME in .env
+            'secure'   => false,        // ← true if HTTPS
+            'httponly' => true,
         ],
         'cache' => [
-            'enabled' => false,       // Enable in production
-            'driver' => 'file',
-            'ttl' => 3600            // Cache lifetime in seconds
+            'enabled' => false,         // ← true in production
+            'driver'  => 'file',
+            'ttl'     => 3600,
         ],
         'security' => [
             'csrf_protection' => true,
-            'rate_limit' => 100      // Requests per minute
-        ]
+            'rate_limit'      => 100,   // requests per minute
+        ],
     ];
     
     // Legacy constants - now loaded from .env

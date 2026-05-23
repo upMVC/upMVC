@@ -43,7 +43,8 @@ $newView->startBody($title);
     <?php endforeach; ?>
 </ul>
 <?php
-print_r($_GET);
+if (isset($_GET) && !empty($_GET)) {
+    print_r($_GET);}
 $newView->endBody();
 $newView->startFooter();
 $newView->endFooter();

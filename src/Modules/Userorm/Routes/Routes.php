@@ -50,77 +50,14 @@ class Routes
     private $table = 'users';
     public function routes($router)
     {
-        $this->model = new Model();
-        $router->addRoute('/usersorm', Controller::class, 'display');
-
-        //list Route
-        $router->addRoute('/usersorm/getall/320', Controller::class, 'getAll');
+        $router->addRoute('/usersorm',        Controller::class, 'display');
+        $router->addRoute('/usersorm/getall', Controller::class, 'display');
         $router->addRoute('/usersorm/create', Controller::class, 'display');
-        $router->addRoute('/usersorm/store', Controller::class, 'display');
+        $router->addRoute('/usersorm/store',  Controller::class, 'display');
 
-
-        $users = $this->model->getAllUsers($this->table);
-        // \print_r($users);
-        $obj = json_decode(json_encode($users));
-        $usersIds = [];
-        foreach ($obj as $o) {
-            $userIds[] = $o->id;
-            //echo $o->id . '<br>';
-        }
-
-        // print_r($userIds); 
-
-        $usersIdsLength = count($users);
-
-        //EDIT ROUTES
-        $i           = 0;
-        $routesArray = [];
-
-        while ($i < $usersIdsLength) {
-            $routesArray[$i] = ['/usersorm/edit/' . $userIds[$i], Controller::class, 'display'];
-            $i++;
-        }
-
-
-        //print_r($routesArray);
-
-        foreach ($routesArray as $key => $value) {
-            $router->addRoute($value[0], $value[1], $value[2]);
-        }
-
-
-        //UPDATE ROUTES
-        $i           = 0;
-        $routesArray = [];
-
-        while ($i < $usersIdsLength) {
-            $routesArray[$i] = ['/usersorm/update/' . $userIds[$i], Controller::class, 'display'];
-            $i++;
-        }
-
-
-        //print_r($routesArray);
-
-        foreach ($routesArray as $key => $value) {
-            $router->addRoute($value[0], $value[1], $value[2]);
-        }
-
-
-        //DELETE ROUTES
-        $i           = 0;
-        $routesArray = [];
-
-        while ($i < $usersIdsLength) {
-            $routesArray[$i] = ['/usersorm/delete/' . $userIds[$i], Controller::class, 'display'];
-            $i++;
-        }
-
-
-        //print_r($routesArray);
-
-        foreach ($routesArray as $key => $value) {
-            $router->addRoute($value[0], $value[1], $value[2]);
-        }
+        $router->addParamRoute('/usersorm/edit/{id:int}',   Controller::class, 'display');
+        $router->addParamRoute('/usersorm/update/{id:int}', Controller::class, 'display');
+        $router->addParamRoute('/usersorm/delete/{id:int}', Controller::class, 'display');
     }
 }
 

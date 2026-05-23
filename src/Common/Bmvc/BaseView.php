@@ -95,21 +95,18 @@ class BaseView
                         </ul>
                     </li>
                     <li>
-                        <a href="<?php echo BASE_URL; ?>">🏠 Routing</a>
+                        <a href="<?php echo BASE_URL; ?>/test">🏠 Routing</a>
                         <ul>
-                            <li><a href="<?php echo BASE_URL; ?>/test">👩‍👩‍👧‍👧 Test</a></li>
-                            <li><a href="<?php echo BASE_URL; ?>/test-one">👩‍👩‍👧‍👧 1 Parameter(GET)</a></li>
-                            <li><a href="<?php echo BASE_URL; ?>/test?param=one">👩‍👩‍👧‍👧 1 Parameter(GET) Classic</a></li>
-                            <li><a href="<?php echo BASE_URL; ?>/test-page-one">👩‍👩‍👧‍👧 1 Parameter(GET)</a></li>
-                            <li><a href="<?php echo BASE_URL; ?>/test?param=page-one">👩‍👩‍👧‍👧 1 Parameter(GET) Classic</a>
-                            </li>
-                            <li><a href="<?php echo BASE_URL; ?>/test-one/two">👩‍👩‍👧‍👧 2 Parameters(GET)</a></li>
-                            <li><a href="<?php echo BASE_URL; ?>/test?param=one&another=two">👩‍👩‍👧‍👧 2 Parameters(GET)
-                                    Classic</a></li>
-                            <li><a href="<?php echo BASE_URL; ?>/test-page-one/two">👩‍👩‍👧‍👧 2 Parameters(GET)</a></li>
-                            <li><a href="<?php echo BASE_URL; ?>/moda">👩‍👩‍👧‍👧 Moda</a></li>
-                            <li><a href="<?php echo BASE_URL; ?>/suba">👩‍👩‍👧‍👧 Suba</a></li>
-                            <li><a href="<?php echo BASE_URL; ?>/error">👩‍👩‍👧‍👧 Error Page</a></li>
+                            <li><a href="<?php echo BASE_URL; ?>/test">Test</a></li>
+                            <li><a href="<?php echo BASE_URL; ?>/test/subpage">Subpage</a></li>
+                            <li><a href="<?php echo BASE_URL; ?>/test/item/42">Int param {id:int}</a></li>
+                            <li><a href="<?php echo BASE_URL; ?>/test/article/my-slug">String param {slug}</a></li>
+                            <li><a href="<?php echo BASE_URL; ?>/test/pair/hello/world">Two params</a></li>
+                            <li><a href="<?php echo BASE_URL; ?>/moda">Moda</a></li>
+                            <li><a href="<?php echo BASE_URL; ?>/moda/subpage">Moda Subpage</a></li>
+                            <li><a href="<?php echo BASE_URL; ?>/suba">Suba</a></li>
+                            <li><a href="<?php echo BASE_URL; ?>/suba/subpage">Suba Subpage</a></li>
+                        
                         </ul>
                     </li>
                     <li>

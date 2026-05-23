@@ -50,8 +50,6 @@ class Routes
         $router->addRoute('/moda.php', Controller::class, 'display');
         $router->addRoute('/moda', Controller::class, 'display');
         $router->addRoute('/moda/subpage', Controller::class, 'display');
-        $router->addRoute('/moda-page-one', Controller::class, 'display');
-        $router->addRoute('/moda-page-one/two', Controller::class, 'display');
     }
 }
 

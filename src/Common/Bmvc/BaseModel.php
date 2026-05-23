@@ -221,19 +221,10 @@ class BaseModel
     private function sanitize($input)
     {
         if (is_string($input)) {
-            // Sanitize string input
-            $sanitizedInput = filter_var($input, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
-            if ($sanitizedInput === false) {
-                return "Error during sanitization.";
-            }
-    
-            // Escape special characters to prevent XSS
-            return htmlspecialchars($sanitizedInput, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+            return trim(strip_tags($input));
         } elseif (is_array($input)) {
-            // Recursively sanitize array elements
             return array_map([$this, 'sanitize'], $input);
         } else {
-            // Return non-string input as is
             return $input;
         }
     }

@@ -49,16 +49,13 @@ class Model extends BaseModel
     {
         $q = "SELECT id, username, password, state
           FROM users
-          WHERE username = :username
-          AND password = :password";
+          WHERE username = :username";
 
         $stmt = $this->conn->prepare($q);
         //sanitize
-        $this->username = htmlspecialchars(strip_tags($this->username));
-        $this->password     = htmlspecialchars(strip_tags($this->password));
+        $this->username = trim(strip_tags($this->username));
         //bind
         $stmt->bindValue(':username', $this->username);
-        $stmt->bindValue(':password', $this->password);
 
         if ($stmt->execute()) {
             return $stmt;
@@ -75,11 +72,11 @@ class Model extends BaseModel
 
         $stmt = $this->conn->prepare($q);
         //sanitize
-        $this->name = htmlspecialchars(strip_tags($this->name));
-        $this->username = htmlspecialchars(strip_tags($this->username));
-        $this->password     = htmlspecialchars(strip_tags($this->password));
-        $this->email    = htmlspecialchars(strip_tags($this->email));
-        $this->token    = htmlspecialchars(strip_tags($this->token));
+        $this->name     = trim(strip_tags($this->name));
+        $this->username = trim(strip_tags($this->username));
+        $this->password = password_hash($this->password, PASSWORD_BCRYPT);
+        $this->email    = trim(strip_tags($this->email));
+        $this->token    = trim(strip_tags($this->token));
         
         //bind
         $stmt->bindParam(":name", $this->name);
