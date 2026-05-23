@@ -50,16 +50,73 @@ class View extends BaseView
 
 	function header()
 	{
-
-		$this->startHead('Users');  //from BasevView
+		$this->startHead('Users');
 		?>
-			<!-- Bootstrap -->
-			<link href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" rel="stylesheet" media="screen">
-			<?php
-			$this->endHead(); //from BasevView
-			$this->startBody('Users made with phpistols.com'); //from BasevView
+        <style>
+            /* ---- Newmod: Bootstrap-compatible component styles ---- */
 
-		}
+            /* Table */
+            .table { width: 100%; border-collapse: collapse; font-size: .88rem; margin-bottom: 16px; }
+            .table th, .table td { padding: 10px 14px; text-align: left; border-bottom: 1px solid #e2e8f0; vertical-align: middle; }
+            .table thead th { background: #f8fafc; font-size: .76rem; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; color: #374151; border-bottom: 2px solid #e2e8f0; }
+            .table tbody tr:hover td { background: #f8fafc; }
+            .table-bordered { border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden; }
+            .table-bordered th, .table-bordered td { border: 1px solid #e2e8f0; }
+
+            /* Form */
+            .form-group { margin-bottom: 14px; }
+            .control-label { display: block; font-size: .82rem; font-weight: 600; color: #374151; margin-bottom: 5px; }
+            .form-control {
+                display: block; width: 100%; padding: 7px 11px;
+                font-size: .9rem; color: #1e293b;
+                background: #fff; border: 1px solid #cbd5e1;
+                border-radius: 6px; outline: none;
+                transition: border-color .15s, box-shadow .15s;
+            }
+            .form-control:focus { border-color: #38bdf8; box-shadow: 0 0 0 3px rgba(56,189,248,.15); }
+            fieldset { border: none; padding: 0; margin: 0; }
+
+            /* Buttons */
+            .btn {
+                display: inline-block; padding: 6px 16px;
+                font-size: .85rem; font-weight: 600;
+                color: #374151; background: #f1f5f9;
+                border: 1px solid #cbd5e1; border-radius: 6px;
+                text-decoration: none; cursor: pointer;
+                transition: background .15s, color .15s;
+            }
+            .btn:hover { background: #e2e8f0; color: #0f172a; }
+            .btn-primary { background: #0369a1; color: #e0f2fe; border-color: #0284c7; }
+            .btn-primary:hover { background: #0284c7; color: #fff; }
+
+            /* Alerts */
+            .alert { padding: 12px 16px; border-radius: 8px; margin-bottom: 16px; font-size: .88rem; border: 1px solid transparent; }
+            .alert-success { background: #dcfce7; border-color: #86efac; color: #166534; }
+            .alert-warning { background: #fef9c3; border-color: #fde68a; color: #92400e; }
+            .alert-danger  { background: #fee2e2; border-color: #fca5a5; color: #991b1b; }
+            .alert-info    { background: #eff6ff; border-color: #bfdbfe; color: #1e40af; }
+
+            /* Panel (used in displayDetails) */
+            .panel { border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden; margin-bottom: 16px; }
+            .panel-default { background: #fff; }
+            .panel-body { padding: 20px; }
+
+            /* Pagination */
+            .pagination { display: flex; list-style: none; gap: 4px; margin: 16px 0; padding: 0; }
+            .pagination li a {
+                display: inline-block; padding: 6px 12px;
+                font-size: .85rem; color: #374151;
+                background: #fff; border: 1px solid #e2e8f0;
+                border-radius: 6px; text-decoration: none;
+                transition: background .15s;
+            }
+            .pagination li a:hover { background: #f1f5f9; }
+            .pagination li.active a { background: #0369a1; color: #fff; border-color: #0284c7; }
+        </style>
+		<?php
+		$this->endHead();
+		$this->startBody('Users made with phpistols.com');
+	}
 
 		function footer()
 		{

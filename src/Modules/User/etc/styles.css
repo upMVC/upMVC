@@ -52,145 +52,127 @@
 
 
 
-body {
-    font-family: 'Arial', sans-serif;
-}
+/* User module — design-system styles matching BaseView palette */
 
 .container {
-    max-width: 600px;
-    margin: 20px auto;
+    max-width: 960px;
+    margin: 0 auto;
 }
 
+/* Table */
 table {
     width: 100%;
     border-collapse: collapse;
+    font-size: .87rem;
     margin-bottom: 20px;
 }
-
-table,
-th,
-td {
-    border: 1px solid #ddd;
-}
-
-th,
-td {
-    padding: 10px;
-    text-align: left;
-}
-
 th {
-    background-color: #f2f2f2;
+    padding: 10px 14px;
+    text-align: left;
+    background: #f8fafc;
+    border-bottom: 2px solid #e2e8f0;
+    font-size: .76rem;
+    font-weight: 600;
+    color: #374151;
+    text-transform: uppercase;
+    letter-spacing: .04em;
 }
-
-form {
-    margin-top: 20px;
+td {
+    padding: 11px 14px;
+    border-bottom: 1px solid #f1f5f9;
+    vertical-align: middle;
+    color: #1e293b;
 }
+tr:last-child td { border-bottom: none; }
+tr:hover td { background: #f8fafc; }
 
-a.delete-link {
-    color: red;
-    cursor: pointer;
+/* Links as action buttons */
+td a {
+    display: inline-block;
+    padding: 4px 12px;
+    font-size: .8rem;
+    font-weight: 600;
+    border-radius: 6px;
+    text-decoration: none;
+    border: 1px solid #cbd5e1;
+    background: #f1f5f9;
+    color: #374151;
+    transition: background .15s;
+    margin-right: 4px;
 }
+td a:hover { background: #e2e8f0; color: #0f172a; }
+a.delete-link { background: #fee2e2; color: #991b1b; border-color: #fca5a5; }
+a.delete-link:hover { background: #fca5a5; color: #7f1d1d; }
 
-/* Add these styles for the form */
-.container {
-    max-width: 850px;
-    margin: auto;
-}
-
-form {
-    margin-top: 20px;
-}
-
+/* Form */
+form { margin-top: 20px; }
 label {
     display: block;
-    margin-bottom: 8px;
+    font-size: .82rem;
+    font-weight: 600;
+    color: #374151;
+    margin-bottom: 5px;
 }
-
-input {
+input[type="text"],
+input[type="email"],
+input[type="password"] {
+    display: block;
     width: 100%;
-    padding: 8px;
-    margin-bottom: 10px;
+    padding: 8px 12px;
+    font-size: .9rem;
+    color: #1e293b;
+    background: #fff;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    margin-bottom: 14px;
+    outline: none;
+    transition: border-color .15s, box-shadow .15s;
 }
-
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="password"]:focus {
+    border-color: #38bdf8;
+    box-shadow: 0 0 0 3px rgba(56,189,248,.15);
+}
 input[type="submit"] {
-    background-color: #4caf50;
-    color: white;
+    display: inline-block;
+    padding: 7px 18px;
+    font-size: .88rem;
+    font-weight: 600;
+    background: #0369a1;
+    color: #e0f2fe;
+    border: 1px solid #0284c7;
+    border-radius: 6px;
     cursor: pointer;
+    transition: background .15s;
 }
+input[type="submit"]:hover { background: #0284c7; color: #fff; }
 
-input[type="submit"]:hover {
-    background-color: #45a049;
-}
-
-/* Add these styles for the table */
-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 20px;
-}
-
-th,
-td {
-    border: 1px solid #ddd;
-    padding: 8px;
-    text-align: left;
-}
-
-th {
-    background-color: #4caf50;
-    color: white;
-}
-
-tr:hover {
-    background-color: #f5f5f5;
-}
-
-/* Add these styles for pagination */
+/* Pagination */
 .pagination {
     display: flex;
-    justify-content: center;
-    margin-top: 10px;
+    gap: 4px;
+    list-style: none;
+    padding: 0;
+    margin: 16px 0;
+    flex-wrap: wrap;
 }
-
 .pagination a {
-    color: black;
-    float: left;
-    padding: 8px 16px;
+    display: inline-block;
+    padding: 6px 12px;
+    font-size: .85rem;
+    color: #374151;
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
     text-decoration: none;
-    transition: background-color .3s;
+    transition: background .15s;
 }
+.pagination a:hover { background: #f1f5f9; }
+.pagination a.active { background: #0369a1; color: #fff; border-color: #0284c7; }
 
-.pagination a.active {
-    background-color: #4caf50;
-    color: white;
-}
-
-.pagination a:hover:not(.active) {
-    background-color: #ddd;
-}
-
-/* Add this to your existing styles.css file */
-
-
-
-/* Responsive styling */
+/* Responsive */
 @media screen and (max-width: 600px) {
-
-    /* Hide the ID column on smaller screens */
-    th:first-child,
-    td:first-child {
-        display: none;
-    }
-
-    /* Add a horizontal scrollbar for the table on smaller screens */
-    table {
-        overflow-x: auto;
-    }
-
-    /* Adjust padding for the remaining columns */
-    th,
-    td {
-        padding: 8px;
-    }
+    th:first-child, td:first-child { display: none; }
+    table { overflow-x: auto; display: block; }
 }

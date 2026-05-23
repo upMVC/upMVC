@@ -63,8 +63,6 @@ class View extends BaseView
                 window.__API_URL__ = "<?php echo \BASE_URL; ?>/apiUsers";
             </script>
 
-            <?php $this->menu() ?>
-
         </head>
         <?php
 
@@ -198,152 +196,118 @@ class View extends BaseView
     {
     ?>
         <style>
-            /**
-                                                                   * General Styles, for looks.
-                                                                  */
-
-            @import url("https://fonts.googleapis.com/css?family=Lato:400");
-
-
-            .wrapper {
-                max-width: 1250px;
-                margin: 15px auto;
-                padding: 9px;
-                text-align: center;
-                font-size: 14px;
+            /* bv-nav styles for the upMVC navbar (no global reset — keeps Bootstrap intact) */
+            .bv-nav {
+                background: #0f172a;
+                position: sticky;
+                top: 0;
+                z-index: 200;
+                border-bottom: 1px solid #1e293b;
             }
-
-            /**
-                                                                   * Styles on screen size smaller then 400 px
-                                                                  */
-
-            .menu {
-                margin: 0;
-                padding: 0;
-                list-style: none;
-                background-color: #2f3640;
-                box-shadow: rgba(50, 50, 93, 0.25) 0px 13px 27px -5px,
-                    rgba(0, 0, 0, 0.3) 0px 8px 16px -8px;
+            .bv-nav-inner {
+                max-width: 1280px;
+                margin: 0 auto;
+                padding: 0 24px;
+                height: 52px;
+                display: flex;
+                align-items: center;
+                gap: 4px;
             }
-
-            .menu ul {
-                height: 0;
-                min-width: 150px;
-                margin: 0;
-                padding: 0;
-                list-style: none;
-                overflow: hidden;
-            }
-
-            .menu li {
-                display: block;
-                position: relative;
-                text-align: left;
-            }
-
-            .menu li:focus-within>ul,
-            .menu li:hover>ul {
-                height: auto;
-                margin-left: 13px;
-            }
-
-            /**
-                                                                   * Styles on screen size bigger 400 px
-                                                                  */
-
-            @media (min-width: 550px) {
-                .menu ul {
-                    height: auto;
-                    overflow: visible;
-                    position: absolute;
-                    top: -999em;
-                    left: -999em;
-                }
-
-                .menu li {
-                    display: inline-block;
-                    position: relative;
-                    text-align: left;
-                }
-
-                .menu li:focus-within>ul,
-                .menu li:hover>ul {
-                    top: auto;
-                    left: auto;
-                    margin-left: 0;
-                    max-width: 550px;
-                }
-
-                .menu li li {
-                    left: auto;
-                    top: auto;
-                    display: block;
-                }
-
-                .menu li li:focus-within>ul,
-                .menu li li:hover>ul {
-                    left: 100%;
-                    top: 0;
-                }
-            }
-
-            /**
-                                                                   * Colouring is fun!
-                                                                  */
-
-            .menu {
-                background-color: #2f3640;
-            }
-
-            .menu a {
-                display: block;
-                white-space: nowrap;
-                color: #fff;
-                font-weight: bold;
+            .bv-brand {
+                font-size: .95rem;
+                font-weight: 700;
+                color: #f8fafc;
                 text-decoration: none;
-                padding: 0.4rem 0.8rem;
+                margin-right: 16px;
+                white-space: nowrap;
+                flex-shrink: 0;
             }
-
-            .menu a:focus-within,
-            .menu a:hover {
-                color: #1e272e;
-                background: #ffa801;
+            .bv-brand span { color: #38bdf8; }
+            .bv-links {
+                display: flex;
+                align-items: center;
+                list-style: none;
+                flex: 1;
+                min-width: 0;
+                margin: 0;
+                padding: 0;
             }
-
-            .menu ul {
-                background-color: #2f3640;
-                box-shadow: rgba(50, 50, 93, 0.25) 0px 13px 27px -5px,
-                    rgba(0, 0, 0, 0.3) 0px 8px 16px -8px;
+            .bv-links > li { position: relative; }
+            .bv-links > li > a {
+                display: flex;
+                align-items: center;
+                padding: 0 13px;
+                height: 52px;
+                color: #94a3b8;
+                text-decoration: none;
+                font-size: .82rem;
+                white-space: nowrap;
+                transition: color .15s, background .15s;
             }
-
-            .menu li:focus-within,
-            .menu li:hover {
-                background: #ffa801;
+            .bv-links > li > a:hover,
+            .bv-links > li:hover > a  { color: #f8fafc; background: #1e293b; }
+            .bv-links > li > a.bv-hi  { color: #38bdf8; font-weight: 600; }
+            .bv-drop > ul {
+                display: none;
+                position: absolute;
+                top: 52px;
+                left: 0;
+                background: #1e293b;
+                min-width: 190px;
+                border-radius: 0 0 8px 8px;
+                border: 1px solid #334155;
+                border-top: none;
+                box-shadow: 0 8px 28px rgba(0,0,0,.35);
+                list-style: none;
+                z-index: 300;
+                margin: 0;
+                padding: 0;
             }
-
-            .menu li:focus-within>a,
-            .menu li:hover>a {
-                color: #2f3640;
+            .bv-drop:hover > ul { display: block; }
+            .bv-drop > ul a {
+                display: block;
+                padding: 9px 16px;
+                color: #94a3b8;
+                text-decoration: none;
+                font-size: .82rem;
+                white-space: nowrap;
             }
-
-            /* ------------ Experimental ------------
-                                                                   * adds a "»" to indicate a dropdown menu
-                                                                  */
-            .menu li a:not(:only-child)::after {
-                content: "»";
+            .bv-drop > ul a:hover { background: #0f172a; color: #e2e8f0; }
+            .bv-right {
+                margin-left: auto;
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                flex-shrink: 0;
+            }
+            .bv-uname { font-size: .8rem; color: #64748b; white-space: nowrap; }
+            .bv-role-badge {
                 display: inline-block;
-                margin-left: 15px;
-                float: right;
-                font-size: 20px;
+                padding: 2px 9px;
+                border-radius: 10px;
+                font-size: .72rem;
+                font-weight: 600;
             }
+            .bv-btn {
+                padding: 5px 14px;
+                border-radius: 6px;
+                font-size: .8rem;
+                font-weight: 600;
+                text-decoration: none;
+                background: #1e293b;
+                color: #94a3b8;
+                border: 1px solid #334155;
+                transition: background .15s, color .15s;
+                white-space: nowrap;
+            }
+            .bv-btn:hover { background: #334155; color: #e2e8f0; }
+            .bv-btn-primary { background: #0369a1; color: #e0f2fe; border-color: #0284c7; }
+            .bv-btn-primary:hover { background: #0284c7; color: #fff; }
         </style>
 <?php
-
-
     }
 }
 ?>
-
 
 
 

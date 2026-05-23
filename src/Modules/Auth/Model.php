@@ -47,7 +47,7 @@ class Model extends BaseModel
     ///read user login////////////////
     public function readUserLogin()
     {
-        $q = "SELECT id, username, password, state
+        $q = "SELECT id, username, password, state, role, tenant_id
           FROM users
           WHERE username = :username";
 

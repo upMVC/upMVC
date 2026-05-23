@@ -60,6 +60,12 @@ class BaseViewModern
                 
                 <!-- Compact horizontal menu for desktop -->
                 <div class="nav-main-menu">
+                    <?php if (($_SESSION['role'] ?? '') === 'platform_admin'): ?>
+                    <a href="<?php echo BASE_URL; ?>/platform-admin" class="nav-main-link" style="background:#7c3aed;color:#fff;border-radius:4px;padding:4px 10px;">🛡️ Platform Admin</a>
+                    <?php endif; ?>
+                    <?php if (in_array($_SESSION['role'] ?? '', ['tenant_owner','tenant_user'], true)): ?>
+                    <a href="<?php echo BASE_URL; ?>/app" class="nav-main-link" style="background:#0891b2;color:#fff;border-radius:4px;padding:4px 10px;">🏢 My App</a>
+                    <?php endif; ?>
                     <a href="<?php echo BASE_URL; ?>/test" class="nav-main-link">🧪 Tests</a>
                     <a href="<?php echo BASE_URL; ?>/test/modern" class="nav-main-link nav-highlight">✨ Modern</a>
                     <a href="<?php echo BASE_URL; ?>/users" class="nav-main-link">👥 CRUD</a>

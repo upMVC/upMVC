@@ -64,21 +64,27 @@ class Controller
         }
     }
 
+    private function getRoleRedirect(string $role, mixed $tenantId = null): string
+    {
+        return match($role) {
+            'platform_admin' => BASE_URL . '/platform-admin',
+            'tenant_owner',
+            'tenant_user'    => $tenantId ? BASE_URL . '/app' : BASE_URL,
+            default          => BASE_URL,
+        };
+    }
+
     private function auth()
     {
-        // Fix: Use comparison (===) not assignment (=)
         if (isset($_SESSION["logged"]) && $_SESSION["logged"] === true) {
-            // If already logged in, redirect to intended URL or home
             $intendedUrl = $_SESSION['intended_url'] ?? null;
             unset($_SESSION['intended_url']);
             if ($intendedUrl && str_starts_with($intendedUrl, BASE_URL)) {
                 header("Location: $intendedUrl");
                 exit;
-            } else {
-                $this->url = BASE_URL;
-                header("Location: $this->url");
-                exit;
             }
+            header('Location: ' . $this->getRoleRedirect($_SESSION['role'] ?? '', $_SESSION['tenant_id'] ?? null));
+            exit;
         } else {
             $this->login();
         }
@@ -101,6 +107,8 @@ class Controller
                     session_regenerate_id(true);
                     $_SESSION['username']      = $row['username'];
                     $_SESSION['iduser']        = $row['id'];
+                    $_SESSION['role']          = $row['role'];
+                    $_SESSION['tenant_id']     = $row['tenant_id'];
                     $_SESSION['logged']        = true;
                     $_SESSION['authenticated'] = true;
 
@@ -108,7 +116,7 @@ class Controller
                     unset($_SESSION['intended_url']);
                     $redirectUrl = ($intendedUrl && str_starts_with($intendedUrl, BASE_URL))
                         ? $intendedUrl
-                        : $this->url;
+                        : $this->getRoleRedirect($row['role'], $row['tenant_id']);
 
                     header('Location: ' . $redirectUrl);
                     exit;
