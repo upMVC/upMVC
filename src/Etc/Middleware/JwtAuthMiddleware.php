@@ -17,6 +17,8 @@
 
 namespace App\Etc\Middleware;
 
+use App\Etc\Config\Environment;
+
 class JwtAuthMiddleware
 {
     /**
@@ -62,7 +64,7 @@ class JwtAuthMiddleware
 
         [$header, $payload, $sig] = $parts;
 
-        $secret = $_ENV['JWT_SECRET'] ?? '';
+        $secret = (string) (Environment::get('JWT_SECRET') ?: getenv('JWT_SECRET') ?: ($_ENV['JWT_SECRET'] ?? ''));
         if ($secret === '') {
             error_log('JwtAuthMiddleware: JWT_SECRET is not set in .env');
             return null;

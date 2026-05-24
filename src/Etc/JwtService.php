@@ -15,6 +15,8 @@
 
 namespace App\Etc;
 
+use App\Etc\Config\Environment;
+
 class JwtService
 {
     private string $secret;
@@ -23,9 +25,9 @@ class JwtService
 
     public function __construct()
     {
-        $this->secret     = $_ENV['JWT_SECRET']      ?? '';
-        $this->accessTtl  = (int) ($_ENV['JWT_ACCESS_TTL']  ?? 3600);
-        $this->refreshTtl = (int) ($_ENV['JWT_REFRESH_TTL'] ?? 2592000);
+        $this->secret     = (string) (Environment::get('JWT_SECRET')     ?: getenv('JWT_SECRET')     ?: ($_ENV['JWT_SECRET']      ?? ''));
+        $this->accessTtl  = (int)   (Environment::get('JWT_ACCESS_TTL')  ?: getenv('JWT_ACCESS_TTL')  ?: ($_ENV['JWT_ACCESS_TTL']  ?? 3600));
+        $this->refreshTtl = (int)   (Environment::get('JWT_REFRESH_TTL') ?: getenv('JWT_REFRESH_TTL') ?: ($_ENV['JWT_REFRESH_TTL'] ?? 2592000));
     }
 
     // -----------------------------------------------------------------------
