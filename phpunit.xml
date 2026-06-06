@@ -13,14 +13,14 @@
     </testsuites>
     <source>
         <include>
-            <directory>etc</directory>
-            <directory>common</directory>
-            <directory>modules</directory>
+            <directory>src/Etc</directory>
+            <directory>src/Common</directory>
+            <directory>src/Modules</directory>
         </include>
         <exclude>
             <directory>vendor</directory>
+            <directory>storage</directory>
             <directory>logs</directory>
-            <directory>zbug</directory>
         </exclude>
     </source>
     <php>

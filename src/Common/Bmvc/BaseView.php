@@ -19,7 +19,7 @@ class BaseView
 
 
     /** Returns 'bv-active' when the given URL's path matches the current request path. */
-    private function isActive(string $url): string
+    protected function isActive(string $url): string
     {
         $current = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?? '/';
         $path    = parse_url($url, PHP_URL_PATH) ?? '';
@@ -27,7 +27,7 @@ class BaseView
     }
 
     /** Returns 'bv-active' when ANY of the given URLs matches — used for dropdown parents. */
-    private function dropActive(array $urls): string
+    protected function dropActive(array $urls): string
     {
         $current = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?? '/';
         foreach ($urls as $url) {

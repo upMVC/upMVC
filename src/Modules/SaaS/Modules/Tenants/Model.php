@@ -9,7 +9,7 @@ class Model extends BaseModel
      * Create a new tenant row.
      * Returns the new tenant ID.
      */
-    public function create(array $data): int
+    public function create(array $data, string $table = ''): int
     {
         $stmt = $this->conn->prepare(
             "INSERT INTO tenants (slug, name, plan_id, status, features)
@@ -68,7 +68,7 @@ class Model extends BaseModel
      * Partial update — only touches columns present in $data.
      * Allowed: name, plan_id, status, features
      */
-    public function update(int $id, array $data): bool
+    public function update(int $id, array $data, string $table = ''): bool
     {
         $allowed = ['name', 'plan_id', 'status', 'features'];
         $sets    = [];

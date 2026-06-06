@@ -41,9 +41,24 @@ class BaseModel
     protected $conn;
 
     /**
-     * Constructor.
+     * Current scope / tenant ID.
+     *
+     * Set this when building multi-tenant or multi-org applications so that
+     * the tq*() helpers can automatically inject the scope into every query.
+     *
+     * Usage:
+     *   $model = new Model($tenantId);          // preferred
+     *   $model = new Model(); $model->tenantId = $id;  // also fine
      */
-    public function __construct()
+    protected int $tenantId = 0;
+
+    /**
+     * Constructor.
+     *
+     * @param int $tenantId  Optional tenant / scope ID. When > 0, tq*() helpers
+     *                       will inject it automatically into every query.
+     */
+    public function __construct(int $tenantId = 0)
     {
         $this->conn = (new Database())->getConnection();
 
@@ -53,16 +68,21 @@ class BaseModel
                 'Database connection could not be established. Please check DB_* settings in .env or ConfigDatabase. '
             );
         }
+
+        if ($tenantId > 0) {
+            $this->tenantId = $tenantId;
+        }
     }
 
     /**
      * Creates a new record in the database.
      *
-     * @param array $data The data to be inserted.
-     * @param string $table The table name.
+     * @param array  $data  The data to be inserted.
+     * @param string $table The table name (required when using the base implementation;
+     *                      child models that hardcode the table may omit it).
      * @return int|false The last inserted ID or false on failure.
      */
-    public function create(array $data, string $table)
+    public function create(array $data, string $table = '')
     {
         if (empty($data)) {
             return false;
@@ -98,7 +118,7 @@ class BaseModel
      * @param string $table The table name.
      * @return array|null The record data or null on failure.
      */
-    public function read(int $id, string $table)
+    public function read(int $id, string $table = '')
     {
         $sanitizedId = $this->sanitize($id);
         $stmt = $this->conn->prepare("SELECT * FROM $table WHERE id = :id");
@@ -158,7 +178,7 @@ class BaseModel
      * @param string $table The table name.
      * @return bool True on success, false on failure.
      */
-    public function update(int $id, array $data, string $table)
+    public function update(int $id, array $data, string $table = '')
     {
         if (empty($data)) {
             return false;
@@ -190,7 +210,7 @@ class BaseModel
      * @param string $table The table name.
      * @return bool True on success, false on failure.
      */
-    public function delete(int $id, string $table)
+    public function delete(int $id, string $table = '')
     {
         $sanitizedId = $this->sanitize($id);
         $stmt = $this->conn->prepare("DELETE FROM $table WHERE id = :id");
@@ -227,6 +247,96 @@ class BaseModel
         } else {
             return $input;
         }
+    }
+
+    // =========================================================================
+    // Tenant / scope query guard  (Points 1 & 7 from SaaS adaptation report)
+    // =========================================================================
+
+    /**
+     * Execute a tenant-scoped query safely.
+     *
+     * Rules:
+     *  - SQL MUST contain `:tenant_id` (named placeholder).
+     *  - Do NOT pass `tenant_id` in $params — it is injected automatically.
+     *  - In APP_ENV != production, throws \LogicException if `:tenant_id` is absent.
+     *  - Throws \RuntimeException if $this->tenantId is 0 (called outside tenant context).
+     *
+     * Usage:
+     *   // In any child Model where $this->tenantId has been set:
+     *   $rows = $this->tqAll(
+     *       "SELECT * FROM cars WHERE tenant_id = :tenant_id AND status = :s",
+     *       [':s' => 'available']
+     *   );
+     *
+     * @param  string $sql    SQL with :tenant_id placeholder.
+     * @param  array  $params Other named params (WITHOUT :tenant_id).
+     * @return \PDOStatement  Executed statement ready for fetch*()
+     * @throws \LogicException   In non-production if :tenant_id is absent.
+     * @throws \RuntimeException If tenantId === 0.
+     */
+    protected function tq(string $sql, array $params = []): \PDOStatement
+    {
+        $env = $_ENV['APP_ENV'] ?? getenv('APP_ENV') ?: 'production';
+        if ($env !== 'production' &&
+            !str_contains($sql, ':tenant_id') &&
+            !str_contains($sql, 'tenant_id = ?')) {
+            throw new \LogicException(
+                'Tenant leak risk: query is missing :tenant_id. ' .
+                'Use tq() only for tenant-scoped tables. SQL: ' .
+                substr(preg_replace('/\s+/', ' ', $sql) ?: '', 0, 120)
+            );
+        }
+
+        if ($this->tenantId < 1) {
+            throw new \RuntimeException(
+                'tq() called with tenantId = 0. ' .
+                'Set $this->tenantId before querying tenant data.'
+            );
+        }
+
+        $params[':tenant_id'] = $this->tenantId;
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute($params);
+        return $stmt;
+    }
+
+    /**
+     * Fetch all rows for a tenant-scoped query.
+     *
+     * @param  string $sql
+     * @param  array  $params  (without :tenant_id)
+     * @return array<int, array<string, mixed>>
+     */
+    protected function tqAll(string $sql, array $params = []): array
+    {
+        return $this->tq($sql, $params)->fetchAll(\PDO::FETCH_ASSOC);
+    }
+
+    /**
+     * Fetch a single row for a tenant-scoped query.
+     *
+     * @param  string $sql
+     * @param  array  $params  (without :tenant_id)
+     * @return array<string, mixed>|null
+     */
+    protected function tqOne(string $sql, array $params = []): ?array
+    {
+        $row = $this->tq($sql, $params)->fetch(\PDO::FETCH_ASSOC);
+        return $row ?: null;
+    }
+
+    /**
+     * Execute a tenant-scoped INSERT / UPDATE / DELETE.
+     * Returns the number of affected rows.
+     *
+     * @param  string $sql
+     * @param  array  $params  (without :tenant_id)
+     * @return int
+     */
+    protected function tqExec(string $sql, array $params = []): int
+    {
+        return $this->tq($sql, $params)->rowCount();
     }
 }
 
