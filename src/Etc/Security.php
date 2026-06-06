@@ -35,18 +35,6 @@ class Security
     // Properties
     // ========================================
     
-    /**
-     * In-memory rate limit tracking
-     * 
-     * Format: ['hash' => ['count' => int, 'reset' => timestamp]]
-     * 
-     * NOTE: This is in-memory only and resets on server restart.
-     * For multi-server environments, consider using Redis or database.
-     * 
-     * @var array
-     */
-    private static $rateLimits = [];
-    
     // ========================================
     // CSRF Protection
     // ========================================
@@ -110,54 +98,61 @@ class Security
      * For multi-server environments or strict rate limiting, consider
      * replacing the session storage with Redis or a database-backed store.
      * 
-     * @param string $identifier Unique identifier (IP, user ID, etc.)
-     * @param int $maxRequests Maximum requests allowed (default: 100)
-     * @param int $timeWindow Time window in seconds (default: 3600 = 1 hour)
-     * @return bool True if under limit, false if exceeded
-     * 
+     * @param string $identifier Unique key — typically the client IP or "user_<id>"
+     * @param int    $maxRequests Maximum allowed attempts in the window (default: 100)
+     * @param int    $timeWindow  Window size in seconds (default: 3600 = 1 hour)
+     * @return bool  TRUE if under limit and the request is allowed; FALSE if blocked
+     *
      * @example
-     * // Limit by IP address
-     * if (!Security::rateLimit($_SERVER['REMOTE_ADDR'], 100, 3600)) {
+     * if (!Security::rateLimit($_SERVER['REMOTE_ADDR'], 5, 900)) {
      *     http_response_code(429);
-     *     die('Rate limit exceeded');
-     * }
-     * 
-     * @example
-     * // Limit by user ID with custom limits
-     * if (!Security::rateLimit('user_' . $userId, 50, 600)) {
-     *     die('Too many requests');
+     *     die(json_encode(['error' => 'Too many requests']));
      * }
      */
     public static function rateLimit(string $identifier, int $maxRequests = 100, int $timeWindow = 3600): bool
     {
-        $now = time();
-        $key = md5($identifier);
+        $storageDir = self::rateLimitDir();
+        $file       = $storageDir . md5($identifier) . '.json';
 
-        // Prefer session-backed storage when a session is active
-        $storage =& self::$rateLimits;
-        if (session_status() === PHP_SESSION_ACTIVE) {
-            if (!isset($_SESSION['upmvc_rate_limits']) || !is_array($_SESSION['upmvc_rate_limits'])) {
-                $_SESSION['upmvc_rate_limits'] = [];
-            }
-            $storage =& $_SESSION['upmvc_rate_limits'];
+        $data = [];
+        if (file_exists($file)) {
+            $raw  = file_get_contents($file);
+            $data = ($raw !== false) ? (json_decode($raw, true) ?? []) : [];
         }
-        
-        // Initialize tracking for new identifier
-        if (!isset($storage[$key])) {
-            $storage[$key] = ['count' => 0, 'reset' => $now + $timeWindow];
+
+        $now = time();
+
+        // Drop attempts outside the current window
+        $data['attempts'] = array_values(array_filter(
+            $data['attempts'] ?? [],
+            static fn(int $ts) => ($now - $ts) < $timeWindow
+        ));
+
+        if (count($data['attempts']) >= $maxRequests) {
+            return false;
         }
-        
-        $limit =& $storage[$key];
-        
-        // Reset counter if time window expired
-        if ($now > $limit['reset']) {
-            $limit['count'] = 0;
-            $limit['reset'] = $now + $timeWindow;
+
+        // Record this attempt
+        $data['attempts'][] = $now;
+        file_put_contents($file, json_encode($data), LOCK_EX);
+
+        return true;
+    }
+
+    /**
+     * Resolve (and create if needed) the rate-limit storage directory.
+     */
+    private static function rateLimitDir(): string
+    {
+        $dir = dirname(__DIR__, 2) . DIRECTORY_SEPARATOR . 'storage'
+             . DIRECTORY_SEPARATOR . 'rate-limits' . DIRECTORY_SEPARATOR;
+
+        if (!is_dir($dir)) {
+            mkdir($dir, 0755, true);
+            file_put_contents($dir . '.htaccess', "Require all denied\n");
         }
-        
-        $limit['count']++;
-        
-        return $limit['count'] <= $maxRequests;
+
+        return $dir;
     }
     
     // ========================================
