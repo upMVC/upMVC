@@ -32,7 +32,6 @@ use App\Common\Assets\CommonCss;
 
 class BaseView
 {
-
     protected $globals = [
         'settings' => [
             'theme' => 'light',
@@ -67,14 +66,13 @@ class BaseView
      * @param string $key Variable name
      * @param mixed $value Variable value
      */
-    public function addGlobal($key, $value) {
+    public function addGlobal($key, $value): void
+    {
         if ($key === 'settings' && isset($this->globals['settings'])) {
-            // Merge settings instead of overwriting
             $this->globals['settings'] = array_merge($this->globals['settings'], $value);
         } else {
             $this->globals[$key] = $value;
         }
-        error_log("BaseView addGlobal - Key: $key, Current globals: " . print_r($this->globals, true));
     }
 
     /**
@@ -83,7 +81,8 @@ class BaseView
      * @param string $key Variable name
      * @return mixed|null Variable value or null if not found
      */
-    public function getGlobal($key) {
+    public function getGlobal($key): mixed
+    {
         return $this->globals[$key] ?? null;
     }
 
