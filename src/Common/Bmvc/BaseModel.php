@@ -62,7 +62,7 @@ class BaseModel
      * @param string $table The table name.
      * @return int|false The last inserted ID or false on failure.
      */
-    public function create(array $data, string $table)
+    public function create(array $data, string $table = '')
     {
         if (empty($data)) {
             return false;
@@ -98,7 +98,7 @@ class BaseModel
      * @param string $table The table name.
      * @return array|null The record data or null on failure.
      */
-    public function read(int $id, string $table)
+    public function read(int $id, string $table = '')
     {
         $sanitizedId = $this->sanitize($id);
         $stmt = $this->conn->prepare("SELECT * FROM $table WHERE id = :id");
@@ -117,7 +117,7 @@ class BaseModel
      * @param string $table The table name.
      * @return array The records data.
      */
-    public function readAll(string $table)
+    public function readAll(string $table = '')
     {
         $stmt = $this->conn->prepare("SELECT * FROM $table");
         if (!$stmt) {
@@ -136,7 +136,7 @@ class BaseModel
      * @param int $pageSize The number of records per page.
      * @return array The records data.
      */
-    public function readWithPagination(string $table, int $page, int $pageSize)
+    public function readWithPagination(string $table = '', int $page = 1, int $pageSize = 10)
     {
         $offset = ($page - 1) * $pageSize;
         $stmt = $this->conn->prepare("SELECT * FROM $table LIMIT :offset, :pageSize");
@@ -158,7 +158,7 @@ class BaseModel
      * @param string $table The table name.
      * @return bool True on success, false on failure.
      */
-    public function update(int $id, array $data, string $table)
+    public function update(int $id, array $data, string $table = '')
     {
         if (empty($data)) {
             return false;
@@ -190,7 +190,7 @@ class BaseModel
      * @param string $table The table name.
      * @return bool True on success, false on failure.
      */
-    public function delete(int $id, string $table)
+    public function delete(int $id, string $table = '')
     {
         $sanitizedId = $this->sanitize($id);
         $stmt = $this->conn->prepare("DELETE FROM $table WHERE id = :id");

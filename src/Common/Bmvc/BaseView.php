@@ -42,6 +42,25 @@ class BaseView
         ]
     ];
 
+    /** Returns 'bv-active' when the given URL's path matches the current request path. */
+    protected function isActive(string $url): string
+    {
+        $current = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?? '/';
+        $path    = parse_url($url, PHP_URL_PATH) ?? '';
+        return $path !== '' && $current === $path ? 'bv-active' : '';
+    }
+
+    /** Returns 'bv-active' when ANY of the given URLs matches — used for dropdown parents. */
+    protected function dropActive(array $urls): string
+    {
+        $current = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?? '/';
+        foreach ($urls as $url) {
+            $path = parse_url($url, PHP_URL_PATH) ?? '';
+            if ($path !== '' && $current === $path) return 'bv-active';
+        }
+        return '';
+    }
+
     /**
      * Add a global variable accessible to all views
      * 
