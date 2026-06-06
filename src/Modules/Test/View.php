@@ -89,7 +89,9 @@ class View extends BaseView
         </script>
     <?php
         echo $request . "<br>";
-        print_r($_GET);
+        if(isset($_GET) && !empty($_GET)){
+    print_r($_GET);
+}
         $this->endBody();
         $this->startFooter();
         $this->endFooter();

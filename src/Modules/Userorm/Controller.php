@@ -126,9 +126,7 @@ class Controller extends BaseControllerOrm
      */
     private function edit($reqRoute, $reqMet)
     {
-        //echo $reqRoute;
-        //print_r($_GET);
-        $id = $_GET['param'];
+        $id = (int) ($_GET['id'] ?? 0);
 
         $user = $this->model->getUserById($id, $this->table);
         //print_r($user);
@@ -152,7 +150,7 @@ class Controller extends BaseControllerOrm
             $this->redirect($reqRoute, $reqMet);
             return;
         }
-        $id = $_GET['param'];
+        $id = (int) ($_GET['id'] ?? 0);
         $userData = [
             'name' => $_POST['name'] ?? '',
             'email' => $_POST['email'] ?? '',
@@ -179,7 +177,7 @@ class Controller extends BaseControllerOrm
      */
     private function delete($reqRoute, $reqMet)
     {
-        $id = $_GET['param'];
+        $id = (int) ($_GET['id'] ?? 0);
         $result = $this->model->deleteUser($id, $this->table);
 
         if ($result) {
