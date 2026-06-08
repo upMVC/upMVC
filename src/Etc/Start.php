@@ -27,6 +27,7 @@ use App\Etc\Exceptions\ErrorHandler;
 use App\Etc\Middleware\AuthMiddleware;
 use App\Etc\Middleware\LoggingMiddleware;
 use App\Etc\Middleware\CorsMiddleware;
+use App\Etc\Middleware\JwtAuthMiddleware;
 use App\Etc\Helpers\HelperFacade;
 
 class Start
@@ -203,6 +204,9 @@ class Start
             return true;
         });
         
+        // JWT bearer token verification — sets $GLOBALS['current_user']
+        $router->addMiddleware('jwt', new JwtAuthMiddleware());
+
         // Session-based authentication check
         $router->addMiddleware('auth', function($route, $method) {
             if (!isset($_SESSION['logged']) || $_SESSION['logged'] !== true) {

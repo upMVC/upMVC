@@ -8,6 +8,7 @@
 | **[📁 REPOSITORY-STRUCTURE-GUIDE.md](REPOSITORY-STRUCTURE-GUIDE.md)** | Choose the right repository | 10 min | ✅ Ready |
 | **[🏗 CORE_AREAS_AND_CONFIGURATION.md](CORE_AREAS_AND_CONFIGURATION.md)** | Understand src/Etc, Modules, Tools, Common | 15-30 min | ✅ Ready |
 | **[📘 HOW-TO-GUIDE.md](HOW-TO-GUIDE.md)** | Complete development guide | 30-60 min | ✅ Ready |
+| **[🔐 JWT_AUTHENTICATION.md](JWT_AUTHENTICATION.md)** | JWT auth — issue tokens, protect routes, refresh flow | 15 min | ✅ Ready |
 | **[❓ FAQ.md](FAQ.md)** | Common questions & troubleshooting | As needed | ✅ Ready |
 
 ---
@@ -70,7 +71,7 @@ All critical issues have been resolved:
 
 ## 🚦 Release & Status
 
-- [CHANGELOG.md](CHANGELOG.md) — Version history and detailed changes
+- [CHANGELOG.md](../CHANGELOG.md) — Version history and detailed changes (root)
 - [PROGRESS.md](PROGRESS.md) — Ongoing development progress log
 - [READY_TO_PUSH.md](READY_TO_PUSH.md) — Pre-merge checklist for Router v2.0
 - [ROUTER_V2_STATUS.md](ROUTER_V2_STATUS.md) — Implementation status and verification
