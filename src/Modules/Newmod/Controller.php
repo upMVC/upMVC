@@ -81,7 +81,7 @@ class Controller
 
 		$fieldsNames = array('id', 'name', 'email');
 
-		$orderBy = '';
+		$orderBy = 0;
 		/*
 if(in_array($_GET['orderBy'], $fieldsNames)){
 	$orderBy = $_GET['orderBy']
@@ -112,6 +112,7 @@ if(in_array($_GET['orderBy'], $fieldsNames)){
 			case 'edit':
 				// get calendar date for this training
 				// Get training infos
+				$message = [];
 				if ($_POST) {
 					try {
 						$dataUsers->save();

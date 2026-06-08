@@ -125,7 +125,6 @@ class Model
 
     /**
      * Delete a row in users.
-     * @param int $id_user
      * @return int 0 or 1
      */
     function del()
@@ -148,7 +147,6 @@ class Model
 
     /**
      * Get a row in users.
-     * @param int $id_user
      * @return int 0 or 1
      */
     function get()
@@ -182,11 +180,11 @@ class Model
      * Get a list of row in users.
      * @param int $limitFrom
      * @param int $limitNumber
-     * @param string $orderBy
+     * @param int $orderBy
      * @param string $order
      * @return int 0 or Number of elements
      */
-    function getList($limitFrom, $limitNumber, $orderBy = '', $order = 'ASC')
+    function getList($limitFrom, $limitNumber, $orderBy = 0, $order = 'ASC')
     {
 
         $query = "  SELECT u.`id`, u.`name`, u.`email`

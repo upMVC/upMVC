@@ -35,14 +35,12 @@ class Controller
                 //print_r($users);
                 $data = ['users' => $users, 'view'=> 'index'];
                 //print_r($data['view']);
-                return $view->render($data); 
-                break;
+                return $view->render($data);
 
                 // ... other render methods
 
             default:
-                return $view->render('error'); 
-                break;
+                return $view->render('error');
         }
     }
 

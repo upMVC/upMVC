@@ -342,8 +342,6 @@ class View extends BaseView
 
     }
 }
-?>
-
 
 
 

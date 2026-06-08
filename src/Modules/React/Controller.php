@@ -52,7 +52,7 @@ class Controller
     {
         $view = new View();
         if (isset($_SESSION["logged"])) {
-            $view->View($reqMet);
+            $view->View();
             echo $reqMet . " " .  $reqRoute . " ";
         } else {
             echo " Not Logged In! Something else.";

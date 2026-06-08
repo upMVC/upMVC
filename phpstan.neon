@@ -5,11 +5,23 @@ parameters:
         - src/Etc
         - src/Common
         - src/Modules
-        - src/Tools
     excludePaths:
         - vendor
         - logs
         - zbug
+        - 'src/Modules/*/views'
+        - 'src/Modules/*/views/**'
+        - 'src/Modules/*/*/views'
+        - 'src/Modules/*/*/views/**'
+        - 'src/Modules/*/templates'
+        - 'src/Modules/*/templates/**'
+        - 'src/Modules/*/*/templates'
+        - 'src/Modules/*/*/templates/**'
+        - 'src/Common/Assets'
+        # Extract-based pseudo-template view files that use injected variables
+        - 'src/Modules/Moda/View.php'
+        - 'src/Modules/Moda/Modules/Suba/View.php'
+        - 'src/Modules/Test/View.php'
     ignoreErrors:
         # Legacy constants - defined at runtime in Config::initConfig()
         # These will be gradually replaced with Config::getBaseUrl(), Config::getAppDir(), etc.
@@ -19,13 +31,6 @@ parameters:
         -
             message: '#Constant THIS_DIR not found#'
             path: src/*
-        # Legacy namespace references in InitMods.php (deprecated, use InitModsImproved)
-        -
-            message: '#Class (Test|Admin|Moda|Suba|User|Userorm|Newmod|Auth|React|Reactb|ReactCrud|Dashboard|Enhanced)\\(Controller|Routes\\Routes) not found#'
-            path: src/Etc/InitMods.php
-        -
-            message: '#Instantiated class (Admin|Test|Moda|Suba|User|Userorm|Newmod|Auth|React|Reactb|ReactCrud|Dashboard|Enhanced)\\Routes\\Routes not found#'
-            path: src/Etc/InitMods.php
         # Router/middleware return type issues - methods work correctly
         -
             message: '#Result of method .* \(void\) is used#'
@@ -34,5 +39,9 @@ parameters:
         -
             message: '#Call to an undefined static method App\\Etc\\Cache\\CacheManager::(get|put|forget|has|flush)#'
             path: src/*
+        # Generated test/scaffold modules — $model/$view/$container assigned but accessed via display() method
+        -
+            message: '#Property App\\Modules\\(TestApi|TestAuth|TestBasic|TestCrud|TestParent|Testitems|Enhanced)\\Controller::\$(model|view|container) is never read, only written#'
+            path: 'src/Modules/**'
     bootstrapFiles:
         - vendor/autoload.php

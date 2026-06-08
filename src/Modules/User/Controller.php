@@ -312,6 +312,7 @@ class Controller
         $numberOfRecords = count($userRecords);
 
         if ($userRecords) {
+            $output = [];
             for ($i = 0; $i < $numberOfRecords; $i++) {
                 $output[$i]['id'] = $userRecords[$i]['id'];
                 $output[$i]['name'] = $userRecords[$i]['name'];

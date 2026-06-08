@@ -28,7 +28,6 @@ class View
     private function renderIndex($data)
     {
         $view        = new BaseView();
-        $this->title;
         $view->startHead($this->title);
 ?>
         <script type="importmap">

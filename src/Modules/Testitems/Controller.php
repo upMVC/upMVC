@@ -16,7 +16,6 @@ class Controller extends BaseController
 
     public function __construct()
     {
-        parent::__construct();
         $this->model = new Model();
         $this->view = new View();
         

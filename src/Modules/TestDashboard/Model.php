@@ -35,7 +35,7 @@ class Model extends BaseModel
     public function getRecentItems(int $limit = 10): array
     {
         // Implement based on your database structure
-        return $this->readAll($this->table, $limit);
+        return $this->readAll($this->table);
     }
 
     private function getTotalCount(): int

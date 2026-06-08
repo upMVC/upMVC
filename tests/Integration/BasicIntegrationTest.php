@@ -16,6 +16,7 @@ class BasicIntegrationTest extends TestCase
 
     public function testIndexPhpExists(): void
     {
-        $this->assertFileExists(__DIR__ . '/../../index.php');
+        // v2.0+ canonical entry point is public/index.php
+        $this->assertFileExists(__DIR__ . '/../../public/index.php');
     }
 }
