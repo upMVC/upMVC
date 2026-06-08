@@ -104,10 +104,19 @@ class Controller
         $users = new Model();
         if ($_POST) {
             $users->username = $_POST['username'];
-            $users->password     = $_POST['password'];
+            $plainPassword = (string) ($_POST['password'] ?? '');
             //$users->tokenSession = $token
             $stmt            = $users->readUserLogin();
-            if ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            if ($stmt && ($row = $stmt->fetch(PDO::FETCH_ASSOC))) {
+                $storedPassword = (string) ($row['password'] ?? '');
+                $validPassword = password_verify($plainPassword, $storedPassword)
+                    || hash_equals($storedPassword, $plainPassword);
+
+                if (!$validPassword) {
+                    echo "Try again!";
+                    return;
+                }
+
                 $active = intval($row['state']);
                 if ($active === 1) {
                     $_SESSION["username"] = $row['username'];

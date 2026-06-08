@@ -26,10 +26,9 @@
  *   https://bitshost.biz/
  */
 
-namespace App\Modules\mail;
+namespace App\Modules\Mail;
 
-//use MailController
-use App\Modules\mail\MailController;
+use App\Modules\Mail\MailController;
 
 
 /**

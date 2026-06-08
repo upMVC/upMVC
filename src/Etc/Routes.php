@@ -26,12 +26,6 @@
 
 namespace App\Etc;
 
-// Example: Custom route imports with aliases to prevent naming conflicts
-// Use 'Controller as Alias' syntax when multiple modules have same class names
-use Test\Controller;
-use Admin\Controller as AnythingElse;
-
-use App\Etc\InitMods;
 use App\Etc\InitModsImproved;
 use App\Etc\Router;
 
