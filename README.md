@@ -6,6 +6,14 @@
 
 **New in 2.0.0 "Islands":** Hardened auth & middleware, Router v2.0 (typed & validated routes with names), PSR-4 helpers, CRUD + dashboard path, and a fully documented PHP + React/Vue *Islands Architecture*.
 
+## 🏢 upMVC-SaaS — Official Multi-Tenant Fork
+
+Need to build a **SaaS product**? **[upMVC-SaaS](https://github.com/upMVC/upMVC-SaaS)** is the official fork of upMVC with multi-tenancy, platform administration, tenant isolation, plan gating, JWT auth, impersonation, and a complete signup/onboarding flow built in — ready to extend, not a starting template.
+
+→ **[github.com/upMVC/upMVC-SaaS](https://github.com/upMVC/upMVC-SaaS)**
+
+---
+
 ## 🎨 **NEW: Modern UI System**
 
 upMVC v1.0.3 introduces a **contemporary design system** while maintaining complete backward compatibility:
@@ -61,6 +69,9 @@ upMVC excels at integrating **pre-built JavaScript applications** from any frame
 - **[📖 Routing Documentation](docs/routing/README.md)** - Complete routing documentation hub
 - **[📋 Routing Guide](docs/routing/ROUTING_GUIDE.md)** - All 5 routing types with decision tree
 - **[🚀 Router V2 Examples](docs/routing/ROUTER_V2_EXAMPLES.md)** - Type casting, validation, named routes
+
+### **🔐 Security & Authentication:**
+- **[JWT Authentication Guide](docs/JWT_AUTHENTICATION.md)** — Opt-in JWT support: issue tokens with `JwtService`, protect API routes with `['jwt']` middleware, refresh token flow. Sessions are unaffected — JWT is an additional option for APIs and SPAs.
 
 ### **🏗 Architecture & Philosophy:**
 - **[🎨 Pure PHP Philosophy](docs/PHILOSOPHY_PURE_PHP.md)** - The upMVC NoFramework approach
