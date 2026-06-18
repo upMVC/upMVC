@@ -137,17 +137,19 @@ class Router
      * @param string $className Fully qualified controller class name
      * @param string $methodName Controller method to call
      * @param array $middleware Array of middleware names to execute for this route
+     * @param array $methods Allowed HTTP methods (empty = all methods)
      * @return void
      * 
      * @example
      * $router->addRoute('/users', 'App\Controllers\UserController', 'index', ['auth']);
      */
-    public function addRoute($route, $className, $methodName, array $middleware = [])
+    public function addRoute($route, $className, $methodName, array $middleware = [], array $methods = [])
     {
         $this->routes[$route] = [
             'className' => $className, 
             'methodName' => $methodName,
-            'middleware' => $middleware
+            'middleware' => $middleware,
+            'methods' => $this->normalizeMethods($methods)
         ];
     }
     
@@ -162,6 +164,7 @@ class Router
      * @param string $methodName Controller method
      * @param array $middleware Optional named middleware list
      * @param array $constraints Optional regex constraints ['id' => '\d+']
+     * @param array $methods Allowed HTTP methods (empty = all methods)
      * @return self For method chaining (->name())
      */
     public function addParamRoute(
@@ -169,7 +172,8 @@ class Router
         string $className, 
         string $methodName, 
         array $middleware = [],
-        array $constraints = []
+        array $constraints = [],
+        array $methods = []
     ): self
     {
         $trimmed = trim($pattern, '/');
@@ -201,6 +205,7 @@ class Router
             'className' => $className,
             'methodName' => $methodName,
             'middleware' => $middleware,
+            'methods' => $this->normalizeMethods($methods),
             'name' => null,  // Set via name() method
         ];
         
@@ -307,7 +312,7 @@ class Router
             return $result !== false;
         }
 
-        return true; // Unknown middleware name — pass through
+        throw new \RuntimeException("Unknown route middleware '{$name}'");
     }
 
     // ========================================
@@ -344,6 +349,10 @@ class Router
         // Check if route exists
         if (isset($this->routes[$reqRoute])) {
             $route = $this->routes[$reqRoute];
+
+            if (!$this->methodAllowed($route, $reqMet)) {
+                return $this->handle405($route);
+            }
             
             // Execute global middleware pipeline, then route handler
             return $this->middlewareManager->execute(
@@ -362,6 +371,10 @@ class Router
             if ($match !== null) {
                 $route = $match['route'];
                 $params = $match['params'];
+
+                if (!$this->methodAllowed($route, $reqMet)) {
+                    return $this->handle405($route);
+                }
 
                 // Enrich request context with extracted params
                 $request['params'] = $params;
@@ -494,6 +507,48 @@ class Router
             default:
                 return (string)$value;
         }
+    }
+
+    /**
+     * Normalize HTTP method names for route definitions.
+     *
+     * @param array $methods
+     * @return array
+     */
+    private function normalizeMethods(array $methods): array
+    {
+        return array_values(array_unique(array_map('strtoupper', $methods)));
+    }
+
+    /**
+     * Determine whether the current request method is allowed for a route.
+     *
+     * @param array $route
+     * @param string $method
+     * @return bool
+     */
+    private function methodAllowed(array $route, string $method): bool
+    {
+        $allowed = $route['methods'] ?? [];
+        return empty($allowed) || in_array(strtoupper($method), $allowed, true);
+    }
+
+    /**
+     * Return a 405 Method Not Allowed response for a matched route.
+     *
+     * @param array $route
+     * @return void
+     */
+    private function handle405(array $route): void
+    {
+        $allowed = $route['methods'] ?? [];
+        if (!empty($allowed)) {
+            header('Allow: ' . implode(', ', $allowed));
+        }
+
+        http_response_code(405);
+        header('Content-Type: application/json; charset=utf-8');
+        echo json_encode(['error' => 'Method Not Allowed']);
     }
 
     // ========================================
