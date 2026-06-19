@@ -129,9 +129,14 @@ class Start
             // Initialize HelperFacade with router instance (PSR-4 autoloaded)
             HelperFacade::setRouter($router);
 
+            // Allow application packages to register module paths and route policy.
+            $app = Application::getInstance();
+            $app->registerProviders();
+
             // Setup middleware stack
             $this->setupEnhancedMiddleware($router);
             $this->registerMiddleware($router);
+            $app->bootProviders($router);
 
             // Initialize and start routing
             $initRoutes = new Routes($router);
@@ -245,10 +250,16 @@ class Start
         $envRoutes = Environment::get('PROTECTED_ROUTES', '');
         
         if (!empty($envRoutes)) {
-            return array_map('trim', explode(',', $envRoutes));
+            return array_values(array_unique(array_merge(
+                array_map('trim', explode(',', $envRoutes)),
+                Application::getInstance()->getProtectedRoutes()
+            )));
         }
         
-        return self::$defaultProtectedRoutes;
+        return array_values(array_unique(array_merge(
+            self::$defaultProtectedRoutes,
+            Application::getInstance()->getProtectedRoutes()
+        )));
     }
 
     /**

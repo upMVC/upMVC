@@ -271,7 +271,7 @@ class InitModsImproved
         $moduleData = [];
         
         // Discover primary modules
-        $primaryModules = glob($this->modulesPath . '/*/Routes/Routes.php');
+        $primaryModules = glob($this->modulesPath . '/*/Routes/Routes.php') ?: [];
         foreach ($primaryModules as $routeFile) {
             $moduleData[] = $this->createModuleData($routeFile, 'primary');
         }
@@ -282,12 +282,12 @@ class InitModsImproved
         
         // Discover submodules (if enabled)
         if ($this->enableSubmoduleDiscovery) {
-            $subModules = glob($this->modulesPath . '/*/Modules/*/Routes/Routes.php');
+            $subModules = glob($this->modulesPath . '/*/Modules/*/Routes/Routes.php') ?: [];
             foreach ($subModules as $routeFile) {
                 $moduleData[] = $this->createModuleData($routeFile, 'sub');
             }
             
-            $deepSubModules = glob($this->modulesPath . '/*/Modules/*/Modules/*/Routes/Routes.php');
+            $deepSubModules = glob($this->modulesPath . '/*/Modules/*/Modules/*/Routes/Routes.php') ?: [];
             foreach ($deepSubModules as $routeFile) {
                 $moduleData[] = $this->createModuleData($routeFile, 'deep');
             }
@@ -498,7 +498,7 @@ class InitModsImproved
      */
     private function loadCustomRoutes(): array
     {
-        $configFile = __DIR__ . '/custom-routes.php';
+        $configFile = Application::getInstance()->path('src/Etc/custom-routes.php');
         return file_exists($configFile) ? include $configFile : [];
     }
 

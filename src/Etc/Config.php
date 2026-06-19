@@ -194,7 +194,7 @@ class Config
      */
     public static function getAppDir(): string
     {
-        return dirname(__DIR__, 2); // Goes up from src/Etc/ to root
+        return Application::getInstance()->getAppRoot();
     }
 
     /**
@@ -285,9 +285,15 @@ class Config
         }
 
         // Define application directory and base URL
-        define('THIS_DIR', str_replace('\\', '/', dirname(__FILE__, 2)));
-        define('BASE_URL', self::getDomainName() . self::getSitePath());
-        define('SITEPATH', self::getSitePath());
+        if (!defined('THIS_DIR')) {
+            define('THIS_DIR', self::getAppDir() . '/src');
+        }
+        if (!defined('BASE_URL')) {
+            define('BASE_URL', self::getDomainName() . self::getSitePath());
+        }
+        if (!defined('SITEPATH')) {
+            define('SITEPATH', self::getSitePath());
+        }
 
         // Enhanced session configuration with security
         $sessionConfig = self::get('session', []);

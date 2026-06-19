@@ -9,6 +9,7 @@
 
 namespace App\Etc\Config;
 
+use App\Etc\Application;
 use App\Etc\Exceptions\ConfigurationException;
 
 /**
@@ -45,9 +46,8 @@ class Environment
             return;
         }
 
-        // .env file is located in src/Etc/ directory
-        $etcDir = dirname(__DIR__); // Gets src/Etc/ directory
-        self::$envFile = $envFile ?? $etcDir . '/.env';
+        // .env file is located in the application src/Etc directory.
+        self::$envFile = $envFile ?? Application::getInstance()->path('src/Etc/.env');
 
         // Create .env if it doesn't exist
         if (!file_exists(self::$envFile)) {

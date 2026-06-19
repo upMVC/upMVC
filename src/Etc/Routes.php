@@ -103,10 +103,12 @@ class Routes
         // Example: Add home route (uncomment and adjust as needed)
         // $this->router->addRoute('/', \New\Controller::class, 'display');
 
-        // Load and register module routes dynamically
-        // Note: InitModsImproved is the current approach (InitMods is legacy)
-        $modulesRoutes = new InitModsImproved();
-        $modulesRoutes->addRoutes($this->router);
+        // Load and register module routes from the app and installed packages.
+        // Later paths can override earlier route definitions when needed.
+        foreach (Application::getInstance()->getModulePaths() as $modulesPath) {
+            $modulesRoutes = new InitModsImproved($modulesPath);
+            $modulesRoutes->addRoutes($this->router);
+        }
     }
 
     // ========================================
