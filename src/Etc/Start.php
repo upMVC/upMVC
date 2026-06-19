@@ -161,7 +161,7 @@ class Start
         
         // Optional CORS support
         if (ConfigManager::get('app.cors.enabled', false)) {
-            $corsConfig = ConfigManager::get('app.cors', []);
+            $corsConfig = $this->getCorsConfig();
             $middlewareManager->addGlobal(new CorsMiddleware($corsConfig));
         }
 
@@ -203,6 +203,19 @@ class Start
             }
             return true;
         });
+
+        // Route-level CORS support for routes declaring ['cors'].
+        $router->addMiddleware('cors', function($route, $method) {
+            $cors = new CorsMiddleware($this->getCorsConfig());
+            $request = [
+                'route' => $route,
+                'method' => $method,
+                'uri' => $_SERVER['REQUEST_URI'] ?? null,
+            ];
+
+            $result = $cors->handle($request, fn() => true);
+            return $result !== false;
+        });
         
         // JWT bearer token verification — sets $GLOBALS['current_user']
         $router->addMiddleware('jwt', new JwtAuthMiddleware());
@@ -236,6 +249,24 @@ class Start
         }
         
         return self::$defaultProtectedRoutes;
+    }
+
+    /**
+     * Normalize CORS config keys for CorsMiddleware.
+     *
+     * @return array
+     */
+    private function getCorsConfig(): array
+    {
+        $config = ConfigManager::get('app.cors', []);
+
+        return [
+            'origins' => $config['origins'] ?? $config['allowed_origins'] ?? ['*'],
+            'methods' => $config['methods'] ?? $config['allowed_methods'] ?? ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+            'headers' => $config['headers'] ?? $config['allowed_headers'] ?? ['Content-Type', 'Authorization', 'X-Requested-With'],
+            'credentials' => $config['credentials'] ?? false,
+            'max_age' => $config['max_age'] ?? 86400,
+        ];
     }
 
     // ========================================
