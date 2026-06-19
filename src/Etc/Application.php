@@ -70,6 +70,27 @@ class Application
         return $this->modulePaths;
     }
 
+    /**
+     * Return module paths in route-registration order.
+     *
+     * The application module path is registered first by default, but it should
+     * be scanned last so app routes can override package routes.
+     *
+     * @return array
+     */
+    public function getModulePathsForRoutes(): array
+    {
+        if (count($this->modulePaths) <= 1) {
+            return $this->modulePaths;
+        }
+
+        $paths = $this->modulePaths;
+        $appPath = array_shift($paths);
+        $paths[] = $appPath;
+
+        return $paths;
+    }
+
     public function addMigrationPath(string $path): void
     {
         $path = $this->normalizePath($path);

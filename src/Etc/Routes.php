@@ -103,9 +103,8 @@ class Routes
         // Example: Add home route (uncomment and adjust as needed)
         // $this->router->addRoute('/', \New\Controller::class, 'display');
 
-        // Load and register module routes from the app and installed packages.
-        // Later paths can override earlier route definitions when needed.
-        foreach (Application::getInstance()->getModulePaths() as $modulesPath) {
+        // Load package module routes first, then app routes so local modules can override packs.
+        foreach (Application::getInstance()->getModulePathsForRoutes() as $modulesPath) {
             $modulesRoutes = new InitModsImproved($modulesPath);
             $modulesRoutes->addRoutes($this->router);
         }
