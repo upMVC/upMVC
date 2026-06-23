@@ -62,7 +62,7 @@
  *   ROUTE_ERROR_HANDLING=true           → show errors when a module fails to load
  *   ROUTE_VERBOSE_LOGGING=true          → log successful route registrations
  *   ROUTE_DEBUG_OUTPUT=false            → raw discovery debug (dev only)
- *   ROUTE_SUBMODULE_DISCOVERY=true      → scan Modules/*/Modules/* nested structure
+ *   ROUTE_SUBMODULE_DISCOVERY=true      → scan Modules/{*}/Modules/{*} nested structure
  *   ROUTE_USE_CACHE=false               → cache discovered routes (true in production)
  *
  * STEP 6 — $fallbacks array  (this file, ~line 95)
