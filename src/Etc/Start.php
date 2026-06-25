@@ -85,7 +85,7 @@ class Start
         ConfigManager::load();
 
         $errorHandler = new ErrorHandler(
-            Environment::isDevelopment(),
+            filter_var(Environment::get('APP_DEBUG', 'false'), FILTER_VALIDATE_BOOLEAN),
             $this->resolveLogPath()
         );
         $errorHandler->register();

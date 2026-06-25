@@ -31,6 +31,7 @@
 
 namespace App\Etc\Exceptions;
 
+use App\Etc\Application;
 use App\Etc\Exceptions\upMVCException;
 use Exception;
 use Throwable;
@@ -85,15 +86,14 @@ class ErrorHandler
     public function __construct(bool $debug = false, string $logFile = 'logs/errors.log')
     {
         $this->debug = $debug;
-        $baseDir = defined('THIS_DIR') ? THIS_DIR : dirname(__DIR__, 2);
         $isAbsolute = str_starts_with($logFile, '/') || preg_match('/^[A-Za-z]:[\\\\\\/]/', $logFile);
-        $this->logFile = $isAbsolute ? $logFile : $baseDir . '/' . $logFile;
-        
-        // Define default error views
+        $this->logFile = $isAbsolute ? $logFile : Application::getInstance()->path('src/logs/' . ltrim($logFile, '/\\'));
+
+        $errorsDir = Application::getInstance()->path('src/Common/errors');
         $this->errorViews = [
-            404 => $baseDir . '/common/errors/404.php',
-            500 => $baseDir . '/common/errors/500.php',
-            403 => $baseDir . '/common/errors/403.php'
+            404 => $errorsDir . '/404.php',
+            500 => $errorsDir . '/500.php',
+            403 => $errorsDir . '/403.php'
         ];
 
         // Ensure log directory exists
