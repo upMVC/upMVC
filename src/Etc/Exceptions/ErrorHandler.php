@@ -86,7 +86,8 @@ class ErrorHandler
     {
         $this->debug = $debug;
         $baseDir = defined('THIS_DIR') ? THIS_DIR : dirname(__DIR__, 2);
-        $this->logFile = $baseDir . '/' . $logFile;
+        $isAbsolute = str_starts_with($logFile, '/') || preg_match('/^[A-Za-z]:[\\\\\\/]/', $logFile);
+        $this->logFile = $isAbsolute ? $logFile : $baseDir . '/' . $logFile;
         
         // Define default error views
         $this->errorViews = [

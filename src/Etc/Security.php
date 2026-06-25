@@ -144,8 +144,7 @@ class Security
      */
     private static function rateLimitDir(): string
     {
-        $dir = dirname(__DIR__, 2) . DIRECTORY_SEPARATOR . 'storage'
-             . DIRECTORY_SEPARATOR . 'rate-limits' . DIRECTORY_SEPARATOR;
+        $dir = Application::getInstance()->path('storage/rate-limits') . DIRECTORY_SEPARATOR;
 
         if (!is_dir($dir)) {
             mkdir($dir, 0755, true);

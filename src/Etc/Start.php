@@ -86,7 +86,7 @@ class Start
 
         $errorHandler = new ErrorHandler(
             Environment::isDevelopment(),
-            'logs/errors.log'
+            $this->resolveLogPath()
         );
         $errorHandler->register();
 
@@ -123,28 +123,23 @@ class Start
      */
     public function upMVC()
     {
-        try {
-            $router = new Router();
-            
-            // Initialize HelperFacade with router instance (PSR-4 autoloaded)
-            HelperFacade::setRouter($router);
+        $router = new Router();
 
-            // Allow application packages to register module paths and route policy.
-            $app = Application::getInstance();
-            $app->registerProviders();
+        // Initialize HelperFacade with router instance (PSR-4 autoloaded)
+        HelperFacade::setRouter($router);
 
-            // Setup middleware stack
-            $this->setupEnhancedMiddleware($router);
-            $this->registerMiddleware($router);
-            $app->bootProviders($router);
+        // Allow application packages to register module paths and route policy.
+        $app = Application::getInstance();
+        $app->registerProviders();
 
-            // Initialize and start routing
-            $initRoutes = new Routes($router);
-            $initRoutes->startRoutes($this->reqRoute, $this->reqMethod, $this->reqURI);
+        // Setup middleware stack
+        $this->setupEnhancedMiddleware($router);
+        $this->registerMiddleware($router);
+        $app->bootProviders($router);
 
-        } catch (\Exception $e) {
-            throw $e;
-        }
+        // Initialize and start routing
+        $initRoutes = new Routes($router);
+        $initRoutes->startRoutes($this->reqRoute, $this->reqMethod, $this->reqURI);
     }
 
     // ========================================
@@ -241,8 +236,27 @@ class Start
     // ========================================
 
     /**
+     * Resolve the error log file path from LOG_PATH in .env or fall back to src/logs/errors.log.
+     * Supports absolute paths (Windows and Unix) and relative paths from app root.
+     */
+    private function resolveLogPath(): string
+    {
+        $appRoot  = Application::getInstance()->getAppRoot();
+        $envPath  = Environment::get('LOG_PATH', '');
+
+        if ($envPath === '') {
+            return $appRoot . '/src/logs/errors.log';
+        }
+
+        $isAbs = str_starts_with($envPath, '/') || (bool) preg_match('/^[A-Za-z]:[\\\\\\/]/', $envPath);
+        $dir   = $isAbs ? $envPath : $appRoot . '/' . ltrim($envPath, '\\/');
+
+        return rtrim($dir, '\\/') . '/errors.log';
+    }
+
+    /**
      * Get protected routes from .env or use defaults
-     * 
+     *
      * @return array Array of protected route patterns
      */
     private function getProtectedRoutes(): array

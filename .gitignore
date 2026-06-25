@@ -47,8 +47,10 @@ temp/
 *.tmp
 *.temp
 
-# Cache files
+# Cache files (runtime dirs only — not the src/Etc/Cache source namespace)
 cache/
+!src/Etc/Cache/
+!src/Etc/Cache/**
 *.cache
 
 # Database dumps
