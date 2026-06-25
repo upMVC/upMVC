@@ -55,7 +55,15 @@
  * ---------------------------------------------------------------
  *   PROTECTED_ROUTES=/admin/*,/dashboard/*
  *                                       → comma-separated prefixes requiring login
- *                                         overrides defaults in Start.php
+ *
+ *   ⚠  If PROTECTED_ROUTES is empty or not set, the framework falls back to a
+ *      hardcoded list in Start.php → $defaultProtectedRoutes (around line 58):
+ *
+ *        '/dashboardexample/*', '/admin/*', '/users/*', '/moda'
+ *
+ *      These defaults exist for the standalone demo modules. For your own app,
+ *      always set PROTECTED_ROUTES in .env so you control exactly what is protected.
+ *      The $defaultProtectedRoutes array will be removed in a future release.
  *
  * STEP 5 — Module discovery (defaults work out of the box)
  * ---------------------------------------------------------------
@@ -65,7 +73,7 @@
  *   ROUTE_SUBMODULE_DISCOVERY=true      → scan Modules/{*}/Modules/{*} nested structure
  *   ROUTE_USE_CACHE=false               → cache discovered routes (true in production)
  *
- * STEP 6 — $fallbacks array  (this file, ~line 95)
+ * STEP 6 — $fallbacks array  (this file, ~line 118)
  * ---------------------------------------------------------------
  *   Used ONLY when .env is missing or a key is absent.
  *   Match them to your STEP 1 values so the app works even without .env.
@@ -73,7 +81,7 @@
  *   'site_path'   => '/upMVC/public'    → same as SITE_PATH above
  *   'domain_name' => 'http://localhost' → same as DOMAIN_NAME above
  *
- * STEP 7 — $config array  (this file, ~line 110)
+ * STEP 7 — $config array  (this file, ~line 126)
  * ---------------------------------------------------------------
  *   'debug'            => true          → set FALSE in production
  *   'timezone'         => 'UTC'         → e.g. 'Europe/Bucharest'
@@ -325,50 +333,30 @@ class Config
             define('SITEPATH', self::getSitePath());
         }
 
-        // Session configuration — read from .env via ConfigManager, fall back to $config array
-        $cookieCfg   = method_exists(ConfigManager::class, 'get') ? (ConfigManager::get('session.cookie', []) ?: []) : [];
-        $sessionName = $cookieCfg['name']      ?? self::get('session.name',     'UPMVC_SESSION');
-        $lifetime    = method_exists(ConfigManager::class, 'get')
-            ? (int) ConfigManager::get('session.lifetime', self::get('session.lifetime', 3600))
-            : (int) self::get('session.lifetime', 3600);
-        $secure      = $cookieCfg['secure']    ?? self::get('session.secure',   false);
-        $httpOnly    = $cookieCfg['http_only'] ?? self::get('session.httponly', true);
-        $sameSite    = ucfirst(strtolower($cookieCfg['same_site'] ?? 'Lax'));
-        $domain      = $cookieCfg['domain']    ?? '';
+        // Session configuration — only configure when no session is active yet.
+        // session_name() and session_set_cookie_params() must be called before session_start().
+        if (session_status() === PHP_SESSION_NONE) {
+            $cookieCfg   = method_exists(ConfigManager::class, 'get') ? (ConfigManager::get('session.cookie', []) ?: []) : [];
+            $sessionName = $cookieCfg['name']      ?? self::get('session.name',     'UPMVC_SESSION');
+            $lifetime    = method_exists(ConfigManager::class, 'get')
+                ? (int) ConfigManager::get('session.lifetime', self::get('session.lifetime', 3600))
+                : (int) self::get('session.lifetime', 3600);
+            $secure      = $cookieCfg['secure']    ?? self::get('session.secure',   false);
+            $httpOnly    = $cookieCfg['http_only'] ?? self::get('session.httponly', true);
+            $sameSite    = ucfirst(strtolower($cookieCfg['same_site'] ?? 'Lax'));
+            $domain      = $cookieCfg['domain']    ?? '';
 
-        session_name($sessionName);
-        session_set_cookie_params([
-            'lifetime' => $lifetime,
-            'path'     => '/',
-            'domain'   => $domain,
-            'secure'   => (bool) $secure,
-            'httponly' => (bool) $httpOnly,
-            'samesite' => $sameSite,
-        ]);
-        
-        session_start();
-
-        // Route all framework error logs into a single location.
-        // LOG_PATH in .env can override the default (relative to app root).
-        $defaultLogPath = self::getAppDir() . '/src/logs';
-        $envLogPath = Environment::get('LOG_PATH', '');
-
-        if ($envLogPath !== '') {
-            // Treat non-absolute paths as relative to application root
-            $isWindowsAbs = (bool) preg_match('/^[A-Za-z]:[\\\\\/]/', $envLogPath);
-            $isUnixAbs = str_starts_with($envLogPath, '/');
-
-            if ($isWindowsAbs || $isUnixAbs) {
-                $logPath = $envLogPath;
-            } else {
-                $logPath = self::getAppDir() . '/' . ltrim($envLogPath, "\\/");
-            }
-        } else {
-            $logPath = $defaultLogPath;
+            session_name($sessionName);
+            session_set_cookie_params([
+                'lifetime' => $lifetime,
+                'path'     => '/',
+                'domain'   => $domain,
+                'secure'   => (bool) $secure,
+                'httponly' => (bool) $httpOnly,
+                'samesite' => $sameSite,
+            ]);
+            session_start();
         }
-
-        ErrorHandler::setLogPath($logPath);
-        ErrorHandler::register();
     }
 
     // ========================================
