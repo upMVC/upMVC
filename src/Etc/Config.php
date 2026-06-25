@@ -325,17 +325,25 @@ class Config
             define('SITEPATH', self::getSitePath());
         }
 
-        // Enhanced session configuration with security
-        $sessionConfig = self::get('session', []);
-        if (isset($sessionConfig['name'])) {
-            session_name($sessionConfig['name']);
-        }
-        
+        // Session configuration — read from .env via ConfigManager, fall back to $config array
+        $cookieCfg   = method_exists(ConfigManager::class, 'get') ? (ConfigManager::get('session.cookie', []) ?: []) : [];
+        $sessionName = $cookieCfg['name']      ?? self::get('session.name',     'UPMVC_SESSION');
+        $lifetime    = method_exists(ConfigManager::class, 'get')
+            ? (int) ConfigManager::get('session.lifetime', self::get('session.lifetime', 3600))
+            : (int) self::get('session.lifetime', 3600);
+        $secure      = $cookieCfg['secure']    ?? self::get('session.secure',   false);
+        $httpOnly    = $cookieCfg['http_only'] ?? self::get('session.httponly', true);
+        $sameSite    = ucfirst(strtolower($cookieCfg['same_site'] ?? 'Lax'));
+        $domain      = $cookieCfg['domain']    ?? '';
+
+        session_name($sessionName);
         session_set_cookie_params([
-            'lifetime' => $sessionConfig['lifetime'] ?? 3600,
-            'secure' => $sessionConfig['secure'] ?? false,
-            'httponly' => $sessionConfig['httponly'] ?? true,
-            'samesite' => 'Strict'
+            'lifetime' => $lifetime,
+            'path'     => '/',
+            'domain'   => $domain,
+            'secure'   => (bool) $secure,
+            'httponly' => (bool) $httpOnly,
+            'samesite' => $sameSite,
         ]);
         
         session_start();

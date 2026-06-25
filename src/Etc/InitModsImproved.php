@@ -102,8 +102,11 @@ class InitModsImproved
             Environment::load();
         }
         
-        // Cache only in production for performance
-        $this->useCache = Environment::isProduction();
+        // ROUTE_USE_CACHE takes explicit precedence; falls back to production auto-detect
+        $envCacheFlag = Environment::get('ROUTE_USE_CACHE', null);
+        $this->useCache = $envCacheFlag !== null
+            ? filter_var($envCacheFlag, FILTER_VALIDATE_BOOLEAN)
+            : Environment::isProduction();
         
         // Load configuration from .env with sensible defaults
         $this->enableDebugOutput = filter_var(
