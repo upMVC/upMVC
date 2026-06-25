@@ -1,14 +1,29 @@
 # Changelog
 
-## [Unreleased] - Bootstrap & Error Handler Cleanup
+## [Unreleased]
+
+---
+
+## v2.3.1 - Bootstrap Cleanup & Path Normalization (2026-06-25)
+
+### Changed
+- **All internal path resolution unified through `Application::getInstance()->path()`** — `ConfigManager`, `LoggingMiddleware`, `Security::rateLimitDir()`, and `FileCache` all previously derived their storage/log/cache paths independently using a mix of `THIS_DIR`, `dirname(__DIR__, N)`, or relative strings. All now call `Application::getInstance()->path()` so the single registered app root is the source of truth.
+- **`LoggingMiddleware` default path is now absolute** — constructor previously defaulted to the relative string `'logs/requests.log'`, meaning the file would land wherever the process cwd happened to be. Default is now `Application::getInstance()->path('src/logs/requests.log')`.
+- **`FileCache` cache path now matches `ConfigManager` advertised path** — `FileCache` was writing to a path derived from `dirname(__DIR__, 2)` which on some installs landed in `src/storage/cache` instead of `storage/cache`. Now explicitly uses `Application::getInstance()->path('storage/cache')`, matching the value advertised in `ConfigManager::loadAdditionalConfigs()`.
+- **`ConfigManager` config file discovery fixed** — `loadConfigFiles()` previously used `defined('THIS_DIR') ? THIS_DIR : dirname(__DIR__, 3)`. `THIS_DIR` is defined in `Config::initConfig()` which runs after `ConfigManager::load()`, so the fallback always ran. Now uses `Application::getInstance()->path('src/Etc')` directly — correct regardless of call order.
 
 ### Fixed
+- **`src/Etc/Cache/` source files now tracked by git** — `.gitignore` entry `cache/` was matching the `src/Etc/Cache/` namespace directory case-insensitively on Windows, silently excluding `CacheInterface.php`, `CacheManager.php`, and `FileCache.php` from version control. Added negation patterns `!src/Etc/Cache/` and `!src/Etc/Cache/**` to allow the source files through.
 - **Dual error handler eliminated** — `Config.php` was registering a second static `App\Etc\ErrorHandler` after `Start.php` already registered the instance-based `App\Etc\Exceptions\ErrorHandler`. Both called `register_shutdown_function`, leaving two shutdown callbacks active per request. Consolidated to one: `Start.php` is the single registration point.
 - **`LOG_PATH` now respected by the active handler** — log path resolution (`.env` `LOG_PATH`, absolute/relative detection) moved from `Config.php` to a new private `Start::resolveLogPath()`. The instance handler receives the correct path at bootstrap time.
 - **`ErrorHandler` supports absolute paths** — constructor previously always prepended `$baseDir` to the log file argument, corrupting absolute paths on Windows and Unix. Now detects absolute paths and uses them as-is.
 - **Session configuration guard is complete** — `session_name()` and `session_set_cookie_params()` were called before the `session_status()` check, potentially generating warnings on an already-active session. The entire session configuration block (name, cookie params, `session_start`) is now wrapped in a single `PHP_SESSION_NONE` guard.
 - **Pointless `try/catch` removed** from `Start::upMVC()` — the block caught `\Exception` and immediately re-threw it with no handling, adding noise.
 - **`public/index.php` requirement docs corrected** — stated PHP 8.0 (should be 8.1) and `.env` in `/etc` (should be `src/Etc`).
+
+### Docs
+- **`Config.php` STEP 4 note added** — documents that `$defaultProtectedRoutes` in `Start.php` exists for standalone demo modules and will be removed in a future release; apps and packages should register routes via `Application::addProtectedRoutes()`.
+- **`Config.php` STEP 6/7 line references corrected** — comments pointed to `~line 95` / `~line 110`; updated to `~line 118` / `~line 126` after session block expansion.
 
 ---
 
