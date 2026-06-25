@@ -46,6 +46,7 @@
 
 namespace App\Etc\Middleware;
 
+use App\Etc\Application;
 use App\Etc\Middleware\MiddlewareInterface;
 
 class LoggingMiddleware implements MiddlewareInterface
@@ -97,11 +98,9 @@ class LoggingMiddleware implements MiddlewareInterface
      * // Disabled logging for testing
      * $logger = new LoggingMiddleware('logs/requests.log', false);
      */
-    public function __construct(string $logFile = 'logs/requests.log', bool $logEnabled = true)
+    public function __construct(?string $logFile = null, bool $logEnabled = true)
     {
-        // Build full path to log file
-        $baseDir = defined('THIS_DIR') ? THIS_DIR : dirname(__DIR__, 2);
-        $this->logFile = $baseDir . '/' . $logFile;
+        $this->logFile = $logFile ?? Application::getInstance()->path('src/logs/requests.log');
         $this->logEnabled = $logEnabled;
         
         // Ensure logs directory exists
