@@ -1,35 +1,16 @@
 <?php
 /**
- * ErrorHandler.php - Static Error and Exception Handler
- * 
- * This class provides a simplified static error handling system for upMVC:
- * - Static method-based API (no instantiation required)
- * - PHP error handling (warnings, notices, etc.)
- * - Uncaught exception handling
- * - Fatal error handling (shutdown function)
- * - Daily log rotation (error_YYYY-MM-DD.log)
- * - Debug mode error display
- * 
- * Features:
- * - Automatic log directory creation
- * - JSON log format for easy parsing
- * - Styled error display in debug mode
- * - Integration with upMVC\Config for debug flag
- * - Daily log file rotation
- * 
- * Debug Mode:
- * - Enabled: Shows styled error boxes with stack traces
- * - Disabled: Shows 500 error page for exceptions
- * 
- * Usage:
- * Call ErrorHandler::register() once during bootstrap.
- * 
+ * ErrorHandler.php - Static Error and Exception Handler (DEPRECATED)
+ *
+ * @deprecated Use App\Etc\Exceptions\ErrorHandler instead.
+ *   The instance-based handler (registered by Start.php) is the active
+ *   error handler since v2.3.1. This static class is no longer called
+ *   during bootstrap and will be removed in a future release.
+ *
  * @package upMVC
  * @author BitsHost
  * @copyright 2025 BitsHost
  * @license MIT License
- * @link https://bitshost.biz/
- * @created October 21, 2025
  */
 
 namespace App\Etc;

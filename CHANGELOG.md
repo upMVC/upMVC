@@ -4,6 +4,18 @@
 
 ---
 
+## v2.3.2 - Debug Flag & Linux Casing Fixes (2026-06-25)
+
+### Fixed
+- **`APP_DEBUG` now controls exception page detail** — `Start::bootstrapApplication()` was passing `Environment::isDevelopment()` (checks `APP_ENV === 'development'`) to `ErrorHandler`, so `APP_DEBUG=false` with `APP_ENV=development` still showed full stack traces. Changed to `filter_var(Environment::get('APP_DEBUG', 'false'), FILTER_VALIDATE_BOOLEAN)` — one flag, one behavior.
+- **Linux casing bug in error view paths** — `ErrorHandler` built error view paths as `$baseDir . '/common/errors/...'` where `$baseDir` pointed to `src/`. On case-sensitive Linux filesystems `common` ≠ `Common`, so custom 404/500/403 pages silently fell back to the generic HTML fallback. Paths now use `Application::getInstance()->path('src/Common/errors')`.
+- **`ErrorHandler` log path fallback now consistent** — removed the `THIS_DIR`-based fallback in the constructor (which was never defined at call time anyway) in favour of `Application::getInstance()->path('src/logs/...')`. Absolute paths passed from `Start::resolveLogPath()` are still used as-is.
+
+### Deprecated
+- **`App\Etc\ErrorHandler` (static)** — marked `@deprecated` in docblock. The instance-based `App\Etc\Exceptions\ErrorHandler` registered by `Start.php` is the active handler since v2.3.1. The static class is no longer called during bootstrap and will be removed in a future release.
+
+---
+
 ## v2.3.1 - Bootstrap Cleanup & Path Normalization (2026-06-25)
 
 ### Changed
