@@ -28,6 +28,10 @@
 // Load Dependencies
 // ========================================
 
+if (!defined('UPMVC_APP_ROOT')) {
+    define('UPMVC_APP_ROOT', dirname(__DIR__));
+}
+
 require_once __DIR__ . '/../vendor/autoload.php';
 
 use App\Etc\Start;

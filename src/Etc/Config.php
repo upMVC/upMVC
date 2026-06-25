@@ -19,38 +19,68 @@
  *   SITE_PATH=/upMVC/public             → subfolder path, or empty '' for domain root
  *                                         e.g. /myapp/public  OR  (leave blank)
  *
+ *   APP_KEY=                            → run: php -r "echo bin2hex(random_bytes(32));"
+ *
  *   DB_HOST=localhost                   → database host
- *   DB_NAME=test                        → your database name
+ *   DB_NAME=your_database               → your database name
  *   DB_USER=root                        → your database user
  *   DB_PASS=                            → your database password
+ *   DB_CHARSET=utf8mb4                  → leave as utf8mb4 unless you have a reason
  *
  *   SESSION_LIFETIME=3600               → seconds before session expires
  *   SESSION_SECURE=false                → set true if site runs on HTTPS
  *
- *   APP_KEY=                            → run: php -r "echo bin2hex(random_bytes(32));"
- *
- * STEP 2 — $fallbacks array  (this file, ~line 65)
+ * STEP 2 — JWT (only if using JWT auth on API routes)
  * ---------------------------------------------------------------
- *   These are used ONLY when .env is missing or a key is absent.
+ *   JWT_SECRET=                         → run: php -r "echo bin2hex(random_bytes(32));"
+ *                                         Must be set — JwtService throws if empty
+ *
+ *   JWT_ACCESS_TTL=3600                 → access token lifetime in seconds  (1 hour)
+ *   JWT_REFRESH_TTL=2592000             → refresh token lifetime in seconds (30 days)
+ *
+ *   Protect a route with JWT by adding ['jwt'] to its route definition.
+ *   See docs/JWT_AUTHENTICATION.md for the full guide.
+ *
+ * STEP 3 — Rate limiting (optional, sensible defaults provided)
+ * ---------------------------------------------------------------
+ *   RATE_LIMIT=100                      → general limit: requests/hour per IP
+ *   RATE_LIMIT_LOGIN_MAX=10             → max login attempts
+ *   RATE_LIMIT_LOGIN_WINDOW=900         → window in seconds (15 min)
+ *   RATE_LIMIT_SIGNUP_MAX=5             → max signup attempts
+ *   RATE_LIMIT_SIGNUP_WINDOW=3600       → window in seconds (1 hour)
+ *   RATE_LIMIT_API_MAX=100              → max API requests
+ *   RATE_LIMIT_API_WINDOW=60            → window in seconds (1 min)
+ *
+ * STEP 4 — Protected routes
+ * ---------------------------------------------------------------
+ *   PROTECTED_ROUTES=/admin/*,/dashboard/*
+ *                                       → comma-separated prefixes requiring login
+ *                                         overrides defaults in Start.php
+ *
+ * STEP 5 — Module discovery (defaults work out of the box)
+ * ---------------------------------------------------------------
+ *   ROUTE_ERROR_HANDLING=true           → show errors when a module fails to load
+ *   ROUTE_VERBOSE_LOGGING=true          → log successful route registrations
+ *   ROUTE_DEBUG_OUTPUT=false            → raw discovery debug (dev only)
+ *   ROUTE_SUBMODULE_DISCOVERY=true      → scan Modules/{*}/Modules/{*} nested structure
+ *   ROUTE_USE_CACHE=false               → cache discovered routes (true in production)
+ *
+ * STEP 6 — $fallbacks array  (this file, ~line 95)
+ * ---------------------------------------------------------------
+ *   Used ONLY when .env is missing or a key is absent.
  *   Match them to your STEP 1 values so the app works even without .env.
  *
  *   'site_path'   => '/upMVC/public'    → same as SITE_PATH above
  *   'domain_name' => 'http://localhost' → same as DOMAIN_NAME above
  *
- * STEP 3 — $config array  (this file, ~line 80)
+ * STEP 7 — $config array  (this file, ~line 110)
  * ---------------------------------------------------------------
  *   'debug'            => true          → set FALSE in production
  *   'timezone'         => 'UTC'         → e.g. 'Europe/Bucharest'
  *   'session.secure'   => false         → true if HTTPS
  *   'session.lifetime' => 3600          → must match SESSION_LIFETIME in .env
  *
- * STEP 4 — src/Etc/Start.php  ($defaultProtectedRoutes, ~line 61)
- * ---------------------------------------------------------------
- *   List the URL prefixes that require a logged-in session.
- *   Override without touching code by adding to .env:
- *   PROTECTED_ROUTES=/admin/*,/dashboard/*,/account/*
- *
- * STEP 5 — src/Etc/ConfigDatabase.php  (DB fallbacks)
+ * STEP 8 — src/Etc/ConfigDatabase.php  (DB fallbacks)
  * ---------------------------------------------------------------
  *   Only relevant when running WITHOUT .env (e.g. quick local test).
  *   Keep these as dummy values in version control.
@@ -194,7 +224,7 @@ class Config
      */
     public static function getAppDir(): string
     {
-        return dirname(__DIR__, 2); // Goes up from src/Etc/ to root
+        return Application::getInstance()->getAppRoot();
     }
 
     /**
@@ -285,21 +315,35 @@ class Config
         }
 
         // Define application directory and base URL
-        define('THIS_DIR', str_replace('\\', '/', dirname(__FILE__, 2)));
-        define('BASE_URL', self::getDomainName() . self::getSitePath());
-        define('SITEPATH', self::getSitePath());
-
-        // Enhanced session configuration with security
-        $sessionConfig = self::get('session', []);
-        if (isset($sessionConfig['name'])) {
-            session_name($sessionConfig['name']);
+        if (!defined('THIS_DIR')) {
+            define('THIS_DIR', self::getAppDir() . '/src');
         }
-        
+        if (!defined('BASE_URL')) {
+            define('BASE_URL', self::getDomainName() . self::getSitePath());
+        }
+        if (!defined('SITEPATH')) {
+            define('SITEPATH', self::getSitePath());
+        }
+
+        // Session configuration — read from .env via ConfigManager, fall back to $config array
+        $cookieCfg   = method_exists(ConfigManager::class, 'get') ? (ConfigManager::get('session.cookie', []) ?: []) : [];
+        $sessionName = $cookieCfg['name']      ?? self::get('session.name',     'UPMVC_SESSION');
+        $lifetime    = method_exists(ConfigManager::class, 'get')
+            ? (int) ConfigManager::get('session.lifetime', self::get('session.lifetime', 3600))
+            : (int) self::get('session.lifetime', 3600);
+        $secure      = $cookieCfg['secure']    ?? self::get('session.secure',   false);
+        $httpOnly    = $cookieCfg['http_only'] ?? self::get('session.httponly', true);
+        $sameSite    = ucfirst(strtolower($cookieCfg['same_site'] ?? 'Lax'));
+        $domain      = $cookieCfg['domain']    ?? '';
+
+        session_name($sessionName);
         session_set_cookie_params([
-            'lifetime' => $sessionConfig['lifetime'] ?? 3600,
-            'secure' => $sessionConfig['secure'] ?? false,
-            'httponly' => $sessionConfig['httponly'] ?? true,
-            'samesite' => 'Strict'
+            'lifetime' => $lifetime,
+            'path'     => '/',
+            'domain'   => $domain,
+            'secure'   => (bool) $secure,
+            'httponly' => (bool) $httpOnly,
+            'samesite' => $sameSite,
         ]);
         
         session_start();

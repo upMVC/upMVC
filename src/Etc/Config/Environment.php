@@ -9,6 +9,7 @@
 
 namespace App\Etc\Config;
 
+use App\Etc\Application;
 use App\Etc\Exceptions\ConfigurationException;
 
 /**
@@ -45,9 +46,8 @@ class Environment
             return;
         }
 
-        // .env file is located in src/Etc/ directory
-        $etcDir = dirname(__DIR__); // Gets src/Etc/ directory
-        self::$envFile = $envFile ?? $etcDir . '/.env';
+        // .env file is located in the application src/Etc directory.
+        self::$envFile = $envFile ?? Application::getInstance()->path('src/Etc/.env');
 
         // Create .env if it doesn't exist
         if (!file_exists(self::$envFile)) {
@@ -241,7 +241,6 @@ class Environment
     private static function createDefaultEnvFile(): void
     {
         $template = <<<'ENV'
-# Application Configuration
 APP_NAME="upMVC Application"
 APP_ENV=production
 APP_DEBUG=false
@@ -249,25 +248,22 @@ APP_KEY=
 APP_TIMEZONE=UTC
 APP_LOCALE=en
 
-# Domain Configuration
 DOMAIN_NAME=https://yourdomain.com
 SITE_PATH=
 
-# Database Configuration
 DB_CONNECTION=mysql
 DB_HOST=127.0.0.1
 DB_PORT=3306
 DB_NAME=upmvc
 DB_USER=root
 DB_PASS=
+DB_CHARSET=utf8mb4
 
-# Cache Configuration
 CACHE_DRIVER=file
 CACHE_TTL=3600
 
-# Session Configuration
 SESSION_DRIVER=file
-SESSION_LIFETIME=120
+SESSION_LIFETIME=3600
 SESSION_EXPIRE_ON_CLOSE=false
 SESSION_ENCRYPT=false
 SESSION_COOKIE=upmvc_session
@@ -276,17 +272,26 @@ SESSION_SECURE=false
 SESSION_HTTP_ONLY=true
 SESSION_SAME_SITE=lax
 
-# Security Configuration
 CSRF_PROTECTION=true
 RATE_LIMIT=100
+RATE_LIMIT_LOGIN_MAX=10
+RATE_LIMIT_LOGIN_WINDOW=900
+RATE_LIMIT_SIGNUP_MAX=5
+RATE_LIMIT_SIGNUP_WINDOW=3600
+RATE_LIMIT_REGISTER_MAX=5
+RATE_LIMIT_REGISTER_WINDOW=3600
+RATE_LIMIT_API_MAX=100
+RATE_LIMIT_API_WINDOW=60
 
-# CORS Configuration
 CORS_ENABLED=false
 CORS_ALLOWED_ORIGINS=*
 CORS_ALLOWED_METHODS=GET,POST,PUT,DELETE,OPTIONS
 CORS_ALLOWED_HEADERS=Content-Type,Authorization
 
-# Mail Configuration
+JWT_SECRET=
+JWT_ACCESS_TTL=3600
+JWT_REFRESH_TTL=2592000
+
 MAIL_MAILER=smtp
 MAIL_HOST=
 MAIL_PORT=587
@@ -296,12 +301,17 @@ MAIL_PASSWORD=
 MAIL_FROM_ADDRESS=noreply@example.com
 MAIL_FROM_NAME="${APP_NAME}"
 
-# Logging Configuration
 LOG_CHANNEL=file
 LOG_LEVEL=debug
-
-# Log path (relative to app root or absolute)
 LOG_PATH=src/logs
+
+ROUTE_ERROR_HANDLING=true
+ROUTE_VERBOSE_LOGGING=false
+ROUTE_DEBUG_OUTPUT=false
+ROUTE_SUBMODULE_DISCOVERY=true
+ROUTE_USE_CACHE=true
+
+PROTECTED_ROUTES=
 
 ENV;
 

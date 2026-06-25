@@ -3,7 +3,7 @@
 namespace App\Modules\Mail;
 
 use PHPMailer\PHPMailer\PHPMailer;
-use PHPMailer\PHPMailer\Exception;
+use App\Etc\Config\Environment;
 
 class MailController
 {
@@ -12,12 +12,12 @@ class MailController
         $mail             = new PHPMailer(true);
         $mail->CharSet    = 'UTF-8';
         $mail->isSMTP();
-        $mail->Host       = $_ENV['MAIL_HOST'] ?? '';
+        $mail->Host       = Environment::get('MAIL_HOST', '');
         $mail->SMTPAuth   = true;
-        $mail->Username   = $_ENV['MAIL_USERNAME'] ?? '';
-        $mail->Password   = $_ENV['MAIL_PASSWORD'] ?? '';
-        $mail->SMTPSecure = $_ENV['MAIL_ENCRYPTION'] ?? 'ssl';
-        $mail->Port       = (int) ($_ENV['MAIL_PORT'] ?? 465);
+        $mail->Username   = Environment::get('MAIL_USERNAME', '');
+        $mail->Password   = Environment::get('MAIL_PASSWORD', '');
+        $mail->SMTPSecure = Environment::get('MAIL_ENCRYPTION', 'ssl');
+        $mail->Port       = (int) Environment::get('MAIL_PORT', 465);
         $mail->isHTML(true);
         return $mail;
     }

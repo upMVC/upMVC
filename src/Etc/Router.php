@@ -101,6 +101,13 @@ class Router
      */
     protected $middleware = [];
 
+    /**
+     * Factories for parameterized middleware names like "feature:billing".
+     *
+     * @var array
+     */
+    protected $middlewareFactories = [];
+
     // ========================================
     // Initialization
     // ========================================
@@ -298,6 +305,18 @@ class Router
     }
 
     /**
+     * Register a factory for parameterized route middleware.
+     *
+     * @param string $name Middleware prefix before the colon
+     * @param callable $factory Factory receiving the argument and returning a callable
+     * @return void
+     */
+    public function registerMiddlewareFactory(string $name, callable $factory): void
+    {
+        $this->middlewareFactories[$name] = $factory;
+    }
+
+    /**
      * Execute a single named middleware entry.
      *
      * @param string $name    Middleware name
@@ -307,6 +326,19 @@ class Router
      */
     private function runNamedMiddleware(string $name, string $route, string $method): bool
     {
+        if (str_contains($name, ':')) {
+            [$factoryName, $argument] = explode(':', $name, 2);
+            if (isset($this->middlewareFactories[$factoryName])) {
+                $middleware = $this->middlewareFactories[$factoryName]($argument);
+                if (!is_callable($middleware)) {
+                    throw new \RuntimeException("Middleware factory '{$factoryName}' did not return a callable");
+                }
+
+                $result = $middleware($route, $method);
+                return $result !== false;
+            }
+        }
+
         if (isset($this->middleware[$name])) {
             $result = $this->middleware[$name]($route, $method);
             return $result !== false;

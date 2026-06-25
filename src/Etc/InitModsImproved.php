@@ -102,8 +102,11 @@ class InitModsImproved
             Environment::load();
         }
         
-        // Cache only in production for performance
-        $this->useCache = Environment::isProduction();
+        // ROUTE_USE_CACHE takes explicit precedence; falls back to production auto-detect
+        $envCacheFlag = Environment::get('ROUTE_USE_CACHE', null);
+        $this->useCache = $envCacheFlag !== null
+            ? filter_var($envCacheFlag, FILTER_VALIDATE_BOOLEAN)
+            : Environment::isProduction();
         
         // Load configuration from .env with sensible defaults
         $this->enableDebugOutput = filter_var(
@@ -271,7 +274,7 @@ class InitModsImproved
         $moduleData = [];
         
         // Discover primary modules
-        $primaryModules = glob($this->modulesPath . '/*/Routes/Routes.php');
+        $primaryModules = glob($this->modulesPath . '/*/Routes/Routes.php') ?: [];
         foreach ($primaryModules as $routeFile) {
             $moduleData[] = $this->createModuleData($routeFile, 'primary');
         }
@@ -282,12 +285,12 @@ class InitModsImproved
         
         // Discover submodules (if enabled)
         if ($this->enableSubmoduleDiscovery) {
-            $subModules = glob($this->modulesPath . '/*/Modules/*/Routes/Routes.php');
+            $subModules = glob($this->modulesPath . '/*/Modules/*/Routes/Routes.php') ?: [];
             foreach ($subModules as $routeFile) {
                 $moduleData[] = $this->createModuleData($routeFile, 'sub');
             }
             
-            $deepSubModules = glob($this->modulesPath . '/*/Modules/*/Modules/*/Routes/Routes.php');
+            $deepSubModules = glob($this->modulesPath . '/*/Modules/*/Modules/*/Routes/Routes.php') ?: [];
             foreach ($deepSubModules as $routeFile) {
                 $moduleData[] = $this->createModuleData($routeFile, 'deep');
             }
@@ -498,7 +501,7 @@ class InitModsImproved
      */
     private function loadCustomRoutes(): array
     {
-        $configFile = __DIR__ . '/custom-routes.php';
+        $configFile = Application::getInstance()->path('src/Etc/custom-routes.php');
         return file_exists($configFile) ? include $configFile : [];
     }
 
