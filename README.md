@@ -1,10 +1,10 @@
-# 📚 upMVC noFramework v2.0.0 "Islands" – Complete Documentation
+# 📚 upMVC noFramework v2.3 – Complete Documentation
 
 > **Modern, lightweight PHP NoFramework with Islands Architecture for real-world PHP + JS systems**
 
-**Status: ✅ Production Ready (v2.0.0 "Islands")** | **PHP 8.1+** | **PSR-4 Compliant** | **MIT License**
+**Status: ✅ Production Ready (v2.3)** | **PHP 8.1+** | **PSR-4 Compliant** | **MIT License**
 
-**New in 2.0.0 "Islands":** Hardened auth & middleware, Router v2.0 (typed & validated routes with names), PSR-4 helpers, CRUD + dashboard path, and a fully documented PHP + React/Vue *Islands Architecture*.
+**v2.3:** Hardened auth & middleware, Router v2.0 (typed & validated routes with names), PSR-4 helpers, CRUD + dashboard path, package/provider architecture, and a fully documented PHP + React/Vue *Islands Architecture*.
 
 ## 🏢 upMVC-SaaS — Official Multi-Tenant Fork
 
@@ -126,7 +126,7 @@ upMVC now features a modern PSR-4 compliant modular helper system:
 - **Auto-loaded:** No manual `require_once` needed
 - **Type-Safe:** Router V2 integration for named routes
 - **Scalable:** Easy to add new helpers
-- **[View Helper Classes](etc/Helpers/)** - PSR-4 helper architecture
+- **[View Helper Classes](src/Etc/Helpers/)** - PSR-4 helper architecture
 
 ### **🎯 Routing Features:**
 
@@ -200,12 +200,13 @@ composer require bitshost/upmvc
 copy vendor/bitshost/upmvc/index.php .
 copy vendor/bitshost/upmvc/.htaccess .
 
-# Step 3: Configure your environment (.env)
-# Edit vendor/bitshost/upmvc/src/Etc/.env with required settings:
+# Step 3: Create .env at your project root (copy from the example)
+# cp vendor/bitshost/upmvc/src/Etc/.env.example .env
+# Edit .env with required settings:
 # - SITE_PATH=/your-folder-name (e.g., /myproject)
 # - DOMAIN_NAME=localhost (or your domain)
-# 
-# Database configuration is optional (uses etc/ConfigDatabase.php fallback)
+#
+# Database configuration is optional (uses src/Etc/ConfigDatabase.php fallback)
 # - Configure only when your modules need database access
 # - Framework works without database for static/API projects
 ```
@@ -233,15 +234,16 @@ cd yourProjectName
 # (Recommended v2.0) If you use public/ as web server document root:
 # cd public
 
-# Step 3: Configure etc/.env
+# Step 3: Configure .env (copy from example if not present)
+# cp src/Etc/.env.example .env
 # Edit these 2 required settings:
 # - SITE_PATH=/yourProjectName          # if document root is project root
 #   or SITE_PATH=/yourProjectName/public # if document root points to public/
 #   or SITE_PATH=                       # if the app is at domain root
 # - DOMAIN_NAME=http://localhost
-# 
+#
 # Database settings are optional because upMVC has smart fallbacks:
-# - If .env database settings are missing, it uses etc/ConfigDatabase.php
+# - If .env database settings are missing, it uses src/Etc/ConfigDatabase.php
 # - Framework will work even without database (for static/API projects)
 # - Configure database only when you need it for your modules
 ```
@@ -329,8 +331,8 @@ php .\tools\cache-cli.php clear:all
 ```
 
 Affected components:
-- Module discovery cache used by `etc/InitModsImproved.php` in production mode.
-- Admin dynamic route cache file: `etc/storage/cache/admin_routes.php`.
+- Module discovery cache used by `src/Etc/InitModsImproved.php` in production mode.
+- Admin dynamic route cache file: `storage/cache/admin_routes.php`.
 - All instantiated cache stores via `upMVC\Cache\CacheManager::clearAll()`.
 
 Exit codes: `0` success, `1` failure, `2` unknown command.
@@ -341,7 +343,7 @@ Exit codes: `0` success, `1` failure, `2` unknown command.
 upMVC uses a smart **layered configuration system** with automatic fallbacks:
 
 ### Primary Configuration: `.env` file
-Edit `/etc/.env` for environment-specific settings:
+Edit `.env` (at project root) for environment-specific settings:
 - **Required:** `SITE_PATH`, `DOMAIN_NAME`, `APP_ENV`
 - **Optional:** Database, mail, cache, session settings
 
@@ -444,17 +446,16 @@ In the same file, modules/test/routes/Routes.php, you will see for demonstration
 
 # Steps
 #
- - Edit /etc/Config.php, /etc/ConfigDatabase.php, /modules/mail/MailController.php with your data.
+ - Copy `.env.example` from `src/Etc/` to the project root as `.env` and fill in `SITE_PATH`, `DOMAIN_NAME`, and database credentials.
+ - For mail: configure `src/Modules/Mail/MailController.php` with your SMTP settings (or use `.env` `MAIL_*` keys).
  - Make your module in the MVC style (model, view, controller).
- - You may or may not wish to utilize BASE MODEL, BASE VIEW and BASE CONTROLLER from the common/bmvc subdirectory.
- - BaseModel contains all of the data required for CRUD OPERATIONS; simply expand it in your module model and you have a CRUD ready-made module; see example module modules/user.
- - Make a distinctive namespace for each module
- - Your module routes should be kept under modules/YourModule/routes - file Routes.php
- - Because these routes should be presented to Router, you must provide their namespace to InitMods.php and initialize your module routes. 
- - Don't forget to update composer.json with your new namespaces for your module and routes, as well as refresh composer from the terminal:
- - composer  dump-autoload
- - php composer.phar dump-autolad
- - setup your PHPMailer - mail/MailController.php
+ - You may or may not wish to utilize BASE MODEL, BASE VIEW and BASE CONTROLLER from `src/Common/Bmvc/`.
+ - BaseModel contains all of the data required for CRUD OPERATIONS; simply expand it in your module model and you have a CRUD ready-made module; see example module `src/Modules/User/`.
+ - Make a distinctive namespace for each module under `App\Modules\YourModule`.
+ - Your module routes should be kept under `src/Modules/YourModule/Routes/Routes.php`.
+ - `InitModsImproved` (`src/Etc/InitModsImproved.php`) auto-discovers and registers routes — no manual wiring needed.
+ - After adding new modules, refresh the autoloader:
+ - `composer dump-autoload`
 
 ### You have more than one method of accomplishing things in example modules, upMVC - don't enforce RULES like others do, but respect architecture models MVC, MMVC, and pure PHP and OOP programming rules.
 
@@ -467,9 +468,9 @@ In the same file, modules/test/routes/Routes.php, you will see for demonstration
  - Model, View, Controller - will be called without using module name in their name. For example, module name = books:
  - Model.php - class Model; View.php - class View; Controller.php - class Controller;
  - and make a distinctive namespace for each module - namespace Modulename - e.g. Books;
- - Your module routes should be kept under modules/yourmodule/routes - file Routes.php: 
-   - Routes.php class Routes in folder /modules/books/routes
-   - namespace Modulename\Routes, e.g. Books\Routes
+ - Your module routes should be kept under `src/Modules/YourModule/Routes/Routes.php`:
+   - `Routes.php` class `Routes` in `src/Modules/Books/Routes/`
+   - namespace `App\Modules\Books\Routes`
 #
 #
 ##

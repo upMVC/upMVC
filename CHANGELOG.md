@@ -4,6 +4,16 @@
 
 ---
 
+## v2.3.4 - README Path Corrections (2026-06-30)
+
+### Docs
+- **All obsolete `/etc/` paths updated** — README referenced `etc/Config.php`, `etc/ConfigDatabase.php`, `etc/InitModsImproved.php`, `etc/storage/cache/`, `etc/Helpers/`, and `/etc/.env` throughout. All corrected to their actual locations (`src/Etc/`, `storage/`, `src/Etc/Helpers/`, `.env` at project root).
+- **Version header updated** — title and status badge updated from v2.0.0 to v2.3.
+- **Install instructions modernised** — standalone and library install steps now reference `.env` at project root with `cp src/Etc/.env.example .env`; database fallback correctly points to `src/Etc/ConfigDatabase.php`.
+- **Module creation steps modernised** — Steps section updated: removed stale `InitMods.php` manual namespace wiring (auto-discovery handles this), removed outdated per-module `composer.json` namespace entries (PSR-4 single root covers all modules), corrected all module paths to `src/Modules/`, corrected namespace convention to `App\Modules\YourModule`.
+
+---
+
 ## v2.3.3 - Auth Hardening (2026-06-30)
 
 ### Security
