@@ -22,7 +22,7 @@
 
 ### Modified Files (2)
 
-1. **etc/Router.php** ⭐
+1. **src/Etc/Router.php** ⭐
    - Added validation patterns support
    - Added type casting with type hints
    - Added route grouping optimization
@@ -30,14 +30,14 @@
    - **Lines changed:** ~150 lines added/modified
    - **Backward compatible:** ✅ 100%
 
-2. **etc/Start.php**
+2. **src/Etc/Start.php**
    - Load helpers.php in bootstrap
    - Make $router globally available
    - **Lines changed:** 3 lines added
 
 ### New Files (6)
 
-3. **etc/helpers.php** ⭐
+3. **src/Etc/helpers.php** ⭐
    - route() - Generate URLs from named routes
    - url(), redirect(), csrf_field()
    - Plus 10+ helper functions

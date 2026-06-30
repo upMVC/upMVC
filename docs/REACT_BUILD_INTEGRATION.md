@@ -86,11 +86,11 @@ modules/reactb/
 3. Controller creates methods for each asset:
 ```php
 public function mainjs() {
-    require_once THIS_DIR . "/modules/reactb/etc/build/static/js/main.10d2eb17.js";
+    require_once THIS_DIR . "/Modules/reactb/etc/build/static/js/main.10d2eb17.js";
 }
 
 public function maincss() {
-    require_once THIS_DIR . "/modules/reactb/etc/build/static/css/main.f855e6bc.css";
+    require_once THIS_DIR . "/Modules/reactb/etc/build/static/css/main.f855e6bc.css";
 }
 ```
 4. View includes assets via BASE_URL routes
@@ -254,7 +254,7 @@ npm start  # Development
 npm run build
 
 # 3. Copy build to upMVC module
-cp -r build/* /path/to/upMVC/modules/myreactapp/public/
+cp -r build/* /path/to/upMVC/src/Modules/myreactapp/public/
 
 # 4. Access in browser
 # http://localhost/myproject/myreactapp
@@ -645,11 +645,11 @@ npm run build
 
 # 2. Copy to upMVC module
 # Option A: Manual copy
-cp -r build/* /path/to/upMVC/modules/myreactapp/public/
+cp -r build/* /path/to/upMVC/src/Modules/myreactapp/public/
 
 # Option B: NPM script (add to package.json)
 "scripts": {
-  "deploy": "npm run build && cp -r build/* /path/to/upMVC/modules/myreactapp/public/"
+  "deploy": "npm run build && cp -r build/* /path/to/upMVC/src/Modules/myreactapp/public/"
 }
 
 # Then run:
@@ -671,8 +671,8 @@ npm run build
 
 # Copy to upMVC module
 echo "Deploying to upMVC..."
-rm -rf /path/to/upMVC/modules/myreactapp/public/*
-cp -r build/* /path/to/upMVC/modules/myreactapp/public/
+rm -rf /path/to/upMVC/src/Modules/myreactapp/public/*
+cp -r build/* /path/to/upMVC/src/Modules/myreactapp/public/
 
 echo "✅ Deployment complete!"
 echo "Access at: http://localhost/myproject/myreactapp"
@@ -793,7 +793,7 @@ fetch('/api/index.php?action=list&table=products')
 
 - [Islands Architecture](ISLANDS_ARCHITECTURE.md) - Hybrid React + PHP rendering
 - [React Integration Patterns](REACT_INTEGRATION_PATTERNS.md) - Multiple integration approaches
-- [ReactHMR Module](../modules/reacthmr/README.md) - Development with hot reload
+- [ReactHMR Module](../src/Modules/reacthmr/README.md (or modules/reacthmr/README.md at repo root)) - Development with hot reload
 - [Integration: upMVC + PHP CRUD API Generator](INTEGRATION_PHP_CRUD_API.md) - Full-stack setup
 
 ---

@@ -85,10 +85,10 @@ Copy-Item "docs/routing/examples/Routes_WithCache.php" "modules/yourmodule/route
 ### Pattern Matching
 ```powershell
 # Backup Router
-Copy-Item "etc/Router.php" "etc/Router_BACKUP.php"
+Copy-Item "src/Etc/Router.php" "src/Etc/Router_BACKUP.php"
 
 # Install
-Copy-Item "docs/routing/examples/Router_PatternMatching.php" "etc/Router.php" -Force
+Copy-Item "docs/routing/examples/Router_PatternMatching.php" "src/Etc/Router.php" -Force
 ```
 
 ## 🧪 Testing

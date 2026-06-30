@@ -171,7 +171,7 @@ Keeps as:         /admin (passed to Router)
 
 ## 🎯 Layer 2: PHP Router Class
 
-### Location: `/etc/Router.php`
+### Location: `src/Etc/Router.php`
 
 After `.htaccess` processes the URL, the Router class matches routes to controllers.
 
@@ -455,7 +455,7 @@ class Routes {
     private int $cacheLifetime = 3600; // 1 hour
     
     public function __construct() {
-        $this->cacheFile = __DIR__ . '/../../../etc/storage/cache/admin_routes.php';
+        $this->cacheFile = Application::getInstance()->path('storage/cache/admin_routes.php';
     }
     
     public function routes($router) {
@@ -551,7 +551,7 @@ PHP;
     
     // Clear cache after creating/deleting users
     public static function clearCache(): void {
-        $cacheFile = __DIR__ . '/../../../etc/storage/cache/admin_routes.php';
+        $cacheFile = Application::getInstance()->path('storage/cache/admin_routes.php';
         if (file_exists($cacheFile)) {
             unlink($cacheFile);
         }
@@ -559,7 +559,7 @@ PHP;
 }
 ```
 
-**Cache File Example:** `/etc/storage/cache/admin_routes.php`
+**Cache File Example:** `storage/cache/admin_routes.php`
 
 ```php
 <?php

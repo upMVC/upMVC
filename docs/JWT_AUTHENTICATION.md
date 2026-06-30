@@ -15,7 +15,7 @@ They are deliberately separate — issuance and verification are different conce
 
 ## .env Configuration
 
-Add these keys to your `etc/.env`:
+Add these keys to your `.env` (project root):
 
 ```env
 JWT_SECRET=your-long-random-secret-here

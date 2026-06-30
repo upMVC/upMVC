@@ -4,6 +4,17 @@
 
 ---
 
+## v2.3.5 - Documentation Cleanup (2026-06-30)
+
+### Docs
+- **12 internal dev-artifact files deleted** — `PROGRESS.md`, `READY_FOR_MAIN.md`, `READY_TO_PUSH.md`, `PRE_RELEASE_VERIFICATION.md`, `VERIFICATION_CHECKLIST.md`, and all five `BUG_FIX_*.md` files plus two `CLEANUP_*.md` files were internal branch checklists and historical fix notes, not user-facing documentation.
+- **60+ stale path references corrected across 25 files** — all `etc/Config.php`, `etc/ConfigDatabase.php`, `etc/Router.php`, `etc/Start.php`, `etc/Middleware/`, `etc/Storage/`, etc. updated to `src/Etc/` equivalents. `etc/.env` references updated to `.env` at project root. `etc/storage/cache/` updated to `storage/cache/`. Affected files include `CONFIGURATION_FALLBACKS.md`, `FAQ.md`, `FIRST-STEPS-GUIDE.md`, `HOW-TO-GUIDE.md`, `ROUTING_HTACCESS.md`, `routing/ROUTING_GUIDE.md`, `routing/THE_COMPLETE_PICTURE.md`, `routing/ROUTER_V2_CHANGELOG.md`, `routing/ROUTER_V2_IMPLEMENTATION_COMPLETE.md`, and all `REACT_*.md` docs.
+- **React docs: `/modules/` paths corrected** — 25+ references to `/modules/reactb`, `/modules/reactcrud`, etc. updated to `src/Modules/` equivalents across `REACT_BUILD_INTEGRATION.md`, `REACT_INTEGRATION_PATTERNS.md`, `REACT_PATTERNS_SUMMARY.md`, `REACT_QUICK_REFERENCE.md`, `REACT_DOCUMENTATION_COMPLETE.md`.
+- **PSR-4 namespace note updated** — `routing/HELPERS_CLASS_USAGE.md` removed stale claim that `upMVC\` is mapped to `etc/`; replaced with accurate PSR-4 single-root description.
+- **ENHANCEMENTS.md file tree corrected** — root directory in tree diagram updated from `etc/` to `src/Etc/`.
+
+---
+
 ## v2.3.4 - README Path Corrections (2026-06-30)
 
 ### Docs

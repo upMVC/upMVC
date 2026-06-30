@@ -204,7 +204,7 @@ echo $url1 === $url2; // true
 4. Both APIs available throughout application
 
 ```php
-// etc/helpers_functions.php
+// src/Etc/helpers_functions.php
 function route(string $name, array $params = []): string
 {
     return Helpers::route($name, $params);

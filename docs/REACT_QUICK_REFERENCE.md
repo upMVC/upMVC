@@ -100,7 +100,7 @@ npm run build
 // Controller.php
 public function mainjs()
 {
-    require_once THIS_DIR . "/modules/reactb/etc/build/static/js/main.js";
+    require_once THIS_DIR . "/Modules/reactb/etc/build/static/js/main.js";
 }
 
 // routes/Routes.php

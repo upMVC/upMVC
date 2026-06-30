@@ -63,15 +63,15 @@ Generating autoload files
 ### **Create Environment File:**
 ```bash
 # Copy example environment file (if exists)
-cp etc/.env.example etc/.env
+cp src/Etc/.env.example .env
 
 # Or create basic .env file
-echo "APP_ENV=development" > etc/.env
-echo "APP_DEBUG=true" >> etc/.env
+echo "APP_ENV=development" > .env
+echo "APP_DEBUG=true" >> .env
 ```
 
 ### **Verify Configuration:**
-Check that `etc/Config.php` has reasonable defaults:
+Check that `src/Etc/Config.php` has reasonable defaults:
 ```php
 public const SITE_PATH = '/';  // Root path
 public const DOMAIN_NAME = 'http://localhost';

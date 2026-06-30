@@ -49,7 +49,7 @@ Let's follow a request from start to finish to understand the complete picture:
                          ↓
 ┌─────────────────────────────────────────────────────────────────────┐
 │ 4. index.php (APPLICATION ENTRY POINT)                              │
-│    require_once 'etc/Start.php';                                    │
+│    require_once 'src/Etc/Start.php';                                    │
 │    $start = new upMVC\Start();                                      │
 │    $start->upMVC();                                                 │
 └────────────────────────┬────────────────────────────────────────────┘
@@ -639,7 +639,7 @@ This is how the admin module worked with cached routes:
 ```php
 // modules/admin/routes/Routesc.php (Cached version)
 public function routes($router) {
-    $cacheFile = __DIR__ . '/../../etc/storage/cache/admin_routes.php';
+    $cacheFile = Application::getInstance()->path('storage/cache/admin_routes.php');
     $cacheTTL = 3600; // 1 hour
     
     if (file_exists($cacheFile) && (time() - filemtime($cacheFile)) < $cacheTTL) {
@@ -1254,7 +1254,7 @@ Server status: Might crash! 💥
 **The best solution: Block bots BEFORE they reach the controller!**
 
 ```php
-// etc/Middleware/RateLimitMiddleware.php
+// src/Etc/Middleware/RateLimitMiddleware.php
 namespace upMVC\Middleware;
 
 class RateLimitMiddleware
@@ -1294,7 +1294,7 @@ class RateLimitMiddleware
     }
 }
 
-// In etc/Start.php - Apply BEFORE routing
+// In src/Etc/Start.php - Apply BEFORE routing
 RateLimitMiddleware::handle();
 
 // Or apply to specific routes in modules/admin/routes/Routes.php

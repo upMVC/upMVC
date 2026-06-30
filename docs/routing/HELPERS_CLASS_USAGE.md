@@ -13,7 +13,7 @@ The Helpers class is automatically loaded via PSR-4 autoloader and initialized i
 Helpers::setRouter($router);
 ```
 
-**No manual include needed!** The `upMVC\` namespace is mapped to `etc/` folder in `composer.json`, so PHP autoloader handles it automatically.
+**No manual include needed!** The `App\` namespace is mapped to `src/` in `composer.json` (PSR-4 single root), so the autoloader handles it automatically.
 
 ## Usage Examples
 

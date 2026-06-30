@@ -245,7 +245,7 @@ public function routes($router)
 ```php
 public function routes($router)
 {
-    $cacheFile = __DIR__ . '/../../etc/storage/cache/admin_routes.php';
+    $cacheFile = Application::getInstance()->path('storage/cache/admin_routes.php');
     $cacheTTL = 3600; // 1 hour
     
     // Check cache validity
@@ -282,7 +282,7 @@ public function createUser()
     $this->model->createUser($data);
     
     // Clear cache to rebuild routes
-    $cacheFile = __DIR__ . '/routes/../../etc/storage/cache/admin_routes.php';
+    $cacheFile = Application::getInstance()->path('storage/cache/admin_routes.php');
     if (file_exists($cacheFile)) {
         unlink($cacheFile);
     }

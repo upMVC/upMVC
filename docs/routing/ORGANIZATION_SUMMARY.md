@@ -77,7 +77,7 @@ docs/
 5. **`docs/routing/examples/Router_PatternMatching.php`**
    - Production-ready Router with pattern matching
    - Supports wildcards (*) and named parameters ({id})
-   - Drop-in replacement for etc/Router.php
+   - Drop-in replacement for src/Etc/Router.php
 
 6. **`docs/routing/examples/Router_PatternMatching_README.md`**
    - Installation guide for pattern Router

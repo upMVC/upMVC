@@ -23,7 +23,7 @@ cd my-project
 composer install
 
 # Set up environment (copy and modify as needed)
-cp etc/.env.example etc/.env
+cp src/Etc/.env.example .env
 
 # Set permissions (Linux/Mac)
 chmod -R 755 storage/
@@ -41,14 +41,14 @@ cd my-dev-project
 composer install --dev
 
 # Enable development mode
-echo "APP_ENV=development" > etc/.env
+echo "APP_ENV=development" > .env
 ```
 
 ---
 
 ## ⚙️ **Configuration**
 
-### **Environment Configuration (`etc/.env`):**
+### **Environment Configuration (`.env` (project root)):**
 ```env
 # Application Settings
 APP_ENV=production
@@ -73,7 +73,7 @@ CSRF_PROTECTION=true
 RATE_LIMIT=100
 ```
 
-### **Database Setup (`etc/ConfigDatabase.php`):**
+### **Database Setup (`src/Etc/ConfigDatabase.php`):**
 ```php
 <?php
 return [
@@ -461,7 +461,7 @@ php artisan cache:clear  # If you implement artisan-like commands
 
 ### **Enable Debug Mode:**
 ```env
-# In etc/.env
+# In .env (project root)
 APP_ENV=development
 APP_DEBUG=true
 ```

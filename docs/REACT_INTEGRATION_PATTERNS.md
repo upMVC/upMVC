@@ -18,7 +18,7 @@ upMVC demonstrates **five different approaches** to integrating modern JavaScrip
 
 ---
 
-## 🔷 Pattern 1: CDN Components (`/modules/react`)
+## 🔷 Pattern 1: CDN Components (`src/Modules/React`)
 
 ### Philosophy: "PHP Islands in React"
 Load React from CDN and add small interactive components to PHP pages.
@@ -49,7 +49,7 @@ case "/comp":
 
 private function comp($reqMet)
 {
-    require_once THIS_DIR . "/modules/react/etc/component.js";
+    require_once THIS_DIR . "/Modules/react/etc/component.js";
 }
 ```
 
@@ -106,7 +106,7 @@ root.render(e(LikeButton));
 
 ---
 
-## 🔷 Pattern 2: Built React App - Embedded (`/modules/reactb`)
+## 🔷 Pattern 2: Built React App - Embedded (`src/Modules/Reactb`)
 
 ### Philosophy: "React Islands in PHP"
 Build a complete React app, then embed it in a **section** of a PHP page.
@@ -141,22 +141,22 @@ public function display($reqRoute, $reqMet)
 
 public function logo()
 {
-    require_once THIS_DIR . "/modules/reactb/etc/build/logo192.png";
+    require_once THIS_DIR . "/Modules/reactb/etc/build/logo192.png";
 }
 
 public function manifest()
 {
-    require_once THIS_DIR . "/modules/reactb/etc/build/manifest.json";
+    require_once THIS_DIR . "/Modules/reactb/etc/build/manifest.json";
 }
 
 public function mainjs()
 {
-    require_once THIS_DIR . "/modules/reactb/etc/build/static/js/main.10d2eb17.js";
+    require_once THIS_DIR . "/Modules/reactb/etc/build/static/js/main.10d2eb17.js";
 }
 
 public function maincss()
 {
-    require_once THIS_DIR . "/modules/reactb/etc/build/static/css/main.f855e6bc.css";
+    require_once THIS_DIR . "/Modules/reactb/etc/build/static/css/main.f855e6bc.css";
 }
 ```
 
@@ -256,7 +256,7 @@ $router->addRoute("/reactb/maincss", Controller::class, "maincss");
 
 ---
 
-## 🔷 Pattern 3: Built React App - Full Page (`/modules/reactcrud`)
+## 🔷 Pattern 3: Built React App - Full Page (`src/Modules/Reactcrud`)
 
 ### Philosophy: "Full React SPA with PHP Backend"
 Build a complete React SPA that takes over the **entire page**, with PHP serving only as API backend.
@@ -273,22 +273,22 @@ public function display($reqRoute, $reqMet)
 
 public function css()
 {
-    require_once THIS_DIR . "/modules/reactcrud/etc/build/static/css/2.326c04ff.chunk.css";
+    require_once THIS_DIR . "/Modules/reactcrud/etc/build/static/css/2.326c04ff.chunk.css";
 }
 
 public function cssb()
 {
-    require_once THIS_DIR . "/modules/reactcrud/etc/build/static/css/main.b1413f35.chunk.css";
+    require_once THIS_DIR . "/Modules/reactcrud/etc/build/static/css/main.b1413f35.chunk.css";
 }
 
 public function js()
 {
-    require_once THIS_DIR . "/modules/reactcrud/etc/build/static/js/2.b5004239.chunk.js";
+    require_once THIS_DIR . "/Modules/reactcrud/etc/build/static/js/2.b5004239.chunk.js";
 }
 
 public function jsb()
 {
-    require_once THIS_DIR . "/modules/reactcrud/etc/build/static/js/main.dc560686.chunk.js";
+    require_once THIS_DIR . "/Modules/reactcrud/etc/build/static/js/main.dc560686.chunk.js";
 }
 ```
 
@@ -361,7 +361,7 @@ $router->addRoute("/crud/jsa", Controller::class, "jsb");
 
 ---
 
-## 🔷 Pattern 4: ES Modules - No Build (`/modules/reactnb`)
+## 🔷 Pattern 4: ES Modules - No Build (`src/Modules/Reactnb`)
 
 ### Philosophy: "Modern JS Frameworks WITHOUT Build Step"
 Use modern JavaScript with ES modules, import maps, and framework CDNs. No webpack, no babel, no npm build.
@@ -637,7 +637,7 @@ public function index($reqRoute, $reqMet)
 
 ---
 
-## 🔷 Pattern 5: ES Modules + HMR (`/modules/reacthmr`)
+## 🔷 Pattern 5: ES Modules + HMR (`src/Modules/Reacthmr`)
 
 ### Philosophy: "Edit → Save → See Changes Instantly"
 Combines ES Modules (Pattern 4) with Hot Module Reload using Server-Sent Events. **No webpack, no Vite** - just PHP watching files and browser auto-reloading.
@@ -900,7 +900,7 @@ private $watchPaths = [
     'modules/reacthmr/',
     'modules/mymodule/',
     'common/Assets/',
-    'etc/Config.php'
+    'src/Etc/Config.php'
 ];
 ```
 
@@ -991,7 +991,7 @@ import Vue from "https://cdn.jsdelivr.net/npm/vue@3/dist/vue.esm-browser.js";
 ### Pattern 1: Direct Serve
 ```php
 case "/comp":
-    require_once THIS_DIR . "/modules/react/etc/component.js";
+    require_once THIS_DIR . "/Modules/react/etc/component.js";
     break;
 ```
 
@@ -999,7 +999,7 @@ case "/comp":
 ```php
 public function mainjs()
 {
-    require_once THIS_DIR . "/modules/reactb/etc/build/static/js/main.10d2eb17.js";
+    require_once THIS_DIR . "/Modules/reactb/etc/build/static/js/main.10d2eb17.js";
 }
 
 // routes/Routes.php

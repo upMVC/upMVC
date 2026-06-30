@@ -153,7 +153,7 @@ Helpers::route('user.show', ['id' => 123]);
 
 ### Modified Files
 
-1. **etc/Router.php**
+1. **src/Etc/Router.php**
    - Added `$paramRoutesByPrefix` property for grouping
    - Added `$namedRoutes` property for named routes
    - Added `$lastRoute` property for chaining
@@ -163,11 +163,11 @@ Helpers::route('user.show', ['id' => 123]);
    - Enhanced `matchParamRoute()` with validation and grouping
    - Added `castParam()` method for type casting
 
-2. **etc/Start.php**
+2. **src/Etc/Start.php**
    - Initialize Helpers class with router instance
    - Clean OOP dependency injection (no globals)
 
-3. **etc/helpers.php** (NEW)
+3. **src/Etc/helpers.php** (NEW)
    - OOP Helpers class with static methods
    - PSR-4 autoloaded (no manual includes)
    - `Helpers::route()` - Generate URL from named route

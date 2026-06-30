@@ -47,7 +47,7 @@ composer install
 ## ⚙️ **Configuration Issues**
 
 ### **Q: How do I change the base URL/path?**
-**A:** Edit `etc/Config.php`:
+**A:** Edit `src/Etc/Config.php`:
 ```php
 public const SITE_PATH = '/your-app-path';  // e.g., '/myapp' or '/' for root
 public const DOMAIN_NAME = 'https://yourdomain.com';
@@ -55,7 +55,7 @@ public const DOMAIN_NAME = 'https://yourdomain.com';
 
 ### **Q: Database connection fails, what should I check?**
 **A:** 
-1. **Check credentials** in `etc/ConfigDatabase.php`
+1. **Check credentials** in `src/Etc/ConfigDatabase.php`
 2. **Verify database exists:**
    ```sql
    CREATE DATABASE your_database_name;
@@ -72,7 +72,7 @@ public const DOMAIN_NAME = 'https://yourdomain.com';
 
 ### **Q: How do I enable/disable debug mode?**
 **A:** 
-- **Enable:** Set `APP_DEBUG=true` in `etc/.env` or modify `etc/Config.php`
+- **Enable:** Set `APP_DEBUG=true` in `.env` (project root) or modify `src/Etc/Config.php`
 - **Disable:** Set `APP_DEBUG=false` for production
 
 ### **Q: Sessions not working, what's wrong?**
@@ -83,7 +83,7 @@ public const DOMAIN_NAME = 'https://yourdomain.com';
    ```
 2. **PHP session configuration:**
    ```php
-   // In etc/Config.php
+   // In src/Etc/Config.php
    ini_set('session.save_path', __DIR__ . '/../storage/sessions');
    ```
 3. **Headers already sent:** Check for output before `session_start()`
@@ -262,7 +262,7 @@ $cached = CacheManager::get('key', $default);
    ```
 2. **Disable debug mode:**
    ```php
-   // etc/Config.php
+   // src/Etc/Config.php
    'debug' => false,
    ```
 3. **Enable PHP OPcache** in `php.ini`:
@@ -329,7 +329,7 @@ $cached = CacheManager::get('key', $default);
    ```bash
    chmod -R 755 storage/
    chmod -R 755 logs/
-   chmod 644 etc/.env
+   chmod 644 .env
    ```
 4. **Configure web server** (Apache/Nginx)
 5. **Install dependencies:** `composer install --no-dev --optimize-autoloader`
