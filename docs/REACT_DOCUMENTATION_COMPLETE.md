@@ -131,7 +131,7 @@ Example: Compare React/Vue/Preact, prototypes
 // Controller creates route for each asset
 public function mainjs()
 {
-    require_once THIS_DIR . "/modules/reactb/etc/build/static/js/main.js";
+    require_once THIS_DIR . "/Modules/reactb/etc/build/static/js/main.js";
 }
 
 // Router registers the route

@@ -91,7 +91,7 @@ All patterns serve React assets **through PHP routes**, not direct file access:
 ```php
 // Controller.php
 case "/comp":
-    require_once THIS_DIR . "/modules/react/etc/component.js";
+    require_once THIS_DIR . "/Modules/react/etc/component.js";
     break;
 ```
 
@@ -100,7 +100,7 @@ case "/comp":
 // Controller.php - One route per asset
 public function mainjs()
 {
-    require_once THIS_DIR . "/modules/reactb/etc/build/static/js/main.10d2eb17.js";
+    require_once THIS_DIR . "/Modules/reactb/etc/build/static/js/main.10d2eb17.js";
 }
 
 // routes/Routes.php

@@ -909,7 +909,7 @@ private function deleteUser($id) {
 
 **Step 1: Backup Router.php**
 ```powershell
-Copy-Item etc/Router.php etc/Router_BACKUP.php
+Copy-Item src/Etc/Router.php src/Etc/Router_BACKUP.php
 ```
 
 **Step 2: Update Router.php**

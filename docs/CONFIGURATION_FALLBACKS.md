@@ -31,17 +31,17 @@ upMVC uses a **five-level fallback system** that allows the system to work even 
 
 | Setting | Priority 1 (Highest) | Priority 2 (Fallback) | File Location |
 |---------|---------------------|----------------------|---------------|
-| **Paths & Domain** | `.env` SITE_PATH, DOMAIN_NAME | `Config.php` $fallbacks | `/etc/Config.php` |
-| **Protected Routes** | `.env` PROTECTED_ROUTES | `start.php` $defaultProtectedRoutes | `/etc/start.php` |
-| **Database Credentials** | `.env` DB_* variables | `ConfigDatabase.php` | `/etc/ConfigDatabase.php` |
-| **Session Configuration** | `Config::get('session')` | Hardcoded defaults | `/etc/Config.php` line 215 |
-| **Security/Middleware** | `.env` via ConfigManager | Hardcoded defaults | `/etc/Start.php` line 158+ |
+| **Paths & Domain** | `.env` SITE_PATH, DOMAIN_NAME | `Config.php` $fallbacks | `src/Etc/Config.php` |
+| **Protected Routes** | `.env` PROTECTED_ROUTES | `start.php` $defaultProtectedRoutes | `src/Etc/Start.php` |
+| **Database Credentials** | `.env` DB_* variables | `ConfigDatabase.php` | `src/Etc/ConfigDatabase.php` |
+| **Session Configuration** | `Config::get('session')` | Hardcoded defaults | `src/Etc/Config.php` line 215 |
+| **Security/Middleware** | `.env` via ConfigManager | Hardcoded defaults | `src/Etc/Start.php` line 158+ |
 
 ---
 
 ## 1️⃣ Path & Domain Fallbacks
 
-### Location: `/etc/Config.php`
+### Location: `src/Etc/Config.php`
 
 ### Configuration Array
 
@@ -123,7 +123,7 @@ No configuration needed!
 
 ## 2️⃣ Protected Routes Fallbacks
 
-### Location: `/etc/start.php`
+### Location: `src/Etc/Start.php`
 
 ### Configuration Array
 
@@ -216,7 +216,7 @@ Uses start.php defaults:
 
 ## 3️⃣ Database Credentials Fallbacks
 
-### Location: `/etc/Database.php`
+### Location: `src/Etc/Database.php`
 
 ### Priority Logic
 
@@ -297,7 +297,7 @@ DB_PORT=3306
 
 **Quick Testing (ConfigDatabase.php fallback):**
 ```php
-// /etc/ConfigDatabase.php
+// src/Etc/ConfigDatabase.php
 return [
     'db.host' => 'localhost',
     'db.name' => 'test_db',
@@ -330,7 +330,7 @@ return [
 
 ## 4️⃣ Session Configuration Fallbacks
 
-### Location: `/etc/Config.php` (line 215)
+### Location: `src/Etc/Config.php` (line 215)
 
 ### Configuration Logic
 
@@ -400,7 +400,7 @@ SESSION_SECURE=false                 # HTTP allowed
 
 ## 5️⃣ Security & Middleware Fallbacks
 
-### Location: `/etc/Start.php` (lines 158-192)
+### Location: `src/Etc/Start.php` (lines 158-192)
 
 ### Configuration Logic
 
@@ -499,33 +499,33 @@ RATE_LIMIT=1000                      # High limit for development
 **Check in this order:**
 
 1. **`.env` file** (highest priority)
-   - Location: `/etc/.env`
+   - Location: `.env` (project root)
    - Is the file present?
    - Are variables correctly named?
    - Are there typos in variable names?
 
 2. **`Config.php` $fallbacks** (path/domain)
-   - Location: `/etc/Config.php`
+   - Location: `src/Etc/Config.php`
    - Lines: ~30-33
    - Check `site_path` and `domain_name` values
 
 3. **`Config.php` session defaults** (session behavior)
-   - Location: `/etc/Config.php`
+   - Location: `src/Etc/Config.php`
    - Line: ~215
    - Check session_set_cookie_params()
 
 4. **`start.php` $defaultProtectedRoutes** (auth routes)
-   - Location: `/etc/start.php`
+   - Location: `src/Etc/Start.php`
    - Lines: ~40-46
    - Check route patterns match your needs
 
 5. **`start.php` security settings** (CORS, CSRF, rate limit)
-   - Location: `/etc/start.php`
+   - Location: `src/Etc/Start.php`
    - Lines: ~158-192
    - Check ConfigManager::get() defaults
 
 6. **`ConfigDatabase.php`** (database)
-   - Location: `/etc/ConfigDatabase.php`
+   - Location: `src/Etc/ConfigDatabase.php`
    - Check all `db.*` keys
 
 ### Common Issues
@@ -598,7 +598,7 @@ RATE_LIMIT=1000                      # High limit for development
 Enable debug mode to see configuration values:
 
 ```php
-// In etc/.env
+// In .env (project root)
 APP_ENV=development
 DEBUG=true
 ```
@@ -683,9 +683,9 @@ echo "DB Source: " . (isset($_ENV['DB_HOST']) ? '.env' : 'ConfigDatabase.php fal
 ## 📚 Related Documentation
 
 - [First Steps Guide](FIRST-STEPS-GUIDE.md) - Getting started
-- [Configuration Management](../etc/Config.php) - Config.php source code
-- [Database Setup](../etc/Database.php) - Database.php source code
-- [Application Bootstrap](../etc/start.php) - start.php source code
+- [Configuration Management](../src/Etc/Config.php) - Config.php source code
+- [Database Setup](../src/Etc/Database.php) - Database.php source code
+- [Application Bootstrap](../src/Etc/Start.php) - start.php source code
 
 ---
 

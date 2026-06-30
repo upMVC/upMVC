@@ -592,7 +592,7 @@ public function route(string $name, array $params = []): string
 
 **Add global helper function:**
 ```php
-// In etc/helpers.php (create if doesn't exist)
+// In src/Etc/helpers.php (create if doesn't exist)
 function route(string $name, array $params = []): string
 {
     global $router;  // Or use container

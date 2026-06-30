@@ -18,7 +18,7 @@ Combine **upMVC** (MVC framework) with **PHP CRUD API Generator** (REST API) to 
 ```
 /myproject (upMVC Root)
 ├── index.php                  → upMVC entry point
-├── etc/
+├── src/Etc/
 │   └── .env                   → Shared database config
 ├── modules/
 │   ├── admin/                 → User management UI
@@ -44,7 +44,7 @@ Combine **upMVC** (MVC framework) with **PHP CRUD API Generator** (REST API) to 
 composer create-project bitshost/upmvc myproject
 cd myproject
 
-# Configure etc/.env
+# Configure .env (project root)
 # - SITE_PATH=/myproject
 # - DOMAIN_NAME=http://localhost
 # - Database credentials
@@ -80,7 +80,7 @@ Edit `vendor/bitshost/php-crud-api-generator/config/db.php`:
 
 ```php
 <?php
-// Use SAME credentials as upMVC etc/.env
+// Use SAME credentials as upMVC .env (project root)
 return [
     'host' => '127.0.0.1',
     'dbname' => 'myproject_db',  // Same as upMVC
@@ -284,7 +284,7 @@ GRANT SELECT, INSERT, UPDATE ON myproject_db.cart TO 'api_user'@'localhost';
 Use same JWT secret in both systems for token validation:
 
 ```php
-// upMVC: etc/Config.php
+// upMVC: src/Etc/Config.php
 define('JWT_SECRET', 'your-secret-key-min-32-chars-long');
 
 // API: config/api.php

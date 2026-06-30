@@ -185,7 +185,7 @@ class Config
 # Find all usages of old constants
 grep -r "Config::SITE_PATH" modules/
 grep -r "Config::DOMAIN_NAME" modules/
-grep -r "self::SITE_PATH" etc/
+grep -r "self::SITE_PATH" src/Etc/
 ```
 
 ### **Method 2: PHP Static Analysis**

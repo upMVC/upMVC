@@ -143,7 +143,7 @@ Typical structure:
 - `Model.php` – database access (usually extends `Common\Bmvc\BaseModel`)
 - `View.php` – rendering logic
 - `Routes/Routes.php` – route definitions for the module
-- `etc/` – module-specific docs or configs (API docs, examples)
+- `public/` – module-specific public assets or build output (optional)
 
 Registration:
 - `InitModsImproved.php` discovers and registers modules.

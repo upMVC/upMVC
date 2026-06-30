@@ -89,12 +89,12 @@ Copy-Item "docs/routing/examples/Controller_WithCache.php" "modules/yourmodule/C
 
 **Step 1:** Backup original Router
 ```powershell
-Copy-Item "etc/Router.php" "etc/Router_BACKUP.php"
+Copy-Item "src/Etc/Router.php" "src/Etc/Router_BACKUP.php"
 ```
 
 **Step 2:** Install pattern matching Router
 ```powershell
-Copy-Item "docs/routing/examples/Router_PatternMatching.php" "etc/Router.php" -Force
+Copy-Item "docs/routing/examples/Router_PatternMatching.php" "src/Etc/Router.php" -Force
 ```
 
 **Step 3:** Update your routes to use patterns

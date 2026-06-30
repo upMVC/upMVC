@@ -294,7 +294,7 @@ private $watchPaths = [
     'modules/reacthmr/',
     'modules/mymodule/',
     'common/Assets/',
-    'etc/Config.php'
+    'src/Etc/Config.php'
 ];
 ```
 

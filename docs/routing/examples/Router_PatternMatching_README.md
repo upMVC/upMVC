@@ -149,7 +149,7 @@ Even with 100 routes, total routing time is < 1ms.
 If you need to go back to the original Router:
 
 ```powershell
-Copy-Item etc/Router_BACKUP.php etc/Router.php -Force
+Copy-Item src/Etc/Router_BACKUP.php etc/Router.php -Force
 ```
 
 ## See Also

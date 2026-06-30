@@ -5,7 +5,7 @@ This document outlines the major enhancements made to the upMVC core system to i
 ## 🚀 Enhancement Overview
 
 ### 1. Middleware System
-**Location**: `etc/Middleware/`
+**Location**: `src/Etc/Middleware/`
 
 A comprehensive middleware system for request/response processing:
 
@@ -30,7 +30,7 @@ $middlewareManager->addForRoute('/admin/*', new AuthMiddleware(['/admin/*']));
 ```
 
 ### 2. Dependency Injection Container
-**Location**: `etc/Container/`
+**Location**: `src/Etc/Container/`
 
 A powerful dependency injection container for better testability and loose coupling:
 
@@ -52,7 +52,7 @@ $userService = $container->make(UserService::class); // Auto-injects dependencie
 ```
 
 ### 3. Enhanced Error Handling
-**Location**: `etc/Exceptions/` and `common/errors/`
+**Location**: `src/Etc/Exceptions/` and `common/errors/`
 
 Comprehensive error handling with custom exceptions and user-friendly error pages:
 
@@ -79,7 +79,7 @@ $errorHandler->register();
 ```
 
 ### 4. Enhanced Configuration System
-**Location**: `etc/Config/`
+**Location**: `src/Etc/Config/`
 
 Environment-based configuration management:
 
@@ -108,7 +108,7 @@ if (Environment::isDevelopment()) {
 ```
 
 ### 5. Caching System
-**Location**: `etc/Cache/`
+**Location**: `src/Etc/Cache/`
 
 Flexible caching system with multiple drivers:
 
@@ -135,7 +135,7 @@ CacheManager::tags(['users'])->flush(); // Invalidate all user-related cache
 ```
 
 ### 6. Event System
-**Location**: `etc/Events/`
+**Location**: `src/Etc/Events/`
 
 Event-driven architecture for loose coupling between modules:
 
@@ -176,7 +176,7 @@ The Router class has been enhanced with:
 ## 📁 Updated File Structure
 
 ```
-etc/
+src/Etc/
 ├── Middleware/
 │   ├── MiddlewareInterface.php
 │   ├── MiddlewareManager.php

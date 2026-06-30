@@ -141,7 +141,7 @@ Config::getSitePath() returns '/myapp'  ← .env wins!
 ### Step 1: Edit Config.php Fallbacks
 
 ```php
-// File: etc/Config.php (lines 34-38)
+// File: src/Etc/Config.php (lines 34-38)
 private static $fallbacks = [
     'site_path' => '',                    // Your path
     'domain_name' => 'https://mysite.com', // Your domain
@@ -151,7 +151,7 @@ private static $fallbacks = [
 ### Step 2: Edit .env File (RECOMMENDED)
 
 ```env
-# File: etc/.env
+# File: .env (project root)
 SITE_PATH=
 DOMAIN_NAME=https://mysite.com
 APP_ENV=production
@@ -339,7 +339,7 @@ $baseUrl = Config::getDomainName() . Config::getSitePath();
 1. Is `.env` file loaded? (Check `bootstrapApplication()` is called)
 2. Is the key correct in `.env`? (Case-sensitive!)
 3. Did you restart your server/clear cache?
-4. Is `.env` in the correct location? (`etc/.env`)
+4. Is `.env` in the correct location? (`.env` (project root))
 
 ### Problem: Site path is wrong!
 

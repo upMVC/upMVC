@@ -20,7 +20,7 @@ SITE_PATH=/upMVC               # Used by Config::getSitePath()
 
 ### **APP_URL - Used by ConfigManager**
 ```php
-// File: etc/Config/ConfigManager.php - Line 174
+// File: src/Etc/Config/ConfigManager.php - Line 174
 self::$config['app'] = [
     'url' => Environment::get('APP_URL', 'https://yourdomain.com'),
     // ...
@@ -36,7 +36,7 @@ Search result: NO! ❌
 
 ### **DOMAIN_NAME - Used by Config**
 ```php
-// File: etc/Config.php
+// File: src/Etc/Config.php
 public static function getDomainName(): string
 {
     return Environment::get('DOMAIN_NAME', self::$fallbacks['domain_name']);
@@ -52,7 +52,7 @@ public static function getDomainName(): string
 
 ### **APP_PATH - Used by ConfigManager**
 ```php
-// File: etc/Config/ConfigManager.php - Line 175
+// File: src/Etc/Config/ConfigManager.php - Line 175
 self::$config['app'] = [
     'path' => Environment::get('APP_PATH', ''),
     // ...
@@ -68,7 +68,7 @@ Search result: NO! ❌
 
 ### **SITE_PATH - Used by Config**
 ```php
-// File: etc/Config.php
+// File: src/Etc/Config.php
 public static function getSitePath(): string
 {
     return Environment::get('SITE_PATH', self::$fallbacks['site_path']);
