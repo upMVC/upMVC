@@ -4,6 +4,18 @@
 
 ---
 
+## v2.3.3 - Auth Hardening (2026-06-30)
+
+### Security
+- **Cryptographically secure activation tokens** — `tokenGenerator()` was using `rand()` (predictable, non-CSPRNG). Replaced with `bin2hex(random_bytes(32))` — 64-character hex token, unpredictable and collision-resistant.
+- **Plaintext password fallback removed** — login accepted `hash_equals($storedPassword, $plainPassword)` as a second check after bcrypt. Any user whose stored password was ever plaintext could log in without bcrypt. The fallback is gone; `password_verify()` is the only accepted path.
+- **Open redirect closed** — `$_SESSION['intended_url']` was redirected to without validation. Added `safeIntendedUrl()`: relative paths are allowed as-is; URLs with a host component are only accepted if the host matches `BASE_URL`. All other values fall back to `BASE_URL`.
+- **CSRF protection on login and signup** — both POST handlers now call `Security::validateCsrf()` before processing credentials. Login and signup forms now include a hidden `csrf_token` field via `Security::csrfToken()`.
+- **Rate limiting on login and signup** — login is capped at 5 attempts per IP per 5 minutes; signup at 3 per IP per hour. Both use the existing `Security::rateLimit()` file-based store.
+- **XSS in post-login redirect fixed** — `validateToken()` echoed the redirect URL directly into a `location.href` JS assignment without escaping. Now passes through `htmlspecialchars(..., ENT_QUOTES)`.
+
+---
+
 ## v2.3.2 - Debug Flag & Linux Casing Fixes (2026-06-25)
 
 ### Fixed
