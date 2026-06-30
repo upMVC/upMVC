@@ -31,6 +31,7 @@
 namespace App\Modules\Auth;
 
 use App\Common\Bmvc\BaseView;
+use App\Etc\Security;
 use App\Modules\Mail\MailController;
 use PDO;
 
@@ -66,22 +67,29 @@ class Controller
 
     private function auth()
     {
-        // Fix: Use comparison (===) not assignment (=)
         if (isset($_SESSION["logged"]) && $_SESSION["logged"] === true) {
-            // If already logged in, redirect to intended URL or home
             $intendedUrl = $_SESSION['intended_url'] ?? null;
-            if ($intendedUrl) {
-                unset($_SESSION['intended_url']); // Clear intended URL
-                header("Location: $intendedUrl");
-                exit;  // CRITICAL: Stop execution after redirect
-            } else {
-                $this->url = BASE_URL;
-                header("Location: $this->url");
-                exit;  // CRITICAL: Stop execution after redirect
-            }
+            unset($_SESSION['intended_url']);
+            header("Location: " . $this->safeIntendedUrl($intendedUrl));
+            exit;
         } else {
             $this->login();
         }
+    }
+
+    private function safeIntendedUrl(?string $url): string
+    {
+        if (!$url) {
+            return BASE_URL;
+        }
+        $parsed = parse_url($url);
+        if (isset($parsed['host'])) {
+            $ownHost = parse_url(BASE_URL, PHP_URL_HOST);
+            if ($parsed['host'] !== $ownHost) {
+                return BASE_URL;
+            }
+        }
+        return $url;
     }
 
     private function login()
@@ -103,37 +111,36 @@ class Controller
 
         $users = new Model();
         if ($_POST) {
+            $ip = $_SERVER['REMOTE_ADDR'] ?? 'unknown';
+            if (!Security::rateLimit('login_' . $ip, 5, 300)) {
+                echo "Too many login attempts. Please try again later.";
+                return;
+            }
+            if (!Security::validateCsrf($_POST['csrf_token'] ?? '')) {
+                echo "Invalid request.";
+                return;
+            }
+
             $users->username = $_POST['username'];
-            $plainPassword = (string) ($_POST['password'] ?? '');
-            //$users->tokenSession = $token
+            $plainPassword   = (string) ($_POST['password'] ?? '');
             $stmt            = $users->readUserLogin();
             if ($stmt && ($row = $stmt->fetch(PDO::FETCH_ASSOC))) {
                 $storedPassword = (string) ($row['password'] ?? '');
-                $validPassword = password_verify($plainPassword, $storedPassword)
-                    || hash_equals($storedPassword, $plainPassword);
-
-                if (!$validPassword) {
+                if (!password_verify($plainPassword, $storedPassword)) {
                     echo "Try again!";
                     return;
                 }
 
                 $active = intval($row['state']);
                 if ($active === 1) {
-                    $_SESSION["username"] = $row['username'];
-                    $_SESSION["iduser"]   = $row['id'];
-                    $_SESSION["logged"] = true;           // Legacy compatibility
-                    $_SESSION['authenticated'] = true;     // Middleware compatibility
-                    
-                    // Redirect to intended URL if available, otherwise home
+                    $_SESSION["username"]      = $row['username'];
+                    $_SESSION["iduser"]        = $row['id'];
+                    $_SESSION["logged"]        = true;
+                    $_SESSION['authenticated'] = true;
+
                     $intendedUrl = $_SESSION['intended_url'] ?? null;
-                    if ($intendedUrl) {
-                        $redirectUrl = $intendedUrl;
-                        unset($_SESSION['intended_url']); // Clear intended URL
-                    } else {
-                        $redirectUrl = $this->url;
-                    }
-                    
-                    $this->html->validateToken($redirectUrl);
+                    unset($_SESSION['intended_url']);
+                    $this->html->validateToken($this->safeIntendedUrl($intendedUrl));
                     exit;
                 } else {
                     echo 'You have not activated your account, check your email!';
@@ -183,7 +190,16 @@ class Controller
         $view->endHead();
         $view->startBody($this->title);
         if (isset($_POST["signup"])) {
-            $token          = $this->TokenGenerator(31);
+            $ip = $_SERVER['REMOTE_ADDR'] ?? 'unknown';
+            if (!Security::rateLimit('signup_' . $ip, 3, 3600)) {
+                echo "Too many signup attempts. Please try again later.";
+                return;
+            }
+            if (!Security::validateCsrf($_POST['csrf_token'] ?? '')) {
+                echo "Invalid request.";
+                return;
+            }
+            $token          = $this->tokenGenerator();
             $user->token    = $token;
             $user->name = $_POST["name"];
             $user->username = $_POST['username'];
@@ -210,17 +226,9 @@ class Controller
         $view->endFooter();
     }
 
-    private function tokenGenerator($tokenLength)
+    private function tokenGenerator(): string
     {
-        $char = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-        $token     = '';
-        $n         = 0;
-        while ($n < $tokenLength) {
-            $position = rand(0, strlen($char) - 1);
-            $token .= $char[$position];
-            $n++;
-        }
-        return $token;
+        return bin2hex(random_bytes(32));
     }
 
     private function accountActivation()

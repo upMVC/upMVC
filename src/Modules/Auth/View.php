@@ -41,6 +41,7 @@ class View
                 <a href="<?php echo BASE_URL; ?>/signup">Sign up</a>
             </div>
             <form action="" method="post" id="frmLogin" onSubmit="return validate();">
+                <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars(\App\Etc\Security::csrfToken(), ENT_QUOTES); ?>">
                 <div class="demo-table">
 
                     <div class="form-head">Login</div>
@@ -108,6 +109,7 @@ class View
                 <a href="<?php echo BASE_URL; ?>/auth">Login</a>
             </div>
             <form action="" method="post" id="frmLogin" onSubmit="return validate();">
+                <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars(\App\Etc\Security::csrfToken(), ENT_QUOTES); ?>">
                 <div class="demo-table">
 
                     <div class="form-head">Login</div>
@@ -200,7 +202,7 @@ class View
     {
     ?>
         <script>
-            location.href = "<?php echo $redirectUrl; ?>";
+            location.href = "<?php echo htmlspecialchars($redirectUrl, ENT_QUOTES); ?>";
         </script>
     <?php
     }
