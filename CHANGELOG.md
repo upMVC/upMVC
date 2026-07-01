@@ -4,6 +4,20 @@
 
 ---
 
+## v2.3.6 - Test Suite Foundation (2026-07-01)
+
+### Testing
+- **`.gitignore`**: Removed `tests/` and `/tests/` exclusions so test files are tracked by git.
+- **`phpunit.xml`**: Updated schema to PHPUnit 11, fixed bootstrap path to `tests/bootstrap.php`, corrected source directories from stale `etc`/`common`/`modules` to `src/Etc`, `src/Common`, `src/Modules`, added `APP_ENV=testing` and `APP_DEBUG=false` env vars.
+- **`tests/bootstrap.php`**: Created minimal bootstrap — `Application::getInstance()` resolves to project root via its `dirname(__DIR__, 2)` fallback, so no `UPMVC_APP_ROOT` constant is required.
+- **`tests/Unit/ApplicationTest.php`**: 9 unit tests covering singleton identity, `getAppRoot()` validity and `composer.json` presence, `path()` construction, `addProtectedRoutes()`, and `getModulePaths()`.
+- **`tests/Unit/Config/EnvironmentTest.php`**: 10 unit tests covering `get()`/`set()`, defaults, `has()`, and all three `isDevelopment()`/`isProduction()`/`isTesting()` branches.
+- **`tests/Unit/Security/SecurityTest.php`**: 17 unit tests covering CSRF token generation and validation, `sanitizeInput()` XSS escaping and recursive arrays, and `validateInput()` with required/type/length rules.
+- **`tests/Unit/Routing/RouterTest.php`**: 16 unit tests covering `addRoute()` registration, `addParamRoute()` param and type extraction, named route `route()` URL generation, and exception paths for missing/unknown routes.
+- **`tests/Unit/RateLimiterTest.php`**: Fixed `testCheckActionUsesDefaults` to unset `RATE_LIMIT_LOGIN_MAX` / `RATE_LIMIT_LOGIN_WINDOW` env vars before asserting class defaults, preventing cross-test pollution from `Environment::load()`.
+
+---
+
 ## v2.3.5 - Documentation Cleanup (2026-06-30)
 
 ### Docs
