@@ -73,6 +73,9 @@ upMVC excels at integrating **pre-built JavaScript applications** from any frame
 ### **🔐 Security & Authentication:**
 - **[JWT Authentication Guide](docs/JWT_AUTHENTICATION.md)** — Opt-in JWT support: issue tokens with `JwtService`, protect API routes with `['jwt']` middleware, refresh token flow. Sessions are unaffected — JWT is an additional option for APIs and SPAs.
 
+### **🤖 AI Agent Pack:**
+- **[Agent Pack Guide](docs/AGENT_PACK.md)** — Portable JSON knowledge + `upmvc-next.php` CLI: drop in, say what you want, get a ready agent prompt (Cursor, Claude, local LLMs)
+
 ### **🏗 Architecture & Philosophy:**
 - **[🎨 Pure PHP Philosophy](docs/PHILOSOPHY_PURE_PHP.md)** - The upMVC NoFramework approach
 - **[🧩 Module Philosophy](docs/MODULE_PHILOSOPHY.md)** - Modules as reference implementations
@@ -337,6 +340,17 @@ Affected components:
 
 Exit codes: `0` success, `1` failure, `2` unknown command.
 
+
+## 🤖 AI Agent Pack
+
+Use the agent pack when working with Cursor or other AI assistants on upMVC projects. It scans your repo, asks what you want, and outputs a context-rich prompt — no framework lecture required.
+
+```bash
+php src/Tools/upmvc-next.php
+php src/Tools/upmvc-next.php --goal "Add a contact form module" --stdout
+```
+
+Knowledge files live in `docs/agent/` (`upmvc-knowledge.json`, `upmvc-rules.json`, `upmvc-workflows.json`). Full guide: **[docs/AGENT_PACK.md](docs/AGENT_PACK.md)**.
 
 ## ⚙️ Configuration
 

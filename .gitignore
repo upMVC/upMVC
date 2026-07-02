@@ -10,6 +10,9 @@ vault/
 /vault/**
 private-vault/
 
+# Agent CLI generated output (ephemeral)
+docs/agent/generated/
+
 # Logs
 logs/
 *.log

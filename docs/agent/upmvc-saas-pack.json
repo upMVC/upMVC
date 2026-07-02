@@ -1,0 +1,112 @@
+{
+  "meta": {
+    "name": "upMVC SaaS Pack Knowledge",
+    "version": "1.0.1",
+    "verified_against": "bitshost/upmvc-saas-pack + upMVC v2.3.6",
+    "applies_when": [
+      "composer package bitshost/upmvc-saas-pack is installed",
+      "src/Etc/packages.php registers BitsHost\\UpmvcSaas\\SaasServiceProvider",
+      "Project is upMVC-SaaS or similar SaaS starter"
+    ],
+    "companion_repo": "upMVC-SaaS"
+  },
+  "architecture": {
+    "three_pieces": {
+      "bitshost/upmvc": "Core framework kernel — routing, config, middleware, module discovery",
+      "bitshost/upmvc-saas-pack": "Reusable SaaS modules, middleware, provider, demo schema",
+      "upMVC-SaaS": "Starter app wiring both packages via Composer"
+    },
+    "request_flow": [
+      "HTTP → public/index.php (UPMVC_APP_ROOT)",
+      "vendor/bitshost/upmvc → Start.php",
+      "src/Etc/packages.php → SaasServiceProvider",
+      "Router + middleware → SaaS or app module controller"
+    ]
+  },
+  "provider": {
+    "class": "BitsHost\\UpmvcSaas\\SaasServiceProvider",
+    "register": "Adds module paths, migration paths, protected routes",
+    "boot": "Registers tenant middleware, feature:* factory, SaaS routes"
+  },
+  "module_paths": {
+    "pack": "vendor/bitshost/upmvc-saas-pack/src/Modules",
+    "app": "src/Modules (optional — create for local overrides)",
+    "order": "Pack scanned first, app modules last — app wins on route conflicts"
+  },
+  "pack_modules": {
+    "note": "Pack ships under vendor/.../src/Modules/. Your app adds domain modules under src/Modules/Api/{Domain}/",
+    "pack_api_modules": "Api/Modules/Auth, Api/Modules/Plans, Api/Modules/Tenants, Api/Modules/Admin",
+    "pack_web_modules": "Auth, Home, PlatformAdmin, TenantApp, TenantShop, Mail",
+    "routes": {
+      "Api/Modules/Auth": "POST /api/auth/login, /refresh, /logout",
+      "Api/Modules/Plans": "GET /api/plans, /api/plans/{id}",
+      "Api/Modules/Tenants": "POST /api/tenants/register and tenant APIs",
+      "Api/Modules/Admin": "Platform admin APIs (platform_admin role)"
+    }
+  },
+  "middleware": {
+    "jwt": {
+      "source": "upMVC core",
+      "sets": "$GLOBALS['current_user']",
+      "usage": "['jwt'] on API routes"
+    },
+    "tenant": {
+      "source": "SaaS pack — BitsHost\\UpmvcSaas\\Middleware\\TenantMiddleware",
+      "sets": "$GLOBALS['current_tenant']",
+      "usage": "['tenant'] on web shell routes — not required on standard JWT tenant APIs",
+      "resolves_from": "URL slug /app/{slug}/... or subdomain"
+    },
+    "feature": {
+      "source": "SaaS pack — BitsHost\\UpmvcSaas\\Middleware\\PlanGateMiddleware via factory",
+      "usage": "['feature:efactura'] as 4th addRoute argument — plan feature gating",
+      "factory": "Router::registerMiddlewareFactory('feature', fn($f) => new PlanGateMiddleware($f))"
+    },
+    "cors": {
+      "note": "Enable CORS_ENABLED=true in .env for cross-origin clients. Route-level 'cors' tag is not a substitute for global CORS config."
+    }
+  },
+  "tenancy": {
+    "model": "Shared database, shared schema — rows filtered by tenant_id",
+    "core_tables": ["users", "tenants", "plans", "refresh_tokens"],
+    "tenant_registration": "POST /api/tenants/register — creates tenant + owner atomically",
+    "tenant_status": ["trial", "active", "suspended"],
+    "context_in_controller": {
+      "jwt_tenant_api": "$this->user['tenant_id'] from JWT — primary source for tenant-scoped API queries",
+      "web_shell": "$GLOBALS['current_tenant'] when ['tenant'] middleware is used",
+      "shortcut": "$this->tenantId on SaasApiController — populated from current_tenant row when tenant middleware ran"
+    }
+  },
+  "roles": {
+    "platform_admin": "Full Api/Admin access — no tenant_id",
+    "tenant_owner": "Full access within tenant",
+    "tenant_user": "Limited access within tenant — app-defined"
+  },
+  "api_module_pattern": {
+    "controller": "extends BitsHost\\UpmvcSaas\\Http\\SaasApiController",
+    "helpers": ["$this->user", "$this->tenant", "$this->tenantId", "$this->success()", "$this->error()", "$this->body()", "$this->requireFields()"],
+    "model": "All tenant queries scoped: WHERE tenant_id = :tid using $this->user['tenant_id'] on JWT APIs",
+    "routes_example": "$router->addRoute('/api/bookings', Controller::class, 'index', ['cors', 'jwt'], ['GET']);"
+  },
+  "domain_module_contract": {
+    "description": "Your SaaS-specific code — only layer you write per product",
+    "location": "src/Modules/Api/{Domain}/ (app repo — not inside vendor pack)",
+    "structure": ["Controller.php", "Model.php", "Routes/Routes.php"],
+    "shared_modules_reused": ["Tenants", "Plans", "Auth", "PlatformAdmin", "TenantApp"]
+  },
+  "lessons_from_production": [
+    "BaseModel CRUD method names may conflict — use app-level AppBaseModel wrapper if needed",
+    "Use dispatch() pattern on API controllers for multi-verb routes instead of manual REQUEST_METHOD checks",
+    "Split large View.php into Views/ partials when exceeding ~400 lines",
+    "RateLimiter (file-based) preferred over session-only Security::rateLimit for login/signup",
+    "Validate input at controller boundary — model receives clean typed data"
+  ],
+  "docs_in_saas_repo": [
+    "docs/02-architecture.md",
+    "docs/03-getting-started.md",
+    "docs/04-api-modules.md",
+    "docs/05-auth-jwt.md",
+    "docs/06-tenants-plans.md",
+    "docs/07-platform-admin.md",
+    "docs/08-your-way.md"
+  ]
+}

@@ -2,6 +2,16 @@
 
 ## [Unreleased]
 
+### Agent pack (AiAgent branch)
+- **`docs/AGENT_PACK.md`** — Full guide: what the pack is, how to use it, how to update rules and workflows
+- **`docs/agent/`** — Portable JSON knowledge pack: `upmvc-knowledge.json`, `upmvc-rules.json`, `upmvc-workflows.json`, `upmvc-saas-pack.json`
+- **`src/Tools/upmvc-next.php`** — Interactive CLI: scan project, ask what you want, output `docs/agent/generated/last-prompt.md`
+- **`AGENTS.md`** — Root pointer for Cursor/cloud agents
+- **`tests/Unit/Tools/`** — Minimal tests for agent JSON pack and CLI smoke checks
+- **Accuracy pass (v1.0.1)** — JSON pack aligned to v2.3.6: addRoute middleware syntax, InitModsImproved, optional packages.php, SaaS JWT vs tenant middleware, removed stale Billing/tq()/->middleware() references
+- **Review fixes** — `upmvc-saas-pack.json` optional at CLI load; stable module sort; test tearDown; no hardcoded pack version in tests
+- **`README.md`**, **`docs/DOCUMENTATION-INDEX.md`** — Linked from quick navigation
+
 ---
 
 ## v2.3.6 - Test Suite Foundation (2026-07-01)
