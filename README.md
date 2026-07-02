@@ -4,7 +4,50 @@
 
 **Status: ✅ Production Ready (v2.3)** | **PHP 8.1+** | **PSR-4 Compliant** | **MIT License**
 
-**v2.3:** Hardened auth & middleware, Router v2.0 (typed & validated routes with names), PSR-4 helpers, CRUD + dashboard path, package/provider architecture, and a fully documented PHP + React/Vue *Islands Architecture*.
+**v2.3:** Hardened auth & middleware, Router v2.0 (typed & validated routes with names), PSR-4 helpers, package/provider architecture, **AI Agent pack** for Cursor and other assistants, and a fully documented PHP + React/Vue *Islands Architecture*.
+
+## 🤖 AI Agent — built-in context for Cursor, Claude, and local LLMs
+
+upMVC ships an **AI-native knowledge pack** — not a chatbot inside PHP, but portable rules and facts any coding assistant can load so you **start in the middle of the house**: say what you want to build; the agent already knows paths, bootstrap, modules, and constraints.
+
+**You do not need to explain upMVC from scratch in every chat.**
+
+### How it works
+
+1. Run **`php src/Tools/upmvc-next.php`** (or pass `--goal "…"`).
+2. The CLI scans your project (modules, `.env`, SaaS pack if present).
+3. It writes **`docs/agent/generated/last-prompt.md`** — paste into Cursor, Windsurf, Claude, or any agent.
+4. The agent follows **`upmvc-rules.json`** (must/never) and outputs a **plan before** multi-file edits.
+
+### What ships in the repo
+
+| File | Role | Loaded by default? |
+|------|------|-------------------|
+| [`AGENTS.md`](AGENTS.md) | Entry point for cloud agents / Cursor | Yes (when supported) |
+| `docs/agent/upmvc-knowledge.json` | Framework facts: paths, config, routing, packages | Yes |
+| `docs/agent/upmvc-rules.json` | Hard must/never rules | Yes |
+| `docs/agent/upmvc-workflows.json` | Intent → recipes (config audit, API, auth, …) | Yes |
+| `docs/agent/upmvc-scaffolds.json` | Module types, CRUD field schema, route patterns | **No** — opt-in (`--scaffold`) |
+| `docs/agent/upmvc-saas-pack.json` | SaaS pack architecture | **No** — when SaaS project detected |
+
+**General mode by default.** Module scaffolds and SaaS context are optional extensions — different users use agents differently; we do not force builder mode on every session.
+
+### Quick commands
+
+```bash
+# Interactive — one question, then paste last-prompt.md into your agent
+php src/Tools/upmvc-next.php
+
+# Non-interactive
+php src/Tools/upmvc-next.php --goal "Fix JWT on /api/auth" --stdout
+
+# Opt-in module builder pack (replaces removed PHP generators)
+php src/Tools/upmvc-next.php --scaffold --goal "Create a Blog CRUD module"
+```
+
+**Full guide:** [docs/AGENT_PACK.md](docs/AGENT_PACK.md) · **Tests:** `vendor\bin\phpunit tests\Unit\Tools`
+
+> **Note:** Legacy PHP module generators were removed. New modules are created by your AI assistant using the knowledge pack (and optional scaffolds), not `php tools/createmodule/…`.
 
 ## 🏢 upMVC-SaaS — Official Multi-Tenant Fork
 
@@ -73,8 +116,9 @@ upMVC excels at integrating **pre-built JavaScript applications** from any frame
 ### **🔐 Security & Authentication:**
 - **[JWT Authentication Guide](docs/JWT_AUTHENTICATION.md)** — Opt-in JWT support: issue tokens with `JwtService`, protect API routes with `['jwt']` middleware, refresh token flow. Sessions are unaffected — JWT is an additional option for APIs and SPAs.
 
-### **🤖 AI Agent Pack:**
-- **[Agent Pack Guide](docs/AGENT_PACK.md)** — Portable JSON knowledge + `upmvc-next.php` CLI: drop in, say what you want, get a ready agent prompt (Cursor, Claude, local LLMs)
+### **🤖 AI Agent:**
+- **[Agent Pack Guide](docs/AGENT_PACK.md)** — Full guide: core JSON pack, `upmvc-next.php`, optional scaffolds, Cursor/`AGENTS.md`
+- **[AGENTS.md](AGENTS.md)** — Root entry for cloud agents
 
 ### **🏗 Architecture & Philosophy:**
 - **[🎨 Pure PHP Philosophy](docs/PHILOSOPHY_PURE_PHP.md)** - The upMVC NoFramework approach
@@ -335,22 +379,23 @@ php .\src\Tools\cache-cli.php clear:all
 
 Affected components:
 - Module discovery cache used by `src/Etc/InitModsImproved.php` in production mode.
-- Admin dynamic route cache file: `storage/cache/admin_routes.php`.
+- Admin dynamic route cache file: `src/Etc/storage/cache/admin_routes.php`.
 - All instantiated cache stores via `upMVC\Cache\CacheManager::clearAll()`.
 
 Exit codes: `0` success, `1` failure, `2` unknown command.
 
 
-## 🤖 AI Agent Pack
+## 🤖 AI Agent Pack (tools)
 
-Use the agent pack when working with Cursor or other AI assistants on upMVC projects. It scans your repo, asks what you want, and outputs a context-rich prompt — no framework lecture required.
+See **[AI Agent — built-in context](#-ai-agent--built-in-context-for-cursor-claude-and-local-llms)** above for the full picture. From `src/Tools/`:
 
 ```bash
 php src/Tools/upmvc-next.php
-php src/Tools/upmvc-next.php --goal "Add a contact form module" --stdout
+php src/Tools/upmvc-next.php --goal "Audit my .env wiring" --stdout
+php src/Tools/upmvc-next.php --scaffold --goal "Add Api/Bookings module"
 ```
 
-Knowledge files live in `docs/agent/` (`upmvc-knowledge.json`, `upmvc-rules.json`, `upmvc-workflows.json`). Full guide: **[docs/AGENT_PACK.md](docs/AGENT_PACK.md)**.
+Output: `docs/agent/generated/last-prompt.md` (gitignored). Details: **[docs/AGENT_PACK.md](docs/AGENT_PACK.md)**.
 
 ## ⚙️ Configuration
 

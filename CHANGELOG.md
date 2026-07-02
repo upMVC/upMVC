@@ -2,22 +2,32 @@
 
 ## [Unreleased]
 
-### Tools cleanup — agent scaffolds replace PHP generators
-- **`docs/agent/upmvc-scaffolds.json`** — Optional module builder pack (not default agent context)
-- **`upmvc-next.php --scaffold`** — Opt-in scaffold pack; `--no-scaffold` for explicit general mode
-- **Removed** — `createmodule/`, `modulegenerator/`, `crudgenerator/`, `modulegenerator-enhanced/`, `ModuleGeneratorEnhanced/` (~8k lines)
-- **`cache-cli.php`** — Fixed vendor path, Admin namespace, admin cache path under `src/Etc/storage/cache/`
-- **Docs** — `FIRST-STEPS-GUIDE`, `HOW-TO-GUIDE`, `CORE_AREAS`, `src/Tools/README.md` updated
+---
 
-### Agent pack (merged PR #43)
-- **`docs/AGENT_PACK.md`** — Full guide: what the pack is, how to use it, how to update rules and workflows
-- **`docs/agent/`** — Portable JSON knowledge pack: `upmvc-knowledge.json`, `upmvc-rules.json`, `upmvc-workflows.json`, `upmvc-saas-pack.json`
-- **`src/Tools/upmvc-next.php`** — Interactive CLI: scan project, ask what you want, output `docs/agent/generated/last-prompt.md`
-- **`AGENTS.md`** — Root pointer for Cursor/cloud agents
-- **`tests/Unit/Tools/`** — Minimal tests for agent JSON pack and CLI smoke checks
-- **Accuracy pass (v1.0.1)** — JSON pack aligned to v2.3.6: addRoute middleware syntax, InitModsImproved, optional packages.php, SaaS JWT vs tenant middleware, removed stale Billing/tq()/->middleware() references
-- **Review fixes** — `upmvc-saas-pack.json` optional at CLI load; stable module sort; test tearDown; no hardcoded pack version in tests
-- **`README.md`**, **`docs/DOCUMENTATION-INDEX.md`** — Linked from quick navigation
+## v2.3.7 - AI Agent Pack & Tools Cleanup (2026-07-02)
+
+### AI Agent (AiAgent)
+- **`docs/agent/`** — Portable JSON knowledge pack for any coding assistant:
+  - `upmvc-knowledge.json` — framework facts (bootstrap, config, modules, packages)
+  - `upmvc-rules.json` — must/never constraints
+  - `upmvc-workflows.json` — intent → recipes (create module, config audit, SaaS, auth, …)
+  - `upmvc-saas-pack.json` — optional SaaS extension when pack is present
+  - `upmvc-scaffolds.json` — **optional** module builder pack (not default context)
+- **`src/Tools/upmvc-next.php`** — Scans project, asks what you want, writes `docs/agent/generated/last-prompt.md`
+  - `--scaffold` / `--no-scaffold` for opt-in module templates
+  - SaaS pack auto-detected; scaffold prompt only on interactive TTY
+- **`AGENTS.md`** — Root entry for Cursor and cloud agents
+- **`docs/AGENT_PACK.md`** — Full usage guide
+- **`tests/Unit/Tools/`** — 15 tests (JSON validity, CLI smoke, scaffold flags)
+
+### Tools
+- **Removed** legacy PHP generators: `createmodule/`, `modulegenerator/`, `crudgenerator/`, `modulegenerator-enhanced/`, `ModuleGeneratorEnhanced/` (~12k lines)
+- **`cache-cli.php`** — Fixed vendor autoload path, `App\Modules\Admin\Routes\Routes`, admin cache under `src/Etc/storage/cache/`
+- **`src/Tools/README.md`** — Rewritten for agent CLI + cache-cli only
+
+### Docs
+- **`README.md`** — AI Agent section (core vs optional packs, quick commands)
+- **`FIRST-STEPS-GUIDE.md`**, **`HOW-TO-GUIDE.md`**, **`CORE_AREAS_AND_CONFIGURATION.md`** — Agent-first module creation; generator references removed
 
 ---
 
