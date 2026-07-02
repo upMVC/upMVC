@@ -1,0 +1,185 @@
+{
+  "meta": {
+    "name": "upMVC Agent Knowledge Pack",
+    "version": "1.0.1",
+    "verified_against": "upMVC v2.3.6",
+    "framework": "upMVC",
+    "php_minimum": "8.1",
+    "purpose": "Portable startup context for any AI agent working on upMVC or upMVC-SaaS projects",
+    "usage": "Load this file at session start together with upmvc-rules.json. Do not ask the user to explain framework basics."
+  },
+  "philosophy": {
+    "summary": "Pure PHP MVC. Modules are optional reference implementations. Minimal core, explicit control, no ORM required.",
+    "principles": [
+      "Modules auto-discovered — drop folder in src/Modules, routes register automatically",
+      "PDO prepared statements — no magic query builder required",
+      "Config from .env via Environment::get() and ConfigManager::get()",
+      "Framework stays out of the way — app-specific patterns belong in app layer, not core"
+    ],
+    "docs": [
+      "docs/MODULE_PHILOSOPHY.md",
+      "docs/PHILOSOPHY_PURE_PHP.md",
+      "docs/CORE_AREAS_AND_CONFIGURATION.md",
+      "docs/CONFIGURATION_FALLBACKS.md"
+    ]
+  },
+  "paths": {
+    "app_root": "UPMVC_APP_ROOT or project root (dirname above src/)",
+    "entry": "public/index.php",
+    "env_file": "src/Etc/.env",
+    "env_file_note": "Copy from src/Etc/.env.example — canonical path loaded by Environment::load()",
+    "env_example": "src/Etc/.env.example",
+    "core": "src/Etc/",
+    "modules": "src/Modules/",
+    "common": "src/Common/",
+    "logs": "src/logs/",
+    "storage": "storage/",
+    "cache": "storage/cache/",
+    "admin_route_cache": "src/Etc/storage/cache/admin_routes.php",
+    "packages_registry": "src/Etc/packages.php (optional — create when using Composer packages; upMVC-SaaS ships one)",
+    "custom_routes": "src/Etc/custom-routes.php",
+    "module_structure": {
+      "controller": "src/Modules/{Name}/Controller.php",
+      "model": "src/Modules/{Name}/Model.php",
+      "view": "src/Modules/{Name}/View.php",
+      "routes": "src/Modules/{Name}/Routes/Routes.php",
+      "config_metadata": "src/Modules/{Name}/etc/config.php"
+    },
+    "note_module_etc_config": "Module etc/config.php files are generator metadata — not loaded by runtime unless you wire them yourself"
+  },
+  "bootstrap": {
+    "flow": [
+      "public/index.php defines UPMVC_APP_ROOT and loads vendor/autoload.php",
+      "new Start() → ConfigManager::load(), ErrorHandler (APP_DEBUG), request init",
+      "Start::upMVC() → Router, Application::registerProviders(), global middleware, named middleware",
+      "Application::bootProviders($router), then App\\Etc\\Routes::startRoutes()"
+    ],
+    "key_classes": [
+      "App\\Etc\\Start",
+      "App\\Etc\\Routes",
+      "App\\Etc\\Application",
+      "App\\Etc\\Config\\ConfigManager",
+      "App\\Etc\\Config\\Environment",
+      "App\\Etc\\InitModsImproved",
+      "App\\Etc\\Router"
+    ]
+  },
+  "config": {
+    "priority": [
+      "1. src/Etc/.env (Environment)",
+      "2. ConfigManager structured config (app, database, cache, session, security, mail, logging)",
+      "3. Config.php legacy fallbacks (site_path, domain_name, static session defaults)",
+      "4. ConfigDatabase.php DB fallbacks (development only)"
+    ],
+    "required_env": ["DOMAIN_NAME", "SITE_PATH", "APP_ENV"],
+    "important_env": {
+      "APP_DEBUG": "Controls error display — use this, not APP_ENV alone",
+      "APP_KEY": "Application secret — generate for production",
+      "DB_HOST": "Database host",
+      "DB_NAME": "Database name",
+      "DB_USER": "Database user",
+      "DB_PASS": "Database password",
+      "DB_CHARSET": "Database charset (default utf8mb4)",
+      "SESSION_COOKIE": "Session cookie name",
+      "SESSION_SAME_SITE": "lax | strict | none",
+      "SESSION_SECURE": "true if HTTPS",
+      "JWT_SECRET": "Required for JWT middleware",
+      "PROTECTED_ROUTES": "Comma-separated route prefixes requiring session auth",
+      "ROUTE_USE_CACHE": "Module discovery cache — overrides production auto-detect when set",
+      "CACHE_DRIVER": "file | array — default cache store for CacheManager",
+      "LOG_PATH": "Error log directory (relative to app root or absolute)",
+      "CORS_ENABLED": "Global CORS via ConfigManager app.cors.enabled"
+    },
+    "access_patterns": {
+      "correct": [
+        "Environment::get('KEY', 'default')",
+        "ConfigManager::get('app.debug', false)",
+        "ConfigManager::get('session.lifetime', 3600)"
+      ],
+      "avoid": [
+        "$_ENV['KEY'] for .env values — putenv does not populate $_ENV",
+        "Hardcoding credentials in PHP files"
+      ]
+    }
+  },
+  "routing": {
+    "discovery": "InitModsImproved scans src/Modules/*/Routes/Routes.php and nested Modules/*/Modules/*/Routes/Routes.php",
+    "route_methods": [
+      "addRoute(path, controller, method, middleware[], methods[]) — middleware is 4th argument array",
+      "addParamRoute(path, controller, method, middleware[], constraints[], methods[]) — supports {id:int} typed params in $_GET"
+    ],
+    "middleware_registration": "Start.php registers global + named middleware (csrf, rate_limit, jwt, auth, cors)",
+    "protected_routes": "PROTECTED_ROUTES in .env merges with Start::$defaultProtectedRoutes and Application::addProtectedRoutes()",
+    "docs": [
+      "docs/routing/ROUTING_GUIDE.md",
+      "docs/PROTECTED_ROUTES_IMPLEMENTED.md",
+      "docs/JWT_AUTHENTICATION.md"
+    ]
+  },
+  "middleware": {
+    "global": ["LoggingMiddleware", "CorsMiddleware (if app.cors.enabled)", "AuthMiddleware (protected routes)"],
+    "named": {
+      "csrf": "POST CSRF validation via Security::validateCsrf",
+      "rate_limit": "IP rate limit via Security::rateLimit + security.rate_limit config",
+      "jwt": "Bearer JWT — sets $GLOBALS['current_user']",
+      "auth": "Session check $_SESSION['logged']",
+      "cors": "Route-level CORS (global CORS preferred when cross-origin)"
+    },
+    "note_cors_tag": "Adding 'cors' to route middleware array only works if cors named middleware is used; global CORS uses CORS_ENABLED in .env"
+  },
+  "modules": {
+    "namespace": "App\\Modules\\{Name}",
+    "base_classes": {
+      "controller": "App\\Common\\Bmvc\\BaseController",
+      "model": "App\\Common\\Bmvc\\BaseModel",
+      "view": "App\\Common\\Bmvc\\BaseView",
+      "orm_optional": "App\\Common\\Bmvc\\BaseModelOrm (requires RedBean — optional)"
+    },
+    "generator": "src/Tools/ModuleGeneratorEnhanced/ — scaffolds modules with Routes, Controller, Model, View",
+    "philosophy": "Bundled modules (Auth, Admin, React*, etc.) are reference implementations — delete what you do not need"
+  },
+  "packages": {
+    "summary": "Composer packages extend upMVC via optional src/Etc/packages.php provider registry",
+    "registry_file": "src/Etc/packages.php",
+    "registry_note": "File is optional in standalone upMVC; required pattern for upMVC-SaaS and library-mode apps",
+    "registry_format": "return [ \\Vendor\\Package\\ServiceProvider::class, ... ];",
+    "application_api": {
+      "addModulePath": "Register extra module scan paths — prepend for pack, append for app overrides",
+      "addMigrationPath": "Register migration directories",
+      "addProtectedRoutes": "Register route prefixes requiring auth",
+      "registerProviders": "Called from Start before middleware",
+      "bootProviders": "Called after middleware registration — wire routes, factories"
+    },
+    "module_path_order": "Pack paths registered first; app src/Modules scanned last so app routes override pack routes",
+    "library_mode": {
+      "constant": "UPMVC_APP_ROOT",
+      "description": "When upMVC is a Composer dependency, host app defines UPMVC_APP_ROOT before autoload so Application resolves host paths for .env, packages.php, and local modules"
+    },
+    "example_saas_starter": {
+      "repo": "upMVC-SaaS",
+      "packages_php": "src/Etc/packages.php returns BitsHost\\UpmvcSaas\\SaasServiceProvider::class",
+      "composer_packages": ["bitshost/upmvc", "bitshost/upmvc-saas-pack"],
+      "docs": "See docs/agent/upmvc-saas-pack.json for SaaS-specific knowledge"
+    }
+  },
+  "cache_and_tools": {
+    "cache_manager": "App\\Etc\\Cache\\CacheManager — multi-store cache, respects CACHE_DRIVER",
+    "legacy_cache": "App\\Etc\\Cache — older file cache using Config::get('cache.enabled') — prefer CacheManager for new code",
+    "cache_cli": "php src/Tools/cache-cli.php list|stats|clear:modules|clear:admin|clear:all",
+    "admin_route_cache_note": "Admin dynamic routes cache at src/Etc/storage/cache/admin_routes.php; module discovery uses storage/cache via CacheManager",
+    "agent_cli": "php src/Tools/upmvc-next.php — builds agent prompt from this knowledge pack"
+  },
+  "security_baseline": {
+    "csrf": "Security::csrfToken() in forms; validate on POST",
+    "passwords": "password_hash / password_verify — never plain text",
+    "sessions": "session_regenerate_id(true) after login",
+    "jwt": "Read JWT_SECRET via Environment::get(), not $_ENV",
+    "rate_limiting": "Security::rateLimit for simple; App\\Common\\Helpers\\RateLimiter for per-action file-persisted limits"
+  },
+  "agent_behavior": {
+    "user_experience": "User is already inside the framework — do not make them explain upMVC basics. Ask what they want to build, then plan.",
+    "default_mode": "plan_first",
+    "plan_output": "JSON plan with steps, files_touched, config_changes, risks — wait for approval before writing files",
+    "when_unsure": "Read existing module in src/Modules as reference before inventing patterns"
+  }
+}

@@ -185,6 +185,7 @@ Key items:
 - `ModuleGeneratorEnhanced/ModuleGeneratorEnhanced.php` – generates full modules (controllers, models, views, routes) that plug into `InitModsImproved`.
 - `modulegenerator/`, `crudgenerator/`, `createmodule/` – earlier generators kept for backwards compatibility and experimentation.
 - `cache-cli.php` – CLI helper for cache operations.
+- `upmvc-next.php` – builds AI agent prompts from `docs/agent/` JSON pack ([Agent Pack Guide](../AGENT_PACK.md)).
 
 Usage:
 - Run via PHP CLI from project root, e.g.:

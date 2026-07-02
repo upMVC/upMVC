@@ -1,0 +1,65 @@
+{
+  "meta": {
+    "name": "upMVC Agent Rules",
+    "version": "1.0.1",
+    "verified_against": "upMVC v2.3.6",
+    "severity": "These are hard constraints. Violations must be fixed before code is accepted."
+  },
+  "must": [
+    "Read config with Environment::get() or ConfigManager::get() — never $_ENV for .env values",
+    "Place new modules under src/Modules/{Name}/ with Routes/Routes.php for auto-discovery",
+    "Use namespace App\\Modules\\{Name} for application modules",
+    "Use PDO prepared statements for all SQL — never interpolate user input into queries",
+    "Hash passwords with password_hash() and verify with password_verify()",
+    "Include CSRF protection on session-based POST forms",
+    "Register JWT routes with ['jwt'] middleware when using bearer token auth",
+    "Match existing code style, naming, and file layout in the target module",
+    "Return a structured plan before creating or modifying multiple files",
+    "Use Application::getInstance()->path() for filesystem paths — avoid hardcoded relative paths"
+  ],
+  "never": [
+    "Store or compare passwords in plain text",
+    "Use $_ENV['MAIL_*'] or $_ENV['JWT_SECRET'] as primary config source",
+    "Use FILTER_SANITIZE_STRING (removed in PHP 8.1)",
+    "Apply htmlspecialchars() before database storage — encode at output in views",
+    "Hardcode credentials, API keys, or secrets in PHP files",
+    "Manually register modules in InitModsImproved when auto-discovery works",
+    "Use unserialize() without ['allowed_classes' => false] on untrusted data",
+    "Use rand() for security tokens — use random_bytes() or random_int()",
+    "Redirect to user-controlled URLs without validating against BASE_URL",
+    "Invent framework APIs that do not exist — verify in src/Etc/ first"
+  ],
+  "saas_must": [
+    "Scope every tenant data query with tenant_id — use prepared statement binding",
+    "For JWT tenant APIs use $this->user['tenant_id'] from SaasApiController; for web shell use $GLOBALS['current_tenant']",
+    "Protected tenant APIs: middleware ['cors', 'jwt'] as 4th addRoute argument — not ->middleware() chaining",
+    "Use ['tenant'] middleware on web shell routes that need TenantMiddleware slug/subdomain resolution",
+    "Use ['feature:flagname'] only when plan gating is required (PlanGateMiddleware factory)",
+    "Never expose cross-tenant data — if tenant_id is missing, fail closed"
+  ],
+  "prefer": [
+    "Extend BaseController / BaseModel / BaseView over reinventing base classes",
+    "ConfigManager dot keys over duplicating env reads",
+    "InitModsImproved + module Routes.php over editing core router",
+    "ModuleGeneratorEnhanced for scaffolding over hand-rolling boilerplate",
+    "Small focused diffs — one concern per change set"
+  ],
+  "output_format": {
+    "phase": "plan | implement | review",
+    "required_fields": [
+      "understanding",
+      "assumptions",
+      "plan",
+      "files_touched",
+      "config_changes",
+      "risks",
+      "next_step_for_human"
+    ],
+    "plan_step_schema": {
+      "step": "number",
+      "action": "create_module | add_route | migration | config | fix | test",
+      "details": "string",
+      "files": ["array of paths"]
+    }
+  }
+}

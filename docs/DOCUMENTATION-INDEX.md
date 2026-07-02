@@ -9,6 +9,7 @@
 | **[🏗 CORE_AREAS_AND_CONFIGURATION.md](CORE_AREAS_AND_CONFIGURATION.md)** | Understand src/Etc, Modules, Tools, Common | 15-30 min | ✅ Ready |
 | **[📘 HOW-TO-GUIDE.md](HOW-TO-GUIDE.md)** | Complete development guide | 30-60 min | ✅ Ready |
 | **[🔐 JWT_AUTHENTICATION.md](JWT_AUTHENTICATION.md)** | JWT auth — issue tokens, protect routes, refresh flow | 15 min | ✅ Ready |
+| **[🤖 AGENT_PACK.md](AGENT_PACK.md)** | AI agent knowledge pack — `upmvc-next.php`, rules, workflows | 10 min | ✅ Ready |
 | **[❓ FAQ.md](FAQ.md)** | Common questions & troubleshooting | As needed | ✅ Ready |
 
 ---

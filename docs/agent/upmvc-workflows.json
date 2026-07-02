@@ -1,0 +1,110 @@
+{
+  "meta": {
+    "name": "upMVC Agent Workflows",
+    "version": "1.0.1",
+    "verified_against": "upMVC v2.3.6",
+    "instruction": "Match user intent to a workflow. Output plan JSON before implementation."
+  },
+  "workflows": {
+    "create_module": {
+      "intent_keywords": ["module", "feature", "crud", "new page", "scaffold"],
+      "steps": [
+        "Confirm module name (PascalCase) and type: web | api | both",
+        "Check if similar module exists in src/Modules for pattern reference",
+        "Scaffold with ModuleGeneratorEnhanced or hand-create Controller, Model, View, Routes/Routes.php",
+        "Register routes in Routes/Routes.php using addRoute(path, class, method, [middleware], [methods]) or addParamRoute",
+        "Add middleware array if auth/csrf/jwt required",
+        "Add view templates if web module",
+        "Verify module appears in InitMods discovery (no manual registration)"
+      ],
+      "files_touched": [
+        "src/Modules/{Name}/Controller.php",
+        "src/Modules/{Name}/Model.php",
+        "src/Modules/{Name}/View.php",
+        "src/Modules/{Name}/Routes/Routes.php"
+      ]
+    },
+    "add_api_route": {
+      "intent_keywords": ["api", "endpoint", "rest", "json"],
+      "steps": [
+        "Identify target module or create Api/{Domain} module",
+        "Add route in Routes/Routes.php",
+        "Implement controller method returning JSON (success/error helpers if SaaS)",
+        "Apply middleware as 4th addRoute argument: ['cors', 'jwt'] for protected APIs",
+        "Validate input at controller; use prepared statements in model",
+        "Document method in module or docs if public API"
+      ]
+    },
+    "saas_domain_module": {
+      "intent_keywords": ["saas", "tenant", "booking", "product", "domain"],
+      "requires": "bitshost/upmvc-saas-pack",
+      "steps": [
+        "Confirm SaaS pack is installed and packages.php registers SaasServiceProvider",
+        "Create src/Modules/Api/{Domain}/ with Controller extending BitsHost\\UpmvcSaas\\Http\\SaasApiController",
+        "Model: scope queries with tenant_id from $this->user['tenant_id'] (JWT APIs)",
+        "Routes: addRoute(..., ['cors', 'jwt'], [methods]) for protected tenant APIs",
+        "Migration: add table with tenant_id column and index",
+        "Test with JWT from /api/auth/login — never skip tenant scoping"
+      ],
+      "reference": "docs/agent/upmvc-saas-pack.json"
+    },
+    "config_audit": {
+      "intent_keywords": ["config", "env", "settings", "audit", "wiring"],
+      "steps": [
+        "Read src/Etc/.env.example and compare to src/Etc/.env",
+        "Grep codebase for Environment::get, ConfigManager::get, $_ENV, Config::get",
+        "Map each env key to consumer class",
+        "Flag unused keys and unwired keys",
+        "Propose minimal fixes — prefer ConfigManager over new globals"
+      ],
+      "reference": "docs/CORE_AREAS_AND_CONFIGURATION.md"
+    },
+    "add_package_provider": {
+      "intent_keywords": ["package", "provider", "composer", "extend", "pack"],
+      "steps": [
+        "composer require vendor/package",
+        "Add ServiceProvider class to src/Etc/packages.php return array",
+        "Provider register(): addModulePath, addMigrationPath, addProtectedRoutes as needed",
+        "Provider boot(): register routes, middleware factories",
+        "Confirm UPMVC_APP_ROOT points to host app when upMVC is library dependency"
+      ]
+    },
+    "fix_auth": {
+      "intent_keywords": ["login", "auth", "session", "jwt", "protected"],
+      "steps": [
+        "Identify auth mode: session (web) | jwt (api) | both",
+        "Session: PROTECTED_ROUTES in .env + AuthMiddleware + CSRF on POST",
+        "JWT: JWT_SECRET in .env + jwt middleware on routes",
+        "SaaS: use pack Api/Auth + refresh token flow",
+        "Verify password_hash on store, session_regenerate_id on login"
+      ]
+    },
+    "debug_routing": {
+      "intent_keywords": ["404", "route", "not found", "middleware"],
+      "steps": [
+        "Check InitModsImproved discovery — module Routes.php path correct",
+        "Clear route cache: php src/Tools/cache-cli.php clear:modules",
+        "Verify ROUTE_USE_CACHE and APP_ENV",
+        "Check middleware blocking before controller",
+        "Inspect protected route prefixes vs actual URL path"
+      ]
+    },
+    "cache_operations": {
+      "intent_keywords": ["cache", "slow", "stale routes"],
+      "steps": [
+        "php src/Tools/cache-cli.php stats",
+        "php src/Tools/cache-cli.php clear:modules",
+        "Verify CACHE_DRIVER in .env matches CacheManager usage"
+      ]
+    }
+  },
+  "intent_router": {
+    "description": "Map free-text user goal to workflow id",
+    "examples": [
+      { "user_says": "I need a bookings API for my SaaS", "workflow": "saas_domain_module" },
+      { "user_says": "Add a contact form module", "workflow": "create_module" },
+      { "user_says": "Why is my env not working", "workflow": "config_audit" },
+      { "user_says": "Hook in the saas pack", "workflow": "add_package_provider" }
+    ]
+  }
+}
