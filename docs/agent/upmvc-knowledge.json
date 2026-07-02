@@ -135,7 +135,7 @@
       "view": "App\\Common\\Bmvc\\BaseView",
       "orm_optional": "App\\Common\\Bmvc\\BaseModelOrm (requires RedBean — optional)"
     },
-    "generator": "src/Tools/ModuleGeneratorEnhanced/ — scaffolds modules with Routes, Controller, Model, View",
+    "generator": "Optional: load docs/agent/upmvc-scaffolds.json via upmvc-next.php --scaffold (replaces removed PHP generators)",
     "philosophy": "Bundled modules (Auth, Admin, React*, etc.) are reference implementations — delete what you do not need"
   },
   "packages": {

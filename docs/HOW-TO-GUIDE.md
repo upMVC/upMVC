@@ -97,17 +97,10 @@ return [
 
 ## 🏗️ **Creating Your First Module**
 
-### **Using Module Generator (Enhanced):**
+### **Using the agent scaffold pack (optional):**
 ```bash
-# Generate a new module with full structure
-php tools/modulegenerator-enhanced/generate.php create blog
-
-# This creates:
-# modules/blog/
-# ├── Controller.php
-# ├── Model.php  
-# ├── View.php
-# └── routes/Routes.php
+php src/Tools/upmvc-next.php --scaffold --goal "Create a Blog CRUD module"
+# Loads docs/agent/upmvc-scaffolds.json — paste last-prompt.md into your agent
 ```
 
 ### **Manual Module Creation:**

@@ -2,7 +2,14 @@
 
 ## [Unreleased]
 
-### Agent pack (AiAgent branch)
+### Tools cleanup — agent scaffolds replace PHP generators
+- **`docs/agent/upmvc-scaffolds.json`** — Optional module builder pack (not default agent context)
+- **`upmvc-next.php --scaffold`** — Opt-in scaffold pack; `--no-scaffold` for explicit general mode
+- **Removed** — `createmodule/`, `modulegenerator/`, `crudgenerator/`, `modulegenerator-enhanced/`, `ModuleGeneratorEnhanced/` (~8k lines)
+- **`cache-cli.php`** — Fixed vendor path, Admin namespace, admin cache path under `src/Etc/storage/cache/`
+- **Docs** — `FIRST-STEPS-GUIDE`, `HOW-TO-GUIDE`, `CORE_AREAS`, `src/Tools/README.md` updated
+
+### Agent pack (merged PR #43)
 - **`docs/AGENT_PACK.md`** — Full guide: what the pack is, how to use it, how to update rules and workflows
 - **`docs/agent/`** — Portable JSON knowledge pack: `upmvc-knowledge.json`, `upmvc-rules.json`, `upmvc-workflows.json`, `upmvc-saas-pack.json`
 - **`src/Tools/upmvc-next.php`** — Interactive CLI: scan project, ask what you want, output `docs/agent/generated/last-prompt.md`

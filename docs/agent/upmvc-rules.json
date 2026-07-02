@@ -41,7 +41,7 @@
     "Extend BaseController / BaseModel / BaseView over reinventing base classes",
     "ConfigManager dot keys over duplicating env reads",
     "InitModsImproved + module Routes.php over editing core router",
-    "ModuleGeneratorEnhanced for scaffolding over hand-rolling boilerplate",
+    "upmvc-scaffolds.json with --scaffold for new modules — not default agent context",
     "Small focused diffs — one concern per change set"
   ],
   "output_format": {

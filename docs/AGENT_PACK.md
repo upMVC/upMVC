@@ -19,6 +19,7 @@ docs/agent/
   upmvc-knowledge.json   ← framework facts (bootstrap, config, modules, packages)
   upmvc-rules.json       ← hard must / never rules
   upmvc-workflows.json   ← recipes (create module, SaaS CRUD, config audit, …)
+  upmvc-scaffolds.json   ← optional module builder pack (not default)
   upmvc-saas-pack.json   ← SaaS pack architecture (when applicable)
   generated/             ← ephemeral CLI output (gitignored)
 
@@ -55,7 +56,10 @@ The script writes:
 ```bash
 php src/Tools/upmvc-next.php --goal "Add a bookings API for my SaaS"
 php src/Tools/upmvc-next.php --goal "Audit config wiring" --stdout
+php src/Tools/upmvc-next.php --scaffold --goal "Create Blog CRUD module"
 ```
+
+`--scaffold` includes optional `upmvc-scaffolds.json` (module types, field schema). Default sessions use general context only.
 
 ---
 
@@ -92,8 +96,9 @@ Import the JSON files into system context, a skill, or a RAG index:
 | `upmvc-rules.json` | Always |
 | `upmvc-workflows.json` | When planning multi-step work |
 | `upmvc-saas-pack.json` | Only for upMVC-SaaS / `bitshost/upmvc-saas-pack` projects |
+| `upmvc-scaffolds.json` | Only when scaffolding new modules (`--scaffold` or user rule) |
 
-Always pair **knowledge + rules**. The agent should **plan first** (JSON plan with files and risks) before editing multiple files.
+Always pair **knowledge + rules** for core work. Scaffolds and SaaS packs are **opt-in extensions**.
 
 ---
 
@@ -132,6 +137,10 @@ These are the guardrails. Keep the list short and actionable.
 ### `upmvc-workflows.json`
 
 Recipes keyed by intent (`create_module`, `saas_domain_module`, `config_audit`, …). Each workflow has `intent_keywords` and ordered `steps`. The CLI matches user goals to workflows by keyword overlap.
+
+### `upmvc-scaffolds.json`
+
+Optional module builder pack (replaces removed PHP generators). Module types (`basic`, `api`, `crud`, `auth`, `dashboard`, `submodule`, `saas_api`), CRUD field schema, route patterns. **Not loaded by default** — use `php src/Tools/upmvc-next.php --scaffold` or add to Cursor rules when you scaffold often.
 
 ### `upmvc-saas-pack.json`
 

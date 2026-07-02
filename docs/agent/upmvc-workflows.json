@@ -11,7 +11,7 @@
       "steps": [
         "Confirm module name (PascalCase) and type: web | api | both",
         "Check if similar module exists in src/Modules for pattern reference",
-        "Scaffold with ModuleGeneratorEnhanced or hand-create Controller, Model, View, Routes/Routes.php",
+        "Hand-create or agent-scaffold Controller, Model, View, Routes/Routes.php (see upmvc-scaffolds.json with --scaffold)",
         "Register routes in Routes/Routes.php using addRoute(path, class, method, [middleware], [methods]) or addParamRoute",
         "Add middleware array if auth/csrf/jwt required",
         "Add view templates if web module",
