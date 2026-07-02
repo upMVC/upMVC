@@ -118,12 +118,10 @@ Visit: `http://localhost:8000`
 
 ## 🏗️ **Step 6: Create Your First Module**
 
-### **Using Module Generator (if available):**
+### **Using the agent (recommended):**
 ```bash
-# Generate a complete module
-php tools/modulegenerator-enhanced/generate.php create hello
-
-# This creates modules/hello/ with all necessary files
+php src/Tools/upmvc-next.php --scaffold --goal "Create a Hello basic module"
+# Paste docs/agent/generated/last-prompt.md into Cursor — agent scaffolds under src/Modules/
 ```
 
 ### **Manual Creation:**

@@ -1,0 +1,110 @@
+{
+  "meta": {
+    "name": "upMVC Agent Scaffold Pack",
+    "version": "1.0.0",
+    "verified_against": "upMVC v2.3.6",
+    "optional": true,
+    "load_when": "User opts in via --scaffold, confirms at CLI prompt, or adds a Cursor rule. Not part of default agent context.",
+    "replaces": "Legacy PHP generators (createmodule, modulegenerator, crudgenerator, ModuleGeneratorEnhanced) — removed from core repo"
+  },
+  "intent_keywords": ["module", "scaffold", "crud", "generator", "create module", "new module", "boilerplate"],
+  "module_types": {
+    "basic": {
+      "description": "Standard MVC module with index action",
+      "files": [
+        "src/Modules/{Name}/Controller.php",
+        "src/Modules/{Name}/Model.php",
+        "src/Modules/{Name}/View.php",
+        "src/Modules/{Name}/Routes/Routes.php"
+      ],
+      "namespace": "App\\Modules\\{Name}",
+      "routes_namespace": "App\\Modules\\{Name}\\Routes"
+    },
+    "api": {
+      "description": "JSON API module — extend BaseApiController or return json_encode from controller",
+      "files": [
+        "src/Modules/{Name}/Controller.php",
+        "src/Modules/{Name}/Model.php",
+        "src/Modules/{Name}/Routes/Routes.php"
+      ],
+      "middleware_default": ["cors"],
+      "protected_middleware": ["cors", "jwt"]
+    },
+    "crud": {
+      "description": "Full CRUD web module with list/create/edit/delete",
+      "files": [
+        "src/Modules/{Name}/Controller.php",
+        "src/Modules/{Name}/Model.php",
+        "src/Modules/{Name}/View.php",
+        "src/Modules/{Name}/Routes/Routes.php"
+      ],
+      "controller_methods": ["index", "create", "store", "edit", "update", "delete"],
+      "model_methods": ["all", "find", "create", "update", "delete"],
+      "csrf_on": ["store", "update", "delete"]
+    },
+    "auth": {
+      "description": "Login/signup session module — reference Auth module in src/Modules/Auth",
+      "reference_module": "src/Modules/Auth",
+      "middleware_notes": "PROTECTED_ROUTES in .env; CSRF on POST; session_regenerate_id on login"
+    },
+    "dashboard": {
+      "description": "Admin-style dashboard shell — reference DashboardExample or Admin modules",
+      "reference_module": "src/Modules/DashboardExample"
+    },
+    "submodule": {
+      "description": "Nested module under a parent",
+      "path": "src/Modules/{Parent}/Modules/{Name}/",
+      "routes_path": "src/Modules/{Parent}/Modules/{Name}/Routes/Routes.php",
+      "discovery": "InitModsImproved scans Modules/*/Modules/*/Routes/Routes.php"
+    },
+    "saas_api": {
+      "description": "Tenant-scoped API domain module (requires SaaS pack)",
+      "path": "src/Modules/Api/{Domain}/",
+      "controller_extends": "BitsHost\\UpmvcSaas\\Http\\SaasApiController",
+      "middleware": ["cors", "jwt"],
+      "tenant_scope": "$this->user['tenant_id'] in all model queries"
+    }
+  },
+  "field_schema": {
+    "description": "CRUD field definition for plan output — agent asks user or infers from goal",
+    "field_format": {
+      "name": "column name (snake_case)",
+      "sql_type": "e.g. VARCHAR(255), INT, TEXT, DECIMAL(10,2)",
+      "html_type": "text | email | number | textarea | select | radio | date | checkbox",
+      "options": "for select/radio: [{\"value\":\"x\",\"label\":\"Y\"}]",
+      "required": "boolean"
+    },
+    "example_fields": [
+      {"name": "title", "sql_type": "VARCHAR(255)", "html_type": "text", "required": true},
+      {"name": "description", "sql_type": "TEXT", "html_type": "textarea", "required": false},
+      {"name": "status", "sql_type": "VARCHAR(20)", "html_type": "select", "options": [{"value": "active", "label": "Active"}, {"value": "inactive", "label": "Inactive"}]}
+    ]
+  },
+  "route_patterns": {
+    "basic_index": "$router->addRoute('/{route}', {Controller}::class, 'index');",
+    "api_get": "$router->addRoute('/api/{resource}', {Controller}::class, 'index', ['cors'], ['GET']);",
+    "api_post_protected": "$router->addRoute('/api/{resource}', {Controller}::class, 'create', ['cors', 'jwt'], ['POST']);",
+    "param_route": "$router->addParamRoute('/{resource}/{id:int}', {Controller}::class, 'show', [], [], ['GET']);",
+    "note": "Middleware is 4th argument array; HTTP methods 5th. No ->middleware() chaining."
+  },
+  "base_classes": {
+    "controller": "App\\Common\\Bmvc\\BaseController",
+    "model": "App\\Common\\Bmvc\\BaseModel",
+    "view": "App\\Common\\Bmvc\\BaseView",
+    "api_controller": "App\\Common\\Bmvc\\BaseApiController"
+  },
+  "scaffold_steps": [
+    "Confirm module name (PascalCase) and type from module_types",
+    "Read a similar existing module in src/Modules/ before writing",
+    "Create files under src/Modules/{Name}/ with Routes/Routes.php for auto-discovery",
+    "Use addRoute(path, class, method, [middleware], [methods]) — never manual InitMods registration",
+    "Output JSON plan with files_touched and field list for CRUD — wait for approval",
+    "After implementation: php src/Tools/cache-cli.php clear:modules"
+  ],
+  "never": [
+    "Do not write to modules/ (lowercase legacy path)",
+    "Do not edit InitMods.php or composer autoload per module",
+    "Do not use routes/ lowercase folder — use Routes/Routes.php",
+    "Do not run removed PHP generator scripts"
+  ]
+}

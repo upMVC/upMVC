@@ -17,7 +17,8 @@ Paste `generated/last-prompt.md` into your agent chat.
 | `upmvc-knowledge.json` | Framework facts |
 | `upmvc-rules.json` | Must / never rules |
 | `upmvc-workflows.json` | Intent → recipe mapping |
-| `upmvc-saas-pack.json` | SaaS pack (optional file — include only for SaaS projects) |
+| `upmvc-scaffolds.json` | Module builder (optional — `--scaffold`) |
+| `upmvc-saas-pack.json` | SaaS pack (when applicable) |
 | `generated/` | CLI output (gitignored) |
 
 ## Updating rules

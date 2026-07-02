@@ -111,13 +111,36 @@ class AgentPackTest extends TestCase
         $this->assertStringNotContainsString('Billing', $saasBlob);
     }
 
-    public function test_knowledge_pack_documents_canonical_env_path(): void
+    public function test_scaffolds_pack_is_optional_extension(): void
     {
+        $path = $this->agentDir . '/upmvc-scaffolds.json';
+        $this->assertFileExists($path);
+
+        $data = json_decode((string) file_get_contents($path), true);
+        $this->assertIsArray($data);
+        $this->assertTrue($data['meta']['optional'] ?? false);
+        $this->assertArrayHasKey('basic', $data['module_types'] ?? []);
+        $this->assertArrayHasKey('crud', $data['module_types'] ?? []);
+
         $knowledge = json_decode(
             (string) file_get_contents($this->agentDir . '/upmvc-knowledge.json'),
             true
         );
+        $this->assertStringContainsString('upmvc-scaffolds.json', (string) ($knowledge['modules']['generator'] ?? ''));
+    }
 
-        $this->assertSame('src/Etc/.env', $knowledge['paths']['env_file'] ?? null);
+    public function test_legacy_generators_removed(): void
+    {
+        $removed = [
+            'src/Tools/createmodule',
+            'src/Tools/modulegenerator',
+            'src/Tools/crudgenerator',
+            'src/Tools/modulegenerator-enhanced',
+            'src/Tools/ModuleGeneratorEnhanced',
+        ];
+
+        foreach ($removed as $dir) {
+            $this->assertDirectoryDoesNotExist($this->root . '/' . $dir);
+        }
     }
 }

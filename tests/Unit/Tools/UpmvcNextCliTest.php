@@ -110,6 +110,33 @@ class UpmvcNextCliTest extends TestCase
         }
     }
 
+    public function test_scaffold_flag_includes_scaffolds_in_output(): void
+    {
+        $result = $this->runCli([
+            '--goal',
+            'Create a Blog CRUD module',
+            '--scaffold',
+            '--stdout',
+        ]);
+
+        $this->assertSame(0, $result['exit'], $result['output']);
+        $this->assertStringContainsString('upmvc-scaffolds.json', $result['output']);
+        $this->assertStringContainsString('Module scaffolds', $result['output']);
+    }
+
+    public function test_no_scaffold_flag_omits_scaffolds_by_default(): void
+    {
+        $result = $this->runCli([
+            '--goal',
+            'Audit my .env config wiring',
+            '--no-scaffold',
+            '--stdout',
+        ]);
+
+        $this->assertSame(0, $result['exit'], $result['output']);
+        $this->assertStringNotContainsString('upmvc-scaffolds.json', $result['output']);
+    }
+
     /** @param list<string> $args */
     private function runCli(array $args): array
     {

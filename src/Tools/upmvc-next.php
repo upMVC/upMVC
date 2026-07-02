@@ -8,7 +8,8 @@
  * Usage (from project root):
  *   php src/Tools/upmvc-next.php
  *   php src/Tools/upmvc-next.php --goal "Add a bookings API for my SaaS"
- *   php src/Tools/upmvc-next.php --stdout
+ *   php src/Tools/upmvc-next.php --scaffold
+ *   php src/Tools/upmvc-next.php --no-scaffold
  *
  * Output:
  *   docs/agent/generated/last-prompt.md
@@ -31,6 +32,8 @@ final class UpmvcNext
     private array $workflows = [];
     /** @var array<string, mixed> */
     private array $saasPack = [];
+    /** @var array<string, mixed> */
+    private array $scaffolds = [];
 
     public function __construct(?string $appRoot = null)
     {
@@ -41,14 +44,10 @@ final class UpmvcNext
 
     public function run(array $argv): int
     {
-        $goal = null;
-        $stdoutOnly = in_array('--stdout', $argv, true);
-
-        foreach ($argv as $i => $arg) {
-            if ($arg === '--goal' && isset($argv[$i + 1])) {
-                $goal = $argv[$i + 1];
-            }
-        }
+        $parsed = $this->parseArgv($argv);
+        $goal = $parsed['goal'];
+        $stdoutOnly = $parsed['stdout'];
+        $scaffoldFlag = $parsed['scaffold_flag'];
 
         if (!$this->loadAgentPack()) {
             return 1;
@@ -62,7 +61,13 @@ final class UpmvcNext
         }
 
         $workflow = $this->matchWorkflow($goal);
-        $session = $this->buildSession($scan, $goal, $workflow);
+        $includeScaffolds = $this->resolveIncludeScaffolds($goal, $workflow, $scaffoldFlag);
+
+        if ($includeScaffolds && !$this->loadScaffoldsPack()) {
+            return 1;
+        }
+
+        $session = $this->buildSession($scan, $goal, $workflow, $includeScaffolds);
         $prompt = $this->buildPrompt($session);
 
         if ($stdoutOnly) {
@@ -94,6 +99,119 @@ final class UpmvcNext
         }
 
         return getcwd() ?: '.';
+    }
+
+    /**
+     * @return array{goal: ?string, stdout: bool, scaffold_flag: ?bool}
+     */
+    private function parseArgv(array $argv): array
+    {
+        $goal = null;
+        $stdout = in_array('--stdout', $argv, true);
+        $scaffoldFlag = null;
+
+        if (in_array('--scaffold', $argv, true)) {
+            $scaffoldFlag = true;
+        } elseif (in_array('--no-scaffold', $argv, true)) {
+            $scaffoldFlag = false;
+        }
+
+        foreach ($argv as $i => $arg) {
+            if ($arg === '--goal' && isset($argv[$i + 1])) {
+                $goal = $argv[$i + 1];
+            }
+        }
+
+        return ['goal' => $goal, 'stdout' => $stdout, 'scaffold_flag' => $scaffoldFlag];
+    }
+
+    private function loadScaffoldsPack(): bool
+    {
+        $path = $this->agentDir . '/upmvc-scaffolds.json';
+        if (!is_file($path)) {
+            $this->err("Scaffold pack requested but missing: {$path}");
+            return false;
+        }
+
+        $decoded = json_decode((string) file_get_contents($path), true);
+        if (!is_array($decoded)) {
+            $this->err("Invalid JSON: {$path}");
+            return false;
+        }
+
+        $this->scaffolds = $decoded;
+        return true;
+    }
+
+    private function hasScaffoldsFile(): bool
+    {
+        return is_file($this->agentDir . '/upmvc-scaffolds.json');
+    }
+
+    /**
+     * @param array{id: string, label: string}|null $workflow
+     */
+    private function resolveIncludeScaffolds(string $goal, ?array $workflow, ?bool $scaffoldFlag): bool
+    {
+        if ($scaffoldFlag === true) {
+            return true;
+        }
+        if ($scaffoldFlag === false) {
+            return false;
+        }
+
+        if (!$this->looksLikeScaffoldGoal($goal, $workflow)) {
+            return false;
+        }
+
+        if (PHP_SAPI !== 'cli' || !defined('STDIN')) {
+            return false;
+        }
+
+        if (function_exists('stream_isatty') && !stream_isatty(STDIN)) {
+            return false;
+        }
+
+        return $this->askIncludeScaffolds();
+    }
+
+    /**
+     * @param array{id: string, label: string}|null $workflow
+     */
+    private function looksLikeScaffoldGoal(string $goal, ?array $workflow): bool
+    {
+        $scaffoldWorkflows = ['create_module', 'saas_domain_module', 'add_api_route'];
+        if ($workflow !== null && in_array($workflow['id'], $scaffoldWorkflows, true)) {
+            return true;
+        }
+
+        $lower = strtolower($goal);
+        $keywords = [
+            'module', 'scaffold', 'crud', 'generator', 'boilerplate', 'new page',
+        ];
+
+        foreach ($keywords as $kw) {
+            if (str_contains($lower, $kw)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private function askIncludeScaffolds(): bool
+    {
+        if (!$this->hasScaffoldsFile()) {
+            return false;
+        }
+
+        $this->out('This looks like module scaffolding.');
+        $this->out('Load optional scaffold pack (upmvc-scaffolds.json)? [y/N]: ', false);
+
+        $line = fgets(STDIN);
+        $answer = is_string($line) ? strtolower(trim($line)) : '';
+
+        return in_array($answer, ['y', 'yes', '1'], true);
     }
 
     private function loadAgentPack(): bool
@@ -304,7 +422,7 @@ final class UpmvcNext
     /** @param array<string, mixed> $scan */
     /** @param array{id: string, label: string}|null $workflow */
     /** @return array<string, mixed> */
-    private function buildSession(array $scan, string $goal, ?array $workflow): array
+    private function buildSession(array $scan, string $goal, ?array $workflow, bool $includeScaffolds): array
     {
         $wfId = $workflow['id'] ?? 'explore';
         $wfData = $this->workflows['workflows'][$wfId] ?? null;
@@ -316,14 +434,19 @@ final class UpmvcNext
             'workflow_steps' => is_array($wfData) ? ($wfData['steps'] ?? []) : [],
             'scan' => $scan,
             'include_saas_pack' => (bool) ($scan['include_saas_pack'] ?? false),
+            'include_scaffolds' => $includeScaffolds,
             'agent_files' => [
                 'knowledge' => 'docs/agent/upmvc-knowledge.json',
                 'rules' => 'docs/agent/upmvc-rules.json',
                 'workflows' => 'docs/agent/upmvc-workflows.json',
+                'scaffolds' => $includeScaffolds ? 'docs/agent/upmvc-scaffolds.json' : null,
                 'saas' => ($scan['include_saas_pack'] ?? false)
                     ? 'docs/agent/upmvc-saas-pack.json'
                     : null,
             ],
+            'scaffold_types' => $includeScaffolds
+                ? array_keys($this->scaffolds['module_types'] ?? [])
+                : [],
             'rules_must' => array_slice($this->rules['must'] ?? [], 0, 8),
             'rules_never' => array_slice($this->rules['never'] ?? [], 0, 8),
         ];
@@ -378,6 +501,15 @@ final class UpmvcNext
             $lines[] = '## SaaS';
             $lines[] = 'This project uses the SaaS pack. All tenant data queries must filter by `tenant_id`.';
             $lines[] = 'Use `docs/agent/upmvc-saas-pack.json` for middleware and module patterns.';
+        }
+        if ($session['include_scaffolds'] ?? false) {
+            $lines[] = '';
+            $lines[] = '## Module scaffolds (opt-in)';
+            $lines[] = 'Load `docs/agent/upmvc-scaffolds.json` for module types, field schema, and route patterns.';
+            if (!empty($session['scaffold_types'])) {
+                $lines[] = 'Available types: `' . implode('`, `', $session['scaffold_types']) . '`';
+            }
+            $lines[] = 'Follow scaffold_steps in that file; output a JSON plan before creating files.';
         }
         $lines[] = '';
         $lines[] = '## Your task';
@@ -438,6 +570,7 @@ final class UpmvcNext
         $this->out('');
         $this->out('Paste last-prompt.md into Cursor or your agent chat.');
         $this->out('Or re-run with: php src/Tools/upmvc-next.php --stdout');
+        $this->out('Module scaffolds (optional): php src/Tools/upmvc-next.php --scaffold');
         $this->out('');
     }
 

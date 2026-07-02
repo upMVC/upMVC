@@ -179,22 +179,20 @@ Configuration links:
 
 Path: `src/Tools`
 
-These are not part of the runtime HTTP request flow. They are **developer tools** for generating code and managing modules.
+Developer CLIs — not part of the HTTP request flow.
 
-Key items:
-- `ModuleGeneratorEnhanced/ModuleGeneratorEnhanced.php` – generates full modules (controllers, models, views, routes) that plug into `InitModsImproved`.
-- `modulegenerator/`, `crudgenerator/`, `createmodule/` – earlier generators kept for backwards compatibility and experimentation.
-- `cache-cli.php` – CLI helper for cache operations.
-- `upmvc-next.php` – builds AI agent prompts from `docs/agent/` JSON pack ([Agent Pack Guide](../AGENT_PACK.md)).
+| Tool | Purpose |
+|------|---------|
+| `upmvc-next.php` | Agent prompt builder ([Agent Pack Guide](../AGENT_PACK.md)) |
+| `cache-cli.php` | Module discovery, admin route, and CacheManager maintenance |
+
+**Module scaffolding:** use the optional agent pack `docs/agent/upmvc-scaffolds.json` (`php src/Tools/upmvc-next.php --scaffold`). Legacy PHP generators were removed.
 
 Usage:
-- Run via PHP CLI from project root, e.g.:
-  - `php src/Tools/ModuleGeneratorEnhanced/quick-gen-test.php`
-- Generators create code under `src/Modules/...` following the PSR-4 structure.
+- `php src/Tools/upmvc-next.php`
+- `php src/Tools/cache-cli.php clear:modules`
 
-Configuration:
-- Generators read DB settings and environment via `App\Etc\Config\Environment`.
-- They assume the same `.env` configuration as the main application.
+Generators read DB settings via `Environment` when applicable.
 
 ---
 

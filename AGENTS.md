@@ -13,6 +13,10 @@ If `bitshost/upmvc-saas-pack` is installed or `src/Etc/packages.php` registers `
 
 - `docs/agent/upmvc-saas-pack.json`
 
+For **new module scaffolding** (optional, not default):
+
+- `docs/agent/upmvc-scaffolds.json` — or run `php src/Tools/upmvc-next.php --scaffold`
+
 ## Behavior
 
 1. User states what they want — you are already in the project.

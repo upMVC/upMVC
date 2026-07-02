@@ -312,25 +312,25 @@ Use the cache maintenance utility to inspect and clear caches (module discovery,
 
 ```bash
 # List available commands
-php tools/cache-cli.php list
+php src/Tools/cache-cli.php list
 
 # Show cache statistics
-php tools/cache-cli.php stats
+php src/Tools/cache-cli.php stats
 
 # Clear only module discovery caches
-php tools/cache-cli.php clear:modules
+php src/Tools/cache-cli.php clear:modules
 
 # Clear Admin module dynamic route cache
-php tools/cache-cli.php clear:admin
+php src/Tools/cache-cli.php clear:admin
 
 # Clear everything (modules + admin + cache stores)
-php tools/cache-cli.php clear:all
+php src/Tools/cache-cli.php clear:all
 ```
 
 Windows PowerShell example:
 
 ```powershell
-php .\tools\cache-cli.php clear:all
+php .\src\Tools\cache-cli.php clear:all
 ```
 
 Affected components:
