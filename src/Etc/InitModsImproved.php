@@ -31,7 +31,6 @@ namespace App\Etc;
 
 use App\Etc\Cache\CacheManager;
 use App\Etc\Config\Environment;
-use App\Etc\Exceptions\RouteNotFoundException;
 
 class InitModsImproved
 {
