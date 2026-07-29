@@ -11,6 +11,14 @@
 - **PHP 8.4 compatibility** — implicitly nullable parameters are deprecated in 8.4. Corrected in `src/Etc/Cache/FileCache.php` (`?string $cachePath`), `src/Etc/Cache.php` (`?int $ttl`) and `src/Modules/Enhanced/Controller.php` (`?Container`, `?EventDispatcher`). `FileCache` matters most: it sits on the module-discovery cache path. Explicit nullable types have been valid since PHP 7.1, so nothing changes for 8.1–8.3.
 - **`tests/Unit/Tools/AgentPackTest.php`** — the agent-pack staleness guard hardcoded `v2.3`, so it failed the moment the pack was updated for the v2.4.0 release. It now derives the expected version from the newest `## vX.Y` heading in `CHANGELOG.md`, so it tracks releases automatically and still fails loudly if the agent pack falls behind.
 
+### Fixed — demo modules on a fresh install
+- **`database/demo-modules.sql`** — new. Creates the tables the bundled demo modules need (`usernou` for Admin and Reactnb, `products` for Product), with demo rows.
+  - Previously a `composer create-project` install could not run them: `/admin` failed with `SQLSTATE[42S02]: Base table or view not found: 1146 Table 'usernou' doesn't exist`. The definition existed — in `src/Modules/Admin/schema.sql` — but the `*.sql` ignore rule meant it had never been committed, so it reached nobody. The bug was invisible to anyone whose development database had accumulated those tables over time, and only surfaced when a genuinely fresh install was tested.
+  - Consolidated into one file rather than shipping the per-module `.sql` files: `Admin/schema.sql` and `Reactnb/schema.sql` were byte-identical duplicates of each other, so shipping both would have been two definitions of one table, free to drift. The per-module files stay ignored.
+  - Idempotent, unlike the originals — `Product/create_table.sql` used `INSERT INTO`, so re-importing it duplicated every row. Now `CREATE TABLE IF NOT EXISTS` and `INSERT IGNORE` throughout.
+  - Documents what it does *not* cover: `DashboardExample` creates its tables at runtime, and the `Test*` modules reference seven tables (`testapis`, `testauths`, `testbasics`, `testcruds`, `testdashboards`, `testitemss`, `testparents`) for which no definition exists anywhere in the project.
+  - `Userorm` additionally needs the optional RedBean ORM: `composer require gabordemooij/redbean`. This is declared under `suggest` in `composer.json`, but the runtime failure (`Class "RedBeanPHP\R" not found`) does not say so.
+
 ### Packaging
 - **`.gitattributes`** — excludes documentation, tests, CI config and the committed `composer.phar` from the distribution archive: **405 → 296 files, 7.1 MB → 3.0 MB**. Everything remains in the repository and is still available via `git clone`.
   - `src/Modules/` is deliberately kept — the demo modules are what make `composer create-project` produce a working app.
@@ -19,6 +27,7 @@
 
 ### Docs
 - **`README.md`** — the "you can delete any modules you don't need" note now records that the `Test` module registers the `/` route, so removing it leaves the site without a homepage. Noted in both places the claim appears.
+- **`README.md`** — the standalone install is now four steps, not three. Following the documented three produced `SQLSTATE[HY000] [1049] Unknown database 'your_database'` on the homepage: the bundled modules open a database connection on boot, so `DB_NAME` must point at a database that exists. An **empty** one is sufficient — no schema import is required to get the site rendering. Verified end to end with `composer create-project` against a freshly created empty database.
 
 ---
 

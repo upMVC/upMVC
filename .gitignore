@@ -64,6 +64,11 @@ cache/
 !/database/schema.sql
 !/database/seed.sql
 
+# Demo module tables live in one place: /database/demo-modules.sql (above).
+# The per-module .sql files under src/Modules/ stay ignored deliberately —
+# shipping both would be two definitions of the same table, free to drift.
+!/database/demo-modules.sql
+
 # Runtime state written by the app / CLI tools
 /storage/rate-limits/
 

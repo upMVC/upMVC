@@ -272,7 +272,7 @@ php -S localhost:8080
 
 ## Option 2: Install as a Standalone Project (Even Simpler!)
 
-Create a complete upMVC project in **3 simple steps:**
+Create a complete upMVC project in **4 simple steps:**
 
 ```bash
 # Step 1: Create project
@@ -293,6 +293,28 @@ cd yourProjectName
 #   or SITE_PATH=/yourProjectName/public # if document root points to public/
 #   or SITE_PATH=                       # if the app is at domain root
 # - DOMAIN_NAME=http://localhost
+
+# Step 4: Point .env at a database
+# The bundled modules open a connection on boot, so DB_NAME must exist —
+# an EMPTY database is enough to get the site running. Without it you get
+# a 500: SQLSTATE[HY000] [1049] Unknown database 'your_database'
+#
+#   CREATE DATABASE upmvc CHARACTER SET utf8mb4;
+#
+# - DB_NAME=upmvc
+# - DB_HOST=127.0.0.1
+# - DB_USER=root
+# - DB_PASS=
+#
+# Want tables and demo logins too? See database/README.md:
+#   mysql -u root -p upmvc < database/schema.sql
+#   mysql -u root -p upmvc < database/seed.sql
+#
+# Want the demo modules to run too? They need their own tables:
+#   mysql -u root -p upmvc < database/demo-modules.sql   # /admin, /product
+#
+# The Userorm demo also needs the optional ORM:
+#   composer require gabordemooij/redbean
 #
 # Database settings are optional because upMVC has smart fallbacks:
 # - If .env database settings are missing, it uses src/Etc/ConfigDatabase.php
