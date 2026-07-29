@@ -39,7 +39,7 @@ class JwtAuthMiddleware
             $this->abort(401, 'No bearer token provided');
         }
 
-        $payload = $this->verifyJwt($m[1]);
+        $payload = self::verifyToken($m[1]);
         if ($payload === null) {
             $this->abort(401, 'Invalid or expired token');
         }
@@ -54,8 +54,19 @@ class JwtAuthMiddleware
 
     /**
      * Verify an HS256 JWT and return its payload, or null on failure.
+     *
+     * Public and static because tokens do not only arrive in an Authorization
+     * header. Anything holding a raw token — an impersonation form post, a
+     * queued job, a CLI tool — needs to verify it without going through the
+     * request pipeline, and JwtService deliberately issues only.
+     *
+     * Returns null rather than throwing: an invalid token is an expected
+     * condition, not an exceptional one. Callers decide what to do about it.
+     *
+     * @param string $token Raw JWT (no "Bearer " prefix)
+     * @return array<string, mixed>|null Decoded claims, or null if invalid or expired
      */
-    private function verifyJwt(string $token): ?array
+    public static function verifyToken(string $token): ?array
     {
         $parts = explode('.', $token);
         if (count($parts) !== 3) {
