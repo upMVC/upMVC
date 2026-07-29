@@ -13,6 +13,8 @@ class Application
     private static ?self $instance = null;
 
     private string $appRoot;
+    private string $kernelMigrationPath = '';
+    private string $appMigrationPath = '';
     private array $modulePaths = [];
     private array $migrationPaths = [];
     private array $protectedRoutes = [];
@@ -28,6 +30,11 @@ class Application
         );
 
         $this->addModulePath($this->path('src/Modules'));
+
+        // The kernel ships its own migrations (users). dirname(__DIR__, 2) resolves
+        // to the kernel root whether it sits in the project root or under vendor/.
+        $this->kernelMigrationPath = $this->normalizePath(dirname(__DIR__, 2) . '/database/migrations');
+        $this->appMigrationPath    = $this->normalizePath($this->path('database/migrations'));
     }
 
     public static function getInstance(?string $appRoot = null): self
@@ -102,6 +109,37 @@ class Application
     public function getMigrationPaths(): array
     {
         return $this->migrationPaths;
+    }
+
+    /**
+     * Return migration paths in run order: kernel → packages → app.
+     *
+     * The order matters and is NOT the same as getModulePathsForRoutes().
+     * There the app is scanned last so it can override package routes; here the
+     * app runs last because its migrations may depend on both the kernel and any
+     * installed packages — e.g. the SaaS pack's refresh_tokens declares a foreign
+     * key to the kernel's users table.
+     *
+     * Only directories that actually exist are returned.
+     *
+     * @return array<int, string>
+     */
+    public function getMigrationPathsForRun(): array
+    {
+        $ordered = [$this->kernelMigrationPath];
+
+        foreach ($this->migrationPaths as $path) {
+            if ($path !== $this->kernelMigrationPath && $path !== $this->appMigrationPath) {
+                $ordered[] = $path;
+            }
+        }
+
+        $ordered[] = $this->appMigrationPath;
+
+        return array_values(array_unique(array_filter(
+            $ordered,
+            static fn(string $path): bool => $path !== '' && is_dir($path)
+        )));
     }
 
     public function addProtectedRoute(string $route): void

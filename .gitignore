@@ -54,10 +54,18 @@ cache/
 !src/Etc/Cache/**
 *.cache
 
-# Database dumps
+# Database dumps (ad-hoc exports, backups)
 *.sql
 *.db
 *.sqlite
+
+# ...but versioned schema artifacts must ship with the repo
+!/database/migrations/*.sql
+!/database/schema.sql
+!/database/seed.sql
+
+# Runtime state written by the app / CLI tools
+/storage/rate-limits/
 
 # Uploaded files (if not needed in repo)
 uploads/
@@ -124,3 +132,5 @@ error_log
 # PHP specific
 composer.phar
 /vendor/
+# Local safety copies of retired SQL files
+/database/junk/
