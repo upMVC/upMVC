@@ -91,7 +91,25 @@ class AgentPackTest extends TestCase
 
         $this->assertIsString($knowledge['meta']['version'] ?? null);
         $this->assertNotEmpty($knowledge['meta']['version'] ?? null);
-        $this->assertStringContainsString('v2.3', (string) ($knowledge['meta']['verified_against'] ?? ''));
+
+        // Derive the current version from the newest CHANGELOG heading rather
+        // than hardcoding it. A literal string here has to be hand-edited on
+        // every release, and forgetting is exactly how this guard went stale —
+        // it still expected v2.3 after v2.4.0 shipped.
+        $changelog = (string) file_get_contents($this->root . '/CHANGELOG.md');
+        preg_match('/^## (v\d+\.\d+)/m', $changelog, $m);
+
+        $currentMinor = $m[1] ?? null;
+        $this->assertNotNull(
+            $currentMinor,
+            'No "## vX.Y" release heading found in CHANGELOG.md'
+        );
+
+        $this->assertStringContainsString(
+            $currentMinor,
+            (string) ($knowledge['meta']['verified_against'] ?? ''),
+            "The agent pack claims to be verified against a different version than the latest release ($currentMinor). Update verified_against in docs/agent/*.json."
+        );
 
         $rulesBlob = json_encode($rules);
         $this->assertIsString($rulesBlob);

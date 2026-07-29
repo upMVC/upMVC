@@ -132,7 +132,7 @@ class Cache
      * // Cache for 5 minutes
      * Cache::set('api_response', $data, 300);
      */
-    public static function set(string $key, $value, int $ttl = null): bool
+    public static function set(string $key, $value, ?int $ttl = null): bool
     {
         // Don't cache if disabled
         if (!Config::get('cache.enabled', false)) {

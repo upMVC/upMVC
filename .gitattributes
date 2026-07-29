@@ -1,2 +1,38 @@
 # Auto detect text files and perform LF normalization
 * text=auto
+
+# ---------------------------------------------------------------------------
+# Dist archive contents
+#
+# export-ignore applies to `git archive`, which is what Packagist serves for
+# BOTH `composer require` and `composer create-project`. Anything excluded here
+# is absent from every install — but stays in the repository, where it is read
+# on GitHub or fetched with `git clone`.
+#
+# src/Modules/ is deliberately NOT excluded: the demo modules are what make
+# `composer create-project` produce a working app, and one of them currently
+# serves the `/` route.
+# ---------------------------------------------------------------------------
+
+# Reference documentation — read on GitHub, never loaded at runtime.
+# docs/agent/ is kept: src/Tools/upmvc-next.php reads its JSON knowledge pack.
+/docs/*.md                export-ignore
+/docs/examples/           export-ignore
+/docs/install-as-library/ export-ignore
+/docs/routing/            export-ignore
+/docs/subjects/           export-ignore
+
+# Development-only tooling
+/tests/                   export-ignore
+/.github/                 export-ignore
+phpstan.neon              export-ignore
+phpunit.xml               export-ignore
+
+# A committed Composer binary (3.2 MB). Consumers already have Composer —
+# that is how they are installing this package.
+composer.phar             export-ignore
+
+# Repo-only scaffolding
+/zbug/                    export-ignore
+/.gitattributes           export-ignore
+/.gitignore               export-ignore

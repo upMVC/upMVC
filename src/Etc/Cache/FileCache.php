@@ -29,7 +29,7 @@ class FileCache implements CacheInterface
      */
     private int $defaultTtl;
 
-    public function __construct(string $cachePath = null, int $defaultTtl = 3600)
+    public function __construct(?string $cachePath = null, int $defaultTtl = 3600)
     {
         $this->cachePath = $cachePath ?? Application::getInstance()->path('storage/cache');
         $this->defaultTtl = $defaultTtl;

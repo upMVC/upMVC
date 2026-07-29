@@ -98,6 +98,8 @@ upMVC excels at integrating **pre-built JavaScript applications** from any frame
 > Unlike Laravel, Symfony, or other PHP frameworks, upMVC is a **system, not a framework**. No forced conventions, no ORM requirements, no framework rules. **"Direct PHP First"** principle means complete freedom. Want React in one module and Vue in another? ✅ Want to delete core modules? ✅ Want to split your app into multiple independent instances? ✅ True micro-frontends architecture that nobody else offers. Read: [Comparison with Other PHP Projects](docs/COMPARISON_PHP_FRAMEWORKS.md)
 
 > **📌 Note:** Included modules (admin, email, auth, react, etc.) are **reference implementations** showing different approaches to common problems. After installation, **you can delete any modules** you don't need - keep only what serves your project. Each module demonstrates different techniques (middleware vs manual auth checks, cached routes, etc.) to help you choose your preferred approach. See [Module Philosophy](docs/MODULE_PHILOSOPHY.md) for details.
+>
+> **One exception:** the `Test` module registers the `/` route, so deleting it leaves the site with no homepage. Either keep it until you have your own landing page, or move its `addRoute('/', …)` line into your replacement module first.
 
 ## 🚀 **Quick Navigation**
 
@@ -536,7 +538,7 @@ In the same file, modules/test/routes/Routes.php, you will see for demonstration
 #
 #
 ##
-## The provided modules (Mail and Authentication) are for illustrative purposes only. You can safely delete them, as well as any other existing modules. The goal is to demonstrate the modularity of the system and how you can create your own custom modules to suit your specific project needs.
+## The provided modules (Mail and Authentication) are for illustrative purposes only. You can safely delete them, as well as any other existing modules. The goal is to demonstrate the modularity of the system and how you can create your own custom modules to suit your specific project needs. The one to check before removing is `Test`, which currently registers the `/` route — move that line to your own module first, or the site is left without a homepage.
 
 ##
 

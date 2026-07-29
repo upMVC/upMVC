@@ -24,7 +24,7 @@ class Controller extends BaseController
     private Container $container;
     private EventDispatcher $eventDispatcher;
 
-    public function __construct(Container $container = null, EventDispatcher $eventDispatcher = null)
+    public function __construct(?Container $container = null, ?EventDispatcher $eventDispatcher = null)
     {
         // Demonstrate dependency injection
         $this->container = $container ?? new Container();

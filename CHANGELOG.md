@@ -2,6 +2,24 @@
 
 ## [Unreleased]
 
+### CI
+- **`.github/workflows/ci.yml`** — PHPStan and PHPUnit on every push and pull request, across PHP 8.1–8.4 with Composer caching. Neither tool needs a database, so the run is self-contained.
+  - PHP 8.4 is tested because `composer.json` declares `>=8.1`, but runs as `continue-on-error`: its new deprecations should report rather than block until the codebase is deliberately verified against it.
+  - The SaaS pack has a matching workflow that resolves `bitshost/upmvc` **from Packagist** rather than a local path repository — the run that proves the pack installs the way a stranger installs it.
+
+### Fixed
+- **PHP 8.4 compatibility** — implicitly nullable parameters are deprecated in 8.4. Corrected in `src/Etc/Cache/FileCache.php` (`?string $cachePath`), `src/Etc/Cache.php` (`?int $ttl`) and `src/Modules/Enhanced/Controller.php` (`?Container`, `?EventDispatcher`). `FileCache` matters most: it sits on the module-discovery cache path. Explicit nullable types have been valid since PHP 7.1, so nothing changes for 8.1–8.3.
+- **`tests/Unit/Tools/AgentPackTest.php`** — the agent-pack staleness guard hardcoded `v2.3`, so it failed the moment the pack was updated for the v2.4.0 release. It now derives the expected version from the newest `## vX.Y` heading in `CHANGELOG.md`, so it tracks releases automatically and still fails loudly if the agent pack falls behind.
+
+### Packaging
+- **`.gitattributes`** — excludes documentation, tests, CI config and the committed `composer.phar` from the distribution archive: **405 → 296 files, 7.1 MB → 3.0 MB**. Everything remains in the repository and is still available via `git clone`.
+  - `src/Modules/` is deliberately kept — the demo modules are what make `composer create-project` produce a working app.
+  - `docs/agent/` is deliberately kept — `src/Tools/upmvc-next.php` reads its JSON knowledge pack at runtime.
+  - Archives are built at tag time, so this takes effect from the next release; the published v2.4.0 zip is unchanged.
+
+### Docs
+- **`README.md`** — the "you can delete any modules you don't need" note now records that the `Test` module registers the `/` route, so removing it leaves the site without a homepage. Noted in both places the claim appears.
+
 ---
 
 ## v2.4.0 - Migration Runner, Database Tooling & Autoload Fixes (2026-07-29)
