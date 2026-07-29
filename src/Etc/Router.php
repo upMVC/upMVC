@@ -646,14 +646,22 @@ class Router
 
     /**
      * Handle 404 Not Found error
-     * 
-     * Displays 404 error page and sets up auto-redirect to home page.
-     * 
+     *
+     * Sends a real 404 status, then displays the error page with an
+     * auto-redirect to the home page.
+     *
+     * The status matters as much as the page: without it every missing route
+     * answers 200, so API clients cannot tell "not found" from success without
+     * parsing the body, and crawlers index the error page as real content.
+     *
      * @param string $reqRoute The requested route that was not found
      * @return void
      */
     private function handle404($reqRoute)
     {
+        if (!headers_sent()) {
+            http_response_code(404);
+        }
         ?>
         <meta http-equiv="refresh" content="3; URL='<?php echo BASE_URL ?>'" />
         <?php

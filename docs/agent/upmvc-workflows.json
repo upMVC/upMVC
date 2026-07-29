@@ -96,6 +96,19 @@
         "php src/Tools/cache-cli.php clear:modules",
         "Verify CACHE_DRIVER in .env matches CacheManager usage"
       ]
+    },
+    "change_schema": {
+      "intent_keywords": ["table", "column", "schema", "migration", "database change", "add field"],
+      "steps": [
+        "php src/Tools/migrate.php --status — see what is applied and pending before changing anything",
+        "Create a NEW file in database/migrations/ — never edit an existing one. Name it with the next number and a unique basename (tracking is by bare filename across kernel, packages and app)",
+        "Write forward-only SQL: CREATE TABLE IF NOT EXISTS for new tables, ALTER TABLE for changes to existing ones. A snapshot cannot express an ALTER, which is why migrations exist alongside schema.sql",
+        "SaaS tables (tenant-scoped) belong in the pack's database/migrations/, not the kernel's — the kernel owns users only",
+        "php src/Tools/migrate.php — applies it and regenerates database/schema.sql automatically",
+        "Commit BOTH the new migration and the regenerated schema.sql",
+        "Never hand-edit schema.sql to reflect the change — it is derived output"
+      ],
+      "reference": "database/README.md"
     }
   },
   "intent_router": {
@@ -104,7 +117,9 @@
       { "user_says": "I need a bookings API for my SaaS", "workflow": "saas_domain_module" },
       { "user_says": "Add a contact form module", "workflow": "create_module" },
       { "user_says": "Why is my env not working", "workflow": "config_audit" },
-      { "user_says": "Hook in the saas pack", "workflow": "add_package_provider" }
+      { "user_says": "Hook in the saas pack", "workflow": "add_package_provider" },
+      { "user_says": "I need an invoices table", "workflow": "change_schema" },
+      { "user_says": "Add a status column to tenants", "workflow": "change_schema" }
     ]
   }
 }
