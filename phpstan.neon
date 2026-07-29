@@ -41,7 +41,7 @@ parameters:
             path: src/*
         # Generated test/scaffold modules — $model/$view/$container assigned but accessed via display() method
         -
-            message: '#Property App\\Modules\\(TestApi|TestAuth|TestBasic|TestCrud|TestParent|Testitems|Enhanced)\\Controller::\$(model|view|container) is never read, only written#'
+            message: '#Property App\\Modules\\Enhanced\\Controller::\$(model|view|container) is never read, only written#'
             path: 'src/Modules/**'
     bootstrapFiles:
         - vendor/autoload.php

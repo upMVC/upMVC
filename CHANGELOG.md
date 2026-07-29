@@ -19,6 +19,12 @@
   - Documents what it does *not* cover: `DashboardExample` creates its tables at runtime, and the `Test*` modules reference seven tables (`testapis`, `testauths`, `testbasics`, `testcruds`, `testdashboards`, `testitemss`, `testparents`) for which no definition exists anywhere in the project.
   - `Userorm` additionally needs the optional RedBean ORM: `composer require gabordemooij/redbean`. This is declared under `suggest` in `composer.json`, but the runtime failure (`Class "RedBeanPHP\R" not found`) does not say so.
 
+### Removed — generator skeleton modules
+- **`TestApi`, `TestAuth`, `TestBasic`, `TestCrud`, `TestDashboard`, `TestParent`, `Testitems`** — 79 files, 37% of all module code. Output of the PHP module generators removed in v2.3.7, left in a state that generator never finished: each hardcoded a table (`testapis`, `testauths`, `testbasics`, `testcruds`, `testdashboards`, `testitemss`, `testparents`) whose definition exists nowhere in the project, so every one of their ~26 routes returned a 500 on any installation. Six also shipped the same copy-pasted dead code — an "enhanced caching" pair of empty stub methods returning `null`.
+  - They demonstrated nothing that survives inspection, and modules are now scaffolded on demand from `docs/agent/upmvc-scaffolds.json` via `upmvc-next.php`, which is what replaced those generators.
+  - **`Test` is kept** — it registers the `/` route and serves the homepage.
+  - `phpstan.neon` — the ignore pattern listing those modules narrowed to `Enhanced`, the only remaining module it applies to.
+
 ### Packaging
 - **`.gitattributes`** — excludes documentation, tests, CI config and the committed `composer.phar` from the distribution archive: **405 → 296 files, 7.1 MB → 3.0 MB**. Everything remains in the repository and is still available via `git clone`.
   - `src/Modules/` is deliberately kept — the demo modules are what make `composer create-project` produce a working app.

@@ -136,7 +136,7 @@ Usage:
 
 Path: `src/Modules`
 
-Each folder under `Modules/` is a self-contained feature or domain (e.g. `Test`, `User`, `TestCrud`).
+Each folder under `Modules/` is a self-contained feature or domain (e.g. `Test`, `User`, `Product`).
 
 Typical structure:
 - `Controller.php` – HTTP entry points
