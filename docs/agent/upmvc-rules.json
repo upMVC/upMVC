@@ -2,7 +2,7 @@
   "meta": {
     "name": "upMVC Agent Rules",
     "version": "1.0.1",
-    "verified_against": "upMVC v2.3.6",
+    "verified_against": "upMVC v2.4.0",
     "severity": "These are hard constraints. Violations must be fixed before code is accepted."
   },
   "must": [

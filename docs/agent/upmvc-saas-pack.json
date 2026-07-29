@@ -2,7 +2,7 @@
   "meta": {
     "name": "upMVC SaaS Pack Knowledge",
     "version": "1.0.1",
-    "verified_against": "bitshost/upmvc-saas-pack + upMVC v2.3.6",
+    "verified_against": "bitshost/upmvc-saas-pack + upMVC v2.4.0",
     "applies_when": [
       "composer package bitshost/upmvc-saas-pack is installed",
       "src/Etc/packages.php registers BitsHost\\UpmvcSaas\\SaasServiceProvider",

@@ -4,6 +4,62 @@
 
 ---
 
+## v2.4.0 - Migration Runner, Database Tooling & Autoload Fixes (2026-07-29)
+
+First release since v2.1.0. Everything documented under v2.2.0–v2.3.7 was
+developed but never tagged, so this release publishes those changes together
+with the work below.
+
+**Upgrade notes**
+
+- `handle404()` now returns HTTP **404** instead of 200. Anything asserting a
+  200 response for a missing route will see the corrected status.
+- Three exception classes (`ValidationException`, `AuthenticationException`,
+  `AuthorizationException`) and seventeen event classes were removed. All were
+  unreachable by PSR-4 autoloading, so no correctly-loaded code could reference
+  them — but code relying on `Event.php` being loaded for its side effects will
+  need updating.
+- `vendor/` is no longer tracked in git. Run `composer install` after pulling.
+
+### Database & Migrations
+- **`src/Tools/migrate.php`** — New CLI migration runner. Collects migrations from every path registered on `Application`, in run order **kernel → packages → app**, tracks applied files in a `migrations` table, and regenerates `database/schema.sql` after each run.
+  - `--status` (applied / pending / missing), `--dump` (regenerate schema only), `--fresh` (dev reset), `--root=/path`
+  - `--baseline` — records migrations as applied **without running them**, for databases built by importing `schema.sql`. Refuses on an empty database, which would otherwise mark a schema as created when it never was.
+  - Rejects unknown options before touching the database. Previously an unrecognised flag fell through to a real migration run against whatever `.env` pointed at.
+  - Hard-errors on duplicate migration filenames across kernel/packages/app — tracking is by bare filename, so a collision silently skipped the second file.
+  - App-root detection skips candidates inside `vendor/`: a `path` repository install copies the package's own `vendor/`, so `vendor/bitshost/upmvc/vendor/autoload.php` was being mistaken for the application root.
+- **`src/Etc/Application.php`** — Registers the kernel's and app's own migration directories; new `getMigrationPathsForRun()` returns them in **kernel → packages → app** order. Deliberately the reverse of `getModulePathsForRoutes()`, because the SaaS pack's `refresh_tokens` declares a foreign key to the kernel's `users`.
+- **`database/schema.sql`** — New, **generated**. Full current structure for fresh installs; rewritten on every migrate so it cannot drift from the migrations.
+- **`database/seed.sql`** — New. Demo users (`admin`/`Admin5678!`, `demo` and `ghost`/`Test1234!`), with `ghost` inactive for testing the activation flow. Scoped deletes only.
+- **`database/README.md`** — New. Both install routes, flag reference, demo logins, and the never-edit-generated-files rule.
+- **`.gitignore`** — `*.sql` was hiding every migration from the repository, so a clone shipped no schema at all. Narrowed with `!/database/migrations/*.sql`, `!/database/schema.sql`, `!/database/seed.sql`; ad-hoc dumps stay ignored. Also ignores `/storage/rate-limits/`.
+- **Removed** duplicate SQL: `database/schema.sql` (old hand-written copy of `001_base_schema.sql`), `database/saas-schema.sql`, and `src/Etc/saas-schema.sql` — whose own header read *"This file has moved"* and had since diverged from it.
+- **Moved** `database/migrations/002_saas_layer.sql` and `database/saas-seed.sql` to the SaaS pack. `plans`, `tenants` and `refresh_tokens` are pack concerns; the kernel owns `users` only.
+
+### Authentication
+- **`src/Etc/Middleware/JwtAuthMiddleware.php`** — `verifyJwt()` promoted from `private` to **`public static verifyToken()`**. Tokens do not only arrive in an `Authorization` header: an impersonation form post, a queued job or a CLI tool holds a raw token and must verify it outside the request pipeline. There was previously no way to do so — `JwtService` issues only, by design, and the verifier was unreachable. Implementation unchanged (HS256, constant-time comparison, expiry check); it now returns `null` for callers to handle rather than being locked behind the middleware's `abort()`.
+- **`tests/Unit/Middleware/JwtAuthMiddlewareTest.php`** — 7 tests covering issue-then-verify round trip, tampered signatures, payloads re-signed with the wrong secret, expiry, absent `exp`, malformed input, and fail-closed behaviour when `JWT_SECRET` is unset.
+
+### Routing
+- **`src/Etc/Router.php`** — `handle404()` now sends a real `404` status. Every missing route previously answered **HTTP 200** with a meta-refresh, so API clients could not distinguish "not found" from success without parsing the body, and crawlers indexed the error page as content. Guarded with `headers_sent()`.
+
+### Autoloading (PSR-4)
+- **Removed** `src/Etc/Exceptions/Exceptions.php` — it re-declared four exceptions that already have their own working files, and orphaned three (`ValidationException`, `AuthenticationException`, `AuthorizationException`) that no code referenced and PSR-4 could never load. Loading it alongside the individual files would have fataled with *"Cannot declare class … already in use"*.
+- **`src/Etc/Events/UserRegistered.php`** — New. The one event class with an external caller (`Modules/Enhanced`) now autoloads properly instead of relying on `Event.php` happening to load first.
+- **`src/Etc/Events/Event.php`** — The remaining 17 event markers are parked as documentation, each listed beside the file where it would fire. Nothing in the kernel dispatches events yet — there is no shared `EventDispatcher` binding — so they were unreachable classes advertising a feature that does not run.
+- **`src/Etc/InitModsImproved.php`** — Removed an unused `RouteNotFoundException` import.
+
+### Repository
+- **Stopped tracking `vendor/`** — 196 files (184 of them `gabordemooij/redbean`, a `suggest`-only dependency) predated the `vendor/` ignore rule and were still committed. Restored by `composer install`.
+
+### AI Agent
+- **`docs/agent/upmvc-knowledge.json`** — New `database` section (file map, run order, both install routes, filename uniqueness, kernel/pack table ownership) and `cache_and_tools.migrate_cli`.
+- **`docs/agent/upmvc-rules.json`** — Never hand-edit `schema.sql`, never edit a released migration, never reuse a migration filename, and never split a multi-class file without checking callers first. Must add schema changes as new migrations; must `--baseline` after a `schema.sql` install.
+- **`docs/agent/upmvc-workflows.json`** — New `change_schema` recipe plus intent-router entries.
+- **`docs/agent/upmvc-saas-pack.json`**, **`upmvc-scaffolds.json`** — Corrected the SaaS domain module path to `src/Modules/Api/Modules/{Domain}/`. The documented `src/Modules/Api/{Domain}/` is never discovered by the kernel's globs, so following the docs produced routes that silently did not exist.
+
+---
+
 ## v2.3.7 - AI Agent Pack & Tools Cleanup (2026-07-02)
 
 ### AI Agent (AiAgent)

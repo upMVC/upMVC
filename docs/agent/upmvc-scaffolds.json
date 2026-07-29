@@ -2,7 +2,7 @@
   "meta": {
     "name": "upMVC Agent Scaffold Pack",
     "version": "1.0.0",
-    "verified_against": "upMVC v2.3.6",
+    "verified_against": "upMVC v2.4.0",
     "optional": true,
     "load_when": "User opts in via --scaffold, confirms at CLI prompt, or adds a Cursor rule. Not part of default agent context.",
     "replaces": "Legacy PHP generators (createmodule, modulegenerator, crudgenerator, ModuleGeneratorEnhanced) — removed from core repo"

@@ -2,7 +2,7 @@
   "meta": {
     "name": "upMVC Agent Knowledge Pack",
     "version": "1.0.1",
-    "verified_against": "upMVC v2.3.6",
+    "verified_against": "upMVC v2.4.0",
     "framework": "upMVC",
     "php_minimum": "8.1",
     "purpose": "Portable startup context for any AI agent working on upMVC or upMVC-SaaS projects",
