@@ -123,39 +123,45 @@ abstract class Event
     }
 }
 
-/**
- * User Events
+/*
+ * ---------------------------------------------------------------------------
+ * Event taxonomy — PARKED, not implemented.
+ *
+ * The kernel does not dispatch any of these yet: nothing binds a shared
+ * EventDispatcher, so there is no application-wide bus to publish to.
+ *
+ * Kept here as the intended taxonomy. To activate one, give it its own file
+ * (PSR-4 autoloads one class per file — declaring it below leaves it
+ * unreachable) and add the dispatch call at the site named beside it.
+ *
+ * UserRegistered is already live in UserRegistered.php.
+ *
+ * User events
+ *   UserLoggedIn        src/Modules/Auth, pack Api/Modules/Auth
+ *   UserLoggedOut       src/Modules/Auth, pack Api/Modules/Auth
+ *   UserUpdated         src/Modules/User
+ *   UserDeleted         src/Modules/User
+ *
+ * System events
+ *   RequestStarted      src/Etc/Start.php  (upMVC())
+ *   RequestCompleted    src/Etc/Start.php  (upMVC())
+ *   ErrorOccurred       src/Etc/ErrorHandler.php
+ *   CacheCleared        src/Etc/Cache/CacheManager.php  (forget/clearAll)
+ *   ConfigLoaded        src/Etc/Config/ConfigManager.php  (load)
+ *
+ * Module events
+ *   ModuleLoaded        src/Etc/InitModsImproved.php
+ *   ModuleInstalled     no install mechanism exists yet
+ *   ModuleUninstalled   no install mechanism exists yet
+ *
+ * Database events
+ *   DatabaseConnected   src/Etc/Database.php
+ *   QueryExecuted       src/Etc/Database.php
+ *   ModelCreated        src/Common/Bmvc/BaseModel.php
+ *   ModelUpdated        src/Common/Bmvc/BaseModel.php
+ *   ModelDeleted        src/Common/Bmvc/BaseModel.php
+ * ---------------------------------------------------------------------------
  */
-class UserRegistered extends Event {}
-class UserLoggedIn extends Event {}
-class UserLoggedOut extends Event {}
-class UserUpdated extends Event {}
-class UserDeleted extends Event {}
-
-/**
- * System Events
- */
-class RequestStarted extends Event {}
-class RequestCompleted extends Event {}
-class ErrorOccurred extends Event {}
-class CacheCleared extends Event {}
-class ConfigLoaded extends Event {}
-
-/**
- * Module Events
- */
-class ModuleLoaded extends Event {}
-class ModuleInstalled extends Event {}
-class ModuleUninstalled extends Event {}
-
-/**
- * Database Events
- */
-class DatabaseConnected extends Event {}
-class QueryExecuted extends Event {}
-class ModelCreated extends Event {}
-class ModelUpdated extends Event {}
-class ModelDeleted extends Event {}
 
 
 
