@@ -1,10 +1,10 @@
-# 📚 upMVC noFramework v2.3 – Complete Documentation
+# 📚 upMVC noFramework v2.4 – Complete Documentation
 
 > **Modern, lightweight PHP NoFramework with Islands Architecture for real-world PHP + JS systems**
 
-**Status: ✅ Production Ready (v2.3)** | **PHP 8.1+** | **PSR-4 Compliant** | **MIT License**
+**Status: ✅ Production Ready (v2.4)** | **PHP 8.1+** | **PSR-4 Compliant** | **MIT License**
 
-**v2.3:** Hardened auth & middleware, Router v2.0 (typed & validated routes with names), PSR-4 helpers, package/provider architecture, **AI Agent pack** for Cursor and other assistants, and a fully documented PHP + React/Vue *Islands Architecture*.
+**v2.4:** Migration runner with generated schema and seed data, hardened auth & middleware, Router v2.0 (typed & validated routes with names), PSR-4 helpers, package/provider architecture, **AI Agent pack** for Cursor and other assistants, and a fully documented PHP + React/Vue *Islands Architecture*.
 
 ## 🤖 AI Agent — built-in context for Cursor, Claude, and local LLMs
 
@@ -115,6 +115,9 @@ upMVC excels at integrating **pre-built JavaScript applications** from any frame
 
 ### **🔐 Security & Authentication:**
 - **[JWT Authentication Guide](docs/JWT_AUTHENTICATION.md)** — Opt-in JWT support: issue tokens with `JwtService`, protect API routes with `['jwt']` middleware, refresh token flow. Sessions are unaffected — JWT is an additional option for APIs and SPAs.
+
+### **🗄 Database & Migrations:**
+- **[Database Guide](database/README.md)** — Two ways in: import `database/schema.sql` + `database/seed.sql` for an instant working install, or run `php src/Tools/migrate.php` for tracked, repeatable migrations. Packages register their own migration paths and are picked up automatically. `schema.sql` is generated on every run, so it never drifts.
 
 ### **🤖 AI Agent:**
 - **[Agent Pack Guide](docs/AGENT_PACK.md)** — Full guide: core JSON pack, `upmvc-next.php`, optional scaffolds, Cursor/`AGENTS.md`
