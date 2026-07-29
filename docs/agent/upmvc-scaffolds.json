@@ -59,7 +59,9 @@
     },
     "saas_api": {
       "description": "Tenant-scoped API domain module (requires SaaS pack)",
-      "path": "src/Modules/Api/{Domain}/",
+      "path": "src/Modules/Api/Modules/{Domain}/",
+      "routes_path": "src/Modules/Api/Modules/{Domain}/Routes/Routes.php",
+      "discovery": "InitModsImproved scans Modules/*/Modules/*/Routes/Routes.php — the literal 'Modules' segment is required",
       "controller_extends": "BitsHost\\UpmvcSaas\\Http\\SaasApiController",
       "middleware": ["cors", "jwt"],
       "tenant_scope": "$this->user['tenant_id'] in all model queries"

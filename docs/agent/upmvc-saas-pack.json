@@ -34,7 +34,7 @@
     "order": "Pack scanned first, app modules last — app wins on route conflicts"
   },
   "pack_modules": {
-    "note": "Pack ships under vendor/.../src/Modules/. Your app adds domain modules under src/Modules/Api/{Domain}/",
+    "note": "Pack ships under vendor/.../src/Modules/. Your app adds domain modules under src/Modules/Api/Modules/{Domain}/ — the literal 'Modules' segment is required by the kernel glob",
     "pack_api_modules": "Api/Modules/Auth, Api/Modules/Plans, Api/Modules/Tenants, Api/Modules/Admin",
     "pack_web_modules": "Auth, Home, PlatformAdmin, TenantApp, TenantShop, Mail",
     "routes": {
@@ -89,7 +89,8 @@
   },
   "domain_module_contract": {
     "description": "Your SaaS-specific code — only layer you write per product",
-    "location": "src/Modules/Api/{Domain}/ (app repo — not inside vendor pack)",
+    "location": "src/Modules/Api/Modules/{Domain}/ (app repo — not inside vendor pack)",
+    "discovery_warning": "Depth matters. InitModsImproved scans */Routes/Routes.php, */Modules/*/Routes/Routes.php and */Modules/*/Modules/*/Routes/Routes.php only. src/Modules/Api/{Domain}/ is NOT discovered and fails silently.",
     "structure": ["Controller.php", "Model.php", "Routes/Routes.php"],
     "shared_modules_reused": ["Tenants", "Plans", "Auth", "PlatformAdmin", "TenantApp"]
   },
