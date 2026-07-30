@@ -83,18 +83,20 @@ public const DOMAIN_NAME = 'http://localhost';
 
 ### **Option A: PHP Built-in Server (Easiest)**
 ```bash
-# Start server on port 8000
-php -S localhost:8000
+# Start server on port 8000 — note the -t public
+php -S localhost:8000 -t public
 
 # Or with specific configuration
-APP_ENV=development php -S localhost:8000
+APP_ENV=development php -S localhost:8000 -t public
 ```
 
-### **Option B: Using Specific Directory**
-```bash
-# If upMVC is in subdirectory
-php -S localhost:8000 -t . index.php
-```
+`-t public` is required. The only entry point is `public/index.php`; there is
+no `index.php` at the project root, so serving the root directory returns 404
+for every URL including `/`.
+
+### **Option B: Apache / Nginx**
+Point the virtual host's document root at the project's `public/` directory —
+never at the project root, which would expose `src/Etc/.env`.
 
 ---
 
@@ -126,15 +128,25 @@ php src/Tools/upmvc-next.php --scaffold --goal "Create a Hello basic module"
 
 ### **Manual Creation:**
 
-#### **1. Create Directory (v2.0 layout):**
+> **Three things are not optional.** The kernel finds modules by scanning the
+> filesystem, so it can only find yours if all three match exactly:
+>
+> 1. the folder is `Routes/` — **capital R** (lowercase fails on Linux)
+> 2. the file is `Routes.php` — not `HelloRoutes.php`
+> 3. the namespace is `App\Modules\Hello\…` — mirroring the folder path
+>
+> Get one wrong and the module is skipped **silently**: no error, no log line,
+> just a 404 on your new route. Everything below already follows the rules.
+
+#### **1. Create Directory:**
 ```bash
-mkdir -p src/Modules/Hello/routes
+mkdir -p src/Modules/Hello/Routes
 ```
 
 #### **2. Create Controller (`src/Modules/Hello/Controller.php`):**
 ```php
 <?php
-namespace Hello;
+namespace App\Modules\Hello;
 
 class Controller
 {
@@ -147,37 +159,36 @@ class Controller
 }
 ```
 
-#### **3. Create Routes (`src/Modules/Hello/routes/Routes.php`):**
+#### **3. Create Routes (`src/Modules/Hello/Routes/Routes.php`):**
 ```php
 <?php
-namespace Hello\Routes;
+namespace App\Modules\Hello\Routes;
+
+use App\Modules\Hello\Controller;
 
 class Routes
 {
-    public static function addRoutes($router): void
+    public function routes($router)
     {
-        $router->addRoute('/hello', \Hello\Controller::class, 'display');
+        $router->addRoute('/hello', Controller::class, 'display');
     }
 }
 ```
 
-#### **4. Update Composer Autoloading:**
-Add to `composer.json` in the `autoload` section (v2.0 layout):
-```json
-{
-    "autoload": {
-        "psr-4": {
-            "Hello\\": "src/Modules/Hello/",
-            "Hello\\Routes\\": "src/Modules/Hello/routes/"
-        }
-    }
-}
-```
+The method must be called `routes()` (or `Routes()`) and must **not** be
+static — the kernel instantiates the class and calls the method on the object.
 
-#### **5. Regenerate Autoloader:**
+#### **4. Autoloading — nothing to do:**
+`composer.json` already maps `App\` to `src/`, so `App\Modules\Hello\Controller`
+resolves to `src/Modules/Hello/Controller.php` automatically. **Do not add
+per-module entries to `composer.json`** — they are unnecessary, and a module
+that needs them is a module whose namespace does not match its folder.
+
+#### **5. Regenerate the classmap (optimised autoloader only):**
 ```bash
 composer dump-autoload
 ```
+Only needed if you installed with `--optimize-autoloader` or `--classmap-authoritative`.
 
 ---
 
@@ -193,11 +204,33 @@ Your first module is working!
 Time: 2025-10-13 15:30:45
 ```
 
-### **If It Doesn't Work:**
-1. **Check URL:** Ensure you're visiting `/hello` not `/hello/`
-2. **Check logs:** Look for error messages
-3. **Verify autoloader:** Run `composer dump-autoload` again
-4. **Check case sensitivity:** Ensure proper capitalization
+### **If You Get a 404:**
+
+A 404 here almost always means the module was **not discovered**. Discovery is
+a filesystem scan, so it fails quietly — there is nothing in the logs, because
+from the kernel's point of view your module simply does not exist.
+
+Check these four, in order. Any one of them produces exactly this 404:
+
+| Check | Must be |
+|---|---|
+| Folder name | `Routes/` with a **capital R** |
+| File name | `Routes.php` — not `HelloRoutes.php` |
+| Namespace | `App\Modules\Hello\Routes` — mirrors the folder path |
+| Method | `public function routes($router)` — **not** `static`, not `addRoutes` |
+
+Confirm the kernel can see the file at all:
+
+```bash
+php -r 'foreach (glob("src/Modules/*/Routes/Routes.php") as $f) echo $f, PHP_EOL;'
+```
+
+If your module is not in that list, the problem is the folder or file name. If
+it **is** listed but the route still 404s, the problem is the namespace or the
+method name.
+
+Only after those: re-run `composer dump-autoload` (needed only with an
+optimised autoloader), and confirm you are visiting `/hello`, not `/hello/`.
 
 ---
 
@@ -225,7 +258,7 @@ your-app/
 - **`src/Etc/Start.php`** - NoFramework initialization  
 - **`src/Etc/Router.php`** - URL routing system
 - **`src/Modules/*/Controller.php`** - Handle requests
-- **`src/Modules/*/routes/Routes.php`** - Define URLs
+- **`src/Modules/*/Routes/Routes.php`** - Define URLs (capital `R`, exact filename)
 
 ---
 

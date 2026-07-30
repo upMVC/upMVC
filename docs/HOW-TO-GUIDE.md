@@ -105,19 +105,25 @@ php src/Tools/upmvc-next.php --scaffold --goal "Create a Blog CRUD module"
 
 ### **Manual Module Creation:**
 
-#### **1. Create Module Structure (v2.0 layout):**
+> **Discovery is a filesystem scan.** The kernel globs
+> `src/Modules/*/Routes/Routes.php`, so the folder must be `Routes/` with a
+> capital R, the file must be `Routes.php`, and the namespace must mirror the
+> path as `App\Modules\Mymodule\…`. Miss any of them and the module is skipped
+> **silently** — no error, no log line, just a 404 on every route it defines.
+
+#### **1. Create Module Structure:**
 ```
 src/Modules/Mymodule/
 ├── Controller.php
 ├── Model.php
 ├── View.php
-└── routes/Routes.php
+└── Routes/Routes.php        ← capital R, file named exactly Routes.php
 ```
 
 #### **2. Controller (`src/Modules/Mymodule/Controller.php`):**
 ```php
 <?php
-namespace Mymodule;
+namespace App\Modules\Mymodule;
 
 class Controller
 {
@@ -149,9 +155,9 @@ class Controller
 #### **3. Model (`src/Modules/Mymodule/Model.php`):**
 ```php
 <?php
-namespace Mymodule;
+namespace App\Modules\Mymodule;
 
-use upMVC\Database;
+use App\Etc\Database;
 
 class Model
 {
@@ -184,7 +190,7 @@ class Model
 #### **4. View (`src/Modules/Mymodule/View.php`):**
 ```php
 <?php
-namespace Mymodule;
+namespace App\Modules\Mymodule;
 
 class View
 {
@@ -228,39 +234,38 @@ class View
 }
 ```
 
-#### **5. Routes (`src/Modules/Mymodule/routes/Routes.php`):**
+#### **5. Routes (`src/Modules/Mymodule/Routes/Routes.php`):**
 ```php
 <?php
-namespace Mymodule\Routes;
+namespace App\Modules\Mymodule\Routes;
+
+use App\Modules\Mymodule\Controller;
 
 class Routes
 {
-    public static function addRoutes($router): void
+    public function routes($router)
     {
-        $router->addRoute('/mymodule', \Mymodule\Controller::class, 'display');
-        $router->addRoute('/mymodule/create', \Mymodule\Controller::class, 'create');
-        $router->addRoute('/mymodule/view/{id}', \Mymodule\Controller::class, 'view');
+        $router->addRoute('/mymodule', Controller::class, 'display');
+        $router->addRoute('/mymodule/create', Controller::class, 'create');
+        $router->addParamRoute('/mymodule/view/{id}', Controller::class, 'view');
     }
 }
 ```
 
-### **6. Update Composer Autoloading (v2.0 layout):**
-Add to `composer.json` (mapping your module into `src/Modules`):
-```json
-{
-    "autoload": {
-        "psr-4": {
-            "Mymodule\\": "src/Modules/Mymodule/",
-            "Mymodule\\Routes\\": "src/Modules/Mymodule/routes/"
-        }
-    }
-}
-```
+The method must be named `routes()` (or `Routes()`) and must **not** be static
+— the kernel instantiates the class, then calls the method on the instance.
+Parameterised paths like `{id}` go through `addParamRoute()`, not `addRoute()`.
 
-Then run:
-```bash
-composer dump-autoload
-```
+### **6. Autoloading — nothing to do:**
+`composer.json` already maps `App\` to `src/`, so `App\Modules\Mymodule\Controller`
+resolves to `src/Modules/Mymodule/Controller.php` with no configuration.
+
+**Do not add per-module PSR-4 entries.** They are unnecessary, and needing one
+is a sign the namespace does not mirror the folder — which is the same mistake
+that stops discovery from finding the module at all.
+
+Re-run `composer dump-autoload` only if you installed with
+`--optimize-autoloader` or `--classmap-authoritative`.
 
 ---
 
@@ -311,9 +316,9 @@ PHP_ENV=development php -S localhost:8000 -t . index.php
 ### **Using Dependency Injection:**
 ```php
 <?php
-namespace Mymodule;
+namespace App\Modules\Mymodule;
 
-use upMVC\Container\Container;
+use App\Etc\Container\Container;
 
 class Controller
 {
@@ -338,45 +343,64 @@ class Controller
 ```
 
 ### **Using Middleware:**
+
+Middleware is the **fourth argument** to `addRoute()` — an array of registered
+middleware names. There is no fluent `->middleware()` and no `group()`; the
+router builds a plain array of routes, and `addRoute()` returns nothing to
+chain from.
+
 ```php
-// In your module's Routes.php
-public static function addRoutes($router): void
+// In your module's Routes/Routes.php
+public function routes($router)
 {
-    // Add middleware to specific routes
-    $router->addRoute('/admin/mymodule', \Mymodule\Controller::class, 'admin')
-           ->middleware(['auth', 'csrf']);
-    
-    // Group routes with middleware
-    $router->group(['middleware' => ['auth']], function($router) {
-        $router->addRoute('/mymodule/edit/{id}', \Mymodule\Controller::class, 'edit');
-        $router->addRoute('/mymodule/delete/{id}', \Mymodule\Controller::class, 'delete');
-    });
+    // Attach middleware to a single route
+    $router->addRoute('/admin/mymodule', Controller::class, 'admin', ['auth', 'csrf']);
+
+    // Repeat the array to apply the same middleware to several routes
+    $router->addParamRoute('/mymodule/edit/{id}', Controller::class, 'edit', ['auth']);
+    $router->addParamRoute('/mymodule/delete/{id}', Controller::class, 'delete', ['auth']);
 }
 ```
+
+Names must already be registered. `csrf`, `rate_limit`, `cors`, `jwt` and
+`auth` are wired up in `src/Etc/Start.php`. An unregistered name throws
+`RuntimeException: Unknown route middleware '<name>'` on the first request that
+hits the route — a typo fails loudly rather than quietly dropping the
+protection you meant to add.
 
 ### **Using Events:**
 ```php
 <?php
-namespace Mymodule;
+namespace App\Modules\Mymodule;
 
-use upMVC\Events\EventDispatcher;
+use App\Etc\Events\EventDispatcher;
 
 class Controller
 {
     private EventDispatcher $events;
-    
+
+    public function __construct(?EventDispatcher $events = null)
+    {
+        $this->events = $events ?? new EventDispatcher();
+    }
+
     public function create()
     {
         $model = new Model();
         $item = $model->create($_POST);
-        
+
         // Dispatch event after creation
         $this->events->dispatch('item.created', ['item' => $item]);
-        
+
         header('Location: /mymodule');
     }
 }
 ```
+
+`dispatch()` takes a **string** event name plus a data array, or an `Event`
+object. The kernel itself dispatches nothing — the dispatcher exists for your
+modules to use, so `item.created` fires only if something calls `listen()` for
+it.
 
 ---
 
