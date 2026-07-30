@@ -50,6 +50,30 @@ Nothing is executed; the migrations are just recorded. From then on only
 genuinely new ones run. (Baselining an empty database is refused — that would
 record a schema as created when it never was.)
 
+## Write migrations to be re-runnable
+
+MySQL and MariaDB **commit DDL implicitly** — `CREATE`, `ALTER` and `DROP`
+cannot be rolled back. So if a migration contains several statements and one
+fails partway, the earlier ones are already applied and there is no undo. The
+runner does not wrap migrations in a transaction, because doing so would look
+like protection while providing none.
+
+The practical consequence: a failed migration is not recorded, so the next run
+replays the **whole file**. Write them so that is harmless.
+
+| Prefer | Over |
+|---|---|
+| `CREATE TABLE IF NOT EXISTS foo` | `CREATE TABLE foo` |
+| `INSERT IGNORE` / `ON DUPLICATE KEY UPDATE` | bare `INSERT` |
+| `DROP TABLE IF EXISTS foo` | `DROP TABLE foo` |
+
+`ALTER TABLE ... ADD COLUMN` has no `IF NOT EXISTS` in MySQL, so it is the one
+to keep alone in its own migration — then a failure has nothing before it to
+half-apply.
+
+If a migration does fail, `migrate.php` prints exactly what state you are in
+and how to recover.
+
 ## Files
 
 | File | Hand-written? | What |
@@ -57,6 +81,7 @@ record a schema as created when it never was.)
 | `migrations/001_base_schema.sql` | yes | `users` — the source of truth |
 | `schema.sql` | **no — generated** | full current structure |
 | `seed.sql` | yes | demo users |
+| `demo-modules.sql` | yes | tables the bundled demo modules need |
 
 **Never edit `schema.sql` by hand.** It's produced by `--dump`; edits are
 overwritten on the next migrate. Change the schema by adding a migration.

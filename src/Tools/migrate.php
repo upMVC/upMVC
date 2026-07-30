@@ -10,6 +10,10 @@
  *   php src/Tools/migrate.php --dump         # (re)generate database/schema.sql
  *   php src/Tools/migrate.php --baseline     # record migrations as applied WITHOUT running them
  *   php src/Tools/migrate.php --fresh        # drop tracking table and re-run all (dev only)
+ *
+ * --fresh drops only the `migrations` table, not your data. Every migration is
+ * then replayed against a database that still holds all its tables, so it is
+ * only safe when they are written to be re-runnable.
  *   php src/Tools/migrate.php --root=/path   # explicit app root (auto-detected otherwise)
  *
  * --baseline is for databases built by importing database/schema.sql rather
@@ -297,7 +301,31 @@ function runPending(PDO $pdo, array $migrations): void
             out("  OK     $name");
             $ran++;
         } catch (PDOException $e) {
-            fail("Migration '$name' failed: " . $e->getMessage());
+            // No transaction is attempted on purpose: MySQL and MariaDB issue an
+            // implicit commit on DDL, so CREATE/ALTER/DROP cannot be rolled back.
+            // Wrapping this in beginTransaction() would look safe and change
+            // nothing. The database may now be half-changed, and saying so is
+            // the only useful thing left to do.
+            fail(
+                "Migration '$name' failed.\n\n"
+                . "        Database said:\n"
+                . '          ' . str_replace("\n", "\n          ", $e->getMessage()) . "\n\n"
+                . "        File:\n"
+                . "          $file\n\n"
+                . "        STATE OF YOUR DATABASE\n"
+                . "          - This migration was NOT recorded, so it still counts as pending.\n"
+                . "          - Any statements in the file BEFORE the failing one have already\n"
+                . "            been applied and cannot be undone — MySQL commits DDL implicitly.\n"
+                . "          - Re-running now replays the whole file from the top. That is safe\n"
+                . "            for CREATE TABLE IF NOT EXISTS, but an ALTER TABLE that already\n"
+                . "            succeeded will fail the second time.\n\n"
+                . "        WHAT TO DO\n"
+                . "          1. Inspect the database and see how far the file actually got.\n"
+                . "          2. Either finish the change by hand and record the migration:\n"
+                . "               INSERT INTO migrations (filename) VALUES ('$name');\n"
+                . "             or undo the partial change so the file can run cleanly again.\n"
+                . "          3. Write migrations to be safely re-runnable — see database/README.md."
+            );
         }
     }
 

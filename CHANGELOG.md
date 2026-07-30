@@ -7,6 +7,12 @@
   - PHP 8.4 is tested because `composer.json` declares `>=8.1`, but runs as `continue-on-error`: its new deprecations should report rather than block until the codebase is deliberately verified against it.
   - The SaaS pack has a matching workflow that resolves `bitshost/upmvc` **from Packagist** rather than a local path repository — the run that proves the pack installs the way a stranger installs it.
 
+### Tests
+- **`tests/Integration/HttpStatusTest.php`** — new. Guards the HTTP status line the router sends: 404 for a missing route, 200 for a registered one, 405 with an `Allow` header for a route that exists but rejects the method.
+  - It boots PHP's built-in web server (`tests/Integration/fixtures/http-status-server.php`) because `http_response_code()` is a **no-op under the CLI SAPI** — it returns `false` and sets nothing. A conventional unit test therefore cannot tell a router that sends `404` apart from one that sends nothing at all, which is precisely how `handle404()` shipped a `200` for every missing route: the error page rendered correctly, and the wrong status behind it was invisible to the whole suite.
+  - The fixture wires up `Router` alone — no `Start`, no `.env`, no database — so it runs wherever the rest of the suite runs. It picks a free port from the OS, waits for the server to accept connections, and tears it down in `tearDownAfterClass`. If `proc_open` is unavailable or the server fails to start, the test skips rather than fails.
+  - Verified by reverting the fix: removing `http_response_code(404)` from `handle404()` turns the test red with `Failed asserting that 200 is identical to 404`. The companion assertion that the error page still renders stays **green** through that revert — the two are independent, which is exactly why the original bug survived visual inspection in a browser.
+
 ### Fixed
 - **PHP 8.4 compatibility** — implicitly nullable parameters are deprecated in 8.4. Corrected in `src/Etc/Cache/FileCache.php` (`?string $cachePath`), `src/Etc/Cache.php` (`?int $ttl`) and `src/Modules/Enhanced/Controller.php` (`?Container`, `?EventDispatcher`). `FileCache` matters most: it sits on the module-discovery cache path. Explicit nullable types have been valid since PHP 7.1, so nothing changes for 8.1–8.3.
 - **`tests/Unit/Tools/AgentPackTest.php`** — the agent-pack staleness guard hardcoded `v2.3`, so it failed the moment the pack was updated for the v2.4.0 release. It now derives the expected version from the newest `## vX.Y` heading in `CHANGELOG.md`, so it tracks releases automatically and still fails loudly if the agent pack falls behind.
@@ -18,6 +24,13 @@
   - Idempotent, unlike the originals — `Product/create_table.sql` used `INSERT INTO`, so re-importing it duplicated every row. Now `CREATE TABLE IF NOT EXISTS` and `INSERT IGNORE` throughout.
   - Documents what it does *not* cover: `DashboardExample` creates its tables at runtime, and the `Test*` modules reference seven tables (`testapis`, `testauths`, `testbasics`, `testcruds`, `testdashboards`, `testitemss`, `testparents`) for which no definition exists anywhere in the project.
   - `Userorm` additionally needs the optional RedBean ORM: `composer require gabordemooij/redbean`. This is declared under `suggest` in `composer.json`, but the runtime failure (`Class "RedBeanPHP\R" not found`) does not say so.
+
+### Migrations — honest failure reporting
+- **`src/Tools/migrate.php`** — when a migration fails, the runner now states what actually happened to the database instead of printing the raw PDO message and exiting.
+  - MySQL and MariaDB commit DDL implicitly, so a file whose third statement fails leaves the first two applied with no way to undo them. The migration is not recorded, so the next run replays the whole file — harmless for `CREATE TABLE IF NOT EXISTS`, fatal for an `ALTER TABLE` that already succeeded.
+  - No transaction is attempted, deliberately: `beginTransaction()` around DDL on MySQL looks like protection and provides none. The runner explains the situation and how to recover — inspect, then either finish by hand and record the migration, or undo the partial change.
+- **`database/README.md`** — a section on writing re-runnable migrations (`CREATE TABLE IF NOT EXISTS`, `INSERT IGNORE`, `DROP TABLE IF EXISTS`), and why `ALTER TABLE ... ADD COLUMN` — which has no `IF NOT EXISTS` in MySQL — belongs alone in its own migration.
+- **`--fresh`** — usage text now records that it drops only the tracking table, then replays every migration against a database that still holds all its data.
 
 ### Removed — generator skeleton modules
 - **`TestApi`, `TestAuth`, `TestBasic`, `TestCrud`, `TestDashboard`, `TestParent`, `Testitems`** — 79 files, 37% of all module code. Output of the PHP module generators removed in v2.3.7, left in a state that generator never finished: each hardcoded a table (`testapis`, `testauths`, `testbasics`, `testcruds`, `testdashboards`, `testitemss`, `testparents`) whose definition exists nowhere in the project, so every one of their ~26 routes returned a 500 on any installation. Six also shipped the same copy-pasted dead code — an "enhanced caching" pair of empty stub methods returning `null`.
