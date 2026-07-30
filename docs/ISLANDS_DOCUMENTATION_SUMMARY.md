@@ -399,7 +399,7 @@ Developers now have:
 ## 📁 Files Created Summary
 
 ```
-d:\GitHub\upMVC\docs\
+docs/
 ├── ISLANDS_ARCHITECTURE.md           # 8,000 words - Core guide
 ├── ISLANDS_ARCHITECTURE_INDEX.md     # 2,500 words - Master index
 ├── STATE_MANAGEMENT.md               # 3,000 words - State patterns

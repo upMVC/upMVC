@@ -16,21 +16,35 @@ function route(string $name, array $params = []): string {
 ```
 
 ### After (OOP - Current Implementation)
-```php
-namespace upMVC;
 
-class Helpers {
+The class lives at `src/Etc/Helpers/HelperFacade.php` and is named
+**`HelperFacade`**, in namespace `App\Etc\Helpers`:
+
+```php
+namespace App\Etc\Helpers;
+
+use App\Etc\Router;
+
+class HelperFacade {
     private static ?Router $router = null;
-    
+
     public static function setRouter(Router $router): void {
         self::$router = $router;
     }
-    
+
     public static function route(string $name, array $params = []): string {
         return self::$router->route($name, $params);
     }
 }
 ```
+
+> **Historical note.** An intermediate version of this class was called
+> `Helpers` and sat in a top-level `upMVC` namespace. Both are gone — the
+> namespace root is `App\`, and the facade is `HelperFacade`. The method names
+> and signatures did not change, so only the class name and import need
+> updating in older code. The individual helpers it delegates to
+> (`RouteHelper`, `UrlHelper`, `FormHelper`, `DataHelper`, `DebugHelper`,
+> `ResponseHelper`) each live in their own file in the same folder.
 
 ## Benefits
 
@@ -49,7 +63,7 @@ public function upMVC() {
     $router = new Router();
     
     // Initialize Helpers with router instance
-    Helpers::setRouter($router);
+    HelperFacade::setRouter($router);
     
     // ... rest of bootstrap
 }
@@ -57,23 +71,23 @@ public function upMVC() {
 
 ### In Controllers
 ```php
-namespace YourModule;
+namespace App\Modules\YourModule;
 
-use upMVC\Helpers;
+use App\Etc\Helpers\HelperFacade;
 
 class Controller {
     public function show($route, $method) {
-        $id = Helpers::request('id');
+        $id = HelperFacade::request('id');
         $user = $this->model->find($id);
         
-        Helpers::view('users/show', ['user' => $user]);
+        HelperFacade::view('users/show', ['user' => $user]);
     }
     
     public function store($route, $method) {
-        $data = Helpers::request();
+        $data = HelperFacade::request();
         $user = $this->model->create($data);
         
-        Helpers::redirect('user.show', ['id' => $user->id]);
+        HelperFacade::redirect('user.show', ['id' => $user->id]);
     }
 }
 ```
@@ -83,12 +97,12 @@ class Controller {
 <!DOCTYPE html>
 <html>
 <head>
-    <link rel="stylesheet" href="<?= \upMVC\Helpers::asset('css/style.css') ?>">
+    <link rel="stylesheet" href="<?= \App\Etc\Helpers\HelperFacade::asset('css/style.css') ?>">
 </head>
 <body>
-    <form method="POST" action="<?= \upMVC\Helpers::route('user.update', ['id' => $user->id]) ?>">
-        <?= \upMVC\Helpers::csrfField() ?>
-        <input type="text" name="name" value="<?= \upMVC\Helpers::old('name', $user->name) ?>">
+    <form method="POST" action="<?= \App\Etc\Helpers\HelperFacade::route('user.update', ['id' => $user->id]) ?>">
+        <?= \App\Etc\Helpers\HelperFacade::csrfField() ?>
+        <input type="text" name="name" value="<?= \App\Etc\Helpers\HelperFacade::old('name', $user->name) ?>">
         <button type="submit">Update</button>
     </form>
 </body>
@@ -99,21 +113,21 @@ class Controller {
 
 All methods are static:
 
-- `Helpers::route($name, $params)` - Generate URL from named route
-- `Helpers::url($path)` - Generate full URL with BASE_URL
-- `Helpers::asset($path)` - Generate asset URL
-- `Helpers::redirect($to, $params, $status)` - Redirect to URL or route
-- `Helpers::old($key, $default)` - Get old input value
-- `Helpers::csrfToken()` - Get CSRF token
-- `Helpers::csrfField()` - Generate CSRF hidden field
-- `Helpers::dd(...$vars)` - Dump and die
-- `Helpers::env($key, $default)` - Get environment variable
-- `Helpers::config($key, $default)` - Get config value
-- `Helpers::session($key, $default)` - Get session value
-- `Helpers::request($key, $default)` - Get request input
-- `Helpers::view($path, $data)` - Render view
-- `Helpers::abort($code, $message)` - Abort with HTTP status
-- `Helpers::json($data, $status)` - Return JSON response
+- `HelperFacade::route($name, $params)` - Generate URL from named route
+- `HelperFacade::url($path)` - Generate full URL with BASE_URL
+- `HelperFacade::asset($path)` - Generate asset URL
+- `HelperFacade::redirect($to, $params, $status)` - Redirect to URL or route
+- `HelperFacade::old($key, $default)` - Get old input value
+- `HelperFacade::csrfToken()` - Get CSRF token
+- `HelperFacade::csrfField()` - Generate CSRF hidden field
+- `HelperFacade::dd(...$vars)` - Dump and die
+- `HelperFacade::env($key, $default)` - Get environment variable
+- `HelperFacade::config($key, $default)` - Get config value
+- `HelperFacade::session($key, $default)` - Get session value
+- `HelperFacade::request($key, $default)` - Get request input
+- `HelperFacade::view($path, $data)` - Render view
+- `HelperFacade::abort($code, $message)` - Abort with HTTP status
+- `HelperFacade::json($data, $status)` - Return JSON response
 
 ## Testing
 
@@ -127,12 +141,12 @@ Expected output:
 Testing Helpers Class
 =====================
 
-✓ Helpers::setRouter() - OK
+✓ HelperFacade::setRouter() - OK
 ✓ Named route registered - OK
-✓ Helpers::route() generated: /users/123
+✓ HelperFacade::route() generated: /users/123
 ✓ URL generation correct - OK
-✓ Helpers::csrfToken() - OK (length: 64)
-✓ Helpers::csrfField() - OK
+✓ HelperFacade::csrfToken() - OK (length: 64)
+✓ HelperFacade::csrfField() - OK
 
 ✅ All tests passed!
 ```
@@ -142,7 +156,7 @@ Testing Helpers Class
 1. **Namespace Isolation** - No function name conflicts
 2. **Dependency Injection** - Clean router injection via `setRouter()`
 3. **IDE Support** - Full autocomplete and type hints
-4. **Testability** - Easy to mock `Helpers::$router` in tests
+4. **Testability** - Easy to mock `HelperFacade::$router` in tests
 5. **Consistency** - Matches upMVC's OOP architecture
 6. **No Globals** - No `global $router` pollution
 

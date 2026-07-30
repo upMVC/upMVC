@@ -37,13 +37,13 @@
 
 ### New Files (6)
 
-3. **src/Etc/helpers.php** ⭐
+3. **src/Etc/Helpers/HelperFacade.php** ⭐
    - route() - Generate URLs from named routes
    - url(), redirect(), csrf_field()
    - Plus 10+ helper functions
    - **Lines:** 250+
 
-4. **tests/RouterEnhancedTest.php** ⭐
+4. **tests/Unit/Routing/RouterTest.php** ⭐
    - Comprehensive test suite
    - Tests all 4 enhancements
    - **Tests:** 15+ test cases
@@ -118,7 +118,7 @@ $url = route('user.show', ['id' => 123]); // /users/123
 composer require --dev phpunit/phpunit
 
 # Run tests
-vendor/bin/phpunit tests/RouterEnhancedTest.php
+vendor/bin/phpunit tests/Unit/Routing/RouterTest.php
 
 # Expected: All tests pass ✅
 ```

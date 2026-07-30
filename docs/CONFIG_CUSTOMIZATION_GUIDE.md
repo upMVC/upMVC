@@ -11,7 +11,7 @@ All configuration in upMVC can be customized in **TWO PLACES** (in order of prio
 
 ## 📝 Method 1: Using .env File (RECOMMENDED)
 
-### Location: `d:\GitHub\upMVC\etc\.env`
+### Location: `src/Etc/.env`
 
 This is the **easiest and recommended way** to configure your application.
 
@@ -54,7 +54,7 @@ DB_PASS=your_password
 
 ## 🔧 Method 2: Config.php Fallbacks
 
-### Location: `d:\GitHub\upMVC\etc\Config.php`
+### Location: `src/Etc/Config.php`
 
 If `.env` is missing, these fallback values are used.
 
@@ -165,8 +165,8 @@ APP_DEBUG=false
 // Test script
 require_once 'vendor/autoload.php';
 
-use upMVC\Config;
-use upMVC\Config\Environment;
+use App\Etc\Config;
+use App\Etc\Config\Environment;
 
 echo "Site Path: " . Config::getSitePath() . "\n";
 echo "Domain: " . Config::getDomainName() . "\n";
@@ -352,9 +352,9 @@ echo Environment::get('SITE_PATH');  // What does this show?
 ### Problem: Can't find where to edit!
 
 **Quick reference:**
-- `.env` file: `d:\GitHub\upMVC\etc\.env`
-- Fallbacks: `d:\GitHub\upMVC\etc\Config.php` (lines 34-38)
-- Config array: `d:\GitHub\upMVC\etc\Config.php` (lines 57-77)
+- `.env` file: `src/Etc/.env`
+- Fallbacks: `src/Etc/Config.php` (lines 34-38)
+- Config array: `src/Etc/Config.php` (lines 57-77)
 
 ---
 

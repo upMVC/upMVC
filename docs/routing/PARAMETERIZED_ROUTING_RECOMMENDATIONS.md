@@ -591,8 +591,16 @@ public function route(string $name, array $params = []): string
 ```
 
 **Add global helper function:**
+
+> ✅ **Superseded — implemented differently.** This recommendation was met by
+> `App\Etc\Helpers\HelperFacade` (`src/Etc/Helpers/HelperFacade.php`), which
+> avoids the `global $router` this sketch relied on: `Start.php` injects the
+> router via `HelperFacade::setRouter()`. Use `HelperFacade::route(...)`. The
+> global-function form below was **never implemented** and `src/Etc/helpers.php`
+> does not exist.
+
 ```php
-// In src/Etc/helpers.php (create if doesn't exist)
+// Original proposal — for historical reference only, do not copy
 function route(string $name, array $params = []): string
 {
     global $router;  // Or use container
@@ -682,7 +690,7 @@ exit;
 ### Unit Tests Required
 
 ```php
-// tests/RouterTest.php
+// tests/Unit/Routing/RouterTest.php
 
 public function testValidationPatterns()
 {

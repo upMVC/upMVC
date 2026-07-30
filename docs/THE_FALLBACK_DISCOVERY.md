@@ -43,7 +43,7 @@ All values cached in Environment::$env
 ```php
 public static function getSitePath(): string
 {
-    if (class_exists('upMVC\Config\Environment')) {  // ← Always TRUE
+    if (class_exists('App\Etc\Config\Environment')) {  // ← Always TRUE
         return Environment::get('SITE_PATH', '/upMVCa');  // ← Executes this
         //                      ↑
         //                      Gets '/upMVC' from .env

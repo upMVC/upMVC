@@ -234,7 +234,7 @@ class Controller
 #### routes/Routes.php:
 ```php
 <?php
-use upMVC\Router;
+use App\Etc\Router;
 
 // Main React app route
 $router->addRoute('GET', '/myreactapp', ['Myreactapp\Controller', 'display']);

@@ -4,7 +4,7 @@
 <?php
 namespace upMVC;
 
-use upMVC\Config\Environment;
+use App\Etc\Config\Environment;
 
 class Config
 {
@@ -134,8 +134,8 @@ Returns: /upMVC ✅
 
 | File | Location | Purpose |
 |------|----------|---------|
-| `Config.php` | `d:\GitHub\upMVC\etc\Config.php` | Fallback values |
-| `.env` | `d:\GitHub\upMVC\etc\.env` | Primary config (RECOMMENDED) |
+| `Config.php` | `src/Etc/Config.php` | Fallback values |
+| `.env` | `src/Etc/.env` | Primary config (RECOMMENDED) |
 
 ---
 

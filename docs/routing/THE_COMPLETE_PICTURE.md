@@ -50,7 +50,7 @@ Let's follow a request from start to finish to understand the complete picture:
 ┌─────────────────────────────────────────────────────────────────────┐
 │ 4. index.php (APPLICATION ENTRY POINT)                              │
 │    require_once 'src/Etc/Start.php';                                    │
-│    $start = new upMVC\Start();                                      │
+│    $start = new App\Etc\Start();                                      │
 │    $start->upMVC();                                                 │
 └────────────────────────┬────────────────────────────────────────────┘
                          ↓
@@ -639,7 +639,7 @@ This is how the admin module worked with cached routes:
 ```php
 // modules/admin/routes/Routesc.php (Cached version)
 public function routes($router) {
-    $cacheFile = Application::getInstance()->path('storage/cache/admin_routes.php');
+    $cacheFile = Application::getInstance()->path('src/Etc/storage/cache/admin_routes.php');
     $cacheTTL = 3600; // 1 hour
     
     if (file_exists($cacheFile) && (time() - filemtime($cacheFile)) < $cacheTTL) {
@@ -818,23 +818,24 @@ public function routes($router) {
 
 **Perfect for Router V2:**
 ```php
-// API routes with type safety
-$router->group('/api', function($router) {
-    // Get user
-    $router->addParamRoute('/users/{id:int}', API\User\Controller::class, 'show', [], [
-        'id' => '\d+'
-    ])->name('api.user.show');
-    
-    // Get posts by user
-    $router->addParamRoute('/users/{userId:int}/posts', API\Post\Controller::class, 'index', [], [
-        'userId' => '\d+'
-    ])->name('api.user.posts');
-    
-    // Get specific post
-    $router->addParamRoute('/posts/{id:int}', API\Post\Controller::class, 'show', [], [
-        'id' => '\d+'
-    ])->name('api.post.show');
-});
+// API routes with type safety — write the /api prefix into each path;
+// there is no group() method, and addParamRoute() already buckets by
+// first segment internally.
+
+// Get user
+$router->addParamRoute('/api/users/{id:int}', API\User\Controller::class, 'show', [], [
+    'id' => '\d+'
+])->name('api.user.show');
+
+// Get posts by user
+$router->addParamRoute('/api/users/{userId:int}/posts', API\Post\Controller::class, 'index', [], [
+    'userId' => '\d+'
+])->name('api.user.posts');
+
+// Get specific post
+$router->addParamRoute('/api/posts/{id:int}', API\Post\Controller::class, 'show', [], [
+    'id' => '\d+'
+])->name('api.post.show');
 ```
 
 **Controller:**
@@ -1253,61 +1254,45 @@ Server status: Might crash! 💥
 
 **The best solution: Block bots BEFORE they reach the controller!**
 
+You do not need to write this — upMVC registers a `rate_limit` middleware in
+`src/Etc/Start.php` already. Attach it by name as the **fourth argument**:
+
 ```php
-// src/Etc/Middleware/RateLimitMiddleware.php
-namespace upMVC\Middleware;
+// src/Modules/Admin/Routes/Routes.php
+$router->addParamRoute(
+    '/admin/users/edit/{id:int}',
+    \App\Modules\Admin\Controller::class,
+    'display',
+    ['rate_limit'],        // 4th arg: middleware names
+    ['id' => '\d+']        // 5th arg: regex constraints
+)->name('admin.user.edit');
+```
 
-class RateLimitMiddleware
-{
-    private static $requests = [];
-    private static $maxRequests = 100;  // Max requests per IP
-    private static $timeWindow = 60;     // Per 60 seconds
-    
-    public static function handle()
-    {
-        $ip = $_SERVER['REMOTE_ADDR'];
-        $now = time();
-        
-        // Clean old requests
-        if (isset(self::$requests[$ip])) {
-            self::$requests[$ip] = array_filter(
-                self::$requests[$ip],
-                fn($timestamp) => $now - $timestamp < self::$timeWindow
-            );
-        } else {
-            self::$requests[$ip] = [];
-        }
-        
-        // Check limit
-        if (count(self::$requests[$ip]) >= self::$maxRequests) {
-            http_response_code(429);
-            header('Retry-After: ' . self::$timeWindow);
-            exit(json_encode([
-                'error' => 'Too Many Requests',
-                'message' => 'Rate limit exceeded. Try again later.',
-                'retry_after' => self::$timeWindow
-            ]));
-        }
-        
-        // Record this request
-        self::$requests[$ip][] = $now;
+The limit comes from config, defaulting to 100 requests per identifier:
+
+```php
+// src/Etc/Start.php — already wired, shown for reference
+$router->addMiddleware('rate_limit', function($route, $method) {
+    $identifier = $_SERVER['REMOTE_ADDR'] ?? 'unknown';
+    $limit = ConfigManager::get('security.rate_limit', 100);
+
+    if (!Security::rateLimit($identifier, $limit)) {
+        http_response_code(429);
+        echo 'Rate limit exceeded';
+        return false;    // returning false halts the pipeline
     }
-}
-
-// In src/Etc/Start.php - Apply BEFORE routing
-RateLimitMiddleware::handle();
-
-// Or apply to specific routes in modules/admin/routes/Routes.php
-$router->group('/admin/users', function($router) {
-    $router->middleware(function() {
-        RateLimitMiddleware::handle();
-    });
-    
-    $router->get('/edit/{id:int}', 'Admin\Controller@display')
-           ->where(['id' => '\d+'])
-           ->name('admin.user.edit');
+    return true;
 });
 ```
+
+For finer control inside a controller, `App\Etc\Security::rateLimit()` and
+`App\Common\Helpers\RateLimiter` are both available directly.
+
+> **Not real APIs:** `$router->group()`, `$router->middleware()`,
+> `$router->get()`, `->where()` and `'Controller@method'` strings do not exist
+> in upMVC. Middleware is the 4th argument to `addRoute()`/`addParamRoute()`,
+> constraints are the 5th, and controllers are passed as `Class::class` plus a
+> separate method name.
 
 **Result with middleware rate limiting:**
 ```

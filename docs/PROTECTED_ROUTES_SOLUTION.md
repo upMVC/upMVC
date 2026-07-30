@@ -237,12 +237,12 @@ class Start {
 
 namespace upMVC;
 
-use upMVC\Config\ConfigManager;
-use upMVC\Config\Environment;
-use upMVC\Exceptions\ErrorHandler;
-use upMVC\Middleware\AuthMiddleware;
-use upMVC\Middleware\LoggingMiddleware;
-use upMVC\Middleware\CorsMiddleware;
+use App\Etc\Config\ConfigManager;
+use App\Etc\Config\Environment;
+use App\Etc\Exceptions\ErrorHandler;
+use App\Etc\Middleware\AuthMiddleware;
+use App\Etc\Middleware\LoggingMiddleware;
+use App\Etc\Middleware\CorsMiddleware;
 
 class Start
 {

@@ -10,7 +10,7 @@ The Helpers class is automatically loaded via PSR-4 autoloader and initialized i
 
 ```php
 // In Start.php upMVC()
-Helpers::setRouter($router);
+HelperFacade::setRouter($router);
 ```
 
 **No manual include needed!** The `App\` namespace is mapped to `src/` in `composer.json` (PSR-4 single root), so the autoloader handles it automatically.
@@ -20,90 +20,90 @@ Helpers::setRouter($router);
 ### Routing & URLs
 
 ```php
-use upMVC\Helpers;
+use App\Etc\Helpers\HelperFacade;
 
 // Generate URL from named route
-$url = Helpers::route('user.show', ['id' => 123]);
+$url = HelperFacade::route('user.show', ['id' => 123]);
 // Returns: /users/123
 
 // Generate full URL with BASE_URL
-$fullUrl = Helpers::url('/api/products');
+$fullUrl = HelperFacade::url('/api/products');
 // Returns: http://localhost/upMVC/api/products
 
 // Generate asset URL
-$cssUrl = Helpers::asset('css/style.css');
+$cssUrl = HelperFacade::asset('css/style.css');
 // Returns: http://localhost/upMVC/css/style.css
 
 // Redirect to URL or named route
-Helpers::redirect('/dashboard');
-Helpers::redirect('user.show', ['id' => 123]);
-Helpers::redirect('user.show', ['id' => 123], 301); // Permanent redirect
+HelperFacade::redirect('/dashboard');
+HelperFacade::redirect('user.show', ['id' => 123]);
+HelperFacade::redirect('user.show', ['id' => 123], 301); // Permanent redirect
 ```
 
 ### Forms & Security
 
 ```php
 // Get CSRF token
-$token = Helpers::csrfToken();
+$token = HelperFacade::csrfToken();
 
 // Generate CSRF field for forms
-echo Helpers::csrfField();
+echo HelperFacade::csrfField();
 // Outputs: <input type="hidden" name="csrf_token" value="...">
 
 // Get old input (form repopulation after validation error)
-<input name="email" value="<?= Helpers::old('email') ?>">
+<input name="email" value="<?= HelperFacade::old('email') ?>">
 ```
 
 ### Session & Request
 
 ```php
 // Get session value
-$userId = Helpers::session('user_id');
-$userName = Helpers::session('user_name', 'Guest'); // With default
+$userId = HelperFacade::session('user_id');
+$userName = HelperFacade::session('user_name', 'Guest'); // With default
 
 // Get all session data
-$allSession = Helpers::session();
+$allSession = HelperFacade::session();
 
 // Get request input
-$email = Helpers::request('email');
-$search = Helpers::request('search', ''); // With default
+$email = HelperFacade::request('email');
+$search = HelperFacade::request('search', ''); // With default
 
 // Get all request data
-$allInput = Helpers::request();
+$allInput = HelperFacade::request();
 ```
 
 ### Configuration & Environment
 
 ```php
 // Get environment variable
-$debug = Helpers::env('APP_DEBUG', false);
-$apiKey = Helpers::env('API_KEY');
+$debug = HelperFacade::env('APP_DEBUG', false);
+$apiKey = HelperFacade::env('API_KEY');
 
 // Get configuration value
-$dbHost = Helpers::config('database.host', 'localhost');
-$appName = Helpers::config('app.name');
+$dbHost = HelperFacade::config('database.host', 'localhost');
+$appName = HelperFacade::config('app.name');
 ```
 
 ### Views & Responses
 
 ```php
 // Render a view
-Helpers::view('users/index', ['users' => $users]);
+HelperFacade::view('users/index', ['users' => $users]);
 
 // Return JSON response
-Helpers::json(['success' => true, 'data' => $users]);
-Helpers::json(['error' => 'Not found'], 404);
+HelperFacade::json(['success' => true, 'data' => $users]);
+HelperFacade::json(['error' => 'Not found'], 404);
 
 // Abort with HTTP status
-Helpers::abort(404, 'Page not found');
-Helpers::abort(403, 'Unauthorized');
+HelperFacade::abort(404, 'Page not found');
+HelperFacade::abort(403, 'Unauthorized');
 ```
 
 ### Debugging
 
 ```php
 // Dump and die
-Helpers::dd($user, $posts, $comments);
+HelperFacade::dd($user, $posts, $comments);
 ```
 
 ## In Controllers
@@ -111,41 +111,41 @@ Helpers::dd($user, $posts, $comments);
 ```php
 namespace YourModule;
 
-use upMVC\Helpers;
+use App\Etc\Helpers\HelperFacade;
 
 class Controller
 {
     public function show($route, $method)
     {
-        $id = Helpers::request('id');
+        $id = HelperFacade::request('id');
         
         if (!$id) {
-            Helpers::abort(400, 'ID required');
+            HelperFacade::abort(400, 'ID required');
         }
         
         $user = $this->model->find($id);
         
         if (!$user) {
-            Helpers::abort(404, 'User not found');
+            HelperFacade::abort(404, 'User not found');
         }
         
-        Helpers::view('users/show', ['user' => $user]);
+        HelperFacade::view('users/show', ['user' => $user]);
     }
     
     public function store($route, $method)
     {
-        $data = Helpers::request();
+        $data = HelperFacade::request();
         
         $user = $this->model->create($data);
         
-        Helpers::redirect('user.show', ['id' => $user->id]);
+        HelperFacade::redirect('user.show', ['id' => $user->id]);
     }
     
     public function api($route, $method)
     {
         $users = $this->model->all();
         
-        Helpers::json([
+        HelperFacade::json([
             'success' => true,
             'data' => $users
         ]);
@@ -159,13 +159,13 @@ class Controller
 <!DOCTYPE html>
 <html>
 <head>
-    <link rel="stylesheet" href="<?= \upMVC\Helpers::asset('css/style.css') ?>">
+    <link rel="stylesheet" href="<?= \App\Etc\Helpers\HelperFacade::asset('css/style.css') ?>">
 </head>
 <body>
-    <form method="POST" action="<?= \upMVC\Helpers::route('user.update', ['id' => $user->id]) ?>">
-        <?= \upMVC\Helpers::csrfField() ?>
+    <form method="POST" action="<?= \App\Etc\Helpers\HelperFacade::route('user.update', ['id' => $user->id]) ?>">
+        <?= \App\Etc\Helpers\HelperFacade::csrfField() ?>
         
-        <input type="text" name="name" value="<?= \upMVC\Helpers::old('name', $user->name) ?>">
+        <input type="text" name="name" value="<?= \App\Etc\Helpers\HelperFacade::old('name', $user->name) ?>">
         
         <button type="submit">Update</button>
     </form>
@@ -183,7 +183,7 @@ class Controller
 
 ## Migration from Procedural Functions
 
-If you had procedural helper functions, simply add `Helpers::` prefix:
+If you had procedural helper functions, simply add `HelperFacade::` prefix:
 
 ```php
 // Old (procedural)
@@ -192,15 +192,15 @@ redirect('/dashboard');
 csrf_field();
 
 // New (OOP)
-Helpers::route('user.show', ['id' => 123]);
-Helpers::redirect('/dashboard');
-Helpers::csrfField();
+HelperFacade::route('user.show', ['id' => 123]);
+HelperFacade::redirect('/dashboard');
+HelperFacade::csrfField();
 ```
 
 Or use `use` statement for cleaner code:
 
 ```php
-use upMVC\Helpers as H;
+use App\Etc\Helpers\HelperFacade as H;
 
 H::route('user.show', ['id' => 123]);
 H::redirect('/dashboard');

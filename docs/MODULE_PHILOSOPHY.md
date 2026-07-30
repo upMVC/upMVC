@@ -193,21 +193,24 @@ private function handleRoute($reqRoute, $reqMet)
 For more granular control, implement route-specific middleware:
 
 ```php
-// In routes/Routes.php
+// In Routes/Routes.php  (capital R, file named exactly Routes.php)
+namespace App\Modules\Admin\Routes;
+
+use App\Modules\Admin\Controller;
+
 class Routes
 {
-    public static function register($router)
+    public function routes($router)      // not static, not register()
     {
-        $router->addRoute('/admin', Controller::class, 'display')
-            ->middleware(function() {
-                if (!isset($_SESSION["logged"])) {
-                    header('Location: ' . BASE_URL . '/auth');
-                    exit;
-                }
-            });
+        // 'auth' is registered in src/Etc/Start.php and does exactly this
+        // check — redirecting to /auth when the session is not logged in.
+        $router->addRoute('/admin', Controller::class, 'display', ['auth']);
     }
 }
 ```
+
+Middleware is the fourth argument. There is no `->middleware()` chaining —
+`addRoute()` returns nothing, so chaining off it is a fatal error.
 
 **Pros:**
 - ✅ Granular per-route control

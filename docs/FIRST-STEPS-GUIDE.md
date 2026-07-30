@@ -62,12 +62,16 @@ Generating autoload files
 
 ### **Create Environment File:**
 ```bash
-# Copy example environment file (if exists)
-cp src/Etc/.env.example .env
+# Copy the example — the destination is src/Etc/.env, not the project root.
+# That is the only location Environment reads.
+cp src/Etc/.env.example src/Etc/.env
+```
 
-# Or create basic .env file
-echo "APP_ENV=development" > .env
-echo "APP_DEBUG=true" >> .env
+Then set the two values that matter for a local run:
+
+```env
+SITE_PATH=            # empty when public/ is the document root
+DOMAIN_NAME=http://localhost
 ```
 
 ### **Verify Configuration:**
@@ -288,7 +292,7 @@ your-app/
 
 ### **🚨 Common Issues & Instant Fixes:**
 
-#### **"Class 'upMVC\Start' not found"**
+#### **"Class 'App\Etc\Start' not found"**
 ```bash
 composer install
 ```

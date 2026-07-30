@@ -2,6 +2,13 @@
 
 Complete guide to upMVC's lightweight parameterized routing feature.
 
+> **Note.** The alternate implementations this guide refers to for comparison —
+> `Routesc.php` / `Controllerc.php` (cached) and `Routesd.php` /
+> `Controllerd.php` (basic) — have been removed from the repository.
+> `src/Modules/Admin/Routes/` now contains only `Routes.php`. The code samples
+> below still illustrate the two approaches; they are just no longer files you
+> can open.
+
 ## 📋 Table of Contents
 
 - [Overview](#overview)

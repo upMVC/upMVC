@@ -169,9 +169,9 @@ upMVC excels at integrating **pre-built JavaScript applications** from any frame
 - **[Evaluation Report](docs/routing/PARAMETERIZED_ROUTING_EVALUATION.md)** - Grade: A+ (90/100)
 - **[Future Recommendations](docs/routing/PARAMETERIZED_ROUTING_RECOMMENDATIONS.md)** - v2.1+ roadmap
 - **[Helpers Class Usage](docs/routing/HELPERS_CLASS_USAGE.md)** - OOP helper methods guide
-- **[Helper Functions Guide](docs/routing/HELPER_FUNCTIONS_GUIDE.md)** - ⭐ **NEW!** PSR-4 modular helper system
+- **[Helper Functions Guide](docs/routing/HELPER_FUNCTIONS_GUIDE.md)** - `HelperFacade` reference: routes, URLs, CSRF, config, responses
 
-### **🏗️ PSR-4 Helper Architecture (v1.4.7):**
+### **🏗️ PSR-4 Helper Architecture:**
 upMVC now features a modern PSR-4 compliant modular helper system:
 - **Modular Structure:** Each helper in its own class (RouteHelper, UrlHelper, FormHelper, etc.)
 - **Facade Pattern:** Unified access via `HelperFacade`
@@ -190,11 +190,15 @@ upMVC provides **5 routing strategies** for different scenarios:
 4. **Database-Driven Routes** - Dynamic routes from DB
 5. **Cached Database Routes** - DB routes with file caching
 
-**Router V2 Enhanced Features (v1.4.7):**
+**Router V2 Enhanced Features:**
 - ✅ **Type Casting:** `{id:int}`, `{price:float}`, `{active:bool}` - automatic type conversion
 - ✅ **Validation:** Regex constraints at router level (`['id' => '\d+']`)
-- ✅ **Named Routes:** Generate URLs from route names (`route('user.edit', ['id' => 5])`)
-- ✅ **Route Grouping:** Auto-prefix optimization for organized routes
+- ✅ **Named Routes:** `addParamRoute(...)->name('user.edit')`, then `$router->route('user.edit', ['id' => 5])`
+- ✅ **Prefix Grouping:** routes are bucketed by first segment internally to speed up matching — an optimisation, not a `group()` API
+
+> Only `addParamRoute()` is chainable (it returns `$this`). `addRoute()` returns
+> nothing, so `addRoute(...)->name(...)` is a fatal error — attach middleware and
+> methods through its 4th and 5th arguments instead.
 
 **Quick Example:**
 ```php
@@ -230,31 +234,29 @@ Rasmus Lerdorf: PHP NoFrameworks all suck!
 
 # 📦 Installation
 
-> **Entry Point (Standalone Projects, v2.0)**  
-> When you create a new project with `composer create-project bitshost/upmvc`,
-> the canonical HTTP entry point is `public/index.php`. The root `index.php`
-> is kept for library-style installs (when you copy the file into an existing
-> project root). For a clean standalone deployment, point your web server
-> document root to the `public/` directory.
+> **Entry Point**  
+> The only HTTP entry point is `public/index.php`. There is no `index.php` at
+> the project root. Point your web server's document root at `public/` — never
+> at the project root, which would expose `src/Etc/.env`.
 
 ## Option 1: Install as a Library (Recommended for existing projects)
 
-Add upMVC to your existing project in **4 simple steps:**
+Add upMVC to your existing project:
 
 ```bash
 # Step 1: Install via Composer
 composer require bitshost/upmvc
 # Alternative versions:
-# composer require bitshost/upmvc:^1.0  (recommended - all 1.x updates)
+# composer require bitshost/upmvc:^2.4  (pin the current minor)
 # composer require bitshost/upmvc:dev-main  (bleeding edge - risky!)
 
-# Step 2: Copy essential files to project root
-copy vendor/bitshost/upmvc/index.php .
-copy vendor/bitshost/upmvc/.htaccess .
+# Step 2: Copy the entry point into your own public directory
+cp vendor/bitshost/upmvc/public/index.php public/
+cp vendor/bitshost/upmvc/public/.htaccess public/
 
-# Step 3: Create .env at your project root (copy from the example)
-# cp vendor/bitshost/upmvc/src/Etc/.env.example .env
-# Edit .env with required settings:
+# Step 3: Create the .env the framework reads
+cp vendor/bitshost/upmvc/src/Etc/.env.example vendor/bitshost/upmvc/src/Etc/.env
+# Edit that file with the required settings:
 # - SITE_PATH=/your-folder-name (e.g., /myproject)
 # - DOMAIN_NAME=localhost (or your domain)
 #
@@ -263,12 +265,19 @@ copy vendor/bitshost/upmvc/.htaccess .
 # - Framework works without database for static/API projects
 ```
 
-**That's it!** 🎉 Run with:
+> **Note on `.env` location.** The `Environment` class currently reads
+> `src/Etc/.env` **relative to the package**, so on a library install that file
+> lives inside `vendor/`. See
+> [docs/install-as-library/](docs/install-as-library/) for the full picture and
+> an advanced `Environment` variant that supports a per-install `.env` outside
+> `vendor/`.
+
+**Run it with:**
 ```bash
-php -S localhost:8080
+php -S localhost:8080 -t public
 ```
 
-**Visit:** `http://localhost:8080` - All 16 modules will be automatically loaded and registered!
+**Visit:** `http://localhost:8080` — all 16 bundled modules are discovered and registered automatically.
 
 ## Option 2: Install as a Standalone Project (Even Simpler!)
 
@@ -283,14 +292,10 @@ composer create-project bitshost/upmvc yourProjectName
 # Step 2: Navigate to project
 cd yourProjectName
 
-# (Recommended v2.0) If you use public/ as web server document root:
-# cd public
-
-# Step 3: Configure .env (copy from example if not present)
-# cp src/Etc/.env.example .env
+# Step 3: Configure .env — note the destination: src/Etc/.env, not the root
+# cp src/Etc/.env.example src/Etc/.env
 # Edit these 2 required settings:
-# - SITE_PATH=/yourProjectName          # if document root is project root
-#   or SITE_PATH=/yourProjectName/public # if document root points to public/
+# - SITE_PATH=/yourProjectName/public   # document root should point at public/
 #   or SITE_PATH=                       # if the app is at domain root
 # - DOMAIN_NAME=http://localhost
 
@@ -322,18 +327,15 @@ cd yourProjectName
 # - Configure database only when you need it for your modules
 ```
 
-**That's it!** 🎉 Run with (choose one):
+**That's it!** 🎉 Run with:
 ```bash
-# A) Serve from project root (uses index.php in root)
-php -S localhost:8081
-
-# B) Recommended v2.0: serve public/ as document root
 php -S localhost:8081 -t public
 ```
 
-**Visit:**
-- If using root as document root: `http://localhost:8081/yourProjectName`
-- If using public/ as document root: `http://localhost:8081` (or adjust for SITE_PATH)
+`-t public` is required — `public/index.php` is the only entry point, so serving
+the project root returns 404 for every URL, including `/`.
+
+**Visit:** `http://localhost:8081` (or adjust for `SITE_PATH`)
 
 **Note:** Everything is included - no copying files needed! Just configure `.env` and run.
 
@@ -407,7 +409,7 @@ php .\src\Tools\cache-cli.php clear:all
 Affected components:
 - Module discovery cache used by `src/Etc/InitModsImproved.php` in production mode.
 - Admin dynamic route cache file: `src/Etc/storage/cache/admin_routes.php`.
-- All instantiated cache stores via `upMVC\Cache\CacheManager::clearAll()`.
+- All instantiated cache stores via `App\Etc\Cache\CacheManager::clearAll()`.
 
 Exit codes: `0` success, `1` failure, `2` unknown command.
 
@@ -532,7 +534,7 @@ In the same file, modules/test/routes/Routes.php, you will see for demonstration
 
 # Steps
 #
- - Copy `.env.example` from `src/Etc/` to the project root as `.env` and fill in `SITE_PATH`, `DOMAIN_NAME`, and database credentials.
+ - Copy `src/Etc/.env.example` to `src/Etc/.env` — it stays in that folder, which is where `Environment` reads it — and fill in `SITE_PATH`, `DOMAIN_NAME`, and database credentials.
  - For mail: configure `src/Modules/Mail/MailController.php` with your SMTP settings (or use `.env` `MAIL_*` keys).
  - Make your module in the MVC style (model, view, controller).
  - You may or may not wish to utilize BASE MODEL, BASE VIEW and BASE CONTROLLER from `src/Common/Bmvc/`.
@@ -553,7 +555,7 @@ In the same file, modules/test/routes/Routes.php, you will see for demonstration
 ## Considering recommendations:
  - Model, View, Controller - will be called without using module name in their name. For example, module name = books:
  - Model.php - class Model; View.php - class View; Controller.php - class Controller;
- - and make a distinctive namespace for each module - namespace Modulename - e.g. Books;
+ - and make a distinctive namespace for each module, mirroring its folder - e.g. `namespace App\Modules\Books;`
  - Your module routes should be kept under `src/Modules/YourModule/Routes/Routes.php`:
    - `Routes.php` class `Routes` in `src/Modules/Books/Routes/`
    - namespace `App\Modules\Books\Routes`

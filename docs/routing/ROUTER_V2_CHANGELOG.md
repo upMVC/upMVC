@@ -139,12 +139,12 @@ redirect('user.edit', ['id' => $userId]);
 
 **Helper Class Methods:**
 ```php
-Helpers::route('user.show', ['id' => 123]);  // Generate URL
-Helpers::redirect('user.show', ['id' => 123]); // Redirect to route
+HelperFacade::route('user.show', ['id' => 123]);  // Generate URL
+HelperFacade::redirect('user.show', ['id' => 123]); // Redirect to route
 
 // Or with use statement
-use upMVC\Helpers;
-Helpers::route('user.show', ['id' => 123]);
+use App\Etc\Helpers\HelperFacade;
+HelperFacade::route('user.show', ['id' => 123]);
 ```
 
 ---
@@ -167,13 +167,13 @@ Helpers::route('user.show', ['id' => 123]);
    - Initialize Helpers class with router instance
    - Clean OOP dependency injection (no globals)
 
-3. **src/Etc/helpers.php** (NEW)
+3. **src/Etc/Helpers/HelperFacade.php** (NEW)
    - OOP Helpers class with static methods
    - PSR-4 autoloaded (no manual includes)
-   - `Helpers::route()` - Generate URL from named route
-   - `Helpers::url()` - Generate full URL with BASE_URL
-   - `Helpers::redirect()` - Redirect to URL or named route
-   - `Helpers::csrfField()` - Generate CSRF hidden input
+   - `HelperFacade::route()` - Generate URL from named route
+   - `HelperFacade::url()` - Generate full URL with BASE_URL
+   - `HelperFacade::redirect()` - Redirect to URL or named route
+   - `HelperFacade::csrfField()` - Generate CSRF hidden input
    - Plus 10+ more helper methods
 
 4. **zbug/test_helpers.php** (NEW)
@@ -306,7 +306,7 @@ $userId = $_GET['id']; // Already validated and casted!
 vendor/bin/phpunit
 
 # Run router tests only
-vendor/bin/phpunit tests/RouterEnhancedTest.php
+vendor/bin/phpunit tests/Unit/Routing/RouterTest.php
 
 # Run specific test
 vendor/bin/phpunit --filter testValidationPattern

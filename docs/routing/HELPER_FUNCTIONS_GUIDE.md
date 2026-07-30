@@ -1,95 +1,92 @@
-# Router V2 Helper Functions - Usage Guide
+# Router V2 Helpers — Usage Guide
 
-## Two Ways to Use Helpers
+> **Note on global functions.** Earlier drafts of this guide described a
+> procedural API — bare `route()`, `url()`, `csrf_field()` and friends — backed
+> by a `src/Etc/helpers_functions.php` loaded from `Start.php`. **That file was
+> never written and those functions do not exist.** Calling `route(...)` today
+> raises `Call to undefined function route()`. upMVC has no `files` entry in
+> `composer.json`, so nothing defines global functions at boot.
+>
+> The static facade below is the real, working API.
 
-Router V2 provides **TWO equivalent APIs** for maximum flexibility:
-
-### 1. Procedural API (Global Functions) ✨
-
-**Clean, simple, Laravel-like syntax:**
-
-```php
-// In controllers
-$url = route('user.show', ['id' => 123]);
-redirect('admin.dashboard');
-$fullUrl = url('/admin/users');
-
-// In views
-<a href="<?= route('user.edit', ['id' => $user['id']]) ?>">Edit</a>
-<form method="POST" action="<?= route('user.update', ['id' => $user['id']]) ?>">
-    <?= csrf_field() ?>
-    <input name="username" value="<?= old('username') ?>">
-</form>
-```
-
-### 2. OOP API (Static Methods)
-
-**Explicit, namespaced, modern PHP:**
+## The API: `HelperFacade`
 
 ```php
-use upMVC\Helpers;
+use App\Etc\Helpers\HelperFacade;
 
 // In controllers
-$url = Helpers::route('user.show', ['id' => 123]);
-Helpers::redirect('admin.dashboard');
-$fullUrl = Helpers::url('/admin/users');
+$url     = HelperFacade::route('user.show', ['id' => 123]);
+$fullUrl = HelperFacade::url('/admin/users');
+HelperFacade::redirect('admin.dashboard');
 
 // In views
-<a href="<?= Helpers::route('user.edit', ['id' => $user['id']]) ?>">Edit</a>
+<a href="<?= HelperFacade::route('user.edit', ['id' => $user['id']]) ?>">Edit</a>
 ```
+
+The class lives at `src/Etc/Helpers/HelperFacade.php`. It is a thin facade over
+the individual helper classes in the same folder — `RouteHelper`, `UrlHelper`,
+`FormHelper`, `DataHelper`, `DebugHelper`, `ResponseHelper` — which you can also
+use directly if you prefer.
+
+`HelperFacade::route()` needs the router instance, which `Start.php` injects
+during bootstrap via `HelperFacade::setRouter($router)`.
 
 ---
 
-## Complete Function Reference
+## Complete Method Reference
 
 ### Routing & URLs
 
-| Function | OOP Equivalent | Purpose | Example |
-|----------|----------------|---------|---------|
-| `route()` | `Helpers::route()` | Generate URL from named route | `route('user.show', ['id' => 1])` |
-| `url()` | `Helpers::url()` | Full URL with BASE_URL | `url('/admin/users')` |
-| `asset()` | `Helpers::asset()` | Asset URL | `asset('css/style.css')` |
-| `redirect()` | `Helpers::redirect()` | Navigate to URL/route | `redirect('admin.dashboard')` |
+| Method | Purpose | Example |
+|---|---|---|
+| `HelperFacade::route()` | Generate URL from named route | `HelperFacade::route('user.show', ['id' => 1])` |
+| `HelperFacade::url()` | Full URL with BASE_URL | `HelperFacade::url('/admin/users')` |
+| `HelperFacade::asset()` | Asset URL | `HelperFacade::asset('css/style.css')` |
+| `HelperFacade::redirect()` | Navigate to URL/route | `HelperFacade::redirect('admin.dashboard')` |
 
 ### Forms & Security
 
-| Function | OOP Equivalent | Purpose | Example |
-|----------|----------------|---------|---------|
-| `csrf_field()` | `Helpers::csrfField()` | CSRF hidden input | `<?= csrf_field() ?>` |
-| `csrf_token()` | `Helpers::csrfToken()` | Get CSRF token | `csrf_token()` |
-| `old()` | `Helpers::old()` | Form repopulation | `old('username')` |
+| Method | Purpose | Example |
+|---|---|---|
+| `HelperFacade::csrfField()` | CSRF hidden input | `<?= HelperFacade::csrfField() ?>` |
+| `HelperFacade::csrfToken()` | Get CSRF token | `HelperFacade::csrfToken()` |
+| `HelperFacade::old()` | Form repopulation | `HelperFacade::old('username')` |
 
 ### Data & Config
 
-| Function | OOP Equivalent | Purpose | Example |
-|----------|----------------|---------|---------|
-| `session()` | `Helpers::session()` | Get session value | `session('user_id')` |
-| `config()` | `Helpers::config()` | Get config value | `config('app.name')` |
-| `env()` | `Helpers::env()` | Get env variable | `env('DB_HOST')` |
+| Method | Purpose | Example |
+|---|---|---|
+| `HelperFacade::session()` | Get session value | `HelperFacade::session('user_id')` |
+| `HelperFacade::config()` | Get config value | `HelperFacade::config('app.name')` |
+| `HelperFacade::env()` | Get env variable | `HelperFacade::env('DB_HOST')` |
+| `HelperFacade::request()` | Get request input | `HelperFacade::request('id')` |
 
 ### Responses
 
-| Function | OOP Equivalent | Purpose | Example |
-|----------|----------------|---------|---------|
-| `view()` | `Helpers::view()` | Render view | `view('admin.dashboard', $data)` |
-| `abort()` | `Helpers::abort()` | HTTP error | `abort(404, 'Not found')` |
-| `json()` | `Helpers::json()` | JSON response | `json(['success' => true])` |
+| Method | Purpose | Example |
+|---|---|---|
+| `HelperFacade::view()` | Render view | `HelperFacade::view('admin.dashboard', $data)` |
+| `HelperFacade::abort()` | HTTP error | `HelperFacade::abort(404, 'Not found')` |
+| `HelperFacade::json()` | JSON response | `HelperFacade::json(['success' => true])` |
 
 ### Debugging
 
-| Function | OOP Equivalent | Purpose | Example |
-|----------|----------------|---------|---------|
-| `dd()` | N/A | Dump and die | `dd($user, $data)` |
-| `dump()` | N/A | Dump without dying | `dump($query)` |
+| Method | Purpose | Example |
+|---|---|---|
+| `HelperFacade::dd()` | Dump and die | `HelperFacade::dd($user, $data)` |
+| `HelperFacade::dump()` | Dump without dying | `HelperFacade::dump($query)` |
 
 ---
 
 ## Usage Examples
 
-### Named Routes with Global Functions
+### Named Routes
+
+Only `addParamRoute()` is chainable — it returns `$this`. `addRoute()` returns
+nothing, so `addRoute(...)->name(...)` is a fatal error.
 
 ```php
-// routes/Routes.php - Define named routes
+// Routes/Routes.php — define named routes
 $router->addParamRoute('/users/{id:int}', User\Controller::class, 'show', [], [
     'id' => '\d+'
 ])->name('user.show');
@@ -97,14 +94,17 @@ $router->addParamRoute('/users/{id:int}', User\Controller::class, 'show', [], [
 $router->addParamRoute('/users/{id:int}/edit', User\Controller::class, 'edit', [], [
     'id' => '\d+'
 ])->name('user.edit');
+```
 
-// Controller.php - Generate URLs
+```php
+// Controller.php — generate URLs
+use App\Etc\Helpers\HelperFacade;
+
 public function index() {
     $users = $this->model->getAllUsers();
-    
+
     foreach ($users as $user) {
-        // Generate edit URL for each user
-        $editUrl = route('user.edit', ['id' => $user['id']]);
+        $editUrl = HelperFacade::route('user.edit', ['id' => $user['id']]);
         echo "Edit: $editUrl\n";
     }
 }
@@ -113,8 +113,8 @@ public function index() {
 public function update($reqRoute, $reqMet) {
     $userId = $_GET['id'];
     $this->model->update($userId, $_POST);
-    
-    redirect('user.show', ['id' => $userId]);
+
+    HelperFacade::redirect('user.show', ['id' => $userId]);
 }
 ```
 
@@ -122,12 +122,14 @@ public function update($reqRoute, $reqMet) {
 
 ```php
 <!-- View: user_form.php -->
-<form method="POST" action="<?= route('user.update', ['id' => $user['id']]) ?>">
-    <?= csrf_field() ?>
-    
-    <input type="text" name="username" value="<?= old('username', $user['username']) ?>">
-    <input type="email" name="email" value="<?= old('email', $user['email']) ?>">
-    
+<?php use App\Etc\Helpers\HelperFacade; ?>
+
+<form method="POST" action="<?= HelperFacade::route('user.update', ['id' => $user['id']]) ?>">
+    <?= HelperFacade::csrfField() ?>
+
+    <input type="text" name="username" value="<?= HelperFacade::old('username', $user['username']) ?>">
+    <input type="email" name="email" value="<?= HelperFacade::old('email', $user['email']) ?>">
+
     <button type="submit">Update User</button>
 </form>
 ```
@@ -136,12 +138,14 @@ public function update($reqRoute, $reqMet) {
 
 ```php
 <!-- View: navigation.php -->
+<?php use App\Etc\Helpers\HelperFacade; ?>
+
 <nav>
-    <a href="<?= route('admin.dashboard') ?>">Dashboard</a>
-    <a href="<?= route('admin.users') ?>">Users</a>
-    
+    <a href="<?= HelperFacade::route('admin.dashboard') ?>">Dashboard</a>
+    <a href="<?= HelperFacade::route('admin.users') ?>">Users</a>
+
     <?php if ($currentUser): ?>
-        <a href="<?= route('user.profile', ['id' => $currentUser['id']]) ?>">
+        <a href="<?= HelperFacade::route('user.profile', ['id' => $currentUser['id']]) ?>">
             My Profile
         </a>
     <?php endif; ?>
@@ -151,139 +155,49 @@ public function update($reqRoute, $reqMet) {
 ### Debugging
 
 ```php
-// Controller.php
+use App\Etc\Helpers\HelperFacade;
+
 public function debug() {
-    $user = $this->model->find(1);
+    $user  = $this->model->find(1);
     $posts = $this->model->getPostsByUser(1);
-    
-    // Dump and die - stops execution
-    dd($user, $posts);
-    
-    // Or just dump and continue
-    dump($user);
+
+    HelperFacade::dd($user, $posts);      // dump and stop
+
+    HelperFacade::dump($user);            // dump and continue
     echo "Script continues...";
 }
 ```
 
 ---
 
-## Which API Should You Use?
+## Shortening the Call Site
 
-### Use Procedural API (Global Functions) When:
-- ✅ Writing views (cleaner syntax)
-- ✅ Quick prototyping
-- ✅ You prefer Laravel/Symfony style
-- ✅ Less typing, more readability
-
-### Use OOP API (Static Methods) When:
-- ✅ You prefer explicit imports
-- ✅ Working in namespaced code
-- ✅ IDE autocomplete is important
-- ✅ You prefer PSR style
-
-### Both Work Perfectly! 🎉
+If `HelperFacade::` is too long for your taste, alias it on import — this is
+plain PHP and needs no framework support:
 
 ```php
-// These are IDENTICAL:
-$url1 = route('user.show', ['id' => 123]);
-$url2 = Helpers::route('user.show', ['id' => 123]);
+use App\Etc\Helpers\HelperFacade as H;
 
-// Same result, different style preference
-echo $url1 === $url2; // true
+$url = H::route('user.show', ['id' => 123]);
+```
+
+Or import the specific helper you need:
+
+```php
+use App\Etc\Helpers\RouteHelper;
+
+$url = RouteHelper::route('user.show', ['id' => 123]);
 ```
 
 ---
 
-## Implementation Notes
+## Router V2 Feature Set
 
-### How It Works
-
-1. **helpers_functions.php** defines global functions
-2. Each function wraps the corresponding `Helpers::` method
-3. Loaded in `Start.php` before routing
-4. Both APIs available throughout application
-
-```php
-// src/Etc/helpers_functions.php
-function route(string $name, array $params = []): string
-{
-    return Helpers::route($name, $params);
-}
-```
-
-### Function Existence Check
-
-All functions use `function_exists()` to avoid conflicts:
-
-```php
-if (!function_exists('route')) {
-    function route(string $name, array $params = []): string {
-        return Helpers::route($name, $params);
-    }
-}
-```
-
-This allows you to override or disable specific functions if needed.
-
----
-
-## Migration from Helpers:: to Global Functions
-
-### Before (OOP API):
-```php
-use upMVC\Helpers;
-
-class Controller {
-    public function show($reqRoute, $reqMet) {
-        $userId = $_GET['id'];
-        $user = $this->model->find($userId);
-        
-        $editUrl = Helpers::route('user.edit', ['id' => $userId]);
-        $profileUrl = Helpers::url('/profile');
-        
-        if (!$user) {
-            Helpers::redirect('users.index');
-        }
-        
-        $data = ['user' => $user, 'editUrl' => $editUrl];
-        Helpers::view('user.show', $data);
-    }
-}
-```
-
-### After (Procedural API):
-```php
-class Controller {
-    public function show($reqRoute, $reqMet) {
-        $userId = $_GET['id'];
-        $user = $this->model->find($userId);
-        
-        $editUrl = route('user.edit', ['id' => $userId]);
-        $profileUrl = url('/profile');
-        
-        if (!$user) {
-            redirect('users.index');
-        }
-        
-        $data = ['user' => $user, 'editUrl' => $editUrl];
-        view('user.show', $data);
-    }
-}
-```
-
-**Cleaner, shorter, more readable!** ✨
-
----
-
-## Router V2 Complete Feature Set
-
-With global helper functions, Router V2 now provides:
-
-1. ✅ **Type Casting** - `{id:int}` auto-casts
-2. ✅ **Validation** - Regex constraints
-3. ✅ **Named Routes** - `->name('user.show')`
-4. ✅ **Route Grouping** - Auto prefix optimization
-5. ✅ **Global Helpers** - `route()`, `url()`, `redirect()`
-6. ✅ **OOP Helpers** - `Helpers::route()` still available
-
-**Full Router V2 implementation complete!** 🎉
+1. ✅ **Type Casting** — `{id:int}`, `{price:float}`, `{active:bool}` auto-cast
+2. ✅ **Validation** — regex constraints as the 5th argument to `addParamRoute()`
+3. ✅ **Named Routes** — `addParamRoute(...)->name('user.show')`
+4. ✅ **Prefix Grouping** — routes are bucketed by first segment internally to
+   speed up matching. This is an optimisation, not a `group()` API — no such
+   method exists.
+5. ✅ **Static Helpers** — `HelperFacade::route()` and friends
+6. ❌ **Global Functions** — not implemented; see the note at the top

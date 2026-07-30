@@ -166,7 +166,7 @@ $router->addParamRoute('/users/{id:int}/edit', User\Controller::class, 'edit')
         ->name('user.edit');
 
 // Generate URLs
-use upMVC\Helpers\HelperFacade;
+use App\Etc\Helpers\HelperFacade;
 
 $url = HelperFacade::route('user.show', ['id' => 123]);
 // Result: /users/123
@@ -175,25 +175,26 @@ $editUrl = HelperFacade::route('user.edit', ['id' => 123]);
 // Result: /users/123/edit
 ```
 
-#### Route Grouping
+#### Route Grouping (prefix convention)
+
+upMVC has **no `group()` method**. Write the shared prefix into each path —
+`addParamRoute()` already buckets routes by first segment internally, so you get
+the matching speed-up without an API for it.
 
 ```php
-// Group related routes with shared prefix
-$router->group('/admin', function($router) {
-    $router->addParamRoute('/users/{id:int}', Admin\User\Controller::class, 'show')
-            ->name('admin.user.show');
-    
-    $router->addParamRoute('/users/{id:int}/edit', Admin\User\Controller::class, 'edit')
-            ->name('admin.user.edit');
-    
-    $router->addParamRoute('/settings', Admin\Settings\Controller::class, 'index')
-            ->name('admin.settings');
-});
+$router->addParamRoute('/admin/users/{id:int}', Admin\User\Controller::class, 'show')
+        ->name('admin.user.show');
+
+$router->addParamRoute('/admin/users/{id:int}/edit', Admin\User\Controller::class, 'edit')
+        ->name('admin.user.edit');
+
+$router->addParamRoute('/admin/settings', Admin\Settings\Controller::class, 'index')
+        ->name('admin.settings');
 
 // Results in:
-// /admin/users/{id:int} → admin.user.show
+// /admin/users/{id:int}      → admin.user.show
 // /admin/users/{id:int}/edit → admin.user.edit
-// /admin/settings → admin.settings
+// /admin/settings            → admin.settings
 ```
 
 **Pros:**
@@ -245,7 +246,7 @@ public function routes($router)
 ```php
 public function routes($router)
 {
-    $cacheFile = Application::getInstance()->path('storage/cache/admin_routes.php');
+    $cacheFile = Application::getInstance()->path('src/Etc/storage/cache/admin_routes.php');
     $cacheTTL = 3600; // 1 hour
     
     // Check cache validity
@@ -282,7 +283,7 @@ public function createUser()
     $this->model->createUser($data);
     
     // Clear cache to rebuild routes
-    $cacheFile = Application::getInstance()->path('storage/cache/admin_routes.php');
+    $cacheFile = Application::getInstance()->path('src/Etc/storage/cache/admin_routes.php');
     if (file_exists($cacheFile)) {
         unlink($cacheFile);
     }
@@ -592,14 +593,18 @@ $router->addParamRoute('/users/{id:int}/edit', Controller::class, 'edit')
 ```
 
 ### 4. Group Related Routes
+
+There is **no `$router->group()` method**. Grouping is a naming convention plus
+an internal optimisation: `addParamRoute()` buckets routes by their first path
+segment automatically, so writing the shared prefix into each path is all that
+is needed.
+
 ```php
-$router->group('/api', function($router) {
-    $router->addParamRoute('/users/{id:int}', API\User\Controller::class, 'show')
-            ->name('api.user.show');
-    
-    $router->addParamRoute('/products/{id:int}', API\Product\Controller::class, 'show')
-            ->name('api.product.show');
-});
+$router->addParamRoute('/api/users/{id:int}', API\User\Controller::class, 'show')
+        ->name('api.user.show');
+
+$router->addParamRoute('/api/products/{id:int}', API\Product\Controller::class, 'show')
+        ->name('api.product.show');
 ```
 
 ### 5. Document Your Choice

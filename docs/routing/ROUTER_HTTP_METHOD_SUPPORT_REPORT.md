@@ -95,5 +95,6 @@ For parameterized routes use a similar structure: bucket them first by method, t
 
 ## Appendix
 - Router source: [`src/Etc/Router.php`](../src/Etc/Router.php)
-- Admin routes examples: [`src/Modules/Admin/Routes/Routes.php`](../src/Modules/Admin/Routes/Routes.php), [`Routesd.php`](../src/Modules/Admin/Routes/Routesd.php), [`Routesc.php`](../src/Modules/Admin/Routes/Routesc.php)
+- Admin routes example: [`src/Modules/Admin/Routes/Routes.php`](../../src/Modules/Admin/Routes/Routes.php)
+  (the `Routesd.php` and `Routesc.php` alternates this report also cited have since been removed from the repository)
 - Related docs: [`docs/ROUTER_V2_STATUS.md`](ROUTER_V2_STATUS.md), `docs/routing/ROUTER_V2_EXAMPLES.md`

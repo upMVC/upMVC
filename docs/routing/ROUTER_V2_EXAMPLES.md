@@ -408,7 +408,7 @@ public function show($reqRoute, $reqMet)
 
 ## 📚 Helper Functions
 
-All available in `src/Etc/helpers.php`:
+All available on `App\Etc\Helpers\HelperFacade` (`src/Etc/Helpers/HelperFacade.php`):
 
 ```php
 // Named route URL

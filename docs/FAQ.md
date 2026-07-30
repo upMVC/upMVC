@@ -105,24 +105,22 @@ public const DOMAIN_NAME = 'https://yourdomain.com';
    ```bash
    composer dump-autoload
    ```
-4. **Routes class exists:**
+4. **Routes class exists — folder, filename, namespace and method must all match:**
    ```php
-   // modules/mymodule/routes/Routes.php
-   namespace MyModule\Routes;
+   // src/Modules/Mymodule/Routes/Routes.php   ← capital R, exactly "Routes.php"
+   namespace App\Modules\Mymodule\Routes;
    class Routes {
-       public static function addRoutes($router): void { ... }
+       public function routes($router) { ... }   // not static, not addRoutes()
    }
    ```
+   Any mismatch means the module is skipped silently — a 404 with nothing in the logs.
 
 ### **Q: How do I rename an existing module?**
 **A:** Follow these steps:
 1. **Rename directory:** `src/Modules/Oldname/` → `src/Modules/Newname/`
-2. **Update namespace in all PHP files:** `namespace OldName;` → `namespace NewName;`
-3. **Update composer.json:**
-   ```json
-   "NewName\\": "src/Modules/Newname/"
-   ```
-4. **Regenerate autoloader:** `composer dump-autoload`
+2. **Update namespace in all PHP files:** `namespace App\Modules\Oldname;` → `namespace App\Modules\Newname;` (and `…\Oldname\Routes` → `…\Newname\Routes`)
+3. **No composer.json change needed** — `App\` already maps to `src/`, so the new namespace resolves as soon as it mirrors the new folder.
+4. **Regenerate autoloader** if you installed with an optimised autoloader: `composer dump-autoload`
 5. **Update any hard-coded references**
 
 ### **Q: Can I delete demonstration modules?**
@@ -202,17 +200,17 @@ public function handleUser() {
 **A:** upMVC includes built-in CSRF protection:
 ```php
 // In forms, add CSRF token:
-echo '<input type="hidden" name="csrf_token" value="' . \upMVC\Security::generateCsrf() . '">';
+echo '<input type="hidden" name="csrf_token" value="' . \App\Etc\Security::generateCsrf() . '">';
 
 // Validation is automatic for POST requests when enabled in config
 ```
 
 ### **Q: How do I add authentication to routes?**
-**A:** Use the auth middleware:
+**A:** Use the auth middleware — it is the **fourth argument**, not a chained
+call. `addRoute()` returns nothing, so `->middleware([...])` is a fatal error.
 ```php
-// In your Routes.php
-$router->addRoute('/admin/dashboard', \Admin\Controller::class, 'dashboard')
-       ->middleware(['auth']);
+// In your Routes/Routes.php
+$router->addRoute('/admin/dashboard', \App\Modules\Admin\Controller::class, 'dashboard', ['auth']);
 
 // Or check manually in controller:
 public function dashboard() {
@@ -242,7 +240,7 @@ $sql = "SELECT * FROM users WHERE id = " . $id;  // VULNERABLE!
 ### **Q: How do I enable caching?**
 **A:** upMVC includes a caching system:
 ```php
-use upMVC\Cache\CacheManager;
+use App\Etc\Cache\CacheManager;
 
 // Cache data for 1 hour (3600 seconds)
 $data = CacheManager::remember('expensive_operation', 3600, function() {
@@ -366,7 +364,7 @@ chmod 755 storage/ logs/
 
 ## 🆘 **Common Error Messages**
 
-### **"Fatal error: Uncaught Error: Class 'upMVC\Start' not found"**
+### **"Fatal error: Uncaught Error: Class 'App\Etc\Start' not found"**
 **Solution:** Run `composer install` to generate autoloader
 
 ### **"404 Not Found" for all routes**

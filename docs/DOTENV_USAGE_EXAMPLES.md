@@ -45,7 +45,7 @@ MY_CUSTOM_VALUE=something
 <?php
 namespace YourModule;
 
-use upMVC\Config\Environment;
+use App\Etc\Config\Environment;
 
 class YourController
 {
@@ -73,7 +73,7 @@ class YourController
 
 ```php
 <?php
-use upMVC\Config\ConfigManager;
+use App\Etc\Config\ConfigManager;
 
 // ConfigManager uses Environment internally
 $debug = ConfigManager::get('app.debug');        // from .env: APP_DEBUG
@@ -85,7 +85,7 @@ $sitePath = ConfigManager::get('app.path');      // from .env: APP_PATH
 
 ```php
 <?php
-use upMVC\Config;
+use App\Etc\Config;
 
 // New helper methods that check .env first, then constants
 $sitePath = Config::getSitePath();       // Checks SITE_PATH in .env, falls back to constant
@@ -130,7 +130,7 @@ DB_NAME=mydb
 ```php
 <?php
 // New Config.php with .env support
-use upMVC\Config\Environment;
+use App\Etc\Config\Environment;
 
 class Config
 {
@@ -165,8 +165,8 @@ $baseUrl = Config::getDomainName() . Config::getSitePath();
 <?php
 namespace Dashboard;
 
-use upMVC\Config\Environment;
-use upMVC\Config\ConfigManager;
+use App\Etc\Config\Environment;
+use App\Etc\Config\ConfigManager;
 
 class Controller
 {
@@ -197,7 +197,7 @@ class Controller
 
 ```php
 <?php
-use upMVC\Config\Environment;
+use App\Etc\Config\Environment;
 
 class Database
 {
@@ -222,7 +222,7 @@ class Database
 ```php
 <?php
 // In your bootstrap or Start.php
-use upMVC\Config\Environment;
+use App\Etc\Config\Environment;
 
 // Load environment
 Environment::load();
@@ -250,7 +250,7 @@ ADMIN_EMAIL=admin@example.com
 
 ```php
 <?php
-use upMVC\Config\Environment;
+use App\Etc\Config\Environment;
 
 class PaymentService
 {
@@ -328,7 +328,7 @@ DB_PASS=secret123
 <?php
 namespace upMVC;
 
-use upMVC\Config\Environment;
+use App\Etc\Config\Environment;
 
 class Config
 {
@@ -339,7 +339,7 @@ class Config
     // Helper methods
     public static function getSitePath(): string
     {
-        if (class_exists('upMVC\Config\Environment')) {
+        if (class_exists('App\Etc\Config\Environment')) {
             return Environment::get('SITE_PATH', self::SITE_PATH);
         }
         return self::SITE_PATH;
@@ -347,7 +347,7 @@ class Config
     
     public static function getDomainName(): string
     {
-        if (class_exists('upMVC\Config\Environment')) {
+        if (class_exists('App\Etc\Config\Environment')) {
             return Environment::get('DOMAIN_NAME', self::DOMAIN_NAME);
         }
         return self::DOMAIN_NAME;
@@ -360,8 +360,8 @@ class Config
 <?php
 namespace YourModule;
 
-use upMVC\Config;
-use upMVC\Config\Environment;
+use App\Etc\Config;
+use App\Etc\Config\Environment;
 
 class Controller
 {
@@ -400,7 +400,7 @@ SITE_PATH=/upMVC
 
 **Access it:**
 ```php
-use upMVC\Config\Environment;
+use App\Etc\Config\Environment;
 
 $sitePath = Environment::get('SITE_PATH', '/default');
 // or

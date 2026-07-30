@@ -4,6 +4,14 @@
 **Date:** November 9, 2025  
 **Status:** ✅ **COMPLETE - READY FOR TESTING**
 
+> ⚠️ **Historical snapshot.** This records the state of the Router V2 work at
+> the date above and is kept for reference — it is not a description of the
+> current tree. Since it was written, the alternate/backup route files it lists
+> (`Routesd.php`, `Routesc.php`, `Controllerd.php`, `Controllerc.php`) have been
+> **removed**; `src/Modules/Admin/Routes/` now contains only `Routes.php`.
+> For current routing behaviour see
+> [routing/ROUTING_GUIDE.md](routing/ROUTING_GUIDE.md).
+
 ---
 
 ## 🎉 What's Implemented
@@ -12,7 +20,7 @@
 
 1. ✅ **Type Casting** - Auto-cast params with `{id:int}`, `{price:float}`, `{active:bool}`
 2. ✅ **Validation Patterns** - Regex constraints for security: `['id' => '\\d+']`
-3. ✅ **Named Routes** - URL generation with `->name()` and `Helpers::route()`
+3. ✅ **Named Routes** - URL generation with `->name()` and `HelperFacade::route()`
 4. ✅ **Route Grouping** - Automatic prefix-based optimization for performance
 
 ---
@@ -24,14 +32,14 @@
 | File | Status | Changes | Purpose |
 |------|--------|---------|---------|
 | `src/Etc/Router.php` | ✅ Enhanced | +207 lines | Core Router V2 implementation |
-| `src/Etc/helpers.php` | ✅ New | +195 lines | Helper class with `route()` method |
-| `src/Etc/Start.php` | ✅ Updated | +3 lines | Initialize `Helpers::setRouter()` |
+| `src/Etc/Helpers/HelperFacade.php` | ✅ New | +195 lines | Static facade with `route()` and friends |
+| `src/Etc/Start.php` | ✅ Updated | +3 lines | Initialize `HelperFacade::setRouter()` |
 
 ### Admin Module - Router V2 Demonstration
 
 | File | Status | Changes | Purpose |
 |------|--------|---------|---------|
-| `src/Modules/Admin/routes/Routes.php` | ✅ Enhanced | Updated | Router V2 with type hints + validation + named routes |
+| `src/Modules/Admin/Routes/Routes.php` | ✅ Enhanced | Updated | Router V2 with type hints + validation + named routes |
 | `src/Modules/Admin/routes/Routesd.php` | ✅ New | +78 lines | Backup: Basic param routing (no type hints) |
 | `src/Modules/Admin/Controller.php` | ✅ Enhanced | Updated | Clean Router V2 integration (no casting) |
 | `src/Modules/Admin/Controllerd.php` | ✅ New | +246 lines | Backup: Basic param controller (manual validation) |
@@ -102,16 +110,16 @@ $router->addParamRoute('/users/{id:int}', Controller::class, 'show')
     ->name('user.show');
 
 // Controller.php - Generate URLs safely
-$url = Helpers::route('user.show', ['id' => 123]);
+$url = HelperFacade::route('user.show', ['id' => 123]);
 // Result: /users/123
 
 // Views - No hardcoded URLs!
-<a href="<?= Helpers::route('user.edit', ['id' => $user['id']]) ?>">Edit</a>
+<a href="<?= HelperFacade::route('user.edit', ['id' => $user['id']]) ?>">Edit</a>
 ```
 
 **Refactoring Benefits:**
 - Change `/users/{id}` to `/members/{id}` - update ONE place
-- All links auto-update via `Helpers::route()`
+- All links auto-update via `HelperFacade::route()`
 - Type-safe URL generation
 
 ### 4. Route Grouping (Performance)
@@ -221,7 +229,7 @@ foreach ($users as $user) {
 - [x] Type casting works (int, float, bool)
 - [x] Validation patterns work
 - [x] Named routes work
-- [x] Helpers::route() works
+- [x] HelperFacade::route() works
 - [x] No syntax errors
 - [x] Backward compatible
 
@@ -256,8 +264,8 @@ foreach ($users as $user) {
   - [ ] `/admin/users/edit/abc` - Gets 404 (validation works)
   - [ ] `/admin/users/delete/1` - Delete works
 - [ ] Test named routes:
-  - [ ] `Helpers::route('admin.user.edit', ['id' => 1])` returns `/admin/users/edit/1`
-  - [ ] `Helpers::route('admin.user.delete', ['id' => 5])` returns `/admin/users/delete/5`
+  - [ ] `HelperFacade::route('admin.user.edit', ['id' => 1])` returns `/admin/users/edit/1`
+  - [ ] `HelperFacade::route('admin.user.delete', ['id' => 5])` returns `/admin/users/delete/5`
 - [ ] Test type casting:
   - [ ] `var_dump($_GET['id'])` shows `int(1)` not `string "1"`
 
@@ -353,7 +361,7 @@ $userId = $_GET['id'];  // int (auto-casted, validated)
 $user = $this->model->getById($userId);
 
 // View - Refactor-safe
-<a href="<?= Helpers::route('user.show', ['id' => $user['id']]) ?>">View</a>
+<a href="<?= HelperFacade::route('user.show', ['id' => $user['id']]) ?>">View</a>
 ```
 
 **Result:**

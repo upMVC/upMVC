@@ -590,7 +590,7 @@ Edit → Save → See Changes (1.5s). That's it. 🚀
 - ✅ `src/Modules/Reacthmr/Controller.php` - Core HMR logic
 - ✅ `src/Modules/Reacthmr/Model.php` - Sample data
 - ✅ `src/Modules/Reacthmr/View.php` - UI + components
-- ✅ `src/Modules/Reacthmr/routes/Routes.php` - Route registration
+- ✅ `src/Modules/Reacthmr/Routes/Routes.php` - Route registration
 - ✅ `src/Modules/Reacthmr/components/TodoApp.js` - External component
 - ✅ `src/Modules/Reacthmr/README.md` - Complete documentation
 - ✅ `docs/REACT_INTEGRATION_PATTERNS.md` - Updated with Pattern 5
