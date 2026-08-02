@@ -1,12 +1,14 @@
 # Integration Guide: upMVC + PHP CRUD API Generator
 
-Combine **upMVC** (app / modules / SPA shells) with **[PHP CRUD API Generator](https://github.com/BitsHost/PHP-CRUD-API-Generator)** (data plane) for a full-stack PHP setup:
+Combine **upMVC** (app / modules / SPA shells) with **[PHP CRUD API Generator](https://github.com/BitsHost/PHP-CRUD-API-Generator)** (API / data plane) for a full-stack PHP setup — or go further with **[upMVC-SaaS](https://github.com/upMVC/upMVC-SaaS)** + **saas-pack** for multi-tenant products.
 
-- Server-rendered pages and module routes (upMVC)
-- Table CRUD REST API — zero codegen (PHP CRUD API Generator)
+- Server-rendered pages and module routes (upMVC / upMVC-SaaS)
+- Full REST-like API — auth, RBAC, filters, bulk, rate limits, OpenAPI — zero codegen
 - Shared database; optional shared JWT secret
 - React/Vue **islands** or SPA entrypoints that `fetch` the API
 - Mobile / third-party clients on the same API
+
+**Strongest simple foundation:** upMVC-SaaS + `bitshost/upmvc-saas-pack` + this API library. Tenancy and product shell from SaaS; modules/SPA from the kernel; API for clients and integrations — each layer stays in its lane, nothing rebuilt from scratch.
 
 upMVC **2.5+ (Thin Core):** stock tree is kernel + **Welcome** only. Optional UI demos come from the Releases zip. The API is a separate Composer package under `public/api/` (or your own Alias).
 
@@ -16,11 +18,12 @@ upMVC **2.5+ (Thin Core):** stock tree is kernel + **Welcome** only. Optional UI
 
 | Piece | Job |
 |--------|-----|
-| **PHP CRUD API Generator** | Data plane — list/read/create/update/delete, filters, RBAC, rate limits |
-| **upMVC** | App plane — boot, modules, SSR, Auth UI, SPA/island entrypoints |
-| **JS in a module** | Orchestration, joins, workflows — not the API’s job |
+| **upMVC-SaaS + saas-pack** (when multi-tenant) | Product plane — tenants, plans, isolation, onboarding, JWT/session shell |
+| **upMVC kernel** | App plane — boot, modules, SSR, SPA/island entrypoints |
+| **PHP CRUD API Generator** | API plane — secure list/read/create/update/delete, filters, bulk, RBAC, rate limits, OpenAPI |
+| **JS in a module / SPA** | Orchestration, joins, workflows on top of the API |
 
-Do not reinvent per-table CRUD controllers in upMVC when the generator already exposes the tables.
+The API is not a “toy table helper.” It is the integration surface. Do not reinvent per-resource REST controllers in upMVC when the generator already exposes the schema under policy.
 
 ---
 
@@ -219,10 +222,13 @@ public/index.php → optional marketing / Welcome / Auth
 
 | Goal | Start with |
 |------|------------|
-| Modular PHP + optional SPA shells + table API | **upMVC + this API** |
-| Multi-tenant product | **upMVC-SaaS** (+ API only if you still want a raw data plane with tenant-aware policy) |
+| **Multi-tenant SaaS product + API + modules/SPA** | **upMVC-SaaS + saas-pack + this API** — the strongest simple BitsHost foundation |
+| Modular PHP + SPA shells + API (single-tenant) | **upMVC + this API** |
+| Multi-tenant UI only (no separate API yet) | **upMVC-SaaS + saas-pack** |
 | API only, no HTML app | Generator alone |
-| Tiny CRUD UI, few tables | upMVC modules alone |
+| Tiny UI, few resources, no external clients | upMVC modules alone |
+
+For SaaS + API: mount the generator under `public/api/` the same way as below; align `JWT_SECRET` / tenant claims with the saas-pack auth story so SPA and mobile call one API under tenant policy.
 
 ---
 
@@ -233,6 +239,7 @@ public/index.php → optional marketing / Welcome / Auth
 - [KERNEL.md](KERNEL.md) — boot / config / router contract
 - [Module Philosophy](MODULE_PHILOSOPHY.md)
 - [React / Islands](REACT_INTEGRATION_PATTERNS.md) · [Islands index](ISLANDS_ARCHITECTURE_INDEX.md)
+- [upMVC-SaaS](https://github.com/upMVC/upMVC-SaaS) — multi-tenant fork + saas-pack
 
 ### PHP CRUD API Generator
 - [README](https://github.com/BitsHost/PHP-CRUD-API-Generator/blob/main/README.md)

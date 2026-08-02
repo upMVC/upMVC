@@ -3,7 +3,7 @@
 ## [Unreleased]
 
 ### Docs
-- **`docs/INTEGRATION_PHP_CRUD_API.md`** — refreshed for Thin Core: `public/` + `src/Etc/.env` + `src/Modules/`, API under `public/api/`, no legacy `modules/` / root `.env` paths.
+- **`docs/INTEGRATION_PHP_CRUD_API.md`** — refreshed for Thin Core: `public/` + `src/Etc/.env` + `src/Modules/`, API under `public/api/`; documents **upMVC-SaaS + saas-pack + API** as the strongest simple foundation (API as full plane, not a toy helper).
 - **`docs/KERNEL.md`** — kernel surface (boot, config, router, packages); agent `kernel_surface` + rules so claims stay tied to `src/Etc/`, not demos.
 
 ### CI
