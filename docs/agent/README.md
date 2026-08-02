@@ -14,12 +14,14 @@ Paste `generated/last-prompt.md` into your agent chat.
 
 | File | Purpose |
 |------|---------|
-| `upmvc-knowledge.json` | Framework facts |
+| `upmvc-knowledge.json` | Framework facts + `kernel_surface` |
 | `upmvc-rules.json` | Must / never rules |
 | `upmvc-workflows.json` | Intent → recipe mapping |
 | `upmvc-scaffolds.json` | Module builder (optional — `--scaffold`) |
 | `upmvc-saas-pack.json` | SaaS pack (when applicable) |
 | `generated/` | CLI output (gitignored) |
+
+**Kernel product doc:** [../KERNEL.md](../KERNEL.md) — boot, config, router, packages; claims from `src/Etc/` only.
 
 ## Updating rules
 

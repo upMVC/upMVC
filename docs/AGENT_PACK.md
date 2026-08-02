@@ -108,6 +108,7 @@ Always pair **knowledge + rules** for core work. Scaffolds and SaaS packs are **
 
 Framework facts an agent should not re-discover each session:
 
+- **`kernel_surface`** — product boundary (`src/Etc/`), boot order, config/router/packages contracts (see also [`docs/KERNEL.md`](KERNEL.md))
 - Bootstrap flow (`public/index.php` → `Start.php` → routing)
 - Paths (`src/Etc/.env` — canonical runtime path via `Environment::load()`, not project-root `.env`)
 - Config access (`Environment::get()`, `ConfigManager::get()`)

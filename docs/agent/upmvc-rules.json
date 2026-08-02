@@ -1,11 +1,13 @@
 {
   "meta": {
     "name": "upMVC Agent Rules",
-    "version": "1.0.1",
-    "verified_against": "upMVC v2.4.0",
+    "version": "1.1.0",
+    "verified_against": "upMVC v2.5.0",
     "severity": "These are hard constraints. Violations must be fixed before code is accepted."
   },
   "must": [
+    "Treat src/Etc/ as the kernel product — load docs/KERNEL.md and knowledge.kernel_surface for kernel work",
+    "State kernel capabilities only from src/Etc/ (or docs/KERNEL.md) — never from demo modules",
     "Read config with Environment::get() or ConfigManager::get() — never $_ENV for .env values",
     "Place new modules under src/Modules/{Name}/ with Routes/Routes.php for auto-discovery",
     "Use namespace App\\Modules\\{Name} for application modules",
