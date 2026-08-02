@@ -1,477 +1,247 @@
-# 🔥 Integration Guide: upMVC + PHP CRUD API Generator
+# Integration Guide: upMVC + PHP CRUD API Generator
 
-## The Power Combo: Full-Stack PHP Solution
+Combine **upMVC** (app / modules / SPA shells) with **[PHP CRUD API Generator](https://github.com/BitsHost/PHP-CRUD-API-Generator)** (data plane) for a full-stack PHP setup:
 
-Combine **upMVC** (MVC framework) with **PHP CRUD API Generator** (REST API) to create a complete full-stack application with:
+- Server-rendered pages and module routes (upMVC)
+- Table CRUD REST API — zero codegen (PHP CRUD API Generator)
+- Shared database; optional shared JWT secret
+- React/Vue **islands** or SPA entrypoints that `fetch` the API
+- Mobile / third-party clients on the same API
 
-- ✅ Server-side rendering (upMVC)
-- ✅ RESTful API endpoints (PHP CRUD API Generator)
-- ✅ Shared database and authentication
-- ✅ Modern frontend integration (React/Vue with Islands)
-- ✅ Mobile app backend
-- ✅ Admin panel + API in one system
-
----
-
-## 🎯 Architecture Overview
-
-```
-/myproject (upMVC Root)
-├── index.php                  → upMVC entry point
-├── src/Etc/
-│   └── .env                   → Shared database config
-├── modules/
-│   ├── admin/                 → User management UI
-│   ├── auth/                  → Authentication system
-│   ├── dashboard/             → Admin dashboard
-│   └── react/                 → React apps using API
-└── api/                       → PHP CRUD API Generator subfolder
-    ├── index.php              → API entry point
-    ├── config/
-    │   ├── db.php             → Points to same DB!
-    │   └── api.php            → JWT, RBAC, rate limiting
-    └── dashboard.html         → API monitoring
-```
+upMVC **2.5+ (Thin Core):** stock tree is kernel + **Welcome** only. Optional UI demos come from the Releases zip. The API is a separate Composer package under `public/api/` (or your own Alias).
 
 ---
 
-## 📦 Installation Steps
+## Roles (read this first)
 
-### Step 1: Install upMVC
+| Piece | Job |
+|--------|-----|
+| **PHP CRUD API Generator** | Data plane — list/read/create/update/delete, filters, RBAC, rate limits |
+| **upMVC** | App plane — boot, modules, SSR, Auth UI, SPA/island entrypoints |
+| **JS in a module** | Orchestration, joins, workflows — not the API’s job |
+
+Do not reinvent per-table CRUD controllers in upMVC when the generator already exposes the tables.
+
+---
+
+## Architecture (Thin Core paths)
+
+Document root must be **`public/`** (`php -S … -t public` or vhost). Put the API **under `public/api/`** so one server reaches both.
+
+```
+myproject/                          ← UPMVC_APP_ROOT
+├── public/
+│   ├── index.php                   → upMVC entry
+│   ├── .htaccess
+│   └── api/                        → PHP CRUD API Generator
+│       ├── index.php               → API entry
+│       ├── dashboard.html          → protect in production
+│       ├── health.php              → protect in production
+│       ├── config/                 → app-owned copies (recommended)
+│       │   ├── db.php              → same DB as upMVC
+│       │   └── api.php             → JWT, RBAC, rate limit
+│       └── vendor/                 → bitshost/php-crud-api-generator
+├── src/
+│   ├── Etc/
+│   │   ├── .env                    → DOMAIN_NAME, SITE_PATH, DB_*, JWT_SECRET
+│   │   └── custom-routes.php       → '/' → Welcome (change anytime)
+│   └── Modules/
+│       ├── Welcome/                → ships with create-project (no DB)
+│       ├── Auth/                   → optional (demos zip or your own)
+│       └── React…/                 → SPA / islands that call /api/
+└── composer.json                   → bitshost/upmvc
+```
+
+Alternative: keep `api/` at the project root and Apache-`Alias` it — fine for production; for the PHP built-in server, **`public/api/` is simpler**.
+
+---
+
+## Installation
+
+### 1. upMVC
 
 ```bash
-# Create upMVC project
 composer create-project bitshost/upmvc myproject
 cd myproject
 
-# Configure .env (project root)
-# - SITE_PATH=/myproject
-# - DOMAIN_NAME=http://localhost
-# - Database credentials
+cp src/Etc/.env.example src/Etc/.env
+# Edit src/Etc/.env:
+#   DOMAIN_NAME=http://localhost
+#   SITE_PATH=                    # empty if docroot is public/ at domain root
+#   # or SITE_PATH=/myproject/public when using a subfolder
+#   DB_HOST=127.0.0.1
+#   DB_NAME=myproject_db
+#   DB_USER=root
+#   DB_PASS=
+#   JWT_SECRET=…                  # same value you will put in api config (optional)
 ```
 
-### Step 2: Install PHP CRUD API Generator in `/api` Subfolder
+Welcome at `/` needs **no** database. Create/import DB when modules or the API need tables.
+
+Optional demos (Auth, Test, React, …): download `upmvc-demos.zip` from [Releases](https://github.com/upMVC/upMVC/releases), paste into `src/Modules/`, import `demo-modules.sql` if needed. See [Module Philosophy](MODULE_PHILOSOPHY.md).
+
+### 2. API under `public/api`
 
 ```bash
-# Create api directory
-mkdir api
-cd api
+mkdir public/api
+cd public/api
 
-# Install as library
 composer require bitshost/php-crud-api-generator
 
-# Copy essential files
-copy vendor/bitshost/php-crud-api-generator/public/index.php index.php
-copy vendor/bitshost/php-crud-api-generator/dashboard.html dashboard.html
-copy vendor/bitshost/php-crud-api-generator/health.php health.php
+# Entry + ops UI (from the package)
+cp vendor/bitshost/php-crud-api-generator/public/index.php index.php
+cp vendor/bitshost/php-crud-api-generator/dashboard.html dashboard.html
+cp vendor/bitshost/php-crud-api-generator/health.php health.php
+
+# Prefer app-owned config (do not edit only inside vendor long-term)
+mkdir -p config
+cp vendor/bitshost/php-crud-api-generator/config/db.php config/db.php
+cp vendor/bitshost/php-crud-api-generator/config/api.php config/api.php
 ```
 
-### Step 3: Configure API to Use Same Database
+Point `public/api/index.php` at **your** `config/` copies (adjust the package’s require paths if the stock `index.php` loads vendor configs).
 
-Edit `api/index.php` to point to vendor configs:
+### 3. Same database as upMVC
 
-```php
-// api/index.php (lines ~51)
-$dbConfig = require __DIR__ . '/vendor/bitshost/php-crud-api-generator/config/db.php';
-$apiConfig = require __DIR__ . '/vendor/bitshost/php-crud-api-generator/config/api.php';
-```
-
-Edit `vendor/bitshost/php-crud-api-generator/config/db.php`:
+`public/api/config/db.php` — use the **same** credentials as `src/Etc/.env`:
 
 ```php
 <?php
-// Use SAME credentials as upMVC .env (project root)
 return [
     'host' => '127.0.0.1',
-    'dbname' => 'myproject_db',  // Same as upMVC
-    'user' => 'root',             // Same as upMVC
-    'pass' => '',                 // Same as upMVC
-    'charset' => 'utf8mb4'
+    'dbname' => 'myproject_db',
+    'user' => 'root',
+    'pass' => '',
+    'charset' => 'utf8mb4',
 ];
 ```
 
-### Step 4: Configure JWT Authentication (Optional but Recommended)
+### 4. JWT (optional, recommended for SPA/mobile)
 
-Edit `vendor/bitshost/php-crud-api-generator/config/api.php`:
+Align secrets with upMVC’s `.env` `JWT_SECRET` (read via `Environment::get('JWT_SECRET')` / ConfigManager — **not** a hardcoded `define` in `Config.php`).
 
 ```php
-<?php
+// public/api/config/api.php (shape may vary by generator version — see package docs)
 return [
     'auth_enabled' => true,
     'auth_method' => 'jwt',
-    
-    // JWT settings
-    'jwt_secret' => 'your-secret-key-min-32-chars-long',
-    'jwt_issuer' => 'myproject.local',
-    'jwt_audience' => 'myproject.local',
-    'jwt_expiration' => 3600,
-    
-    // Basic users for JWT login (same as upMVC users)
-    'basic_users' => [
-        'admin' => 'password123',  // Change in production!
-    ],
-    
-    // Rate limiting
-    'rate_limit' => [
-        'enabled' => true,
-        'max_requests' => 100,
-        'window_seconds' => 60,
-    ],
-    
-    // RBAC - protect system tables
-    'rbac' => [
-        'enabled' => true,
-        'rules' => [
-            'admin' => ['allow' => '*'],
-            'user' => ['deny' => ['users', 'roles', 'permissions']],
-        ],
-    ],
+    'jwt_secret' => 'same-value-as-JWT_SECRET-in-src-Etc-env',
+    // … issuer, audience, RBAC, rate_limit — see generator CONFIGURATION.md
 ];
 ```
 
+Protect `dashboard.html` and `health.php` before production (IP allowlist / auth). See the generator’s dashboard security docs.
+
 ---
 
-## 🚀 Usage Examples
-
-### Access Points
+## Run locally
 
 ```bash
-# upMVC - Server-side rendered pages
-http://localhost:8080/myproject              → Home page
-http://localhost:8080/myproject/admin        → Admin panel
-http://localhost:8080/myproject/auth/login   → Login form
-
-# API - REST endpoints
-http://localhost:8080/myproject/api/index.php?action=tables      → List tables
-http://localhost:8080/myproject/api/index.php?action=list&table=users → Get users
-http://localhost:8080/myproject/api/dashboard.html               → API monitoring
+cd myproject
+php -S localhost:8080 -t public
 ```
 
-### Shared Authentication Flow
+| URL | What |
+|-----|------|
+| `http://localhost:8080/` | Welcome (upMVC) |
+| `http://localhost:8080/auth` | Auth module if installed |
+| `http://localhost:8080/api/index.php?action=tables` | API |
+| `http://localhost:8080/api/dashboard.html` | API monitor (dev only) |
 
-#### 1. User Login via upMVC
+If `SITE_PATH` is a subfolder, prefix URLs accordingly.
 
-```php
-// modules/auth/Controller.php
-public function login() {
-    $username = $_POST['username'];
-    $password = $_POST['password'];
-    
-    // Authenticate against users table
-    $user = R::findOne('users', 'username = ?', [$username]);
-    
-    if ($user && password_verify($password, $user->password)) {
-        $_SESSION['user_id'] = $user->id;
-        $_SESSION['role'] = $user->role;
-        // Redirect to dashboard
-    }
-}
-```
+---
 
-#### 2. Get JWT Token for API
+## Usage sketches
+
+### Login UI in upMVC, data via API
+
+Session/login stays in an Auth (or SaaS) module. SPA code stores a JWT from the API `login` action (or a small upMVC endpoint that mints one with the shared secret).
 
 ```bash
-# Login to API with same credentials
-curl -X POST -d "username=admin&password=password123" \
-  http://localhost:8080/myproject/api/index.php?action=login
+curl -X POST -d "username=admin&password=…" \
+  "http://localhost:8080/api/index.php?action=login"
 
-# Response:
-{
-  "token": "eyJ0eXAiOiJKV1QiLCJhbGci..."
-}
-```
-
-#### 3. Use API with Token
-
-```bash
-# Get products via API
 curl -H "Authorization: Bearer YOUR_TOKEN" \
-  http://localhost:8080/myproject/api/index.php?action=list&table=products
+  "http://localhost:8080/api/index.php?action=list&table=products"
 ```
 
-### React Integration Example
+### Island / SPA module calling the API
 
 ```javascript
-// modules/react/components/ProductList.js
-import React, { useState, useEffect } from 'react';
+// e.g. src/Modules/React/… or your own module assets
+fetch('/api/index.php?action=list&table=products', {
+  headers: { Authorization: 'Bearer ' + localStorage.getItem('jwt_token') }
+})
+  .then((res) => res.json())
+  .then((payload) => { /* render */ });
+```
 
-function ProductList() {
-    const [products, setProducts] = useState([]);
-    
-    useEffect(() => {
-        // Call API from same domain
-        fetch('/myproject/api/index.php?action=list&table=products', {
-            headers: {
-                'Authorization': 'Bearer ' + localStorage.getItem('jwt_token')
-            }
-        })
-        .then(res => res.json())
-        .then(data => setProducts(data.data));
-    }, []);
-    
-    return (
-        <div>
-            {products.map(product => (
-                <div key={product.id}>{product.name}</div>
-            ))}
-        </div>
-    );
-}
+Use paths relative to the site (respect `SITE_PATH` / `BASE_URL` when building asset URLs).
+
+### Shared Auth note
+
+Prefer **PDO + `password_verify`** against your `users` table (upMVC style). Do not treat RedBean examples as required — RedBean is optional (`Userorm` demo only).
+
+---
+
+## Security checklist
+
+1. **Same DB credentials** in `src/Etc/.env` and `public/api/config/db.php` (or a tighter DB user for the API).
+2. **Same `JWT_SECRET`** when both sides validate JWTs.
+3. **CORS** only if the SPA is on another origin — configure in the API package; upMVC has `CORS_*` in `.env` for its own responses.
+4. **Rate limit + table allow/deny** on the API; don’t expose ops HTML publicly.
+5. **Never return password hashes** from upMVC JSON endpoints or the API field lists.
+
+---
+
+## Frontend patterns
+
+### 1. Islands
+
+upMVC renders the page shell; a React/Vue island on that page calls `/api/…`.
+
+### 2. Hybrid
+
+upMVC SSR for first paint / SEO; client hydrates and refreshes from the API.
+
+### 3. Static SPA under public
+
+```
+public/app/     → built SPA
+public/api/     → data plane
+public/index.php → optional marketing / Welcome / Auth
 ```
 
 ---
 
-## 💎 Real-World Use Cases
+## When to use which stack
 
-### 1. E-Commerce Platform
-
-**upMVC handles:**
-- Admin panel for product management
-- Order processing UI
-- Customer dashboard
-- Email notifications
-
-**API provides:**
-- Mobile app backend
-- Product catalog API
-- Shopping cart endpoints
-- Payment gateway integration
-
-### 2. SaaS Application
-
-**upMVC handles:**
-- User registration forms
-- Billing dashboard
-- Settings management
-- Email templates
-
-**API provides:**
-- REST endpoints for integrations
-- Webhook handlers
-- Third-party API access
-- Mobile app backend
-
-### 3. Headless CMS
-
-**upMVC handles:**
-- Content editor interface
-- Media management
-- User permissions
-- Workflow management
-
-**API provides:**
-- Content delivery API
-- Frontend consumption
-- Mobile app content
-- Static site generation
+| Goal | Start with |
+|------|------------|
+| Modular PHP + optional SPA shells + table API | **upMVC + this API** |
+| Multi-tenant product | **upMVC-SaaS** (+ API only if you still want a raw data plane with tenant-aware policy) |
+| API only, no HTML app | Generator alone |
+| Tiny CRUD UI, few tables | upMVC modules alone |
 
 ---
 
-## 🔐 Security Best Practices
+## Resources
 
-### 1. Shared Database Security
-
-```sql
--- Create dedicated database user for API (read-only for sensitive tables)
-CREATE USER 'api_user'@'localhost' IDENTIFIED BY 'secure_password';
-GRANT SELECT ON myproject_db.products TO 'api_user'@'localhost';
-GRANT SELECT ON myproject_db.orders TO 'api_user'@'localhost';
-GRANT SELECT, INSERT, UPDATE ON myproject_db.cart TO 'api_user'@'localhost';
-```
-
-### 2. JWT Secret Synchronization
-
-Use same JWT secret in both systems for token validation:
-
-```php
-// upMVC: src/Etc/Config.php
-define('JWT_SECRET', 'your-secret-key-min-32-chars-long');
-
-// API: config/api.php
-'jwt_secret' => 'your-secret-key-min-32-chars-long',  // Same!
-```
-
-### 3. CORS Configuration (if API used from different domain)
-
-```php
-// API: config/api.php
-'cors' => [
-    'enabled' => true,
-    'allowed_origins' => ['https://yourfrontend.com'],
-    'allowed_methods' => ['GET', 'POST', 'PUT', 'DELETE'],
-],
-```
-
-### 4. Rate Limiting
-
-```php
-// API: config/api.php
-'rate_limit' => [
-    'enabled' => true,
-    'max_requests' => 100,      // 100 requests
-    'window_seconds' => 60,     // per minute
-],
-```
-
----
-
-## 📊 Database Schema Example
-
-### Shared Tables
-
-```sql
--- Users table (used by both upMVC and API)
-CREATE TABLE users (
-    id INT PRIMARY KEY AUTO_INCREMENT,
-    username VARCHAR(50) UNIQUE NOT NULL,
-    email VARCHAR(100) UNIQUE NOT NULL,
-    password VARCHAR(255) NOT NULL,
-    role ENUM('admin', 'user', 'readonly') DEFAULT 'user',
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-);
-
--- Products table (managed via upMVC, consumed via API)
-CREATE TABLE products (
-    id INT PRIMARY KEY AUTO_INCREMENT,
-    name VARCHAR(255) NOT NULL,
-    description TEXT,
-    price DECIMAL(10,2) NOT NULL,
-    stock INT DEFAULT 0,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
--- Orders table (created via both systems)
-CREATE TABLE orders (
-    id INT PRIMARY KEY AUTO_INCREMENT,
-    user_id INT NOT NULL,
-    total DECIMAL(10,2) NOT NULL,
-    status ENUM('pending', 'processing', 'completed', 'cancelled') DEFAULT 'pending',
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (user_id) REFERENCES users(id)
-);
-```
-
----
-
-## 🎨 Frontend Integration Patterns
-
-### Pattern 1: Islands Architecture
-
-Use upMVC for main layout, embed React "islands" that consume API:
-
-```php
-<!-- modules/products/templates/list.php -->
-<div id="product-island"></div>
-
-<script type="module">
-    import ProductList from '/modules/react/components/ProductList.js';
-    ReactDOM.render(<ProductList />, document.getElementById('product-island'));
-</script>
-```
-
-### Pattern 2: Hybrid Rendering
-
-- upMVC renders initial page (SEO-friendly)
-- React takes over for interactions
-- API provides data updates
-
-```php
-<!-- Server-rendered by upMVC -->
-<div id="app" data-initial='<?= json_encode($products) ?>'>
-    <?php foreach ($products as $product): ?>
-        <div class="product"><?= $product->name ?></div>
-    <?php endforeach; ?>
-</div>
-
-<script>
-    // React hydrates with API calls
-    const initialData = JSON.parse(document.getElementById('app').dataset.initial);
-    ReactDOM.hydrate(<App initialData={initialData} />, document.getElementById('app'));
-</script>
-```
-
-### Pattern 3: Pure API Frontend
-
-Serve static React app from upMVC, consume API entirely:
-
-```
-/myproject/public/app/      → Static React build
-/myproject/api/             → API backend
-```
-
----
-
-## 🔧 Development Workflow
-
-### Local Development Setup
-
-```bash
-# Start upMVC on port 8080
-cd /path/to/myproject
-php -S localhost:8080
-
-# Access:
-# - upMVC: http://localhost:8080/myproject
-# - API: http://localhost:8080/myproject/api/index.php
-# - API Monitor: http://localhost:8080/myproject/api/dashboard.html
-```
-
-### Testing Both Systems
-
-```bash
-# Test upMVC
-curl http://localhost:8080/myproject
-
-# Test API
-curl http://localhost:8080/myproject/api/index.php?action=tables
-
-# Test JWT login
-curl -X POST -d "username=admin&password=password123" \
-  http://localhost:8080/myproject/api/index.php?action=login
-```
-
----
-
-## 📚 Additional Resources
-
-### upMVC Documentation
-- [upMVC README](../README.md)
+### upMVC
+- [README](../README.md) — Thin Core, demos zip, `src/Etc/.env`
+- [KERNEL.md](KERNEL.md) — boot / config / router contract
 - [Module Philosophy](MODULE_PHILOSOPHY.md)
-- [Islands Architecture](ISLANDS_ARCHITECTURE.md)
-- [React Integration Patterns](REACT_INTEGRATION_PATTERNS.md)
+- [React / Islands](REACT_INTEGRATION_PATTERNS.md) · [Islands index](ISLANDS_ARCHITECTURE_INDEX.md)
 
-### PHP CRUD API Generator Documentation
-- [PHP CRUD API Generator README](https://github.com/BitsHost/PHP-CRUD-API-Generator/blob/main/README.md)
-- [Quick Start Guide](https://github.com/BitsHost/PHP-CRUD-API-Generator/blob/main/docs/QUICK_START.md)
-- [JWT Authentication Guide](https://github.com/BitsHost/PHP-CRUD-API-Generator/blob/main/docs/JWT_EXPLAINED.md)
-
----
-
-## 💡 Pro Tips
-
-1. **Single Sign-On**: Use upMVC sessions to generate JWT tokens for API
-2. **RBAC Sync**: Keep role definitions identical in both systems
-3. **Logging**: Centralize logs from both systems for easier debugging
-4. **Caching**: Use same cache driver (Redis/Memcached) for both
-5. **Deployment**: Deploy as single application, both systems share same domain
+### PHP CRUD API Generator
+- [README](https://github.com/BitsHost/PHP-CRUD-API-Generator/blob/main/README.md)
+- [Quick start](https://github.com/BitsHost/PHP-CRUD-API-Generator/blob/main/docs/QUICK_START.md)
+- [Authentication](https://github.com/BitsHost/PHP-CRUD-API-Generator/blob/main/docs/AUTHENTICATION.md)
+- [Configuration](https://github.com/BitsHost/PHP-CRUD-API-Generator/blob/main/docs/CONFIGURATION.md)
 
 ---
 
-## 🎯 Next Steps
+**Help:** [upMVC issues](https://github.com/upMVC/upMVC/issues) · [API Generator issues](https://github.com/BitsHost/PHP-CRUD-API-Generator/issues)
 
-1. Install both frameworks following steps above
-2. Create shared database schema
-3. Configure authentication
-4. Build your first integrated module
-5. Deploy to production!
-
----
-
-**Need help?** Open an issue on:
-- [upMVC GitHub](https://github.com/upMVC/upMVC/issues)
-- [PHP CRUD API Generator GitHub](https://github.com/BitsHost/PHP-CRUD-API-Generator/issues)
-
----
-
-Built with ❤️ by [BitsHost](https://bitshost.biz/)
+BitsHost / upMVC
