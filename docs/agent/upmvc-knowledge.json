@@ -104,6 +104,8 @@
   },
   "routing": {
     "discovery": "InitModsImproved scans src/Modules/*/Routes/Routes.php and nested Modules/*/Modules/*/Routes/Routes.php",
+    "custom_routes": "src/Etc/custom-routes.php registers after discovery; addRoute overwrites same path — stock '/' → Welcome\\Controller (no DB)",
+    "homepage": "Change or remove the '/' entry in custom-routes.php to point at your own module anytime",
     "route_methods": [
       "addRoute(path, controller, method, middleware[], methods[]) — middleware is 4th argument array",
       "addParamRoute(path, controller, method, middleware[], constraints[], methods[]) — supports {id:int} typed params in $_GET"
@@ -136,7 +138,7 @@
       "orm_optional": "App\\Common\\Bmvc\\BaseModelOrm (requires RedBean — optional)"
     },
     "generator": "Optional: load docs/agent/upmvc-scaffolds.json via upmvc-next.php --scaffold (replaces removed PHP generators)",
-    "philosophy": "Bundled modules (Auth, Admin, React*, etc.) are reference implementations — delete what you do not need"
+    "philosophy": "Stock tree ships Welcome only. Optional demos (Auth, Admin, React*, …) come from Releases zip — paste into src/Modules/; take / try / drop"
   },
   "packages": {
     "summary": "Composer packages extend upMVC via optional src/Etc/packages.php provider registry",

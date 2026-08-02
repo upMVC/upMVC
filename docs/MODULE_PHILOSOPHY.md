@@ -2,13 +2,17 @@
 
 ## 🎯 Modules as Reference Implementations
 
-The modules included with upMVC (`admin`, `auth`, `email`, `react`, etc.) are **not required dependencies**. They are **reference implementations** that demonstrate different approaches to common problems.
+Stock create-project ships **Welcome** only (static homepage, no DB). Optional demos
+(`admin`, `auth`, `email`, `react`, etc.) download from GitHub Releases as
+`upmvc-demos.zip` — paste into `src/Modules/`. They are **not required dependencies**.
+They are **reference implementations** that demonstrate different approaches to common problems.
 
 ### Core Principle
 
-> **You can delete any or all modules after installation.**
-> 
-> Keep only what you need. Each module shows one way to solve a problem - choose the approach that fits your project.
+> **You can delete any or all optional modules.** Welcome owns `/` via
+> `src/Etc/custom-routes.php` — change that entry when you build your own homepage.
+>
+> Keep only what you need. Each demo shows one way to solve a problem — choose the approach that fits your project.
 
 ---
 
