@@ -1,29 +1,88 @@
 {
   "meta": {
     "name": "upMVC Agent Knowledge Pack",
-    "version": "1.0.1",
-    "verified_against": "upMVC v2.4.0",
+    "version": "1.1.0",
+    "verified_against": "upMVC 2.5.0",
     "framework": "upMVC",
     "php_minimum": "8.1",
     "purpose": "Portable startup context for any AI agent working on upMVC or upMVC-SaaS projects",
     "usage": "Load this file at session start together with upmvc-rules.json. Do not ask the user to explain framework basics."
   },
   "philosophy": {
-    "summary": "Pure PHP MVC. Modules are optional reference implementations. Minimal core, explicit control, no ORM required.",
+    "summary": "Pure PHP MVC. The product is the kernel (src/Etc/). Modules are optional. Minimal core, explicit control, no ORM required.",
     "principles": [
+      "Kernel claims come from src/Etc/ running code — not from demos or marketing",
       "Modules auto-discovered — drop folder in src/Modules, routes register automatically",
       "PDO prepared statements — no magic query builder required",
       "Config from .env via Environment::get() and ConfigManager::get()",
       "Framework stays out of the way — app-specific patterns belong in app layer, not core"
     ],
     "docs": [
+      "docs/KERNEL.md",
       "docs/MODULE_PHILOSOPHY.md",
       "docs/PHILOSOPHY_PURE_PHP.md",
       "docs/CORE_AREAS_AND_CONFIGURATION.md",
       "docs/CONFIGURATION_FALLBACKS.md"
     ]
   },
-  "paths": {
+  "kernel_surface": {
+    "doc": "docs/KERNEL.md",
+    "product": "src/Etc/ (+ public/index.php, Composer package boundary)",
+    "not_product": [
+      "Optional demos (Releases zip)",
+      "Welcome UI chrome (homepage module only)",
+      "src/Common base classes (app helpers, not the kernel contract)"
+    ],
+    "public_classes": [
+      "App\\Etc\\Start",
+      "App\\Etc\\Application",
+      "App\\Etc\\Routes",
+      "App\\Etc\\Router",
+      "App\\Etc\\InitModsImproved",
+      "App\\Etc\\Config\\Environment",
+      "App\\Etc\\Config\\ConfigManager",
+      "App\\Etc\\Security",
+      "App\\Etc\\JwtService",
+      "App\\Etc\\Cache\\CacheManager",
+      "App\\Etc\\Middleware\\*"
+    ],
+    "boot_order": [
+      "public/index.php defines UPMVC_APP_ROOT + autoload",
+      "Start constructs → ConfigManager::load(), ErrorHandler, Config::getReqRoute",
+      "Start::upMVC → Router, registerProviders, global+named middleware, bootProviders",
+      "Routes::startRoutes → InitModsImproved per module path, then custom-routes.php, then dispatch"
+    ],
+    "config_contract": {
+      "env_file": "Application::path('src/Etc/.env') via Environment::load()",
+      "read": ["Environment::get()", "ConfigManager::get()"],
+      "avoid": "$_ENV for .env keys",
+      "legacy_fallbacks": ["Config.php", "ConfigDatabase.php"]
+    },
+    "router_contract": {
+      "addRoute": "exact path; returns void; middleware 4th arg; same path overwrites",
+      "addParamRoute": "pattern with {id:int}; returns $this (chain ->name())",
+      "no_apis": ["get()", "group()", "fluent middleware() groups"],
+      "controller_signature": "(string $route, string $method)",
+      "custom_routes": "src/Etc/custom-routes.php after discovery — stock '/' → Welcome",
+      "discovery": "*/Routes/Routes.php only — modules without it are invisible"
+    },
+    "packages_contract": {
+      "registry": "optional src/Etc/packages.php",
+      "register_then_boot": "registerProviders before middleware; bootProviders after",
+      "path_order": "getModulePathsForRoutes — packs first, app src/Modules last",
+      "interop_test": "bitshost/upmvc-saas-pack"
+    },
+    "tools": [
+      "php src/Tools/doctor.php",
+      "php src/Tools/migrate.php",
+      "php src/Tools/cache-cli.php",
+      "php src/Tools/upmvc-next.php"
+    ],
+    "audit_open": [
+      "Start::$defaultProtectedRoutes still lists demo-ish prefixes — override via PROTECTED_ROUTES",
+      "Legacy Config.php / ConfigDatabase.php still in the stack — prefer ConfigManager"
+    ]
+  },  "paths": {
     "app_root": "UPMVC_APP_ROOT or project root (dirname above src/)",
     "entry": "public/index.php",
     "env_file": "src/Etc/.env",
