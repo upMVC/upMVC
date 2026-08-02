@@ -55,6 +55,21 @@ Need to build a **SaaS product**? **[upMVC-SaaS](https://github.com/upMVC/upMVC-
 
 → **[github.com/upMVC/upMVC-SaaS](https://github.com/upMVC/upMVC-SaaS)**
 
+### Compose your stack (optional layers)
+
+Thin Core is enough for many apps. When you need more, compose — nothing is mandatory:
+
+| Layer | Piece | Job |
+|-------|--------|-----|
+| Kernel | **upMVC** (`src/Etc/`) | Boot, routes, modules, SSR / SPA shells — PHP first, no forced ORM |
+| Product | **upMVC-SaaS + saas-pack** | Tenants, plans, isolation, onboarding |
+| API | **[PHP CRUD API Generator](https://github.com/BitsHost/PHP-CRUD-API-Generator)** | Full API plane — auth, RBAC, filters, bulk, rate limits, OpenAPI |
+| UI | Modules / islands | React, Vue, Svelte, or plain PHP — consume the API from any SPA |
+
+**Strongest simple foundation for multi-tenant products:** upMVC-SaaS + saas-pack + the API library — then SPA modules in whatever JS you like. Each layer stays in its lane; you don’t rebuild tenancy or REST from scratch.
+
+→ Full guide: **[upMVC + PHP CRUD API Generator](docs/INTEGRATION_PHP_CRUD_API.md)** (includes the SaaS + API composition)
+
 ---
 
 ## 🎨 **NEW: Modern UI System**
@@ -143,7 +158,7 @@ Take / try / drop: delete any demo folder under `src/Modules/` anytime.
 - **[🏝️ Islands Architecture](docs/ISLANDS_ARCHITECTURE_INDEX.md)** - **NEW!** Complete guide to PHP + React Islands
 - **[⚛️ React Integration Patterns](docs/REACT_INTEGRATION_PATTERNS.md)** - Five ways to integrate React/Vue/Preact
 - **[🔥 ReactHMR - Hot Module Reload](https://github.com/upMVC/upMVC/releases)** - Demo module in the optional Releases zip (see Reacthmr README inside the pack)
-- **[📦 Integration: upMVC + PHP CRUD API Generator](docs/INTEGRATION_PHP_CRUD_API.md)** - **NEW!** Full-stack power combo guide
+- **[📦 Integration: upMVC + PHP CRUD API Generator](docs/INTEGRATION_PHP_CRUD_API.md)** - Compose with SaaS pack + API (full API plane, not a toy helper)
 - **[🎯 JavaScript Framework Integration](docs/REACT_BUILD_INTEGRATION.md)** - **NEW!** Deploy React, Vue, Svelte, or any JS framework build
 - **[⚛️ React Build Integration](docs/REACT_BUILD_INTEGRATION.md)** - Complete React deployment guide (Vite/Webpack/CRA)
 - **[💚 Vue Build Integration](docs/VUE_BUILD_INTEGRATION.md)** - **NEW!** Vue 2/3 deployment guide (Vite/Webpack/Nuxt)
