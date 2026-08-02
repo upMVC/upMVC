@@ -66,7 +66,7 @@ upMVC v1.0.3 introduces a **contemporary design system** while maintaining compl
 - **⚡ Alpine.js Integration**: Lightweight interactivity (~40KB vs 87KB jQuery)
 - **🎯 Zero Breaking Changes**: Drop-in replacement for existing BaseView
 
-**Quick Demo:** `/test` (original) vs `/test/modern` (new design)
+**Quick Demo** (with optional demos installed): `/test` (original) vs `/test/modern` (new design)
 **Documentation:** [Modern BaseView Guide](docs/MODERN_BASEVIEW_GUIDE.md) | [Demo Instructions](docs/MODERN_DEMO.md)
 
 ## 🌟 **What is upMVC?**
@@ -97,9 +97,9 @@ upMVC excels at integrating **pre-built JavaScript applications** from any frame
 > **🆚 How is upMVC Different?**  
 > Unlike Laravel, Symfony, or other PHP frameworks, upMVC is a **system, not a framework**. No forced conventions, no ORM requirements, no framework rules. **"Direct PHP First"** principle means complete freedom. Want React in one module and Vue in another? ✅ Want to delete core modules? ✅ Want to split your app into multiple independent instances? ✅ True micro-frontends architecture that nobody else offers. Read: [Comparison with Other PHP Projects](docs/COMPARISON_PHP_FRAMEWORKS.md)
 
-> **📌 Note:** Included modules (admin, email, auth, react, etc.) are **reference implementations** showing different approaches to common problems. After installation, **you can delete any modules** you don't need - keep only what serves your project. Each module demonstrates different techniques (middleware vs manual auth checks, cached routes, etc.) to help you choose your preferred approach. See [Module Philosophy](docs/MODULE_PHILOSOPHY.md) for details.
+> **📌 Note:** Stock upMVC ships a thin **Welcome** homepage only (no database). Optional demo modules (Auth, Test, React, Admin, …) are a separate download from [GitHub Releases](https://github.com/upMVC/upMVC/releases) — unzip into `src/Modules/`, import `demo-modules.sql` if needed, done. Demos are take / try / drop; they are not a Composer package. See [Module Philosophy](docs/MODULE_PHILOSOPHY.md).
 >
-> **One exception:** the `Test` module registers the `/` route, so deleting it leaves the site with no homepage. Either keep it until you have your own landing page, or move its `addRoute('/', …)` line into your replacement module first.
+> **Homepage:** `/` is owned by `src/Etc/custom-routes.php` → `Welcome\Controller`. Change or remove that entry anytime and point `/` at your own module.
 
 ## 🚀 **Quick Navigation**
 
@@ -277,7 +277,7 @@ cp vendor/bitshost/upmvc/src/Etc/.env.example vendor/bitshost/upmvc/src/Etc/.env
 php -S localhost:8080 -t public
 ```
 
-**Visit:** `http://localhost:8080` — all 16 bundled modules are discovered and registered automatically.
+**Visit:** `http://localhost:8080` — Welcome homepage loads with no database. Optional demos (if installed) are discovered automatically.
 
 ## Option 2: Install as a Standalone Project (Even Simpler!)
 
@@ -299,10 +299,13 @@ cd yourProjectName
 #   or SITE_PATH=                       # if the app is at domain root
 # - DOMAIN_NAME=http://localhost
 
-# Step 4: Point .env at a database
-# The bundled modules open a connection on boot, so DB_NAME must exist —
-# an EMPTY database is enough to get the site running. Without it you get
-# a 500: SQLSTATE[HY000] [1049] Unknown database 'your_database'
+# Step 4: Open the site
+# Welcome (`/`) needs no database. You can browse immediately after
+# configuring DOMAIN_NAME / SITE_PATH.
+#
+# When you add your own modules (or the optional demo pack) that use PDO,
+# point .env at a database — an EMPTY database is enough to avoid
+# SQLSTATE[HY000] [1049] Unknown database:
 #
 #   CREATE DATABASE upmvc CHARACTER SET utf8mb4;
 #
@@ -311,15 +314,15 @@ cd yourProjectName
 # - DB_USER=root
 # - DB_PASS=
 #
-# Want tables and demo logins too? See database/README.md:
+# Kernel tables and demo logins: see database/README.md
 #   mysql -u root -p upmvc < database/schema.sql
 #   mysql -u root -p upmvc < database/seed.sql
 #
-# Want the demo modules to run too? They need their own tables:
-#   mysql -u root -p upmvc < database/demo-modules.sql   # /admin, /product
-#
-# The Userorm demo also needs the optional ORM:
-#   composer require gabordemooij/redbean
+# Optional demo modules (Auth, Test, Admin, React, …):
+#   Download upmvc-demos.zip from GitHub Releases
+#   Unzip folders into src/Modules/ (next to Welcome)
+#   mysql -u root -p upmvc < database/demo-modules.sql   # or the copy inside the zip
+#   The Userorm demo also needs: composer require gabordemooij/redbean
 #
 # Database settings are optional because upMVC has smart fallbacks:
 # - If .env database settings are missing, it uses src/Etc/ConfigDatabase.php
@@ -562,7 +565,10 @@ In the same file, modules/test/routes/Routes.php, you will see for demonstration
 #
 #
 ##
-## The provided modules (Mail and Authentication) are for illustrative purposes only. You can safely delete them, as well as any other existing modules. The goal is to demonstrate the modularity of the system and how you can create your own custom modules to suit your specific project needs. The one to check before removing is `Test`, which currently registers the `/` route — move that line to your own module first, or the site is left without a homepage.
+## The optional demo modules (Auth, Mail, Test, React, …) are illustrative only.
+## Download them from GitHub Releases when you want show-off code; delete any
+## folder under src/Modules/ anytime. Stock create-project ships Welcome only.
+## Homepage `/` is set in src/Etc/custom-routes.php — change it to your module.
 
 ##
 

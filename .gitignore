@@ -139,3 +139,13 @@ composer.phar
 /vendor/
 # Local safety copies of retired SQL files
 /database/junk/
+
+# Demo modules are optional — download from GitHub Releases and paste into src/Modules/.
+# Only Welcome ships in the thin create-project (owns '/' via src/Etc/custom-routes.php).
+# Local copies stay on disk for development; they are not tracked.
+/src/Modules/*
+!/src/Modules/Welcome/
+!/src/Modules/Welcome/**
+
+# Built demo archive (attach to Releases — do not commit; *.zip already ignored)
+/dist/

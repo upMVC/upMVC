@@ -20,6 +20,7 @@
     "Use Application::getInstance()->path() for filesystem paths — avoid hardcoded relative paths"
   ],
   "never": [
+    "Never expose password hashes in API JSON responses",
     "Store or compare passwords in plain text",
     "Use $_ENV['MAIL_*'] or $_ENV['JWT_SECRET'] as primary config source",
     "Use FILTER_SANITIZE_STRING (removed in PHP 8.1)",

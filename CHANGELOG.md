@@ -2,6 +2,16 @@
 
 ## [Unreleased]
 
+### Changed — thin create-project (Welcome only)
+- **Stock tree ships `Welcome` only.** Optional demos (Auth, Test, Admin, React*, User, …) leave git; keep them locally or download `upmvc-demos.zip` from Releases and paste into `src/Modules/`.
+- **`/` and `/index.php`** are owned by `src/Etc/custom-routes.php` → `App\Modules\Welcome\Controller` (no DB, no auth). Apps replace that entry anytime.
+- **`Test` no longer registers `/`** — demos live under `/test` and friends.
+- **`.gitignore`** ignores `/src/Modules/*` except `Welcome/`. Build archive with `php scripts/build-demos-zip.php` → `dist/upmvc-demos.zip`.
+
+### Fixed (demo pack, before zip)
+- **Auth signup** uses `MAIL_FROM_ADDRESS` from `.env` instead of a hardcoded BitsWorld address.
+- **`/apiUsers` JSON** no longer includes password hashes.
+
 ### CI
 - **`.github/workflows/ci.yml`** — PHPStan and PHPUnit on every push and pull request, across PHP 8.1–8.4 with Composer caching. Neither tool needs a database, so the run is self-contained.
   - PHP 8.4 is tested because `composer.json` declares `>=8.1`, but runs as `continue-on-error`: its new deprecations should report rather than block until the codebase is deliberately verified against it.

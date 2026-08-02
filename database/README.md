@@ -81,7 +81,7 @@ and how to recover.
 | `migrations/001_base_schema.sql` | yes | `users` — the source of truth |
 | `schema.sql` | **no — generated** | full current structure |
 | `seed.sql` | yes | demo users |
-| `demo-modules.sql` | yes | tables the bundled demo modules need |
+| `demo-modules.sql` | yes | tables optional demo modules need (also shipped inside `upmvc-demos.zip`) |
 
 **Never edit `schema.sql` by hand.** It's produced by `--dump`; edits are
 overwritten on the next migrate. Change the schema by adding a migration.
