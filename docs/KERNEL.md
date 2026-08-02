@@ -3,7 +3,7 @@
 The **product** is `src/Etc/` (plus `public/index.php` and the Composer package boundary).  
 Modules under `src/Modules/` are optional. Demos are a Releases zip. Do not infer kernel limits from demos.
 
-Verified against **2.5.0** (Thin Core). Claims below are from running code in `src/Etc/`, not from marketing copy.
+Verified against **v2.5.0** (Thin Core). Claims below are from running code in `src/Etc/`, not from marketing copy.
 
 ---
 
@@ -125,7 +125,7 @@ SaaS pack (`bitshost/upmvc-saas-pack`) is the primary interoperability stress te
 
 ---
 
-## Short audit — boot / config / router only (2.5.0)
+## Short audit — boot / config / router only (v2.5.0)
 
 | Area | Finding | Severity | Next step (later) |
 |------|---------|----------|-------------------|

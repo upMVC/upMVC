@@ -2,15 +2,8 @@
 
 ## [Unreleased]
 
-### Changed — thin create-project (Welcome only)
-- **Stock tree ships `Welcome` only.** Optional demos (Auth, Test, Admin, React*, User, …) leave git; keep them locally or download `upmvc-demos.zip` from Releases and paste into `src/Modules/`.
-- **`/` and `/index.php`** are owned by `src/Etc/custom-routes.php` → `App\Modules\Welcome\Controller` (no DB, no auth). Apps replace that entry anytime.
-- **`Test` no longer registers `/`** — demos live under `/test` and friends.
-- **`.gitignore`** ignores `/src/Modules/*` except `Welcome/`. Optional demos ship as a Releases zip asset (maintainer-built from local copies — not from the public tree).
-
-### Fixed (demo pack, before zip)
-- **Auth signup** uses `MAIL_FROM_ADDRESS` from `.env` instead of a hardcoded BitsWorld address.
-- **`/apiUsers` JSON** no longer includes password hashes.
+### Docs
+- **`docs/KERNEL.md`** — kernel surface (boot, config, router, packages); agent `kernel_surface` + rules so claims stay tied to `src/Etc/`, not demos.
 
 ### CI
 - **`.github/workflows/ci.yml`** — PHPStan and PHPUnit on every push and pull request, across PHP 8.1–8.4 with Composer caching. Neither tool needs a database, so the run is self-contained.
@@ -96,6 +89,20 @@ real namespaces, router methods tested for existence) rather than by reading.
 - **`README.md`** — the standalone install is now four steps, not three. Following the documented three produced `SQLSTATE[HY000] [1049] Unknown database 'your_database'` on the homepage: the bundled modules open a database connection on boot, so `DB_NAME` must point at a database that exists. An **empty** one is sufficient — no schema import is required to get the site rendering. Verified end to end with `composer create-project` against a freshly created empty database.
 
 ---
+
+## v2.5.0 - Thin Core (2026-08-02)
+
+Stock create-project / clone is light boilerplate: kernel + **Welcome** homepage. Full demo suite is optional (`upmvc-demos.zip` on the Release).
+
+### Changed
+- **Stock tree ships `Welcome` only.** Optional demos leave git; keep them locally or download from Releases and paste into `src/Modules/`.
+- **`/` and `/index.php`** owned by `src/Etc/custom-routes.php` → `App\Modules\Welcome\Controller` (no DB, no auth).
+- **`Test` no longer registers `/`** — demos live under `/test` and friends.
+- **`.gitignore`** ignores `/src/Modules/*` except `Welcome/`. Maintainer demos-zip script is local-only (not public).
+
+### Fixed (in the demos zip pack)
+- **Auth signup** uses `MAIL_FROM_ADDRESS` from `.env` instead of a hardcoded BitsWorld address.
+- **`/apiUsers` JSON** no longer includes password hashes.
 
 ## v2.4.0 - Migration Runner, Database Tooling & Autoload Fixes (2026-07-29)
 
