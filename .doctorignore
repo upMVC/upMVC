@@ -1,0 +1,19 @@
+# .doctorignore — findings src/Tools/doctor.php should report but not fail on.
+#
+# One repo-relative path or glob per line. Blank lines and # comments ignored.
+# Matching is case-insensitive and supports * and ? wildcards, e.g.
+#
+#   src/Modules/Legacy/*
+#   src/Modules/*/Routes/Old*.php
+#
+# Entries here are still PRINTED under "Ignored" — they just do not affect the
+# exit code, so CI stays green while the finding remains visible. Run
+# `php src/Tools/doctor.php --strict` to ignore this file entirely.
+#
+# Only add something here once you have decided it is acceptable. An entry with
+# no reason next to it is indistinguishable from a bug someone silenced.
+#
+# Currently empty: the one finding this file used to carry
+# (src/Modules/Mail/Routes/MailRoutes.php) was fixed by deleting the dead route
+# rather than suppressing it. Prefer that order — a suppression is a last
+# resort, not a first one.
