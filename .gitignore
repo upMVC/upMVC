@@ -149,3 +149,8 @@ composer.phar
 
 # Built demo archive (attach to Releases — do not commit; *.zip already ignored)
 /dist/
+
+# Maintainer-only: rebuild demos zip from local (gitignored) modules for Releases.
+# Not useful on a stock clone — demos are not in the public tree.
+/scripts/
+
