@@ -1,10 +1,10 @@
-# 📚 upMVC noFramework v2.4 – Complete Documentation
+# 📚 upMVC noFramework v2.5 – Complete Documentation
 
 > **Modern, lightweight PHP NoFramework with Islands Architecture for real-world PHP + JS systems**
 
-**Status: ✅ Production Ready (v2.4)** | **PHP 8.1+** | **PSR-4 Compliant** | **MIT License**
+**Status: ✅ Production Ready (v2.5)** | **PHP 8.1+** | **PSR-4 Compliant** | **MIT License**
 
-**v2.4:** Migration runner with generated schema and seed data, hardened auth & middleware, Router v2.0 (typed & validated routes with names), PSR-4 helpers, package/provider architecture, **AI Agent pack** for Cursor and other assistants, and a fully documented PHP + React/Vue *Islands Architecture*.
+**v2.5:** Thin create-project — **Welcome** homepage (no database), optional demos as a Releases zip, migration runner, Router v2.0, package/provider architecture, **AI Agent pack**, and PHP + React/Vue *Islands Architecture*. Kernel lives in `src/Etc/`; modules are optional.
 
 ## 🤖 AI Agent — built-in context for Cursor, Claude, and local LLMs
 
@@ -97,9 +97,20 @@ upMVC excels at integrating **pre-built JavaScript applications** from any frame
 > **🆚 How is upMVC Different?**  
 > Unlike Laravel, Symfony, or other PHP frameworks, upMVC is a **system, not a framework**. No forced conventions, no ORM requirements, no framework rules. **"Direct PHP First"** principle means complete freedom. Want React in one module and Vue in another? ✅ Want to delete core modules? ✅ Want to split your app into multiple independent instances? ✅ True micro-frontends architecture that nobody else offers. Read: [Comparison with Other PHP Projects](docs/COMPARISON_PHP_FRAMEWORKS.md)
 
-> **📌 Note:** Stock upMVC ships a thin **Welcome** homepage only (no database). Optional demo modules (Auth, Test, React, Admin, …) are a separate download from [GitHub Releases](https://github.com/upMVC/upMVC/releases) — unzip into `src/Modules/`, import `demo-modules.sql` if needed, done. Demos are take / try / drop; they are not a Composer package. See [Module Philosophy](docs/MODULE_PHILOSOPHY.md).
+> **📌 Note:** Stock upMVC ships a thin **Welcome** homepage only (no database). Optional demos are a separate download — not a Composer package. See [Module Philosophy](docs/MODULE_PHILOSOPHY.md).
 >
 > **Homepage:** `/` is owned by `src/Etc/custom-routes.php` → `Welcome\Controller`. Change or remove that entry anytime and point `/` at your own module.
+
+### Optional demo modules (Auth, Test, Admin, React, …)
+
+Download **`upmvc-demos.zip`** from [GitHub Releases](https://github.com/upMVC/upMVC/releases).
+
+1. Paste `Modules/*` into `src/Modules/` (next to `Welcome`)
+2. Import demo SQL if needed (`demo-modules.sql` is in the zip, or `database/demo-modules.sql` in the repo)
+3. `composer dump-autoload` — optional; `App\` → `src/` usually already covers new folders
+4. Done — routes appear (`/test`, `/auth`, `/admin`, …)
+
+Take / try / drop: delete any demo folder under `src/Modules/` anytime.
 
 ## 🚀 **Quick Navigation**
 
@@ -131,7 +142,7 @@ upMVC excels at integrating **pre-built JavaScript applications** from any frame
 - **[🔄 Configuration Fallbacks](docs/CONFIGURATION_FALLBACKS.md)** - **NEW!** Three-level fallback system explained
 - **[🏝️ Islands Architecture](docs/ISLANDS_ARCHITECTURE_INDEX.md)** - **NEW!** Complete guide to PHP + React Islands
 - **[⚛️ React Integration Patterns](docs/REACT_INTEGRATION_PATTERNS.md)** - Five ways to integrate React/Vue/Preact
-- **[🔥 ReactHMR - Hot Module Reload](modules/reacthmr/README.md)** - Auto-reload without webpack
+- **[🔥 ReactHMR - Hot Module Reload](https://github.com/upMVC/upMVC/releases)** - Demo module in the optional Releases zip (see Reacthmr README inside the pack)
 - **[📦 Integration: upMVC + PHP CRUD API Generator](docs/INTEGRATION_PHP_CRUD_API.md)** - **NEW!** Full-stack power combo guide
 - **[🎯 JavaScript Framework Integration](docs/REACT_BUILD_INTEGRATION.md)** - **NEW!** Deploy React, Vue, Svelte, or any JS framework build
 - **[⚛️ React Build Integration](docs/REACT_BUILD_INTEGRATION.md)** - Complete React deployment guide (Vite/Webpack/CRA)
@@ -319,10 +330,11 @@ cd yourProjectName
 #   mysql -u root -p upmvc < database/seed.sql
 #
 # Optional demo modules (Auth, Test, Admin, React, …):
-#   Download upmvc-demos.zip from GitHub Releases
-#   Unzip folders into src/Modules/ (next to Welcome)
-#   mysql -u root -p upmvc < database/demo-modules.sql   # or the copy inside the zip
-#   The Userorm demo also needs: composer require gabordemooij/redbean
+#   1. Download upmvc-demos.zip from GitHub Releases
+#   2. Paste Modules/* into src/Modules/ (next to Welcome)
+#   3. mysql -u root -p upmvc < database/demo-modules.sql   # or the copy inside the zip
+#   4. composer dump-autoload   # optional
+#   Userorm also needs: composer require gabordemooij/redbean
 #
 # Database settings are optional because upMVC has smart fallbacks:
 # - If .env database settings are missing, it uses src/Etc/ConfigDatabase.php
@@ -340,7 +352,7 @@ the project root returns 404 for every URL, including `/`.
 
 **Visit:** `http://localhost:8081` (or adjust for `SITE_PATH`)
 
-**Note:** Everything is included - no copying files needed! Just configure `.env` and run.
+**Note:** Stock install is **Welcome + kernel** only. Demo modules are the optional Releases zip (steps above) — not bundled in `create-project`.
 
 **Optional - Keep dependencies updated:**
 ```bash
@@ -502,7 +514,7 @@ Composer now handles everything via a **single PSR‑4 root**:
 4. Visit the module URL; Router v2.0 + middleware handle the rest.
 
 **Examples & Guides:**
-- See the `test`, `admin`, and example modules under `src/Modules/*`.
+- Optional demos (`Test`, `Admin`, …) ship in the Releases zip — not in a stock clone.
 - Read: `docs/routing/ROUTING_GUIDE.md`, `docs/routing/ROUTER_V2_EXAMPLES.md`, and `docs/routing/ROUTER_V2_CHANGELOG.md`.
     
 
