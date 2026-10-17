@@ -49,26 +49,49 @@ php src/Tools/upmvc-next.php --scaffold --goal "Create a Blog CRUD module"
 
 > **Note:** Legacy PHP module generators were removed. New modules are created by your AI assistant using the knowledge pack (and optional scaffolds), not `php tools/createmodule/…`.
 
-## 🏢 upMVC-SaaS — Official Multi-Tenant Fork
+## 🧩 Compose your stack (optional layers)
 
-Need to build a **SaaS product**? **[upMVC-SaaS](https://github.com/upMVC/upMVC-SaaS)** is the official fork of upMVC with multi-tenancy, platform administration, tenant isolation, plan gating, JWT auth, impersonation, and a complete signup/onboarding flow built in — ready to extend, not a starting template.
+upMVC is the **kernel** — not a SaaS-only fork. Thin Core is enough for many apps. When you need multi-tenant SaaS, you **compose** packages; nothing is mandatory:
 
-→ **[github.com/upMVC/upMVC-SaaS](https://github.com/upMVC/upMVC-SaaS)**
-
-### Compose your stack (optional layers)
-
-Thin Core is enough for many apps. When you need more, compose — nothing is mandatory:
+```text
+bitshost/upmvc                 → kernel (this repo)
+bitshost/upmvc-saas-pack       → tenancy + Harvest ops (mail, notify, audit, MFA, …)
+bitshost/upmvc-payments-pack   → optional payments (cash / bank / Stripe / …)
+your app                       → domain modules only (e.g. CMMS, rentals, accounting)
+```
 
 | Layer | Piece | Job |
 |-------|--------|-----|
-| Kernel | **upMVC** (`src/Etc/`) | Boot, routes, modules, SSR / SPA shells — PHP first, no forced ORM |
-| Product | **upMVC-SaaS + saas-pack** | Tenants, plans, isolation, onboarding |
-| API | **[PHP CRUD API Generator](https://github.com/BitsHost/PHP-CRUD-API-Generator)** | Full API plane — auth, RBAC, filters, bulk, rate limits, OpenAPI |
-| UI | Modules / islands | React, Vue, Svelte, or plain PHP — consume the API from any SPA |
+| Kernel | **[upMVC](https://github.com/upMVC/upMVC)** (`src/Etc/`) | Boot, routes, modules, SSR / SPA shells — PHP first, no forced ORM |
+| SaaS floor | **[upMVC-SaaS-Pack](https://github.com/upMVC/upMVC-SaaS-Pack)** (`^1.1` Harvest) | Tenants, plans, JWT, platform admin, shared ops |
+| Payments | **[upMVC-Payments-Pack](https://github.com/upMVC/upMVC-Payments-Pack)** (optional) | Gateway contracts + tenant-scoped payment intents |
+| Host app | Your project (or starter) | Domain APIs / UI — registers providers in `src/Etc/packages.php` |
+| API plane | **[PHP CRUD API Generator](https://github.com/BitsHost/PHP-CRUD-API-Generator)** (optional) | Full REST plane — auth, RBAC, filters, OpenAPI |
+| UI | Modules / islands | React, Vue, Svelte, or plain PHP |
 
-**Strongest simple foundation for multi-tenant products:** upMVC-SaaS + saas-pack + the API library — then SPA modules in whatever JS you like. Each layer stays in its lane; you don’t rebuild tenancy or REST from scratch.
+**Wire a SaaS host:**
 
-→ Full guide: **[upMVC + PHP CRUD API Generator](docs/INTEGRATION_PHP_CRUD_API.md)** (includes the SaaS + API composition)
+```php
+// src/Etc/packages.php
+return [
+    \BitsHost\UpmvcSaas\SaasServiceProvider::class,
+    // \BitsHost\UpmvcPayments\PaymentsServiceProvider::class,  // optional
+];
+```
+
+```bash
+composer require bitshost/upmvc bitshost/upmvc-saas-pack
+# optional: composer require bitshost/upmvc-payments-pack
+```
+
+**Starter shell:** [upMVC-SaaS](https://github.com/upMVC/upMVC-SaaS) is a thin composed app that requires the kernel + saas-pack — **not** a fork that copies kernel code.
+
+**How to build one (N steps):** folder layout, providers, modules — without dumping product domain code → **[docs/BUILD_SAAS_APP.md](docs/BUILD_SAAS_APP.md)**  
+Structure reference: [myCMMS-PHP](https://github.com/BitsHost/myCMMS-PHP) (composed host on Packagist; your vertical stays yours).
+
+Each layer stays in its lane: you don’t rebuild tenancy, mail/ops, or payments inside every product.
+
+→ Pack docs: [saas-pack](https://github.com/upMVC/upMVC-SaaS-Pack) · [Harvest ops](https://github.com/upMVC/upMVC-SaaS-Pack/blob/master/docs/09-harvest-ops.md) · **[upMVC + PHP CRUD API](docs/INTEGRATION_PHP_CRUD_API.md)**
 
 ---
 
@@ -158,7 +181,8 @@ Take / try / drop: delete any demo folder under `src/Modules/` anytime.
 - **[🏝️ Islands Architecture](docs/ISLANDS_ARCHITECTURE_INDEX.md)** - **NEW!** Complete guide to PHP + React Islands
 - **[⚛️ React Integration Patterns](docs/REACT_INTEGRATION_PATTERNS.md)** - Five ways to integrate React/Vue/Preact
 - **[🔥 ReactHMR - Hot Module Reload](https://github.com/upMVC/upMVC/releases)** - Demo module in the optional Releases zip (see Reacthmr README inside the pack)
-- **[📦 Integration: upMVC + PHP CRUD API Generator](docs/INTEGRATION_PHP_CRUD_API.md)** - Compose with SaaS pack + API (full API plane, not a toy helper)
+- **[🏢 Build a SaaS app (N steps)](docs/BUILD_SAAS_APP.md)** - Compose kernel + saas-pack + host: folders, providers, modules
+- **[📦 Integration: upMVC + PHP CRUD API Generator](docs/INTEGRATION_PHP_CRUD_API.md)** - Optional API plane with the compose stack
 - **[🎯 JavaScript Framework Integration](docs/REACT_BUILD_INTEGRATION.md)** - **NEW!** Deploy React, Vue, Svelte, or any JS framework build
 - **[⚛️ React Build Integration](docs/REACT_BUILD_INTEGRATION.md)** - Complete React deployment guide (Vite/Webpack/CRA)
 - **[💚 Vue Build Integration](docs/VUE_BUILD_INTEGRATION.md)** - **NEW!** Vue 2/3 deployment guide (Vite/Webpack/Nuxt)

@@ -1,14 +1,14 @@
 # Integration Guide: upMVC + PHP CRUD API Generator
 
-Combine **upMVC** (app / modules / SPA shells) with **[PHP CRUD API Generator](https://github.com/BitsHost/PHP-CRUD-API-Generator)** (API / data plane) for a full-stack PHP setup — or go further with **[upMVC-SaaS](https://github.com/upMVC/upMVC-SaaS)** + **saas-pack** for multi-tenant products.
+Combine **upMVC** (kernel / modules / SPA shells) with **[PHP CRUD API Generator](https://github.com/BitsHost/PHP-CRUD-API-Generator)** (API / data plane) for a full-stack PHP setup — or go multi-tenant by composing **`bitshost/upmvc-saas-pack`** (tenancy + Harvest) into a host app. See **[BUILD_SAAS_APP.md](BUILD_SAAS_APP.md)**.
 
-- Server-rendered pages and module routes (upMVC / upMVC-SaaS)
+- Server-rendered pages and module routes (upMVC host)
 - Full REST-like API — auth, RBAC, filters, bulk, rate limits, OpenAPI — zero codegen
 - Shared database; optional shared JWT secret
 - React/Vue **islands** or SPA entrypoints that `fetch` the API
 - Mobile / third-party clients on the same API
 
-**Strongest simple foundation:** upMVC-SaaS + `bitshost/upmvc-saas-pack` + this API library. Tenancy and product shell from SaaS; modules/SPA from the kernel; API for clients and integrations — each layer stays in its lane, nothing rebuilt from scratch.
+**Strongest simple foundation:** `bitshost/upmvc` + `bitshost/upmvc-saas-pack` + this API library (+ optional payments-pack). Tenancy and ops from the pack; modules/SPA from the host; API for clients — each layer stays in its lane.
 
 upMVC **2.5+ (Thin Core):** stock tree is kernel + **Welcome** only. Optional UI demos come from the Releases zip. The API is a separate Composer package under `public/api/` (or your own Alias).
 
@@ -18,8 +18,9 @@ upMVC **2.5+ (Thin Core):** stock tree is kernel + **Welcome** only. Optional UI
 
 | Piece | Job |
 |--------|-----|
-| **upMVC-SaaS + saas-pack** (when multi-tenant) | Product plane — tenants, plans, isolation, onboarding, JWT/session shell |
-| **upMVC kernel** | App plane — boot, modules, SSR, SPA/island entrypoints |
+| **upmvc-saas-pack** (when multi-tenant) | SaaS floor — tenants, plans, isolation, JWT, Harvest ops |
+| **upMVC kernel** | Boot, modules, SSR, SPA/island entrypoints |
+| **Host app** | Domain modules only — register providers in `packages.php` |
 | **PHP CRUD API Generator** | API plane — secure list/read/create/update/delete, filters, bulk, RBAC, rate limits, OpenAPI |
 | **JS in a module / SPA** | Orchestration, joins, workflows on top of the API |
 
