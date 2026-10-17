@@ -173,6 +173,17 @@ Same pattern: require → register → migrate → call thin API / library.
 
 ---
 
+## Helper CLI (after saas-pack is required)
+
+```bash
+php vendor/bitshost/upmvc-saas-pack/bin/saas-next.php doctor
+php vendor/bitshost/upmvc-saas-pack/bin/saas-next.php init
+php vendor/bitshost/upmvc-saas-pack/bin/saas-next.php scaffold-domain YourDomain
+php vendor/bitshost/upmvc-saas-pack/bin/saas-next.php agent --goal "…"
+```
+
+Discovers optional packs (e.g. payments) via each package’s `saas-kit.json`. See saas-pack `docs/SAAS_NEXT.md`.
+
 ## Checklist
 
 - [ ] Host `public/index.php` sets `UPMVC_APP_ROOT`
@@ -180,6 +191,7 @@ Same pattern: require → register → migrate → call thin API / library.
 - [ ] `packages.php` registers `SaasServiceProvider`
 - [ ] `.env` has domain, DB, JWT
 - [ ] Migrations applied
+- [ ] `saas-next doctor` is clean
 - [ ] JWT login works
 - [ ] First domain module under `src/Modules/Api/Modules/{Domain}/`
 - [ ] Every tenant query uses `tenant_id`
