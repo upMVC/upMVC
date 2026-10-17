@@ -145,7 +145,7 @@ Optional module builder pack (replaces removed PHP generators). Module types (`b
 
 ### `upmvc-saas-pack.json`
 
-SaaS-specific knowledge: three-layer architecture (kernel + pack + starter), `jwt` / `tenant` / `feature:*` middleware, `tenant_id` scoping, `SaasApiController` patterns. Load only when the SaaS pack is present.
+SaaS-specific knowledge: three-piece architecture (kernel + pack + host app), tenancy v1 (`jwt` / `tenant` / `feature:*`, `tenant_id` scoping, `SaasApiController`), plus **Harvest** ops kernel (`MailGateway`, dual-unseal `SecretBox`/`Totp`, empty `NotifyRegistry`, audit, Attention, migration `002`). Human detail lives in the pack repo `docs/09-harvest-ops.md`. Load only when the SaaS pack is present.
 
 ---
 

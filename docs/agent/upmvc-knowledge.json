@@ -247,7 +247,7 @@
     },
     "filename_uniqueness": "Tracking is by bare filename, so a migration name must be unique across kernel, packages and app. migrate.php hard-errors on collisions rather than silently skipping the second one.",
     "kernel_owns": "users (001_base_schema.sql)",
-    "pack_owns": "plans, tenants, refresh_tokens (upmvc-saas-pack 001_saas_layer.sql)"
+    "pack_owns": "plans, tenants, refresh_tokens (001_saas_layer.sql); Harvest ops tables smtp_settings, email_log, audit_log, notification_*, platform_settings, i18n_overlays, optional users.totp_* (002_saas_ops_layer.sql)"
   },
   "security_baseline": {
     "csrf": "Security::csrfToken() in forms; validate on POST",

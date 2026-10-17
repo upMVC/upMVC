@@ -1,8 +1,8 @@
 {
   "meta": {
     "name": "upMVC Agent Rules",
-    "version": "1.1.0",
-    "verified_against": "upMVC v2.5.0",
+    "version": "1.1.1",
+    "verified_against": "upMVC v2.5.0 + upmvc-saas-pack v1.1.0 Harvest",
     "severity": "These are hard constraints. Violations must be fixed before code is accepted."
   },
   "must": [
@@ -44,7 +44,11 @@
     "Protected tenant APIs: middleware ['cors', 'jwt'] as 4th addRoute argument — not ->middleware() chaining",
     "Use ['tenant'] middleware on web shell routes that need TenantMiddleware slug/subdomain resolution",
     "Use ['feature:flagname'] only when plan gating is required (PlanGateMiddleware factory)",
-    "Never expose cross-tenant data — if tenant_id is missing, fail closed"
+    "Never expose cross-tenant data — if tenant_id is missing, fail closed",
+    "Use BitsHost\\UpmvcSaas MailGateway / SecretBox / Totp / Notify* / AuditLog — do not fork copies into the app",
+    "Register product notify types into NotifyRegistry from the app — never ship domain type catalogs in the pack",
+    "Keep dual-unseal legacy peppers until consumers re-saved secrets — never remove without a migration plan",
+    "Do not re-add final on Harvest kernel classes while products thin-extend them"
   ],
   "prefer": [
     "Extend BaseController / BaseModel / BaseView over reinventing base classes",

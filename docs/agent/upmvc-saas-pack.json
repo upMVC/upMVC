@@ -1,48 +1,88 @@
 {
   "meta": {
     "name": "upMVC SaaS Pack Knowledge",
-    "version": "1.0.1",
-    "verified_against": "bitshost/upmvc-saas-pack + upMVC v2.4.0",
+    "version": "1.1.0",
+    "verified_against": "bitshost/upmvc-saas-pack v1.1.0 (Harvest) + upMVC ^2.4 library-mode",
+    "release": "https://github.com/upMVC/upMVC-SaaS-Pack/releases/tag/v1.1.0",
+    "pack_layers": ["tenancy_v1", "harvest_ops"],
     "applies_when": [
       "composer package bitshost/upmvc-saas-pack is installed",
       "src/Etc/packages.php registers BitsHost\\UpmvcSaas\\SaasServiceProvider",
-      "Project is upMVC-SaaS or similar SaaS starter"
+      "Project is upMVC-SaaS or a product app consuming the pack"
     ],
-    "companion_repo": "upMVC-SaaS"
+    "companion_repos": ["upMVC-SaaS", "upMVC-SaaS-Pack"],
+    "human_docs_in_pack": "vendor/bitshost/upmvc-saas-pack/docs/ (especially 09-harvest-ops.md)"
   },
   "architecture": {
     "three_pieces": {
-      "bitshost/upmvc": "Core framework kernel — routing, config, middleware, module discovery",
-      "bitshost/upmvc-saas-pack": "Reusable SaaS modules, middleware, provider, demo schema",
-      "upMVC-SaaS": "Starter app wiring both packages via Composer"
+      "bitshost/upmvc": "Core framework kernel — routing, config, middleware, module discovery, Application registry",
+      "bitshost/upmvc-saas-pack": "Tenancy modules + Harvest ops libraries (MailGateway, Notify*, Audit, Totp, Attention, i18n)",
+      "host_app": "Starter (upMVC-SaaS) or product (e.g. myCMMS) — requires both, owns domain modules"
     },
     "request_flow": [
       "HTTP → public/index.php (UPMVC_APP_ROOT)",
       "vendor/bitshost/upmvc → Start.php",
-      "src/Etc/packages.php → SaasServiceProvider",
-      "Router + middleware → SaaS or app module controller"
-    ]
+      "src/Etc/packages.php → SaasServiceProvider (+ optional product providers)",
+      "Router + middleware → pack or app module controller"
+    ],
+    "boundary_rule": "If multiple SaaS products need it before domain logic → pack. Vertical-only or heavy SDK → new pack or app module."
   },
   "provider": {
     "class": "BitsHost\\UpmvcSaas\\SaasServiceProvider",
-    "register": "Adds module paths, migration paths, protected routes",
-    "boot": "Registers tenant middleware, feature:* factory, SaaS routes"
+    "register": "Adds module paths, migration paths (001+002), protected routes",
+    "boot": "Registers tenant middleware and feature:* factory"
   },
   "module_paths": {
     "pack": "vendor/bitshost/upmvc-saas-pack/src/Modules",
-    "app": "src/Modules (optional — create for local overrides)",
+    "pack_libraries": "vendor/bitshost/upmvc-saas-pack/src/Saas (BitsHost\\UpmvcSaas\\*)",
+    "app": "src/Modules (optional — create for local overrides / domain)",
     "order": "Pack scanned first, app modules last — app wins on route conflicts"
   },
   "pack_modules": {
-    "note": "Pack ships under vendor/.../src/Modules/. Your app adds domain modules under src/Modules/Api/Modules/{Domain}/ — the literal 'Modules' segment is required by the kernel glob",
-    "pack_api_modules": "Api/Modules/Auth, Api/Modules/Plans, Api/Modules/Tenants, Api/Modules/Admin",
+    "note": "Pack ships under vendor/.../src/Modules/. App domain under src/Modules/Api/Modules/{Domain}/ — literal Modules segment required by kernel glob",
+    "pack_api_modules": "Api/Modules/Auth, Api/Modules/Plans, Api/Modules/Tenants, Api/Modules/Admin, Api/Modules/PlatformOps, Api/Modules/I18n",
     "pack_web_modules": "Auth, Home, PlatformAdmin, TenantApp, TenantShop, Mail",
     "routes": {
       "Api/Modules/Auth": "POST /api/auth/login, /refresh, /logout",
       "Api/Modules/Plans": "GET /api/plans, /api/plans/{id}",
       "Api/Modules/Tenants": "POST /api/tenants/register and tenant APIs",
-      "Api/Modules/Admin": "Platform admin APIs (platform_admin role)"
+      "Api/Modules/Admin": "Platform admin APIs (platform_admin role)",
+      "Api/Modules/PlatformOps": "Thin Harvest ops APIs — apps override for domain Attention",
+      "Api/Modules/I18n": "Catalog load + overlay APIs"
     }
+  },
+  "harvest": {
+    "summary": "Ops kernel lifted into BitsHost\\UpmvcSaas\\* so products share mail/notify/audit/MFA/Attention/i18n without domain coupling",
+    "namespaces": {
+      "Mail\\MailGateway": "Platform SMTP + plan-gated tenant SMTP + .env fallback + email_log",
+      "Security\\SecretBox": "AES-256-GCM seal for SMTP passwords; dual-unseal read bridge",
+      "Security\\Totp": "RFC 6238 platform MFA; dual-unseal read bridge",
+      "Notify\\NotifyRegistry": "Empty in pack — apps register types at boot",
+      "Notify\\NotifyGate": "Global pause / kill switch per type",
+      "Notify\\Notify": "Instant fire with mute + MailGateway",
+      "Audit\\AuditLog": "Append-only + impersonator",
+      "Ops\\Attention": "Generic Attention items (SMTP, email fails, scheduler, flags)",
+      "Ops\\PlatformSettings": "Key/value platform flags",
+      "Ops\\SchedulerHeartbeat": "Cron liveness",
+      "I18n\\Catalog": "File catalogs + dotted-key DB overlays"
+    },
+    "migration": "002_saas_ops_layer.sql — platform_settings, smtp_settings, email_log, audit_log, notification_*, i18n_overlays, optional users.totp_*",
+    "thin_extend": "Harvest kernel classes are NOT final — products may extend (e.g. App\\Cmms\\MailGateway extends BitsHost\\...) to keep call-site namespaces stable",
+    "dual_unseal": {
+      "rule": "seal() writes pack pepper only; unseal() also tries legacy myCMMS peppers so path upgrades do not brick existing rows",
+      "SecretBox_write": "{APP_KEY|JWT}|saas-secret-v1",
+      "SecretBox_read_also": "|smtp-password-v1 (+ historical insecure-dev candidates)",
+      "Totp_write": "upmvc-saas-totp|{JWT_SECRET}",
+      "Totp_read_also": "mycmms-totp|{JWT_SECRET}",
+      "never": "Do not remove legacy peppers without a migration plan after all known consumers re-saved secrets"
+    },
+    "deliberately_out": [
+      "Domain notify type catalogs (WO/PM/stock, …)",
+      "Payments / billing (optional separate pack)",
+      "Full PlatformAdmin UI tabs (apps override shells)",
+      "AI translate (after overlays proven in production)"
+    ],
+    "docs": "upMVC-SaaS-Pack docs/09-harvest-ops.md"
   },
   "middleware": {
     "jwt": {
@@ -68,6 +108,7 @@
   "tenancy": {
     "model": "Shared database, shared schema — rows filtered by tenant_id",
     "core_tables": ["users", "tenants", "plans", "refresh_tokens"],
+    "ops_tables_from_002": ["platform_settings", "smtp_settings", "email_log", "audit_log", "notification_global", "i18n_overlays"],
     "tenant_registration": "POST /api/tenants/register — creates tenant + owner atomically",
     "tenant_status": ["trial", "active", "suspended"],
     "context_in_controller": {
@@ -92,22 +133,26 @@
     "location": "src/Modules/Api/Modules/{Domain}/ (app repo — not inside vendor pack)",
     "discovery_warning": "Depth matters. InitModsImproved scans */Routes/Routes.php, */Modules/*/Routes/Routes.php and */Modules/*/Modules/*/Routes/Routes.php only. src/Modules/Api/{Domain}/ is NOT discovered and fails silently.",
     "structure": ["Controller.php", "Model.php", "Routes/Routes.php"],
-    "shared_modules_reused": ["Tenants", "Plans", "Auth", "PlatformAdmin", "TenantApp"]
+    "notify_types": "Register into BitsHost\\UpmvcSaas\\Notify\\NotifyRegistry from an app service provider — never ship product type catalogs in the pack",
+    "shared_modules_reused": ["Tenants", "Plans", "Auth", "PlatformAdmin", "TenantApp", "PlatformOps", "I18n"]
   },
   "lessons_from_production": [
     "BaseModel CRUD method names may conflict — use app-level AppBaseModel wrapper if needed",
     "Use dispatch() pattern on API controllers for multi-verb routes instead of manual REQUEST_METHOD checks",
     "Split large View.php into Views/ partials when exceeding ~400 lines",
     "RateLimiter (file-based) preferred over session-only Security::rateLimit for login/signup",
-    "Validate input at controller boundary — model receives clean typed data"
+    "Validate input at controller boundary — model receives clean typed data",
+    "Dual-unseal is a read bridge — after unseal+re-save, seal() stores pack pepper only",
+    "Do not re-add final on Harvest classes while products thin-extend them"
   ],
-  "docs_in_saas_repo": [
+  "docs_in_pack_repo": [
     "docs/02-architecture.md",
     "docs/03-getting-started.md",
     "docs/04-api-modules.md",
     "docs/05-auth-jwt.md",
     "docs/06-tenants-plans.md",
     "docs/07-platform-admin.md",
-    "docs/08-your-way.md"
+    "docs/08-your-way.md",
+    "docs/09-harvest-ops.md"
   ]
 }

@@ -1,8 +1,8 @@
 {
   "meta": {
     "name": "upMVC Agent Workflows",
-    "version": "1.0.1",
-    "verified_against": "upMVC v2.4.0",
+    "version": "1.1.0",
+    "verified_against": "upMVC v2.5.0 + upmvc-saas-pack v1.1.0 Harvest",
     "instruction": "Match user intent to a workflow. Output plan JSON before implementation."
   },
   "workflows": {
@@ -45,6 +45,19 @@
         "Routes: addRoute(..., ['cors', 'jwt'], [methods]) for protected tenant APIs",
         "Migration: add table with tenant_id column and index",
         "Test with JWT from /api/auth/login — never skip tenant scoping"
+      ],
+      "reference": "docs/agent/upmvc-saas-pack.json"
+    },
+    "saas_harvest_ops": {
+      "intent_keywords": ["harvest", "mailgateway", "notify", "totp", "secretbox", "attention", "dual-unseal", "smtp"],
+      "requires": "bitshost/upmvc-saas-pack",
+      "steps": [
+        "Read pack docs/09-harvest-ops.md and docs/agent/upmvc-saas-pack.json harvest section",
+        "Prefer BitsHost\\UpmvcSaas\\* libraries — do not copy MailGateway/Totp/SecretBox into the app",
+        "Register product notify types into NotifyRegistry from an app provider — keep pack registry empty of domain keys",
+        "If sealing/unsealing changes: keep dual-unseal legacy peppers until consumers re-saved; add HarvestKernelTest coverage in the pack",
+        "Override PlatformOps / Attention in the app for domain items; do not put vertical-only logic in the pack",
+        "Thin-extend Harvest classes only when call-site namespaces must stay stable — do not re-add final"
       ],
       "reference": "docs/agent/upmvc-saas-pack.json"
     },
