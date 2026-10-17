@@ -182,7 +182,7 @@ php vendor/bitshost/upmvc-saas-pack/bin/saas-next.php scaffold-domain YourDomain
 php vendor/bitshost/upmvc-saas-pack/bin/saas-next.php agent --goal "…"
 ```
 
-Discovers optional packs (e.g. payments) via each package’s `saas-kit.json`. See saas-pack `docs/SAAS_NEXT.md`.
+Discovers optional packs (e.g. payments) via each package’s `saas-kit.json`. See saas-pack **[docs/SAAS_NEXT.md](https://github.com/upMVC/upMVC-SaaS-Pack/blob/master/docs/SAAS_NEXT.md)**.
 
 ## Checklist
 
@@ -205,6 +205,7 @@ Discovers optional packs (e.g. payments) via each package’s `saas-kit.json`. S
 | [KERNEL.md](KERNEL.md) | What the kernel actually is |
 | [MODULE_PHILOSOPHY.md](MODULE_PHILOSOPHY.md) | Modules as the unit of work |
 | [saas-pack README](https://github.com/upMVC/upMVC-SaaS-Pack) | Pack install + Harvest |
+| [saas-next CLI](https://github.com/upMVC/upMVC-SaaS-Pack/blob/master/docs/SAAS_NEXT.md) | Host doctor / init / agent / scaffold |
 | [saas-pack docs/09](https://github.com/upMVC/upMVC-SaaS-Pack/blob/master/docs/09-harvest-ops.md) | Mail / notify / dual-unseal |
 | [INTEGRATION_PHP_CRUD_API.md](INTEGRATION_PHP_CRUD_API.md) | Optional API plane |
 | Agent: `docs/agent/upmvc-saas-pack.json` | Machine knowledge when the pack is present |
