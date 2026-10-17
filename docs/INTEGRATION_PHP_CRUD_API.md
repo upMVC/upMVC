@@ -240,7 +240,8 @@ For SaaS + API: mount the generator under `public/api/` the same way as below; a
 - [KERNEL.md](KERNEL.md) — boot / config / router contract
 - [Module Philosophy](MODULE_PHILOSOPHY.md)
 - [React / Islands](REACT_INTEGRATION_PATTERNS.md) · [Islands index](ISLANDS_ARCHITECTURE_INDEX.md)
-- [upMVC-SaaS](https://github.com/upMVC/upMVC-SaaS) — multi-tenant fork + saas-pack
+- [upMVC-SaaS](https://github.com/upMVC/upMVC-SaaS) — thin composed SaaS starter (requires kernel + saas-pack; not a kernel fork)
+- [BUILD_SAAS_APP](BUILD_SAAS_APP.md) — compose kernel + packs + host
 
 ### PHP CRUD API Generator
 - [README](https://github.com/BitsHost/PHP-CRUD-API-Generator/blob/main/README.md)
