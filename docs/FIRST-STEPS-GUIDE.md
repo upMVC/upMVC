@@ -9,7 +9,7 @@ Get upMVC running in 5 minutes with this step-by-step guide.
 ## 📋 **Prerequisites Checklist**
 
 Before starting, ensure you have:
-- ✅ **PHP 8.1+** installed (`php --version`)
+- ✅ **PHP 8.3+** installed (`php --version`)
 - ✅ **Composer** installed (`composer --version`)
 - ✅ **Web server** or ability to run PHP built-in server
 - ✅ **Git** for cloning (optional, can download ZIP)

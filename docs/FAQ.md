@@ -30,7 +30,7 @@ brew install composer     # macOS
 ```
 
 ### **Q: What PHP version is required?**
-**A:** upMVC requires **PHP 8.1 or higher**. Check your version:
+**A:** upMVC requires **PHP 8.3 or higher**. Check your version:
 ```bash
 php --version
 ```

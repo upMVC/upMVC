@@ -2,6 +2,9 @@
 
 ## [Unreleased]
 
+### Changed
+- **PHP floor raised to `>=8.3`** — Composer constraint, CI matrix (`8.3` gate / `8.4` report), README and agent knowledge. Aligns with patched runtimes after the Oct 2026 PHP security releases (use a current 8.3.x, e.g. 8.3.36+). PHP 8.1/8.2 are no longer supported for this line.
+
 ### Docs
 - **`README.md`** — “Compose your stack” under upMVC-SaaS: kernel + SaaS pack + PHP CRUD API Generator + SPA modules.
 - **`docs/INTEGRATION_PHP_CRUD_API.md`** — refreshed for Thin Core: `public/` + `src/Etc/.env` + `src/Modules/`, API under `public/api/`; documents **upMVC-SaaS + saas-pack + API** as the strongest simple foundation (API as full plane, not a toy helper).

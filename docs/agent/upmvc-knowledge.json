@@ -4,7 +4,7 @@
     "version": "1.1.0",
     "verified_against": "upMVC v2.5.0",
     "framework": "upMVC",
-    "php_minimum": "8.1",
+    "php_minimum": "8.3",
     "purpose": "Portable startup context for any AI agent working on upMVC or upMVC-SaaS projects",
     "usage": "Load this file at session start together with upmvc-rules.json. Do not ask the user to explain framework basics."
   },

@@ -3,7 +3,7 @@
 ## 🚀 **Getting Started with upMVC**
 
 ### **System Requirements**
-- PHP 8.1 or higher
+- PHP 8.3 or higher
 - Composer (dependency management)
 - Web server (Apache, Nginx, or built-in PHP server)
 - Git (for cloning repository)

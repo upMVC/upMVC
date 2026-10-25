@@ -2,7 +2,7 @@
 
 > **Modern, lightweight PHP NoFramework with Islands Architecture for real-world PHP + JS systems**
 
-**Status: ✅ Production Ready (v2.5)** | **PHP 8.1+** | **PSR-4 Compliant** | **MIT License**
+**Status: ✅ Production Ready (v2.5)** | **PHP 8.3+** | **PSR-4 Compliant** | **MIT License**
 
 **v2.5:** Thin create-project — **Welcome** homepage (no database), optional demos as a Releases zip, migration runner, Router v2.0, package/provider architecture, **AI Agent pack**, and PHP + React/Vue *Islands Architecture*. Kernel lives in `src/Etc/`; modules are optional.
 
@@ -109,9 +109,9 @@ upMVC v1.0.3 introduces a **contemporary design system** while maintaining compl
 
 ## 🌟 **What is upMVC?**
 
-A lightweight, modern PHP 8.1+ noFramework built on Modular MVC (MMVC) architecture. Designed for developers who want flexibility without noFramework bloat. Features true modularity, "PHP Islands" for frontend integration (React/Vue), dependency injection, middleware pipeline, and clean routing. No forced conventions - use pure PHP or integrate modern JS noFrameworks as needed. Perfect for rapid development while maintaining performance and flexibility.
+A lightweight, modern PHP 8.3+ noFramework built on Modular MVC (MMVC) architecture. Designed for developers who want flexibility without noFramework bloat. Features true modularity, "PHP Islands" for frontend integration (React/Vue), dependency injection, middleware pipeline, and clean routing. No forced conventions - use pure PHP or integrate modern JS noFrameworks as needed. Perfect for rapid development while maintaining performance and flexibility.
 
-✨ **Key Features:** Modular architecture • PHP 8.1+ • PSR-4 compliant • Dependency injection • Middleware support • Frontend noFramework integration • Minimal learning curve
+✨ **Key Features:** Modular architecture • PHP 8.3+ • PSR-4 compliant • Dependency injection • Middleware support • Frontend noFramework integration • Minimal learning curve
 
 ### 🚀 **Deploy Any JavaScript Framework**
 

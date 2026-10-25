@@ -191,7 +191,7 @@ Admin Panel:   50% PHP, 50% Islands
 ## 🛠️ Technology Stack
 
 ### Server-Side
-- **PHP 8.1+** - Server-side rendering
+- **PHP 8.3+** - Server-side rendering
 - **upMVC** - Lightweight MVC framework
 - **PSR-4** - Autoloading standard
 
