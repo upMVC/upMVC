@@ -1,4 +1,4 @@
-# 📚 upMVC noFramework v2.5 – Complete Documentation
+# 📚 upMVC noFramework v2.6 – Complete Documentation
 
 > **Modern, lightweight PHP NoFramework with Islands Architecture for real-world PHP + JS systems**
 
