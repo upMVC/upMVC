@@ -2,7 +2,7 @@
   "meta": {
     "name": "upMVC Agent Rules",
     "version": "1.1.1",
-    "verified_against": "upMVC v2.5.0 + upmvc-saas-pack v1.1.0 Harvest",
+    "verified_against": "upMVC v2.6.0 + upmvc-saas-pack v1.1.0 Harvest",
     "severity": "These are hard constraints. Violations must be fixed before code is accepted."
   },
   "must": [

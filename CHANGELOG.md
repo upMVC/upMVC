@@ -2,21 +2,52 @@
 
 ## [Unreleased]
 
-### Docs
-- **`docs/KERNEL_COMMON_BMVC.md`** — simple / non-SaaS thread: kernel vs `src/Common/Bmvc` vs modules; standalone vs library ownership on update; `AppModel` / `AppView` examples. Linked from KERNEL, Module Philosophy, README; short `src/Common/Bmvc/README.md`.
+## v2.6.0 - PHP 8.3 floor & Common/BMVC clarity (2026-11-02)
+
+Requires **PHP 8.3+**. Hosts still on 8.1/8.2 must upgrade the runtime before installing this release.
 
 ### Changed
-- **PHP floor raised to `>=8.3`** — Composer constraint, CI matrix (`8.3` gate / `8.4` report), README and agent knowledge. Aligns with patched runtimes after the Oct 2026 PHP security releases (use a current 8.3.x, e.g. 8.3.36+). PHP 8.1/8.2 are no longer supported for this line.
+- **PHP floor raised to `>=8.3`** — Composer constraint and docs. Use a patched 8.3.x (e.g. 8.3.36+) after the Oct 2026 PHP security releases. PHP 8.1 and 8.2 are not supported on this line.
+- **CI** — `.github/workflows/ci.yml` gates on PHP **8.3**; **8.4** still runs with `continue-on-error`. Dropped the separate PHP 8.1 runtime job.
+
+### Docs
+- **`docs/KERNEL_COMMON_BMVC.md`** — simple / non-SaaS: kernel (`src/Etc/`) vs `src/Common/Bmvc` vs modules; standalone vs library ownership on update; `AppModel` / `AppView` examples. Linked from KERNEL, Module Philosophy, README, First Steps, doc index; short `src/Common/Bmvc/README.md`.
+- **Compose / SaaS guidance (post-2.5.0)** — README compose stack, `docs/BUILD_SAAS_APP.md`, saas-next pointers, `docs/INTEGRATION_PHP_CRUD_API.md` (composed starter, not a fork), `docs/KERNEL.md` kernel surface.
+- **Agent pack** — `php_minimum` 8.3; `verified_against` updated to v2.6.0.
+
+### Notes for pack / starter maintainers
+- After this tag is on Packagist, release saas-pack / payments-pack / upMVC-SaaS with `php: >=8.3` and a kernel constraint that accepts `2.6.x` (e.g. `^2.5` still resolves 2.6.0 under Composer caret rules once PHP allows the install).
+
+---
+
+## v2.5.0 - Thin Core (2026-08-02)
+
+Stock create-project / clone is light boilerplate: kernel + **Welcome** homepage. Full demo suite is optional (`upmvc-demos.zip` on the Release).
+
+### Changed
+- **Stock tree ships `Welcome` only.** Optional demos leave git; keep them locally or download from Releases and paste into `src/Modules/`.
+- **`/` and `/index.php`** owned by `src/Etc/custom-routes.php` → `App\Modules\Welcome\Controller` (no DB, no auth).
+- **`Test` no longer registers `/`** — demos live under `/test` and friends.
+- **`.gitignore`** ignores `/src/Modules/*` except `Welcome/`. Maintainer demos-zip script is local-only (not public).
+
+### Fixed (in the demos zip pack)
+- **Auth signup** uses `MAIL_FROM_ADDRESS` from `.env` instead of a hardcoded BitsWorld address.
+- **`/apiUsers` JSON** no longer includes password hashes.
+
+
+### Changelog catch-up (notes not listed in the thin 2.5.0 blurb; code already in the 2.5.0 line)
+
+The following items lived under `[Unreleased]` while already present on `main` / the 2.5.0 tree. Kept here for history.
 
 ### Docs
 - **`README.md`** — “Compose your stack” under upMVC-SaaS: kernel + SaaS pack + PHP CRUD API Generator + SPA modules.
 - **`docs/INTEGRATION_PHP_CRUD_API.md`** — refreshed for Thin Core: `public/` + `src/Etc/.env` + `src/Modules/`, API under `public/api/`; documents **upMVC-SaaS + saas-pack + API** as the strongest simple foundation (API as full plane, not a toy helper).
 - **`docs/KERNEL.md`** — kernel surface (boot, config, router, packages); agent `kernel_surface` + rules so claims stay tied to `src/Etc/`, not demos.
 
-### CI
-- **`.github/workflows/ci.yml`** — PHPStan and PHPUnit on every push and pull request, across PHP 8.1–8.4 with Composer caching. Neither tool needs a database, so the run is self-contained.
-  - PHP 8.4 is tested because `composer.json` declares `>=8.1`, but runs as `continue-on-error`: its new deprecations should report rather than block until the codebase is deliberately verified against it.
-  - The SaaS pack has a matching workflow that resolves `bitshost/upmvc` **from Packagist** rather than a local path repository — the run that proves the pack installs the way a stranger installs it.
+### CI (historical — superseded by v2.6.0 PHP 8.3+ matrix)
+- **`.github/workflows/ci.yml`** — PHPStan and PHPUnit on push/PR; originally covered 8.1–8.4 with Composer caching. Neither tool needs a database.
+  - 8.4 used `continue-on-error` while `composer.json` still declared `>=8.1`.
+  - SaaS pack CI resolves `bitshost/upmvc` from Packagist (install-as-stranger check).
 
 ### Added
 - **`src/Tools/doctor.php`** — new CLI check that reports modules the kernel cannot see. Module discovery is a filesystem scan, so a module that breaks the naming rules is skipped in silence: no error, no log line, just a 404 indistinguishable from a mistyped URL. Run it when a route 404s and the reason isn't obvious.
@@ -95,22 +126,6 @@ real namespaces, router methods tested for existence) rather than by reading.
 ### Docs
 - **`README.md`** — the "you can delete any modules you don't need" note now records that the `Test` module registers the `/` route, so removing it leaves the site without a homepage. Noted in both places the claim appears.
 - **`README.md`** — the standalone install is now four steps, not three. Following the documented three produced `SQLSTATE[HY000] [1049] Unknown database 'your_database'` on the homepage: the bundled modules open a database connection on boot, so `DB_NAME` must point at a database that exists. An **empty** one is sufficient — no schema import is required to get the site rendering. Verified end to end with `composer create-project` against a freshly created empty database.
-
----
-
-## v2.5.0 - Thin Core (2026-08-02)
-
-Stock create-project / clone is light boilerplate: kernel + **Welcome** homepage. Full demo suite is optional (`upmvc-demos.zip` on the Release).
-
-### Changed
-- **Stock tree ships `Welcome` only.** Optional demos leave git; keep them locally or download from Releases and paste into `src/Modules/`.
-- **`/` and `/index.php`** owned by `src/Etc/custom-routes.php` → `App\Modules\Welcome\Controller` (no DB, no auth).
-- **`Test` no longer registers `/`** — demos live under `/test` and friends.
-- **`.gitignore`** ignores `/src/Modules/*` except `Welcome/`. Maintainer demos-zip script is local-only (not public).
-
-### Fixed (in the demos zip pack)
-- **Auth signup** uses `MAIL_FROM_ADDRESS` from `.env` instead of a hardcoded BitsWorld address.
-- **`/apiUsers` JSON** no longer includes password hashes.
 
 ## v2.4.0 - Migration Runner, Database Tooling & Autoload Fixes (2026-07-29)
 

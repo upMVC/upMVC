@@ -2,9 +2,9 @@
 
 > **Modern, lightweight PHP NoFramework with Islands Architecture for real-world PHP + JS systems**
 
-**Status: ✅ Production Ready (v2.5)** | **PHP 8.3+** | **PSR-4 Compliant** | **MIT License**
+**Status: ✅ Production Ready (v2.6)** | **PHP 8.3+** | **PSR-4 Compliant** | **MIT License**
 
-**v2.5:** Thin create-project — **Welcome** homepage (no database), optional demos as a Releases zip, migration runner, Router v2.0, package/provider architecture, **AI Agent pack**, and PHP + React/Vue *Islands Architecture*. Kernel lives in `src/Etc/`; modules are optional.
+**v2.6:** PHP **8.3+** floor; Common/BMVC docs for standalone vs library. **v2.5:** Thin create-project — **Welcome** homepage (no database), optional demos as a Releases zip, migration runner, Router v2.0, package/provider architecture, **AI Agent pack**, and PHP + React/Vue *Islands Architecture*. Kernel lives in `src/Etc/`; modules are optional.
 
 ## 🤖 AI Agent — built-in context for Cursor, Claude, and local LLMs
 
