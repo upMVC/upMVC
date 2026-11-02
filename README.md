@@ -175,8 +175,10 @@ Take / try / drop: delete any demo folder under `src/Modules/` anytime.
 - **[AGENTS.md](AGENTS.md)** — Root entry for cloud agents
 
 ### **🏗 Architecture & Philosophy:**
+- **[🧱 Kernel](docs/KERNEL.md)** - What `src/Etc/` actually is (boot, config, router, packages)
+- **[Kernel · Common · BMVC](docs/KERNEL_COMMON_BMVC.md)** - **Simple / non-SaaS:** kernel vs shared skeleton vs modules; standalone vs library; `AppModel` / `AppView` examples
 - **[🎨 Pure PHP Philosophy](docs/PHILOSOPHY_PURE_PHP.md)** - The upMVC NoFramework approach
-- **[🧩 Module Philosophy](docs/MODULE_PHILOSOPHY.md)** - Modules as reference implementations
+- **[🧩 Module Philosophy](docs/MODULE_PHILOSOPHY.md)** - Modules as reference implementations (demos zip ≠ Common)
 - **[🔄 Configuration Fallbacks](docs/CONFIGURATION_FALLBACKS.md)** - **NEW!** Three-level fallback system explained
 - **[🏝️ Islands Architecture](docs/ISLANDS_ARCHITECTURE_INDEX.md)** - **NEW!** Complete guide to PHP + React Islands
 - **[⚛️ React Integration Patterns](docs/REACT_INTEGRATION_PATTERNS.md)** - Five ways to integrate React/Vue/Preact
@@ -591,8 +593,8 @@ In the same file, modules/test/routes/Routes.php, you will see for demonstration
  - Copy `src/Etc/.env.example` to `src/Etc/.env` — it stays in that folder, which is where `Environment` reads it — and fill in `SITE_PATH`, `DOMAIN_NAME`, and database credentials.
  - For mail: configure `src/Modules/Mail/MailController.php` with your SMTP settings (or use `.env` `MAIL_*` keys).
  - Make your module in the MVC style (model, view, controller).
- - You may or may not wish to utilize BASE MODEL, BASE VIEW and BASE CONTROLLER from `src/Common/Bmvc/`.
- - BaseModel contains all of the data required for CRUD OPERATIONS; simply expand it in your module model and you have a CRUD ready-made module; see example module `src/Modules/User/`.
+ - **`src/Common/Bmvc/`** is the shared skeleton (BaseModel / BaseView / BaseController / BaseApiController) — **not** the kernel, **not** optional demo bloat. Welcome does not extend it; you may ignore it or (recommended) add host `AppModel` / `AppView` that extend it, then extend those in modules. Full standalone vs library + update scenarios: [docs/KERNEL_COMMON_BMVC.md](docs/KERNEL_COMMON_BMVC.md).
+ - Prefer extending BMVC via your own `App*` classes (especially in **library** mode — never edit `vendor/.../Bmvc`). Default view base: `BaseView`.
  - Make a distinctive namespace for each module under `App\Modules\YourModule`.
  - Your module routes should be kept under `src/Modules/YourModule/Routes/Routes.php`.
  - `InitModsImproved` (`src/Etc/InitModsImproved.php`) auto-discovers and registers routes — no manual wiring needed.

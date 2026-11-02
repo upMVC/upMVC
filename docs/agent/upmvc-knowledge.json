@@ -194,10 +194,22 @@
       "controller": "App\\Common\\Bmvc\\BaseController",
       "model": "App\\Common\\Bmvc\\BaseModel",
       "view": "App\\Common\\Bmvc\\BaseView",
+      "view_modern_optional": "App\\Common\\Bmvc\\BaseViewModern",
+      "api_controller": "App\\Common\\Bmvc\\BaseApiController",
       "orm_optional": "App\\Common\\Bmvc\\BaseModelOrm (requires RedBean — optional)"
     },
+    "common_bmvc": {
+      "path": "src/Common/Bmvc",
+      "is_kernel": false,
+      "is_demo_bloat": false,
+      "role": "Shared app skeleton — optional to extend; architectural so hosts can share layout/PDO helpers. Welcome does not extend BMVC.",
+      "host_pattern": "App\\Common\\AppModel / AppView extend BMVC; module Model/View extend App*",
+      "library_rule": "Never edit vendor/bitshost/upmvc/src/Common/Bmvc — extend or FQCN-override in host",
+      "standalone_rule": "After create-project, src/Common is app-owned; composer update does not rewrite it",
+      "docs": "docs/KERNEL_COMMON_BMVC.md"
+    },
     "generator": "Optional: load docs/agent/upmvc-scaffolds.json via upmvc-next.php --scaffold (replaces removed PHP generators)",
-    "philosophy": "Stock tree ships Welcome only. Optional demos (Auth, Admin, React*, …) come from Releases zip — paste into src/Modules/; take / try / drop"
+    "philosophy": "Stock tree ships Welcome only. Optional demos (Auth, Admin, React*, …) come from Releases zip — paste into src/Modules/; take / try / drop. Do not confuse demos with Common/Bmvc."
   },
   "packages": {
     "summary": "Composer packages extend upMVC via optional src/Etc/packages.php provider registry",

@@ -2,6 +2,14 @@
 
 This guide shows how to use upMVC as a *library* inside another PHP application.
 
+**Prefer the current compose story:** host `public/index.php` defines `UPMVC_APP_ROOT`, keeps `.env` and modules in the **host**, and requires `bitshost/upmvc` from Packagist. Do not treat editing files under `vendor/` as the happy path.
+
+- Kernel vs Common/BMVC, extend examples, update scenarios → **[KERNEL_COMMON_BMVC.md](../KERNEL_COMMON_BMVC.md)**
+- Kernel surface → **[KERNEL.md](../KERNEL.md)**
+- SaaS (later) → **[BUILD_SAAS_APP.md](../BUILD_SAAS_APP.md)**
+
+The steps below are a **legacy path-repo sketch**. Use them only for local experiments; for production hosts follow KERNEL_COMMON_BMVC + Packagist.
+
 ## 1. Create a host folder (example: `archive/lib`)
 
 In your host app, create a folder that will host this upMVC instance, e.g.:

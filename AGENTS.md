@@ -6,6 +6,7 @@ You are working inside an **upMVC** PHP project. Do not ask the user to explain 
 
 - `docs/AGENT_PACK.md` — full usage guide
 - `docs/KERNEL.md` — kernel surface (boot, config, router, packages) — product is `src/Etc/`
+- `docs/KERNEL_COMMON_BMVC.md` — simple non-SaaS: Common/BMVC vs modules; standalone vs library
 - `docs/agent/upmvc-knowledge.json` — paths, bootstrap, `kernel_surface`, modules, packages
 - `docs/agent/upmvc-rules.json` — must/never constraints
 - `docs/agent/upmvc-workflows.json` — match user intent to a recipe
@@ -29,6 +30,7 @@ For **new module scaffolding** (optional, not default):
 ## Docs
 
 - `docs/KERNEL.md`
+- `docs/KERNEL_COMMON_BMVC.md`
 - `docs/MODULE_PHILOSOPHY.md`
 - `docs/CORE_AREAS_AND_CONFIGURATION.md`
 - `docs/agent/README.md`

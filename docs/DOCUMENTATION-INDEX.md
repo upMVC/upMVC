@@ -6,6 +6,8 @@
 |----------|---------|-------------|--------|
 | **[📋 FIRST-STEPS-GUIDE.md](FIRST-STEPS-GUIDE.md)** | Get started in 5 minutes | 5-15 min | ✅ Ready |
 | **[📁 REPOSITORY-STRUCTURE-GUIDE.md](../zbug/REPOSITORY-STRUCTURE-GUIDE.md)** | Choose the right repository | 10 min | ✅ Ready |
+| **[🧱 KERNEL.md](KERNEL.md)** | Kernel surface: boot, config, router, packages | 15 min | ✅ Ready |
+| **[🧱 KERNEL_COMMON_BMVC.md](KERNEL_COMMON_BMVC.md)** | Kernel vs Common/BMVC vs modules; standalone vs library | 15-20 min | ✅ Ready |
 | **[🏗 CORE_AREAS_AND_CONFIGURATION.md](CORE_AREAS_AND_CONFIGURATION.md)** | Understand src/Etc, Modules, Tools, Common | 15-30 min | ✅ Ready |
 | **[📘 HOW-TO-GUIDE.md](HOW-TO-GUIDE.md)** | Complete development guide | 30-60 min | ✅ Ready |
 | **[🔐 JWT_AUTHENTICATION.md](JWT_AUTHENTICATION.md)** | JWT auth — issue tokens, protect routes, refresh flow | 15 min | ✅ Ready |

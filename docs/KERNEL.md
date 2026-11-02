@@ -16,7 +16,14 @@ Verified against **v2.5.0** (Thin Core). Claims below are from running code in `
 | Cache manager, JWT service, events, helpers | Anything under `src/Modules/*` except what *you* add |
 | Tools: `doctor`, `migrate`, `cache-cli`, agent CLI | Maintainer-only zip builders (local / gitignored) |
 
-`src/Common/` is shared base classes for *apps* (BaseModel, BaseView, …). Useful with the kernel; not the kernel’s public “framework API” in the same sense as `Router` / `Application`.
+### Common / BMVC (not kernel — still architectural)
+
+`src/Common/Bmvc/` is **shared app skeleton** (BaseModel, BaseView, BaseController, BaseApiController, …):
+
+- **Not** the kernel API (`Router` / `Application` live in `src/Etc/`).
+- **Not** like demo modules — demos are a Releases zip you can skip; Common stays so you have a place for a general skeleton instead of stuffing everything into each module.
+- **Optional to extend** — Welcome does not use BMVC. You may add host `AppModel` / `AppView` that extend these bases.
+- **Standalone vs library** (who owns the files on update) — full thread with examples: **[KERNEL_COMMON_BMVC.md](KERNEL_COMMON_BMVC.md)**.
 
 ---
 

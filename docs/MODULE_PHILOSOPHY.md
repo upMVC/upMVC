@@ -7,6 +7,17 @@ Stock create-project ships **Welcome** only (static homepage, no DB). Optional d
 `upmvc-demos.zip` — paste into `src/Modules/`. They are **not required dependencies**.
 They are **reference implementations** that demonstrate different approaches to common problems.
 
+### Modules vs `src/Common/Bmvc`
+
+| | Demo modules | `Common/Bmvc` |
+|--|--------------|---------------|
+| Pull later from zip? | Yes | No — ships with the package |
+| Delete freely? | Yes | Don’t treat as disposable bloat |
+| Role | Feature examples | Shared Model/View/Controller bases |
+
+Welcome does **not** extend BMVC. Using BMVC is optional; having a Common zone is intentional architecture.  
+Standalone vs library + `AppModel` / `AppView` examples → **[KERNEL_COMMON_BMVC.md](KERNEL_COMMON_BMVC.md)**.
+
 ### Core Principle
 
 > **You can delete any or all optional modules.** Welcome owns `/` via

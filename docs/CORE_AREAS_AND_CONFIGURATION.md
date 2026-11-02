@@ -163,11 +163,17 @@ For more philosophy and patterns, see:
 
 Path: `src/Common`
 
-**Purpose:** shared building blocks reused by many modules.
+**Purpose:** shared building blocks reused by many modules — the **app skeleton**, not the kernel (`src/Etc/`) and not disposable demo modules.
 
 Examples:
-- `Common/Bmvc/BaseController.php` – base controller with render/json helpers.
+- `Common/Bmvc/BaseController.php` – base controller helpers.
 - `Common/Bmvc/BaseModel.php` – base model that obtains a PDO connection from `Database`.
+- `Common/Bmvc/BaseView.php` / `BaseViewModern.php` – HTML shells (prefer extending via host `AppView`).
+- `Common/Bmvc/BaseApiController.php` – JSON API helpers.
+
+**Not optional like the demos zip.** You may ignore BMVC (Welcome does), but the folder exists so you can share layout/PDO across modules. Library mode: extend in the host — do not edit `vendor/.../Bmvc`.
+
+Full standalone vs library thread: **[KERNEL_COMMON_BMVC.md](KERNEL_COMMON_BMVC.md)**.
 
 Configuration links:
 - DB credentials come from `Environment` and `ConfigManager` (see Section 1.2).

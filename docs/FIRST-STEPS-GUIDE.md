@@ -4,6 +4,8 @@
 
 Get upMVC running in 5 minutes with this step-by-step guide.
 
+After you boot: **kernel** is `src/Etc/`; **`src/Common/Bmvc`** is the shared skeleton (not demos — those are a Releases zip); Welcome does not require BMVC. Standalone vs library and `AppModel` / `AppView` → [KERNEL_COMMON_BMVC.md](KERNEL_COMMON_BMVC.md).
+
 ---
 
 ## 📋 **Prerequisites Checklist**

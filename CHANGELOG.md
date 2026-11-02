@@ -2,6 +2,9 @@
 
 ## [Unreleased]
 
+### Docs
+- **`docs/KERNEL_COMMON_BMVC.md`** — simple / non-SaaS thread: kernel vs `src/Common/Bmvc` vs modules; standalone vs library ownership on update; `AppModel` / `AppView` examples. Linked from KERNEL, Module Philosophy, README; short `src/Common/Bmvc/README.md`.
+
 ### Changed
 - **PHP floor raised to `>=8.3`** — Composer constraint, CI matrix (`8.3` gate / `8.4` report), README and agent knowledge. Aligns with patched runtimes after the Oct 2026 PHP security releases (use a current 8.3.x, e.g. 8.3.36+). PHP 8.1/8.2 are no longer supported for this line.
 
