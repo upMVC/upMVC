@@ -98,8 +98,8 @@ class Container
             return $this->instances[$abstract];
         }
 
-        // Check for singleton
-        if (isset($this->singletons[$abstract]) && $this->singletons[$abstract] !== null) {
+        // Check for resolved singleton (null placeholder means "bound but not built yet")
+        if (array_key_exists($abstract, $this->singletons) && $this->singletons[$abstract] !== null) {
             return $this->singletons[$abstract];
         }
 

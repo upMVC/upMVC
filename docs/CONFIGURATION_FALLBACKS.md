@@ -32,7 +32,7 @@ upMVC uses a **five-level fallback system** that allows the system to work even 
 | Setting | Priority 1 (Highest) | Priority 2 (Fallback) | File Location |
 |---------|---------------------|----------------------|---------------|
 | **Paths & Domain** | `.env` SITE_PATH, DOMAIN_NAME | `Config.php` $fallbacks | `src/Etc/Config.php` |
-| **Protected Routes** | `.env` PROTECTED_ROUTES | `start.php` $defaultProtectedRoutes | `src/Etc/Start.php` |
+| **Protected Routes** | `.env` PROTECTED_ROUTES (non-empty replaces defaults) ∪ `Application::addProtectedRoutes()` | `Start::$defaultProtectedRoutes` (`[]` in Thin Core) | `src/Etc/Start.php` |
 | **Database Credentials** | `.env` DB_* variables | `ConfigDatabase.php` | `src/Etc/ConfigDatabase.php` |
 | **Session Configuration** | `Config::get('session')` | Hardcoded defaults | `src/Etc/Config.php` line 215 |
 | **Security/Middleware** | `.env` via ConfigManager | Hardcoded defaults | `src/Etc/Start.php` line 158+ |
@@ -134,41 +134,22 @@ No configuration needed!
  * These routes require user authentication before access.
  * Can be overridden via PROTECTED_ROUTES in .env (comma-separated list)
  */
-private static $defaultProtectedRoutes = [
-    '/dashboardexample/*',  // Dashboard example module
-    '/admin/*',             // Admin panel (all routes)
-    '/users/*',             // User management (all routes)
-    '/moda'                 // Modal example route
-];
+private static $defaultProtectedRoutes = []; // Thin Core — demos use .env
 ```
 
 ### Priority Logic
 
 ```
-1. Check .env for PROTECTED_ROUTES
-   ↓ If found: Parse comma-separated list ✅
-   ↓ If missing: Continue to fallback
-   
-2. Use start.php $defaultProtectedRoutes array
-   ↓ Returns default protected routes
+1. Non-empty PROTECTED_ROUTES → parse comma list (replaces defaults)
+2. Else → Start::$defaultProtectedRoutes (empty in Thin Core)
+3. Always ∪ Application::addProtectedRoutes() (packs/providers)
 ```
 
 ### How It Works
 
 ```php
-// In start.php
-private function getProtectedRoutes(): array
-{
-    // Priority 1: .env file (comma-separated)
-    $envRoutes = Environment::get('PROTECTED_ROUTES', '');
-    
-    if (!empty($envRoutes)) {
-        return array_map('trim', explode(',', $envRoutes));
-    }
-    
-    // Priority 2: $defaultProtectedRoutes array
-    return self::$defaultProtectedRoutes;
-}
+// Start::resolveProtectedRouteList($env, $defaults, $fromApplication)
+// Non-empty env replaces $defaults, then unions provider routes.
 ```
 
 ### Used For

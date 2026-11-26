@@ -2,6 +2,16 @@
 
 ## [Unreleased]
 
+## v2.7.0 - Empty protected-route defaults + QA scripts (2026-11-26)
+
+### Changed
+- **Protected routes (honesty)** — `Start::$defaultProtectedRoutes` is now `[]` (Thin Core). Empty `PROTECTED_ROUTES` no longer injects demo paths (`/admin/*`, `/moda`, …). App areas: set `PROTECTED_ROUTES` in `.env`. Packs keep using `Application::addProtectedRoutes()`. Extracted `Start::resolveProtectedRouteList()` for a clear env ∪ provider contract (non-empty env **replaces** defaults, then unions providers).
+- **Docs / agent** — Config STEP 4, `.env.example`, KERNEL, knowledge, CORE_AREAS aligned; demos zip must set env for demo protection.
+- **QA** — `composer` scripts `test` / `analyse` / `check`; PHPStan raised to `^2.2` (level 5 unchanged).
+
+### Tests
+- `ProtectedRoutesResolveTest` covers empty defaults, env replace, and Application union.
+
 ## v2.6.1 - Session cookie Secure on HTTPS (2026-11-26)
 
 ### Changed

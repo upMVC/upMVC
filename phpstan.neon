@@ -9,8 +9,8 @@ parameters:
         - src/Modules/Welcome
     excludePaths:
         - vendor
-        - logs
-        - zbug
+        - logs (?)
+        - zbug (?)
         - 'src/Common/Assets'
     ignoreErrors:
         # Legacy constants - defined at runtime in Config::initConfig()

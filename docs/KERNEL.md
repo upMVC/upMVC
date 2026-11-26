@@ -3,7 +3,7 @@
 The **product** is `src/Etc/` (plus `public/index.php` and the Composer package boundary).  
 Modules under `src/Modules/` are optional. Demos are a Releases zip. Do not infer kernel limits from demos.
 
-Verified against **v2.5.0** (Thin Core). Claims below are from running code in `src/Etc/`, not from marketing copy.
+Verified against **v2.7.0** (Thin Core). Claims below are from running code in `src/Etc/`, not from marketing copy.
 
 ---
 
@@ -50,7 +50,7 @@ public/index.php
 **Honesty notes (boot)**
 
 - Boot does **not** open a database. PDO opens when something constructs `Database` / `BaseModel`. Welcome needs no DB.
-- `Start::$defaultProtectedRoutes` still lists demo-ish prefixes (`/admin/*`, `/moda`, …). Override with `PROTECTED_ROUTES` in `.env` or `Application::addProtectedRoutes()`. Cleaning those defaults is a future kernel honesty fix — not done in this doc-only pass.
+- `Start::$defaultProtectedRoutes` is **empty** (Thin Core). App areas: `PROTECTED_ROUTES` in `.env`. Packs: `Application::addProtectedRoutes()`. Demos zip must set env — not kernel defaults.
 - Library mode: define `UPMVC_APP_ROOT` *before* autoload so `Application` and `Environment` resolve the **host** app paths (`.env`, `packages.php`, `src/Modules`).
 
 ---
@@ -132,20 +132,18 @@ SaaS pack (`bitshost/upmvc-saas-pack`) is the primary interoperability stress te
 
 ---
 
-## Short audit — boot / config / router only (v2.5.0)
+## Short audit — boot / config / router only (v2.7.0)
 
 | Area | Finding | Severity | Next step (later) |
 |------|---------|----------|-------------------|
 | Boot | No DB on boot — Welcome-safe | OK | Keep |
-| Boot | Default protected routes smell like demos | Low | Slim defaults to `[]` or documented stubs |
+| Boot | Protected-route defaults empty (Thin Core) | OK | Keep; demos use `.env` |
 | Config | `.env` via `Application::path` — correct for library mode | OK | Keep documenting `UPMVC_APP_ROOT` |
 | Config | Dual legacy (`Config` / `ConfigDatabase`) still in play | Medium | Prefer ConfigManager; deprecate gradually |
 | Router | `custom-routes` overwrite is the homepage contract | OK | Treat as public |
 | Router | Discovery requires `Routes/Routes.php` | OK | Document; `doctor` already explains misses |
 | Router | `addRoute` void vs `addParamRoute` chainable | OK | Already corrected in routing docs |
 | Packages | Path order: packs then app | OK | SaaS regression = CI / manual smoke |
-
-No code changes in this pass — documentation + agent knowledge only.
 
 ---
 
