@@ -154,7 +154,7 @@ class ErrorHandler
             self::displayError($error);
         } else {
             // Show production error page
-            include_once './Common/500.php';
+            include_once __DIR__ . '/../Common/500.php';
         }
     }
     

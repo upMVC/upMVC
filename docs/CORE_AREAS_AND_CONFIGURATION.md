@@ -94,7 +94,7 @@ Key configuration:
 Configuration:
 - `.env` → `CORS_ENABLED`, `CORS_ALLOWED_ORIGINS`, `CORS_ALLOWED_METHODS`, `CORS_ALLOWED_HEADERS`.
 - `.env` → `CSRF_PROTECTION`, `RATE_LIMIT`.
-- `.env` → `PROTECTED_ROUTES` (comma-separated), otherwise defaults from `Start::$defaultProtectedRoutes`.
+- `.env` → `PROTECTED_ROUTES` (comma-separated). Kernel `Start::$defaultProtectedRoutes` is empty; empty env keeps only `Application::addProtectedRoutes()` (packs). Non-empty env replaces defaults then unions providers.
 
 ### 1.5 Helpers
 

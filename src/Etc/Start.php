@@ -46,21 +46,16 @@ class Start
     private $reqRoute;
     
     /**
-     * Default protected routes requiring authentication
-     * 
-     * These routes require user authentication before access.
-     * Can be overridden via PROTECTED_ROUTES in .env (comma-separated list)
-     * 
-     * IMPORTANT: Change these according to your application's protected areas!
-     * 
-     * @var array
+     * Kernel defaults for session AuthMiddleware patterns.
+     *
+     * Thin Core: empty. Set PROTECTED_ROUTES in .env for app areas, or register
+     * via Application::addProtectedRoutes() from a pack/provider.
+     * Demos zip examples (put in .env, do not re-add here):
+     *   /dashboardexample/*, /admin/*, /users/*, /moda
+     *
+     * @var array<int, string>
      */
-    private static $defaultProtectedRoutes = [
-        '/dashboardexample/*',
-        '/admin/*',
-        '/users/*',
-        '/moda'
-    ];
+    private static $defaultProtectedRoutes = [];
 
     // ========================================
     // Initialization
@@ -255,25 +250,47 @@ class Start
     }
 
     /**
-     * Get protected routes from .env or use defaults
+     * Resolve session-protected route patterns for AuthMiddleware.
      *
-     * @return array Array of protected route patterns
+     * Non-empty PROTECTED_ROUTES replaces kernel defaults (then unions provider
+     * routes). Empty env keeps defaults (Thin Core: []) then unions providers.
+     *
+     * @param string             $envRoutes       Raw PROTECTED_ROUTES value
+     * @param array<int, string> $defaults        Kernel defaults
+     * @param array<int, string> $fromApplication From Application::addProtectedRoutes()
+     * @return array<int, string>
+     */
+    public static function resolveProtectedRouteList(
+        string $envRoutes,
+        array $defaults,
+        array $fromApplication
+    ): array {
+        $envRoutes = trim($envRoutes);
+        if ($envRoutes !== '') {
+            $fromEnv = array_values(array_filter(
+                array_map('trim', explode(',', $envRoutes)),
+                static fn(string $pattern): bool => $pattern !== ''
+            ));
+            $base = $fromEnv;
+        } else {
+            $base = $defaults;
+        }
+
+        return array_values(array_unique(array_merge($base, $fromApplication)));
+    }
+
+    /**
+     * Get protected routes from .env / defaults / Application providers.
+     *
+     * @return array<int, string>
      */
     private function getProtectedRoutes(): array
     {
-        $envRoutes = Environment::get('PROTECTED_ROUTES', '');
-        
-        if (!empty($envRoutes)) {
-            return array_values(array_unique(array_merge(
-                array_map('trim', explode(',', $envRoutes)),
-                Application::getInstance()->getProtectedRoutes()
-            )));
-        }
-        
-        return array_values(array_unique(array_merge(
+        return self::resolveProtectedRouteList(
+            (string) Environment::get('PROTECTED_ROUTES', ''),
             self::$defaultProtectedRoutes,
             Application::getInstance()->getProtectedRoutes()
-        )));
+        );
     }
 
     /**

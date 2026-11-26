@@ -10,7 +10,7 @@
     },
     "require-dev": {
         "gabordemooij/redbean": "^5.7",
-        "phpstan/phpstan": "^1.10",
+        "phpstan/phpstan": "^2.2",
         "phpunit/phpunit": "^11.0"
     },
     "suggest": {
@@ -31,5 +31,13 @@
         "psr-4": {
             "App\\": "src/"
         }
+    },
+    "scripts": {
+        "test": "phpunit",
+        "analyse": "phpstan analyse --no-progress",
+        "check": [
+            "@analyse",
+            "@test"
+        ]
     }
 }

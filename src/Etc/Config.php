@@ -57,14 +57,13 @@
  *   PROTECTED_ROUTES=/admin/*,/dashboard/*
  *                                       → comma-separated prefixes requiring login
  *
- *   ⚠  If PROTECTED_ROUTES is empty or not set, the framework falls back to a
- *      hardcoded list in Start.php → $defaultProtectedRoutes (around line 58):
+ *   Kernel defaults in Start.php are empty (Thin Core). Empty PROTECTED_ROUTES
+ *   means only patterns registered via Application::addProtectedRoutes()
+ *   (e.g. saas-pack /platform-admin, /app). Set PROTECTED_ROUTES in .env for
+ *   your own session-protected areas. Demos zip: put demo paths in .env
+ *   (e.g. /admin/*,/users/*,/moda) — do not re-add them as kernel defaults.
  *
- *        '/dashboardexample/*', '/admin/*', '/users/*', '/moda'
- *
- *      These defaults exist for the standalone demo modules. For your own app,
- *      always set PROTECTED_ROUTES in .env so you control exactly what is protected.
- *      The $defaultProtectedRoutes array will be removed in a future release.
+ *   Per-route alternative: add ['auth'] or ['jwt'] on addRoute() in Routes.php.
  *
  * STEP 5 — Module discovery (defaults work out of the box)
  * ---------------------------------------------------------------
@@ -305,15 +304,11 @@ class Config
         }
 
         // Set timezone (prefer app.timezone if available, fallback to legacy config)
-        $timezone = method_exists(ConfigManager::class, 'get')
-            ? (ConfigManager::get('app.timezone', self::get('timezone', 'UTC')))
-            : self::get('timezone', 'UTC');
+        $timezone = ConfigManager::get('app.timezone', self::get('timezone', 'UTC'));
         date_default_timezone_set($timezone);
         
         // Error reporting based on debug mode (prefer APP_DEBUG / app.debug)
-        $debug = method_exists(ConfigManager::class, 'get')
-            ? (bool) ConfigManager::get('app.debug', self::get('debug', false))
-            : (bool) self::get('debug', false);
+        $debug = (bool) ConfigManager::get('app.debug', self::get('debug', false));
 
         if ($debug) {
             error_reporting(E_ALL);
@@ -337,11 +332,9 @@ class Config
         // Session configuration — only configure when no session is active yet.
         // session_name() and session_set_cookie_params() must be called before session_start().
         if (session_status() === PHP_SESSION_NONE) {
-            $cookieCfg   = method_exists(ConfigManager::class, 'get') ? (ConfigManager::get('session.cookie', []) ?: []) : [];
+            $cookieCfg   = ConfigManager::get('session.cookie', []) ?: [];
             $sessionName = $cookieCfg['name']      ?? self::get('session.name',     'UPMVC_SESSION');
-            $lifetime    = method_exists(ConfigManager::class, 'get')
-                ? (int) ConfigManager::get('session.lifetime', self::get('session.lifetime', 3600))
-                : (int) self::get('session.lifetime', 3600);
+            $lifetime    = (int) ConfigManager::get('session.lifetime', self::get('session.lifetime', 3600));
             $secure      = $cookieCfg['secure']    ?? self::get('session.secure',   false);
             $httpOnly    = $cookieCfg['http_only'] ?? self::get('session.httponly', true);
             $sameSite    = ucfirst(strtolower($cookieCfg['same_site'] ?? 'Lax'));
