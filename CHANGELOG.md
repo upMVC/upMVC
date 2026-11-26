@@ -2,6 +2,12 @@
 
 ## [Unreleased]
 
+## v2.6.1 - Session cookie Secure on HTTPS (2026-11-26)
+
+### Changed
+- **Session cookie Secure** — `Config::requestLooksHttps()` detects HTTPS (incl. `X-Forwarded-Proto` / `Front-End-Https`). If `.env` leaves `SESSION_SECURE=false` but the request is TLS, the session cookie is still marked Secure. Prefer setting `SESSION_SECURE=true` explicitly on live HTTPS. Product-specific CSRF double-submit cookies (e.g. BitsMag `BM_CSRF`) stay out of the kernel.
+- Docs: `.env.example`, `KERNEL.md`, agent knowledge `SESSION_SECURE` note.
+
 ## v2.6.0 - PHP 8.3 floor & Common/BMVC clarity (2026-11-02)
 
 Requires **PHP 8.3+**. Hosts still on 8.1/8.2 must upgrade the runtime before installing this release.

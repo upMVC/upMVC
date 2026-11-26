@@ -2,7 +2,7 @@
   "meta": {
     "name": "upMVC Agent Knowledge Pack",
     "version": "1.1.0",
-    "verified_against": "upMVC v2.6.0",
+    "verified_against": "upMVC v2.6.1",
     "framework": "upMVC",
     "php_minimum": "8.3",
     "purpose": "Portable startup context for any AI agent working on upMVC or upMVC-SaaS projects",
@@ -141,7 +141,7 @@
       "DB_CHARSET": "Database charset (default utf8mb4)",
       "SESSION_COOKIE": "Session cookie name",
       "SESSION_SAME_SITE": "lax | strict | none",
-      "SESSION_SECURE": "true if HTTPS",
+      "SESSION_SECURE": "true on HTTPS live; if false, Config::requestLooksHttps() still marks cookie Secure when request is TLS/proxy",
       "JWT_SECRET": "Required for JWT middleware",
       "PROTECTED_ROUTES": "Comma-separated route prefixes requiring session auth",
       "ROUTE_USE_CACHE": "Module discovery cache — overrides production auto-detect when set",

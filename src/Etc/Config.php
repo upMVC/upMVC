@@ -28,7 +28,8 @@
  *   DB_CHARSET=utf8mb4                  → leave as utf8mb4 unless you have a reason
  *
  *   SESSION_LIFETIME=3600               → seconds before session expires
- *   SESSION_SECURE=false                → set true if site runs on HTTPS
+ *   SESSION_SECURE=false                → set true on HTTPS; if false but request is HTTPS,
+ *                                         Config still marks the session cookie Secure
  *
  * STEP 2 — JWT (only if using JWT auth on API routes)
  * ---------------------------------------------------------------
@@ -346,12 +347,19 @@ class Config
             $sameSite    = ucfirst(strtolower($cookieCfg['same_site'] ?? 'Lax'));
             $domain      = $cookieCfg['domain']    ?? '';
 
+            // If .env SESSION_SECURE=false but the browser hit us via HTTPS (or proxy TLS),
+            // still mark the cookie Secure so it matches the live site scheme.
+            $secure = (bool) $secure;
+            if (!$secure && self::requestLooksHttps()) {
+                $secure = true;
+            }
+
             session_name($sessionName);
             session_set_cookie_params([
                 'lifetime' => $lifetime,
                 'path'     => '/',
-                'domain'   => $domain,
-                'secure'   => (bool) $secure,
+                'domain'   => is_string($domain) ? $domain : '',
+                'secure'   => $secure,
                 'httponly' => (bool) $httpOnly,
                 'samesite' => $sameSite,
             ]);
@@ -362,6 +370,27 @@ class Config
     // ========================================
     // Helper Methods
     // ========================================
+
+    /**
+     * Whether the current request looks like HTTPS (direct TLS or trusted proxy headers).
+     * Used so the session cookie Secure flag matches the real scheme when
+     * SESSION_SECURE is left false in .env on an HTTPS host.
+     */
+    public static function requestLooksHttps(): bool
+    {
+        if (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') {
+            return true;
+        }
+        if ((string) ($_SERVER['SERVER_PORT'] ?? '') === '443') {
+            return true;
+        }
+        $fwd = strtolower((string) ($_SERVER['HTTP_X_FORWARDED_PROTO'] ?? ''));
+        if ($fwd === 'https') {
+            return true;
+        }
+        $front = strtolower((string) ($_SERVER['HTTP_FRONT_END_HTTPS'] ?? ''));
+        return $front === 'on' || $front === '1';
+    }
 
     /**
      * Remove query string from URL

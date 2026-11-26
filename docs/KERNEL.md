@@ -61,7 +61,7 @@ public/index.php
 |-------|------|
 | `src/Etc/.env` via `Environment::get()` | Canonical runtime values (`Application::path('src/Etc/.env')`) |
 | `ConfigManager::get('dot.key')` | Structured app / database / cache / session / security / mail / logging |
-| `Config.php` | Legacy URL helpers (`getReqRoute`, `BASE_URL` / site path fallbacks) |
+| `Config.php` | Legacy URL helpers (`getReqRoute`, `BASE_URL` / site path fallbacks); session boot; `requestLooksHttps()` so cookie Secure follows TLS even if `SESSION_SECURE=false` |
 | `ConfigDatabase.php` | DB fallbacks when env incomplete (dev-oriented) |
 
 **Read config with** `Environment::get()` or `ConfigManager::get()` — not `$_ENV` for `.env` keys (`putenv` does not populate `$_ENV`).
