@@ -54,7 +54,8 @@
       }
     },
     "compose_later": "Suggest saas-pack / payments-pack only when tenancy or shared payment intents are real requirements — as an option, not a default",
-    "workflow": "simple_product_shape"
+    "workflow": "simple_product_shape",
+    "human_howto": "docs/PRODUCT_SHAPES.md"
   },
   "kernel_surface": {
     "doc": "docs/KERNEL.md",

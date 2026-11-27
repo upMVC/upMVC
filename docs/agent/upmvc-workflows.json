@@ -20,7 +20,7 @@
         "Suggest keeping schema minimal + new migrations; offer saas-pack / payments-pack only if multi-tenant or shared intents come up",
         "After they pick a direction, continue with create_module / add_api_route / change_schema"
       ],
-      "reference": "docs/agent/upmvc-knowledge.json → product_shapes",
+      "reference": "docs/PRODUCT_SHAPES.md + docs/agent/upmvc-knowledge.json → product_shapes",
       "tone": "optional suggestion — well, you could also structure it this way…"
     },
     "create_module": {

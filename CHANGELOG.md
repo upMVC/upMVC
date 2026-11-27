@@ -3,7 +3,7 @@
 ## [Unreleased]
 
 ### Docs / agent
-- **Product shapes** — `product_shapes` in knowledge + workflow `simple_product_shape` (general web-thin vs API-first options; propose, do not prescribe). Rules prefer + scaffold `api_domain`. AGENT_PACK note.
+- **Product shapes** — Human how-to [`docs/PRODUCT_SHAPES.md`](docs/PRODUCT_SHAPES.md); linked from README AI Agent section. Agent pack: `product_shapes` + `simple_product_shape` (propose, do not prescribe). Rules prefer + scaffold `api_domain`.
 
 ## v2.7.0 - Empty protected-route defaults + QA scripts (2026-11-26)
 

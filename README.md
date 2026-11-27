@@ -12,7 +12,13 @@ upMVC ships an **AI-native knowledge pack** — not a chatbot inside PHP, but po
 
 **You do not need to explain upMVC from scratch in every chat.**
 
+**How to structure a lean app** (server pages vs API + shells): **[docs/PRODUCT_SHAPES.md](docs/PRODUCT_SHAPES.md)** — differences, when to pick each, and how to ask an agent.
+
 ### How it works
+
+**Direct in Cursor / Claude Code:** open the repo and chat — root [`AGENTS.md`](AGENTS.md) loads the pack. Say what you want (“add a Contact module”, “propose API-first vs server-render”).
+
+**Optional prompt builder** (any LLM — pasteable brief):
 
 1. Run **`php src/Tools/upmvc-next.php`** (or pass `--goal "…"`).
 2. The CLI scans your project (modules, `.env`, SaaS pack if present).
@@ -45,7 +51,7 @@ php src/Tools/upmvc-next.php --goal "Fix JWT on /api/auth" --stdout
 php src/Tools/upmvc-next.php --scaffold --goal "Create a Blog CRUD module"
 ```
 
-**Full guide:** [docs/AGENT_PACK.md](docs/AGENT_PACK.md) · **Tests:** `vendor\bin\phpunit tests\Unit\Tools`
+**Full guide:** [docs/AGENT_PACK.md](docs/AGENT_PACK.md) · **App layouts:** [docs/PRODUCT_SHAPES.md](docs/PRODUCT_SHAPES.md) · **Tests:** `vendor\bin\phpunit tests\Unit\Tools`
 
 > **Note:** Legacy PHP module generators were removed. New modules are created by your AI assistant using the knowledge pack (and optional scaffolds), not `php tools/createmodule/…`.
 
@@ -172,10 +178,12 @@ Take / try / drop: delete any demo folder under `src/Modules/` anytime.
 
 ### **🤖 AI Agent:**
 - **[Agent Pack Guide](docs/AGENT_PACK.md)** — Full guide: core JSON pack, `upmvc-next.php`, optional scaffolds, Cursor/`AGENTS.md`
+- **[Product shapes (how-to)](docs/PRODUCT_SHAPES.md)** — Web thin modules vs API-first + shells; how to use each with an agent
 - **[AGENTS.md](AGENTS.md)** — Root entry for cloud agents
 
 ### **🏗 Architecture & Philosophy:**
 - **[🧱 Kernel](docs/KERNEL.md)** - What `src/Etc/` actually is (boot, config, router, packages)
+- **[Product shapes](docs/PRODUCT_SHAPES.md)** - Two lean host layouts (server pages vs API + shells)
 - **[Kernel · Common · BMVC](docs/KERNEL_COMMON_BMVC.md)** - **Simple / non-SaaS:** kernel vs shared skeleton vs modules; standalone vs library; `AppModel` / `AppView` examples
 - **[🎨 Pure PHP Philosophy](docs/PHILOSOPHY_PURE_PHP.md)** - The upMVC NoFramework approach
 - **[🧩 Module Philosophy](docs/MODULE_PHILOSOPHY.md)** - Modules as reference implementations (demos zip ≠ Common)
