@@ -135,6 +135,17 @@ Hard constraints — **must**, **never**, **saas_must**, **prefer**:
 
 These are the guardrails. Keep the list short and actionable.
 
+### Product shapes (greenfield)
+
+`upmvc-knowledge.json` → **`product_shapes`** + workflow **`simple_product_shape`**: two **general** layouts the agent may **propose** (not prescribe).
+
+| Shape | Layout | Auth |
+|-------|--------|------|
+| `web_thin_modules` | `src/Modules/{Domain}/` + View PHP | Session / CSRF |
+| `api_first_shells` | `Api/Modules/{Domain}/` + optional shells | JWT (`JwtService`) |
+
+Tone: *you could also structure it this way…* — wait for the user. Do not name-drop internal host apps. Tips: prefer kernel helpers over parallel `ApiResponse` classes; keep the literal `Modules` segment under `Api/` when using nested JSON domains.
+
 ### `upmvc-workflows.json`
 
 Recipes keyed by intent (`create_module`, `saas_domain_module`, `config_audit`, …). Each workflow has `intent_keywords` and ordered `steps`. The CLI matches user goals to workflows by keyword overlap.

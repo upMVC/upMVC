@@ -7,9 +7,9 @@ You are working inside an **upMVC** PHP project. Do not ask the user to explain 
 - `docs/AGENT_PACK.md` — full usage guide
 - `docs/KERNEL.md` — kernel surface (boot, config, router, packages) — product is `src/Etc/`
 - `docs/KERNEL_COMMON_BMVC.md` — simple non-SaaS: Common/BMVC vs modules; standalone vs library
-- `docs/agent/upmvc-knowledge.json` — paths, bootstrap, `kernel_surface`, modules, packages
+- `docs/agent/upmvc-knowledge.json` — paths, bootstrap, `kernel_surface`, `product_shapes`, modules, packages
 - `docs/agent/upmvc-rules.json` — must/never constraints
-- `docs/agent/upmvc-workflows.json` — match user intent to a recipe
+- `docs/agent/upmvc-workflows.json` — match user intent to a recipe (incl. `simple_product_shape` for greenfield)
 
 If `bitshost/upmvc-saas-pack` is installed or `src/Etc/packages.php` registers `SaasServiceProvider`, also load:
 
@@ -26,6 +26,7 @@ For **new module scaffolding** (optional, not default):
 3. Output a **plan** (JSON) before multi-file edits.
 4. Follow `upmvc-rules.json` strictly; scope SaaS queries with `tenant_id`.
 5. Kernel work: claim capabilities only from `src/Etc/` / `docs/KERNEL.md` — never from demos.
+6. Greenfield / unclear layout: you may **propose** `product_shapes` (`web_thin_modules` vs `api_first_shells`) as options — never force a path or cite internal product repos.
 
 ## Docs
 

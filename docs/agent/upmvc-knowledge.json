@@ -25,6 +25,37 @@
       "docs/CONFIGURATION_FALLBACKS.md"
     ]
   },
+  "product_shapes": {
+    "summary": "Two general layouts that stay thin on stock upMVC (no SaaS pack required). Patterns distilled from real hosts — present as options, not as named products.",
+    "agent_tone": "Propose, do not prescribe. Prefer phrasing like: you could structure it this way… / another path that works well is… Wait for the user to pick or adapt. Never force a shape or name-drop internal product repos unless the user already works in that repo.",
+    "when_to_offer": [
+      "New app / greenfield and layout is unclear",
+      "User asks how to structure modules for a shop, portal, service app, CRM, or REST API",
+      "User wants a lean build without heavy open-source platform bloat"
+    ],
+    "shapes": {
+      "web_thin_modules": {
+        "label": "Server-render thin modules",
+        "layout": "src/Modules/{Domain}/ with Controller + Model + View + Routes/Routes.php — one concern per module (catalog, cart/shop, admin, …)",
+        "homepage": "src/Etc/custom-routes.php → one module owns '/'",
+        "auth": "Session + PROTECTED_ROUTES and/or ['auth']/['csrf'] on routes",
+        "kernel_helpers": ["BaseController", "BaseModel", "BaseView", "Security::rateLimit"],
+        "notes": "Payment SDKs can live in the app via Composer; pull payments-pack / saas-pack only when the user asks for that floor",
+        "avoid": "Do not invent a parallel ApiResponse / RateLimiter when BaseApiController / Security already cover the need"
+      },
+      "api_first_shells": {
+        "label": "API-first + thin shells",
+        "layout": "JSON under src/Modules/Api/Modules/{Domain}/ (literal Modules segment required for discovery). Optional SPA/HTML shells as sibling modules (public site, admin shell, client shell, …).",
+        "routes": "addRoute(..., ['cors', 'jwt'], [methods]) for protected APIs",
+        "auth": "JwtService issues tokens; JwtAuthMiddleware verifies — prefer kernel JWT over adding a third-party JWT library by default",
+        "kernel_helpers": ["BaseApiController", "JwtService", "named jwt/cors middleware"],
+        "notes": "Stay single-tenant on stock kernel until the user explicitly wants multi-tenant / saas-pack",
+        "discovery_trap": "src/Modules/Api/{Domain}/ without the literal Modules/ segment is never discovered — always Api/Modules/{Domain}/"
+      }
+    },
+    "compose_later": "Suggest saas-pack / payments-pack only when tenancy or shared payment intents are real requirements — as an option, not a default",
+    "workflow": "simple_product_shape"
+  },
   "kernel_surface": {
     "doc": "docs/KERNEL.md",
     "product": "src/Etc/ (+ public/index.php, Composer package boundary)",

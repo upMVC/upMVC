@@ -2,6 +2,9 @@
 
 ## [Unreleased]
 
+### Docs / agent
+- **Product shapes** — `product_shapes` in knowledge + workflow `simple_product_shape` (general web-thin vs API-first options; propose, do not prescribe). Rules prefer + scaffold `api_domain`. AGENT_PACK note.
+
 ## v2.7.0 - Empty protected-route defaults + QA scripts (2026-11-26)
 
 ### Changed
