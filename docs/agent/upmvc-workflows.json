@@ -6,10 +6,29 @@
     "instruction": "Match user intent to a workflow. Output plan JSON before implementation."
   },
   "workflows": {
+    "simple_product_shape": {
+      "intent_keywords": [
+        "new app", "greenfield", "architecture", "how to structure", "shop", "store",
+        "magazine", "portal", "crm", "rest api", "spa", "without saas",
+        "thin modules", "api first", "lean store", "how would you organize"
+      ],
+      "steps": [
+        "Propose (do not prescribe) two general options from product_shapes — e.g. you could keep server-rendered thin modules, or you could go API-first with shells. Let the user choose or mix",
+        "If they lean HTML/pages: sketch web_thin_modules (one concern per module; homepage via custom-routes.php; session + CSRF). If they lean SPA/mobile: sketch api_first_shells (Api/Modules/{Domain}/ + optional shells; JWT)",
+        "Mention discovery trap only when relevant: JSON domains need the literal Modules segment under Api/",
+        "Suggest kernel helpers (BaseApiController, JwtService, Security) instead of reinventing ApiResponse / extra JWT libs — as a tip, not a lecture",
+        "Suggest keeping schema minimal + new migrations; offer saas-pack / payments-pack only if multi-tenant or shared intents come up",
+        "After they pick a direction, continue with create_module / add_api_route / change_schema"
+      ],
+      "reference": "docs/agent/upmvc-knowledge.json → product_shapes",
+      "tone": "optional suggestion — well, you could also structure it this way…"
+    },
     "create_module": {
       "intent_keywords": ["module", "feature", "crud", "new page", "scaffold"],
       "steps": [
+        "If greenfield and layout is still open, you may gently offer simple_product_shape options — do not block on it",
         "Confirm module name (PascalCase) and type: web | api | both",
+        "For JSON domain APIs, suggest Api/Modules/{Domain}/ when it fits; flat src/Modules/{Name}/ is fine for web or tiny APIs",
         "Check if similar module exists in src/Modules for pattern reference",
         "Hand-create or agent-scaffold Controller, Model, View, Routes/Routes.php (see upmvc-scaffolds.json with --scaffold)",
         "Register routes in Routes/Routes.php using addRoute(path, class, method, [middleware], [methods]) or addParamRoute",
@@ -27,7 +46,8 @@
     "add_api_route": {
       "intent_keywords": ["api", "endpoint", "rest", "json"],
       "steps": [
-        "Identify target module or create Api/Modules/{Domain} module",
+        "Identify target module or create Api/Modules/{Domain} module (literal Modules segment)",
+        "Prefer BaseApiController JSON helpers over a custom ApiResponse class",
         "Add route in Routes/Routes.php",
         "Implement controller method returning JSON (success/error helpers if SaaS)",
         "Apply middleware as 4th addRoute argument: ['cors', 'jwt'] for protected APIs",
@@ -128,6 +148,8 @@
     "description": "Map free-text user goal to workflow id",
     "examples": [
       { "user_says": "I need a bookings API for my SaaS", "workflow": "saas_domain_module" },
+      { "user_says": "Build a lean online shop without platform bloat", "workflow": "simple_product_shape" },
+      { "user_says": "How should I structure modules for an API plus SPA admin", "workflow": "simple_product_shape" },
       { "user_says": "Add a contact form module", "workflow": "create_module" },
       { "user_says": "Why is my env not working", "workflow": "config_audit" },
       { "user_says": "Hook in the saas pack", "workflow": "add_package_provider" },

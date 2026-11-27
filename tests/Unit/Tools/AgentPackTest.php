@@ -55,6 +55,20 @@ class AgentPackTest extends TestCase
 
         $this->assertIsArray($data);
         $this->assertArrayHasKey('create_module', $data['workflows'] ?? []);
+        $this->assertArrayHasKey('simple_product_shape', $data['workflows'] ?? []);
+    }
+
+    public function test_knowledge_pack_has_product_shapes(): void
+    {
+        $data = json_decode(
+            (string) file_get_contents($this->agentDir . '/upmvc-knowledge.json'),
+            true
+        );
+
+        $this->assertIsArray($data);
+        $shapes = $data['product_shapes']['shapes'] ?? [];
+        $this->assertArrayHasKey('web_thin_modules', $shapes);
+        $this->assertArrayHasKey('api_first_shells', $shapes);
     }
 
     public function test_agents_md_points_to_agent_pack(): void

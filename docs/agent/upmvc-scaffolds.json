@@ -21,14 +21,25 @@
       "routes_namespace": "App\\Modules\\{Name}\\Routes"
     },
     "api": {
-      "description": "JSON API module — extend BaseApiController or return json_encode from controller",
+      "description": "Flat JSON module under src/Modules/{Name}/ — OK for tiny APIs. Prefer api_domain for product APIs.",
       "files": [
         "src/Modules/{Name}/Controller.php",
         "src/Modules/{Name}/Model.php",
         "src/Modules/{Name}/Routes/Routes.php"
       ],
+      "controller_extends": "App\\Common\\Bmvc\\BaseApiController",
       "middleware_default": ["cors"],
       "protected_middleware": ["cors", "jwt"]
+    },
+    "api_domain": {
+      "description": "Nested JSON domain module (API-first layout). Same discovery shape SaaS apps use — available without saas-pack.",
+      "path": "src/Modules/Api/Modules/{Domain}/",
+      "routes_path": "src/Modules/Api/Modules/{Domain}/Routes/Routes.php",
+      "discovery": "Literal Modules segment required — Api/{Domain}/ alone is never discovered",
+      "controller_extends": "App\\Common\\Bmvc\\BaseApiController",
+      "middleware_default": ["cors"],
+      "protected_middleware": ["cors", "jwt"],
+      "notes": "Suggest JwtService for token issue; only add a third-party JWT lib if the user wants it"
     },
     "crud": {
       "description": "Full CRUD web module with list/create/edit/delete",

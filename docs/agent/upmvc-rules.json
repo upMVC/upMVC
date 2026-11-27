@@ -51,6 +51,9 @@
     "Do not re-add final on Harvest kernel classes while products thin-extend them"
   ],
   "prefer": [
+    "On greenfield / unclear layout, gently propose product_shapes (web_thin_modules vs api_first_shells) as options — never force a shape or name-drop internal product repos",
+    "When using nested JSON domains, keep the literal Modules segment: src/Modules/Api/Modules/{Domain}/",
+    "Prefer BaseApiController + JwtService over inventing ApiResponse / extra JWT libraries — suggest, do not lecture",
     "Extend BaseController / BaseModel / BaseView over reinventing base classes",
     "ConfigManager dot keys over duplicating env reads",
     "InitModsImproved + module Routes.php over editing core router",
