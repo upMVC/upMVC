@@ -31,6 +31,7 @@ For **new module scaffolding** (optional, not default):
 ## Docs
 
 - `docs/KERNEL.md`
+- `docs/PRODUCT_SHAPES.md` — web thin modules vs API-first + shells (propose, do not force)
 - `docs/KERNEL_COMMON_BMVC.md`
 - `docs/MODULE_PHILOSOPHY.md`
 - `docs/CORE_AREAS_AND_CONFIGURATION.md`

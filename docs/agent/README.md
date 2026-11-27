@@ -23,6 +23,8 @@ Paste `generated/last-prompt.md` into your agent chat.
 
 **Kernel product doc:** [../KERNEL.md](../KERNEL.md) — boot, config, router, packages; claims from `src/Etc/` only.
 
+**Lean app layouts (human how-to):** [../PRODUCT_SHAPES.md](../PRODUCT_SHAPES.md) — web thin modules vs API-first + shells.
+
 ## Updating rules
 
 Edit `upmvc-rules.json` or `upmvc-workflows.json`, bump `meta.version`, run `vendor\bin\phpunit tests\Unit\Tools`. See the [main guide](../AGENT_PACK.md#how-to-update-rules).
