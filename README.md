@@ -1,10 +1,10 @@
-# 📚 upMVC noFramework v2.6 – Complete Documentation
+# 📚 upMVC noFramework v2.7 – Complete Documentation
 
 > **Modern, lightweight PHP NoFramework with Islands Architecture for real-world PHP + JS systems**
 
-**Status: ✅ Production Ready (v2.6.1)** | **PHP 8.3+** | **PSR-4 Compliant** | **MIT License**
+**Status: ✅ Production Ready (v2.7.0)** | **PHP 8.3+** | **PSR-4 Compliant** | **MIT License**
 
-**v2.6.1:** Session cookie Secure follows real HTTPS/proxy TLS even if `SESSION_SECURE=false`. **v2.6:** PHP **8.3+** floor; Common/BMVC docs for standalone vs library. **v2.5:** Thin create-project — **Welcome** homepage (no database), optional demos as a Releases zip, migration runner, Router v2.0, package/provider architecture, **AI Agent pack**, and PHP + React/Vue *Islands Architecture*. Kernel lives in `src/Etc/`; modules are optional.
+**v2.7.0:** Empty protected-route defaults (Thin Core honesty); PHPStan 2 + `composer check`; agent **product shapes** how-to. **v2.6.x:** PHP **8.3+** floor; session cookie Secure on HTTPS/proxy; Common/BMVC docs. **v2.5:** Thin create-project — **Welcome** homepage, optional demos zip, migrations, Router v2.0, packages, **AI Agent pack**, Islands Architecture. Kernel lives in `src/Etc/`; modules are optional.
 
 ## 🤖 AI Agent — built-in context for Cursor, Claude, and local LLMs
 
