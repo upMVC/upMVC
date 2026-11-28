@@ -23,6 +23,11 @@ class BaseViewModern
         ]
     ];
 
+    protected function e(mixed $value): string
+    {
+        return htmlspecialchars((string) $value, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+    }
+
     /**
      * Add a global variable accessible to all views
      */
@@ -46,8 +51,8 @@ class BaseViewModern
      */
     public function menu()
     {
-        $siteName = $this->globals['settings']['site_name'];
-        $logoText = $this->globals['settings']['logo_text'];
+        $siteName = $this->e($this->globals['settings']['site_name']);
+        $logoText = $this->e($this->globals['settings']['logo_text']);
 ?>
         <nav class="modern-nav compact">
             <div class="nav-container">
@@ -75,8 +80,8 @@ class BaseViewModern
                             <a href="<?php echo BASE_URL; ?>/reactb" class="dropdown-link">� React Alt</a>
                             <a href="<?php echo BASE_URL; ?>/admin" class="dropdown-link">🚫 No-Build JS</a>
                             <div class="dropdown-divider"></div>
-                            <a href="https://github.com/BitsHost/upMVC" target="_blank" class="dropdown-link">💻 GitHub</a>
-                            <a href="https://upmvc.com" target="_blank" class="dropdown-link">🌐 Official Site</a>
+                            <a href="https://github.com/BitsHost/upMVC" target="_blank" rel="noopener noreferrer" class="dropdown-link">💻 GitHub</a>
+                            <a href="https://upmvc.com" target="_blank" rel="noopener noreferrer" class="dropdown-link">🌐 Official Site</a>
                         </div>
                     </div>
                 </div>
@@ -113,8 +118,8 @@ class BaseViewModern
                     <a href="<?php echo BASE_URL; ?>/react" class="nav-mobile-link">⚛️ React Islands</a>
                     <a href="<?php echo BASE_URL; ?>/auth" class="nav-mobile-link">🔑 Authentication</a>
                     <div class="nav-divider"></div>
-                    <a href="https://github.com/BitsHost/upMVC" target="_blank" class="nav-mobile-link">� GitHub</a>
-                    <a href="https://upmvc.com" target="_blank" class="nav-mobile-link">🌐 Official Site</a>
+                    <a href="https://github.com/BitsHost/upMVC" target="_blank" rel="noopener noreferrer" class="nav-mobile-link">GitHub</a>
+                    <a href="https://upmvc.com" target="_blank" rel="noopener noreferrer" class="nav-mobile-link">Official Site</a>
                 </div>
             </div>
         </nav>
@@ -126,8 +131,8 @@ class BaseViewModern
      */
     public function startHead($title)
     {
-        $siteName = $this->globals['settings']['site_name'];
-        $version = $this->globals['settings']['version'];
+        $siteName = $this->e($this->globals['settings']['site_name']);
+        $pageTitle = $this->e($title) . ' - ' . $siteName;
         $newCss = new ModernCss();
 ?>
 <!DOCTYPE html>
@@ -142,11 +147,11 @@ class BaseViewModern
     <meta name="robots" content="index, follow">
     
     <!-- Open Graph Meta Tags -->
-    <meta property="og:title" content="<?php echo $title . ' - ' . $siteName; ?>">
+    <meta property="og:title" content="<?php echo $pageTitle; ?>">
     <meta property="og:description" content="Modern PHP NoFramework for rapid development">
     <meta property="og:type" content="website">
     
-    <title><?php echo $title . ' - ' . $siteName; ?></title>
+    <title><?php echo $pageTitle; ?></title>
     
     <!-- Favicon -->
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🚀</text></svg>">
@@ -159,8 +164,8 @@ class BaseViewModern
     <!-- Custom Modern Styles (includes utility classes) -->
     <?php $newCss->modernCss(); ?>
     
-    <!-- Core JavaScript -->
-    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+    <!-- Alpine.js pinned; prefer self-hosting in production products -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.8/dist/cdn.min.js" crossorigin="anonymous"></script>
 <?php
     }
 
@@ -178,7 +183,8 @@ class BaseViewModern
      */
     public function startBody($title)
     {
-        $version = $this->globals['settings']['version'];
+        $version = $this->e($this->globals['settings']['version']);
+        $safeTitle = $this->e($title);
 ?>
 <body class="modern-body" x-data="{ darkMode: false }" :class="{ 'dark': darkMode }">
     
@@ -197,7 +203,7 @@ class BaseViewModern
             <header class="page-header">
                 <h1 class="page-title">
                     <span class="title-accent">✨</span>
-                    <?php echo $title; ?>
+                    <?php echo $safeTitle; ?>
                 </h1>
                 <div class="page-controls">
                     <button @click="darkMode = !darkMode" class="theme-toggle">
@@ -229,7 +235,7 @@ class BaseViewModern
     public function startFooter()
     {
         $currentYear = date("Y");
-        $version = $this->globals['settings']['version'];
+        $version = $this->e($this->globals['settings']['version']);
 ?>
     <footer class="modern-footer">
         <div class="footer-container">
@@ -258,13 +264,13 @@ class BaseViewModern
             <div class="footer-section">
                 <h4 class="footer-title">🔗 Quick Links</h4>
                 <div class="footer-links">
-                    <a href="https://upmvc.com" target="_blank" class="footer-link">
+                    <a href="https://upmvc.com" target="_blank" rel="noopener noreferrer" class="footer-link">
                         <span class="link-icon">🌐</span>Official Website
                     </a>
-                    <a href="https://github.com/BitsHost/upMVC" target="_blank" class="footer-link">
+                    <a href="https://github.com/BitsHost/upMVC" target="_blank" rel="noopener noreferrer" class="footer-link">
                         <span class="link-icon">💻</span>GitHub Repository
                     </a>
-                    <a href="https://bitshost.biz/free-web-hosting.html" target="_blank" class="footer-link">
+                    <a href="https://bitshost.biz/free-web-hosting.html" target="_blank" rel="noopener noreferrer" class="footer-link">
                         <span class="link-icon">☁️</span>Free Hosting
                     </a>
                 </div>

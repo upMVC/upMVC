@@ -2,6 +2,17 @@
 
 ## [Unreleased]
 
+### Security (Phase 2)
+- **Router** — `405` / method check runs *after* global middleware (CORS preflight + auth globals first).
+- **JWT** — require `alg=HS256`, `exp`, honour `nbf`; strict base64; `JWT_SECRET` ≥ 32 bytes; `REDIRECT_HTTP_AUTHORIZATION` / Apache header fallbacks.
+- **CSRF** — named `csrf` middleware on `POST|PUT|PATCH|DELETE`; token from POST or `X-CSRF-Token` (no query).
+- **Session** — `use_strict_mode`, `use_only_cookies`, `gc_maxlifetime` aligned; `requestLooksHttps()` trusts forwarded proto only via `TRUSTED_PROXIES`.
+- **Auth** — named `auth` matches `authenticated`/`logged`; JSON/`/api` → 401 JSON; browser → 302 `BASE_URL`+login; `intended_url` same-origin path only.
+- **Headers / CORS** — global `SecurityHeadersMiddleware`; CORS trims origins, `Vary: Origin`; refuse `*` + credentials (no arbitrary Origin reflection).
+- **BMVC** — `EXTR_SKIP` on extract; no CSRF via GET; Orm redirect via `Location`; BaseViewModern HTML escape + pinned Alpine 3.14.8; `noopener` on blank targets; `BaseModel::update` positional binds (no `:id` collision); `ResponseHelper` uses `Modules/`.
+- **AuthMiddleware** — `/admin/*` also covers `/admin`; intended path rejects control chars.
+- **RateLimiter** — strip CR/LF from login log fields.
+
 ### Security (Phase 1)
 - **Router** — path params always overwrite `$_GET` (path wins over query pollution).
 - **ErrorHandler** — strip frame `args` before logging / formatting traces.

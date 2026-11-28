@@ -10,10 +10,7 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * verifyToken() is public API: tokens do not only arrive in an Authorization
- * header, so anything holding a raw token verifies through here. It is also
- * the only signature check in the framework, which makes its rejection paths
- * worth pinning down — a verifier that accepts a forged token fails silently
- * and catastrophically.
+ * header, so anything holding a raw token verifies through here.
  *
  * __invoke() is not covered: it aborts with exit() on failure.
  */
@@ -27,14 +24,17 @@ final class JwtAuthMiddlewareTest extends TestCase
     {
         $this->previousSecret = $_ENV['JWT_SECRET'] ?? null;
         $_ENV['JWT_SECRET'] = self::SECRET;
+        putenv('JWT_SECRET=' . self::SECRET);
     }
 
     protected function tearDown(): void
     {
         if ($this->previousSecret === null) {
             unset($_ENV['JWT_SECRET']);
+            putenv('JWT_SECRET');
         } else {
             $_ENV['JWT_SECRET'] = $this->previousSecret;
+            putenv('JWT_SECRET=' . $this->previousSecret);
         }
     }
 
@@ -43,10 +43,10 @@ final class JwtAuthMiddlewareTest extends TestCase
         return rtrim(strtr(base64_encode($data), '+/', '-_'), '=');
     }
 
-    /** Rebuild a token with altered claims, signed with the given secret. */
-    private function resign(array $claims, string $secret): string
+    /** Rebuild a token with altered claims / header, signed with the given secret. */
+    private function resign(array $claims, string $secret, array $header = ['alg' => 'HS256', 'typ' => 'JWT']): string
     {
-        $h = $this->b64u((string) json_encode(['alg' => 'HS256', 'typ' => 'JWT']));
+        $h = $this->b64u((string) json_encode($header));
         $p = $this->b64u((string) json_encode($claims));
 
         return "$h.$p." . $this->b64u(hash_hmac('sha256', "$h.$p", $secret, true));
@@ -73,8 +73,6 @@ final class JwtAuthMiddlewareTest extends TestCase
 
     public function testRejectsAPayloadResignedWithTheWrongSecret(): void
     {
-        // The attack that matters: valid structure, valid-looking claims,
-        // signed by someone who does not hold JWT_SECRET.
         $forged = $this->resign(['sub' => 1, 'role' => 'platform_admin', 'exp' => time() + 3600], 'wrong-secret');
 
         $this->assertNull(JwtAuthMiddleware::verifyToken($forged));
@@ -87,11 +85,51 @@ final class JwtAuthMiddlewareTest extends TestCase
         $this->assertNull(JwtAuthMiddleware::verifyToken($expired));
     }
 
-    public function testAcceptsATokenWithNoExpiryClaim(): void
+    public function testRejectsATokenWithNoExpiryClaim(): void
     {
         $noExp = $this->resign(['sub' => 7], self::SECRET);
 
-        $this->assertIsArray(JwtAuthMiddleware::verifyToken($noExp));
+        $this->assertNull(JwtAuthMiddleware::verifyToken($noExp));
+    }
+
+    public function testRejectsAlgNone(): void
+    {
+        $h = $this->b64u((string) json_encode(['alg' => 'none', 'typ' => 'JWT']));
+        $p = $this->b64u((string) json_encode(['sub' => 7, 'exp' => time() + 3600]));
+        $token = "$h.$p.";
+
+        $this->assertNull(JwtAuthMiddleware::verifyToken($token));
+    }
+
+    public function testRejectsFutureNbf(): void
+    {
+        $token = $this->resign([
+            'sub' => 7,
+            'exp' => time() + 3600,
+            'nbf' => time() + 600,
+        ], self::SECRET);
+
+        $this->assertNull(JwtAuthMiddleware::verifyToken($token));
+    }
+
+    public function testRejectsNonNumericNbf(): void
+    {
+        $token = $this->resign([
+            'sub' => 7,
+            'exp' => time() + 3600,
+            'nbf' => 'invalid',
+        ], self::SECRET);
+
+        $this->assertNull(JwtAuthMiddleware::verifyToken($token));
+    }
+
+    public function testRejectsShortSecret(): void
+    {
+        $_ENV['JWT_SECRET'] = 'too-short';
+        putenv('JWT_SECRET=too-short');
+        $token = $this->resign(['sub' => 7, 'exp' => time() + 3600], 'too-short');
+
+        $this->assertNull(JwtAuthMiddleware::verifyToken($token));
     }
 
     public function testRejectsMalformedInput(): void

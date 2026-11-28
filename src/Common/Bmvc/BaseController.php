@@ -60,8 +60,8 @@ class BaseController
     
     protected function requireCsrf(): bool
     {
-        $token = $_POST['csrf_token'] ?? $_GET['csrf_token'] ?? '';
-        return Security::validateCsrf($token);
+        $token = $_POST['csrf_token'] ?? $_SERVER['HTTP_X_CSRF_TOKEN'] ?? '';
+        return Security::validateCsrf((string) $token);
     }
     
     protected function json(array $data, int $status = 200): void
@@ -83,8 +83,8 @@ class BaseController
     {
         $data['csrf_token'] = Security::csrfToken();
         $data['errors'] = $this->errors;
-        
-        extract($data);
+
+        extract($data, EXTR_SKIP);
         include_once THIS_DIR . "/Modules/$view.php";
     }
     

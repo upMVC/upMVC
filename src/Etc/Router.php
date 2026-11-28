@@ -382,15 +382,16 @@ class Router
         if (isset($this->routes[$reqRoute])) {
             $route = $this->routes[$reqRoute];
 
-            if (!$this->methodAllowed($route, $reqMet)) {
-                return $this->handle405($route);
-            }
-            
-            // Execute global middleware pipeline, then route handler
+            // Global middleware (CORS, auth, headers) runs before 405 so
+            // OPTIONS preflight gets CORS headers and protected routes do
+            // not leak Allow lists to unauthenticated clients.
             return $this->middlewareManager->execute(
                 $reqRoute,
                 $request,
                 function ($request) use ($route, $reqRoute, $reqMet) {
+                    if (!$this->methodAllowed($route, $reqMet)) {
+                        return $this->handle405($route);
+                    }
                     foreach ($route['middleware'] ?? [] as $middlewareName) {
                         if (!$this->runNamedMiddleware($middlewareName, $reqRoute, $reqMet)) return;
                     }
@@ -404,10 +405,6 @@ class Router
                 $route = $match['route'];
                 $params = $match['params'];
 
-                if (!$this->methodAllowed($route, $reqMet)) {
-                    return $this->handle405($route);
-                }
-
                 // Enrich request context with extracted params
                 $request['params'] = $params;
 
@@ -415,6 +412,9 @@ class Router
                     $reqRoute,
                     $request,
                     function ($request) use ($route, $reqRoute, $reqMet, $params) {
+                        if (!$this->methodAllowed($route, $reqMet)) {
+                            return $this->handle405($route);
+                        }
                         foreach ($route['middleware'] ?? [] as $middlewareName) {
                             if (!$this->runNamedMiddleware($middlewareName, $reqRoute, $reqMet)) return;
                         }

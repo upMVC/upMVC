@@ -356,6 +356,9 @@ class Config
                 'httponly' => (bool) $httpOnly,
                 'samesite' => $sameSite,
             ]);
+            ini_set('session.use_strict_mode', '1');
+            ini_set('session.use_only_cookies', '1');
+            ini_set('session.gc_maxlifetime', (string) $lifetime);
             session_start();
         }
     }
@@ -377,12 +380,41 @@ class Config
         if ((string) ($_SERVER['SERVER_PORT'] ?? '') === '443') {
             return true;
         }
+
+        // Proxy TLS headers only when the peer is a configured trusted proxy
+        // (same TRUSTED_PROXIES list as RateLimiter::getClientIp).
+        if (!self::remoteAddrIsTrustedProxy()) {
+            return false;
+        }
+
         $fwd = strtolower((string) ($_SERVER['HTTP_X_FORWARDED_PROTO'] ?? ''));
         if ($fwd === 'https') {
             return true;
         }
         $front = strtolower((string) ($_SERVER['HTTP_FRONT_END_HTTPS'] ?? ''));
         return $front === 'on' || $front === '1';
+    }
+
+    /**
+     * Whether REMOTE_ADDR is listed in TRUSTED_PROXIES (.env comma list).
+     */
+    public static function remoteAddrIsTrustedProxy(): bool
+    {
+        $remote = $_SERVER['REMOTE_ADDR'] ?? '';
+        if ($remote === '' || !filter_var($remote, FILTER_VALIDATE_IP)) {
+            return false;
+        }
+
+        $raw = getenv('TRUSTED_PROXIES');
+        if ($raw === false || $raw === '') {
+            $raw = $_ENV['TRUSTED_PROXIES'] ?? '';
+        }
+        if ($raw === '') {
+            return false;
+        }
+
+        $proxies = array_values(array_filter(array_map('trim', explode(',', (string) $raw))));
+        return in_array($remote, $proxies, true);
     }
 
     /**
