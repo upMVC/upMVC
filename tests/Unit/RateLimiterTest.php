@@ -100,12 +100,27 @@ class RateLimiterTest extends TestCase
     public function testGetClientIpHonoursForwardedWhenProxyTrusted(): void
     {
         putenv('TRUSTED_PROXIES=10.0.0.5');
+        $_ENV['TRUSTED_PROXIES'] = '10.0.0.5';
         $_SERVER['REMOTE_ADDR'] = '10.0.0.5';
+        // Append-style: client, then proxy — pick rightmost non-trusted
         $_SERVER['HTTP_X_FORWARDED_FOR'] = '203.0.113.9, 10.0.0.5';
 
         $this->assertSame('203.0.113.9', RateLimiter::getClientIp());
 
         putenv('TRUSTED_PROXIES');
-        unset($_SERVER['REMOTE_ADDR'], $_SERVER['HTTP_X_FORWARDED_FOR']);
+        unset($_ENV['TRUSTED_PROXIES'], $_SERVER['REMOTE_ADDR'], $_SERVER['HTTP_X_FORWARDED_FOR']);
+    }
+
+    public function testGetClientIpSkipsTrustedHopsInXffChain(): void
+    {
+        putenv('TRUSTED_PROXIES=10.0.0.5,10.0.0.6');
+        $_ENV['TRUSTED_PROXIES'] = '10.0.0.5,10.0.0.6';
+        $_SERVER['REMOTE_ADDR'] = '10.0.0.5';
+        $_SERVER['HTTP_X_FORWARDED_FOR'] = '198.51.100.7, 10.0.0.6, 10.0.0.5';
+
+        $this->assertSame('198.51.100.7', RateLimiter::getClientIp());
+
+        putenv('TRUSTED_PROXIES');
+        unset($_ENV['TRUSTED_PROXIES'], $_SERVER['REMOTE_ADDR'], $_SERVER['HTTP_X_FORWARDED_FOR']);
     }
 }

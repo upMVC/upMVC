@@ -118,40 +118,12 @@ class ConfigManager
      */
     private static function loadConfigFiles(): void
     {
-        $configDir = Application::getInstance()->path('src/Etc');
-        $configFiles = [
-            'app' => $configDir . '/Config.php',
-            'database' => $configDir . '/ConfigDatabase.php'
-        ];
-
-        foreach ($configFiles as $name => $file) {
-            if (file_exists($file)) {
-                self::loadConfigFile($name, $file);
-            }
-        }
-
-        // Load additional config files
+        // Always hydrate from Environment. Do not gate on Config.php /
+        // ConfigDatabase.php existing under the host src/Etc — library-mode
+        // hosts may omit those stubs while still needing app + database config.
+        self::loadAppConfig();
+        self::loadDatabaseConfig();
         self::loadAdditionalConfigs();
-    }
-
-    /**
-     * Load a single configuration file
-     *
-     * @param string $name
-     * @param string $file
-     * @return void
-     */
-    private static function loadConfigFile(string $name, string $file): void
-    {
-        try {
-            if ($name === 'app') {
-                self::loadAppConfig();
-            } elseif ($name === 'database') {
-                self::loadDatabaseConfig();
-            }
-        } catch (\Exception $e) {
-            throw new ConfigurationException("Failed to load config file {$file}: " . $e->getMessage());
-        }
     }
 
     /**

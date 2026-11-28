@@ -85,7 +85,36 @@ class BaseController
         $data['errors'] = $this->errors;
 
         extract($data, EXTR_SKIP);
-        include_once THIS_DIR . "/Modules/$view.php";
+        $viewFile = $this->resolveModuleView($view);
+        include_once $viewFile;
+    }
+
+    /**
+     * Resolve a view path strictly under THIS_DIR/Modules.
+     *
+     * @throws \InvalidArgumentException|\RuntimeException
+     */
+    protected function resolveModuleView(string $view): string
+    {
+        $relative = str_replace(['\\', "\0"], '', $view);
+        $relative = str_replace('..', '', $relative);
+        $relative = ltrim($relative, '/');
+        if ($relative === '' || !preg_match('#^[a-zA-Z0-9_./-]+$#', $relative)) {
+            throw new \InvalidArgumentException('Invalid view path');
+        }
+
+        $base = realpath(THIS_DIR . '/Modules');
+        if ($base === false) {
+            throw new \RuntimeException('Modules directory missing');
+        }
+
+        $full = $base . DIRECTORY_SEPARATOR . str_replace('/', DIRECTORY_SEPARATOR, $relative) . '.php';
+        $real = realpath($full);
+        if ($real === false || !str_starts_with($real, $base . DIRECTORY_SEPARATOR)) {
+            throw new \RuntimeException('View file not found: ' . $view);
+        }
+
+        return $real;
     }
     
     protected function isPost(): bool

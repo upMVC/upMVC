@@ -2,6 +2,15 @@
 
 ## [Unreleased]
 
+### Security (Phase 2b follow-ups)
+- **AuthMiddleware** — `/api` or `Accept: application/json` → 401 JSON (aligned with named `auth`).
+- **Config::cleanUrlSitePath** — prefix-only strip (no mid-path `str_replace`).
+- **RateLimiter** — storage via `Application::path('storage')` when booted; XFF rightmost non-trusted hop; read `TRUSTED_PROXIES` from `$_ENV` too.
+- **ConfigManager** — always load app/database from Environment (library hosts without `Config.php` stubs).
+- **Router::route** — `preg_quote` + `rawurlencode` on named URL params.
+- **InitModsImproved** — register `custom-routes.php` once across multi module-path scans.
+- **BaseController / Orm** — view paths resolved under `Modules/` with `realpath` (no `..`).
+
 ### Security (Phase 2)
 - **Router** — `405` / method check runs *after* global middleware (CORS preflight + auth globals first).
 - **JWT** — require `alg=HS256`, `exp`, honour `nbf`; strict base64; `JWT_SECRET` ≥ 32 bytes; `REDIRECT_HTTP_AUTHORIZATION` / Apache header fallbacks.

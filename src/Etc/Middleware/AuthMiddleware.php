@@ -42,6 +42,16 @@ class AuthMiddleware implements MiddlewareInterface
                     }
                 }
 
+                $wantsJson = str_contains((string) ($_SERVER['HTTP_ACCEPT'] ?? ''), 'application/json')
+                    || str_starts_with((string) $route, '/api');
+
+                if ($wantsJson) {
+                    http_response_code(401);
+                    header('Content-Type: application/json; charset=utf-8');
+                    echo json_encode(['error' => 'Unauthenticated']);
+                    exit;
+                }
+
                 $baseUrl = defined('BASE_URL') ? BASE_URL : '';
                 header('Location: ' . $baseUrl . $this->redirectTo);
                 exit;
