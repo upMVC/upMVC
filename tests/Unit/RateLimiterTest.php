@@ -123,4 +123,32 @@ class RateLimiterTest extends TestCase
         putenv('TRUSTED_PROXIES');
         unset($_ENV['TRUSTED_PROXIES'], $_SERVER['REMOTE_ADDR'], $_SERVER['HTTP_X_FORWARDED_FOR']);
     }
+
+    public function testCfConnectingIpIgnoredOnTrustedNginxUnlessOptIn(): void
+    {
+        putenv('TRUSTED_PROXIES=10.0.0.5');
+        putenv('TRUST_CF_HEADER=false');
+        $_ENV['TRUSTED_PROXIES'] = '10.0.0.5';
+        $_ENV['TRUST_CF_HEADER'] = 'false';
+        $_SERVER['REMOTE_ADDR'] = '10.0.0.5';
+        $_SERVER['HTTP_CF_CONNECTING_IP'] = '8.8.8.8';
+        $_SERVER['HTTP_X_FORWARDED_FOR'] = '203.0.113.9';
+
+        // Spoofed CF header must NOT win; XFF client does
+        $this->assertSame('203.0.113.9', RateLimiter::getClientIp());
+
+        putenv('TRUST_CF_HEADER=true');
+        $_ENV['TRUST_CF_HEADER'] = 'true';
+        $this->assertSame('8.8.8.8', RateLimiter::getClientIp());
+
+        putenv('TRUSTED_PROXIES');
+        putenv('TRUST_CF_HEADER');
+        unset(
+            $_ENV['TRUSTED_PROXIES'],
+            $_ENV['TRUST_CF_HEADER'],
+            $_SERVER['REMOTE_ADDR'],
+            $_SERVER['HTTP_CF_CONNECTING_IP'],
+            $_SERVER['HTTP_X_FORWARDED_FOR']
+        );
+    }
 }

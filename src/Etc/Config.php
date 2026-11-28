@@ -396,25 +396,12 @@ class Config
     }
 
     /**
-     * Whether REMOTE_ADDR is listed in TRUSTED_PROXIES (.env comma list).
+     * Whether REMOTE_ADDR is listed in TRUSTED_PROXIES (.env comma list / CIDR).
      */
     public static function remoteAddrIsTrustedProxy(): bool
     {
         $remote = $_SERVER['REMOTE_ADDR'] ?? '';
-        if ($remote === '' || !filter_var($remote, FILTER_VALIDATE_IP)) {
-            return false;
-        }
-
-        $raw = getenv('TRUSTED_PROXIES');
-        if ($raw === false || $raw === '') {
-            $raw = $_ENV['TRUSTED_PROXIES'] ?? '';
-        }
-        if ($raw === '') {
-            return false;
-        }
-
-        $proxies = array_values(array_filter(array_map('trim', explode(',', (string) $raw))));
-        return in_array($remote, $proxies, true);
+        return TrustedProxies::contains((string) $remote);
     }
 
     /**
@@ -450,16 +437,19 @@ class Config
      */
     private function cleanUrlSitePath(string $sitePath, string $reqUrl): string
     {
-        if ($sitePath === '' || $sitePath === '/') {
+        $sitePath = rtrim($sitePath, '/');
+        if ($sitePath === '') {
             return $reqUrl;
         }
 
-        // Prefix-only: never str_replace mid-path (SITE_PATH substring elsewhere).
-        if (str_starts_with($reqUrl, $sitePath)) {
+        // Exact match (request is exactly the site root)
+        if ($reqUrl === $sitePath) {
+            return '/';
+        }
+
+        // Segment boundary only: /app matches /app/… and /app?…, not /apple or /app-admin
+        if (str_starts_with($reqUrl, $sitePath . '/') || str_starts_with($reqUrl, $sitePath . '?')) {
             $rest = substr($reqUrl, strlen($sitePath));
-            if ($rest === '') {
-                return '/';
-            }
             return str_starts_with($rest, '/') ? $rest : '/' . $rest;
         }
 

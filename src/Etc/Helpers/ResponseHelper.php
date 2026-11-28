@@ -19,15 +19,24 @@ class ResponseHelper
      */
     public static function view(string $path, array $data = []): void
     {
-        extract($data, EXTR_SKIP);
-        $relative = str_replace(['..', '\\'], '', str_replace('.', '/', $path));
-        $viewPath = __DIR__ . '/../../Modules/' . $relative . '.php';
-
-        if (!file_exists($viewPath)) {
+        if (str_contains($path, '..') || str_contains($path, '\\') || str_contains($path, "\0")) {
+            throw new \InvalidArgumentException('Invalid view path');
+        }
+        $relative = ltrim(str_replace('.', '/', $path), '/');
+        $modulesRoot = realpath(__DIR__ . '/../../Modules');
+        if ($modulesRoot === false) {
+            throw new \RuntimeException('Modules directory missing');
+        }
+        $candidate = $modulesRoot . DIRECTORY_SEPARATOR . str_replace('/', DIRECTORY_SEPARATOR, $relative) . '.php';
+        $viewPath = realpath($candidate);
+        if ($viewPath === false || !str_starts_with($viewPath, $modulesRoot . DIRECTORY_SEPARATOR)) {
             throw new \RuntimeException("View not found: {$path}");
         }
 
-        include $viewPath;
+        (static function (string $__file, array $__data): void {
+            extract($__data, EXTR_SKIP);
+            include $__file;
+        })($viewPath, $data);
     }
     
     /**

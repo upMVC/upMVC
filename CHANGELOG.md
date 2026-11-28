@@ -2,6 +2,13 @@
 
 ## [Unreleased]
 
+### Security (fix Phase 2b regressions — branch `fix/phase2b-regressions`)
+- **custom-routes** — registered once in `Routes` *after* all module paths (restores pack→app→custom order; no static flag).
+- **TrustedProxies** — shared helper with CIDR; `CF-Connecting-IP` only if `TRUST_CF_HEADER=true`.
+- **cleanUrlSitePath** — segment boundary (`/app` ≠ `/apple`); trailing-slash normalize.
+- **BaseController(Orm) / ResponseHelper** — resolve path first; isolated extract closure; reject `..` fail-closed.
+- **Auth JSON** — `/api` and `/api/…` only (not `/apiInfo`); no `intended_url` on JSON 401.
+
 ### Security (Phase 2b follow-ups)
 - **AuthMiddleware** — `/api` or `Accept: application/json` → 401 JSON (aligned with named `auth`).
 - **Config::cleanUrlSitePath** — prefix-only strip (no mid-path `str_replace`).

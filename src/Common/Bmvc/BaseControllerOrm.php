@@ -13,34 +13,32 @@ class BaseControllerOrm
      */
     protected function view($viewPath, $data = [])
     {
-        //define('THIS_DIR', str_replace("\\","/",dirname(__FILE__, 2)));
-
-
-        if ($data) {
-            extract($data, EXTR_SKIP);
+        $viewPath = (string) $viewPath;
+        if (str_contains($viewPath, '..') || str_contains($viewPath, "\0") || str_contains($viewPath, '\\')) {
+            throw new \InvalidArgumentException('Invalid view path');
         }
 
-        $relative = str_replace(['\\', "\0", '..'], '', (string) $viewPath);
-        $relative = ltrim($relative, '/');
+        $relative = ltrim($viewPath, '/');
         if ($relative === '' || !preg_match('#^[a-zA-Z0-9_./-]+$#', $relative)) {
             throw new \InvalidArgumentException('Invalid view path');
         }
 
-        $base = realpath(\THIS_DIR . '/Modules');
-        if ($base === false) {
+        $modulesRoot = realpath(\THIS_DIR . '/Modules');
+        if ($modulesRoot === false) {
             throw new \RuntimeException('Modules directory missing');
         }
 
-        $candidate = $base . DIRECTORY_SEPARATOR . str_replace('/', DIRECTORY_SEPARATOR, $relative) . '.php';
+        $candidate = $modulesRoot . DIRECTORY_SEPARATOR . str_replace('/', DIRECTORY_SEPARATOR, $relative) . '.php';
         $viewFile = realpath($candidate);
-        if ($viewFile === false || !str_starts_with($viewFile, $base . DIRECTORY_SEPARATOR)) {
+        if ($viewFile === false || !str_starts_with($viewFile, $modulesRoot . DIRECTORY_SEPARATOR)) {
             throw new \RuntimeException("View file not found: {$viewPath}");
         }
 
-        include $viewFile;
-
-        // Return the buffered content
-        //return ob_get_clean();
+        // Isolate extract so locals like $modulesRoot never overwrite $data['base']
+        (static function (string $__file, array $__data): void {
+            extract($__data, EXTR_SKIP);
+            include $__file;
+        })($viewFile, is_array($data) ? $data : []);
     }
 
     /**
