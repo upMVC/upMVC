@@ -419,12 +419,10 @@ class Router
                             if (!$this->runNamedMiddleware($middlewareName, $reqRoute, $reqMet)) return;
                         }
 
-                        // Inject params into $_GET with type casting
+                        // Path params always win over query string (prevents ?id= pollution)
                         foreach ($params as $k => $v) {
-                            if (!array_key_exists($k, $_GET)) {
-                                $type = $route['types'][$k] ?? 'string';
-                                $_GET[$k] = $this->castParam($v, $type);
-                            }
+                            $type = $route['types'][$k] ?? 'string';
+                            $_GET[$k] = $this->castParam($v, $type);
                         }
 
                         return $this->callController($route['className'], $route['methodName'], $reqRoute, $reqMet);

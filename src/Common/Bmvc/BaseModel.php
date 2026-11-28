@@ -31,7 +31,12 @@ use App\Etc\Database;
 use PDO;
 
 /**
- * BaseModel
+ * BaseModel — thin PDO CRUD helpers.
+ *
+ * Identifiers (table / column names) must match {@see isSafeIdentifier()}.
+ * Set {@see $fillable} on subclasses to restrict mass-assignment keys;
+ * empty $fillable keeps BC (any safe identifier key is accepted).
+ * Values are bound via PDO — do not HTML-escape here (escape in views).
  */
 class BaseModel
 {
@@ -41,13 +46,21 @@ class BaseModel
     protected $conn;
 
     /**
+     * Mass-assignment whitelist. Empty = any safe identifier key allowed.
+     *
+     * @var list<string>
+     */
+    protected array $fillable = [];
+
+    private const MAX_PAGE_SIZE = 500;
+
+    /**
      * Constructor.
      */
     public function __construct()
     {
         $this->conn = (new Database())->getConnection();
 
-        // Ensure we never operate with a null connection
         if ($this->conn === null) {
             throw new \RuntimeException(
                 'Database connection could not be established. Please check DB_* settings in .env or ConfigDatabase. '
@@ -58,150 +71,175 @@ class BaseModel
     /**
      * Creates a new record in the database.
      *
-     * @param array $data The data to be inserted.
-     * @param string $table The table name.
-     * @return int|false The last inserted ID or false on failure.
+     * @param array<string, mixed> $data
+     * @return int|false|string The last inserted ID or false on failure.
      */
     public function create(array $data, string $table = '')
     {
-        if (empty($data)) {
+        $data = $this->filterAssignable($data);
+        if ($data === [] || $table === '') {
             return false;
         }
-    
-        $sanitizedData = array_map([$this, 'sanitize'], $data);
-        $placeholders = implode(', ', array_fill(0, count($sanitizedData), '?'));
-        $columns = implode(', ', array_keys($sanitizedData));
-    
-        $stmt = $this->conn->prepare("INSERT INTO $table ($columns) VALUES ($placeholders)");
+
+        $tableSql = $this->quoteIdentifier($table);
+        $columns = [];
+        $placeholders = [];
+        foreach (array_keys($data) as $key) {
+            $columns[] = $this->quoteIdentifier($key);
+            $placeholders[] = '?';
+        }
+
+        $stmt = $this->conn->prepare(
+            'INSERT INTO ' . $tableSql . ' (' . implode(', ', $columns) . ') VALUES (' . implode(', ', $placeholders) . ')'
+        );
         if (!$stmt) {
             return false;
         }
-    
-        // Bind parameter with value
+
         $i = 1;
-        foreach ($sanitizedData as $value) {
+        foreach ($data as $value) {
             $stmt->bindValue($i++, $value);
         }
-    
-        $success = $stmt->execute();
-        if ($success) {
+
+        if ($stmt->execute()) {
             return $this->conn->lastInsertId();
-        } else {
-            return false;
         }
+
+        return false;
     }
 
     /**
      * Reads a record from the database.
      *
-     * @param int $id The record ID.
-     * @param string $table The table name.
-     * @return array|null The record data or null on failure.
+     * @return array|false|null
      */
     public function read(int $id, string $table = '')
     {
-        $sanitizedId = $this->sanitize($id);
-        $stmt = $this->conn->prepare("SELECT * FROM $table WHERE id = :id");
+        if ($table === '') {
+            return null;
+        }
+
+        $stmt = $this->conn->prepare(
+            'SELECT * FROM ' . $this->quoteIdentifier($table) . ' WHERE `id` = :id'
+        );
         if (!$stmt) {
             return null;
         }
 
-        $stmt->bindParam(':id', $sanitizedId);
+        $stmt->bindValue(':id', $id, PDO::PARAM_INT);
         $stmt->execute();
-        return $stmt->fetch();
+        $row = $stmt->fetch();
+        return $row === false ? null : $row;
     }
 
     /**
      * Reads all records from the database.
      *
-     * @param string $table The table name.
-     * @return array The records data.
+     * @return list<array<string, mixed>>
      */
     public function readAll(string $table = '')
     {
-        $stmt = $this->conn->prepare("SELECT * FROM $table");
+        if ($table === '') {
+            return [];
+        }
+
+        $stmt = $this->conn->prepare('SELECT * FROM ' . $this->quoteIdentifier($table));
         if (!$stmt) {
             return [];
         }
 
         $stmt->execute();
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC) ?: [];
     }
 
     /**
      * Reads records from the database with pagination.
      *
-     * @param string $table The table name.
-     * @param int $page The current page.
-     * @param int $pageSize The number of records per page.
-     * @return array The records data.
+     * @return list<array<string, mixed>>
      */
     public function readWithPagination(string $table = '', int $page = 1, int $pageSize = 10)
     {
+        if ($table === '') {
+            return [];
+        }
+
+        $page = max(1, $page);
+        $pageSize = max(1, min(self::MAX_PAGE_SIZE, $pageSize));
         $offset = ($page - 1) * $pageSize;
-        $stmt = $this->conn->prepare("SELECT * FROM $table LIMIT :offset, :pageSize");
+
+        $stmt = $this->conn->prepare(
+            'SELECT * FROM ' . $this->quoteIdentifier($table) . ' LIMIT :offset, :pageSize'
+        );
         if (!$stmt) {
             return [];
         }
 
-        $stmt->bindParam(':offset', $offset, PDO::PARAM_INT);
-        $stmt->bindParam(':pageSize', $pageSize, PDO::PARAM_INT);
+        $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
+        $stmt->bindValue(':pageSize', $pageSize, PDO::PARAM_INT);
         $stmt->execute();
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC) ?: [];
     }
 
     /**
      * Updates a record in the database.
      *
-     * @param int $id The record ID.
-     * @param array $data The data to be updated.
-     * @param string $table The table name.
-     * @return bool True on success, false on failure.
+     * @param array<string, mixed> $data
      */
-    public function update(int $id, array $data, string $table = '')
+    public function update(int $id, array $data, string $table = ''): bool
     {
-        if (empty($data)) {
+        $data = $this->filterAssignable($data);
+        if ($data === [] || $table === '') {
             return false;
         }
 
-        $sanitizedId = $this->sanitize($id);
-        $sanitizedData = array_map([$this, 'sanitize'], $data);
-        $setClause = implode(', ', array_map(fn($key) => "$key = :$key", array_keys($sanitizedData)));
+        $setParts = [];
+        foreach (array_keys($data) as $key) {
+            $setParts[] = $this->quoteIdentifier($key) . ' = :' . $key;
+        }
 
-        $stmt = $this->conn->prepare("UPDATE $table SET $setClause WHERE id = :id");
+        $stmt = $this->conn->prepare(
+            'UPDATE ' . $this->quoteIdentifier($table)
+            . ' SET ' . implode(', ', $setParts)
+            . ' WHERE `id` = :id'
+        );
         if (!$stmt) {
             return false;
         }
 
-        $stmt->bindParam(':id', $sanitizedId);
-        foreach ($sanitizedData as $key => $value) {
-            $stmt->bindValue(":$key", $value);
+        $stmt->bindValue(':id', $id, PDO::PARAM_INT);
+        foreach ($data as $key => $value) {
+            $stmt->bindValue(':' . $key, $value);
         }
 
-        $success = $stmt->execute();
-        $rowCount = $stmt->rowCount();
-        return $rowCount > 0 ? $success : false;
+        if (!$stmt->execute()) {
+            return false;
+        }
+
+        return $stmt->rowCount() > 0;
     }
 
     /**
      * Deletes a record from the database.
-     *
-     * @param int $id The record ID.
-     * @param string $table The table name.
-     * @return bool True on success, false on failure.
      */
-    public function delete(int $id, string $table = '')
+    public function delete(int $id, string $table = ''): bool
     {
-        $sanitizedId = $this->sanitize($id);
-        $stmt = $this->conn->prepare("DELETE FROM $table WHERE id = :id");
+        if ($table === '') {
+            return false;
+        }
+
+        $stmt = $this->conn->prepare(
+            'DELETE FROM ' . $this->quoteIdentifier($table) . ' WHERE `id` = :id'
+        );
         if (!$stmt) {
             return false;
         }
 
-        $stmt->bindParam(':id', $sanitizedId);
-        $success = $stmt->execute();
-        $rowCount = $stmt->rowCount();
-        return $rowCount > 0 ? $success : false;
+        $stmt->bindValue(':id', $id, PDO::PARAM_INT);
+        if (!$stmt->execute()) {
+            return false;
+        }
+
+        return $stmt->rowCount() > 0;
     }
 
     /**
@@ -213,33 +251,41 @@ class BaseModel
     }
 
     /**
-     * Sanitizes the input data to prevent SQL injection and XSS attacks.
+     * Keep only assignable keys with safe SQL identifier names.
      *
-     * @param mixed $input The input data to be sanitized.
-     * @return mixed The sanitized input (string for strings, array for arrays, original for others).
+     * @param array<string, mixed> $data
+     * @return array<string, mixed>
      */
-    private function sanitize($input)
+    protected function filterAssignable(array $data): array
     {
-        if (is_string($input)) {
-            // Sanitize string input
-            $sanitizedInput = filter_var($input, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
-            if ($sanitizedInput === false) {
-                return "Error during sanitization.";
+        $out = [];
+        foreach ($data as $key => $value) {
+            if (!is_string($key) || !$this->isSafeIdentifier($key)) {
+                continue;
             }
-    
-            // Escape special characters to prevent XSS
-            return htmlspecialchars($sanitizedInput, ENT_QUOTES | ENT_HTML5, 'UTF-8');
-        } elseif (is_array($input)) {
-            // Recursively sanitize array elements
-            return array_map([$this, 'sanitize'], $input);
-        } else {
-            // Return non-string input as is
-            return $input;
+            if ($this->fillable !== [] && !in_array($key, $this->fillable, true)) {
+                continue;
+            }
+            $out[$key] = $value;
         }
+        return $out;
+    }
+
+    protected function isSafeIdentifier(string $name): bool
+    {
+        return (bool) preg_match('/^[a-zA-Z_][a-zA-Z0-9_]*$/', $name);
+    }
+
+    /**
+     * Quote a validated SQL identifier with backticks.
+     *
+     * @throws \InvalidArgumentException
+     */
+    protected function quoteIdentifier(string $name): string
+    {
+        if (!$this->isSafeIdentifier($name)) {
+            throw new \InvalidArgumentException('Invalid SQL identifier: ' . $name);
+        }
+        return '`' . $name . '`';
     }
 }
-
-
-
-
-

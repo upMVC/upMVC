@@ -2,6 +2,14 @@
 
 ## [Unreleased]
 
+### Security (Phase 1)
+- **Router** — path params always overwrite `$_GET` (path wins over query pollution).
+- **ErrorHandler** — strip frame `args` before logging / formatting traces.
+- **Cache** — `unserialize(..., ['allowed_classes' => false])` in `FileCache` + legacy `Cache`; deprecate `App\Etc\Cache` (prefer `CacheManager`); legacy cache dir under `storage/cache`.
+- **BaseModel / BaseModelOrm** — identifier regex + backtick quoting; optional `$fillable`; remove `FILTER_SANITIZE_STRING` / `htmlspecialchars` from model layer; cap pagination page size; safe advanced WHERE/ORDER BY; ORM `$conn` set on every instance.
+- **RateLimiter** — default IP is `REMOTE_ADDR` only; proxy headers only when peer is in `TRUSTED_PROXIES`; reject unsafe `$action` names.
+- **Ops** — CLI-only guards on `cache-cli.php` / `upmvc-next.php`; `composer audit` in CI; untrack `composer.phar` + rate-limit JSON junk.
+
 ### Docs / agent
 - **Product shapes** — Human how-to [`docs/PRODUCT_SHAPES.md`](docs/PRODUCT_SHAPES.md); linked from README AI Agent section. Agent pack: `product_shapes` + `simple_product_shape` (propose, do not prescribe). Rules prefer + scaffold `api_domain`.
 

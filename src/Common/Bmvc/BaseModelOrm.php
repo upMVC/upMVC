@@ -32,29 +32,43 @@ use PDO;
 use \RedBeanPHP\R;
 
 /**
- * BaseOrm
+ * BaseModelOrm — RedBeanPHP helpers with identifier / fillable guards.
+ *
+ * Same rules as BaseModel: safe table/column names, optional $fillable,
+ * no HTML escaping in the model layer.
  */
 class BaseModelOrm
 {
     /**
-     * @var PDO
+     * @var PDO|null
      */
     protected $conn;
 
     /**
-     * @var self
+     * @var self|null
      */
     private static $instance = null;
 
     /**
-     * @var PDO
+     * @var PDO|null
      */
     private static $connection = null;
 
+    private static bool $beanReady = false;
+
     /**
-     * @var array
+     * @var array<string, mixed>
      */
     private $cache = [];
+
+    /**
+     * Mass-assignment whitelist. Empty = any safe identifier key allowed.
+     *
+     * @var list<string>
+     */
+    protected array $fillable = [];
+
+    private const MAX_PAGE_SIZE = 500;
 
     /**
      * Constructor.
@@ -63,9 +77,12 @@ class BaseModelOrm
     {
         if (self::$connection === null) {
             self::$connection = (new Database())->getConnection();
-            $this->conn = self::$connection;
+        }
+        $this->conn = self::$connection;
+
+        if (!self::$beanReady) {
             $this->readBeanPhp();
-           // R::fancyDebug(TRUE);
+            self::$beanReady = true;
         }
     }
 
@@ -79,29 +96,28 @@ class BaseModelOrm
 
     /**
      * Create a single record
-     * 
-     * @param array $data
-     * @param string $table
+     *
+     * @param array<string, mixed> $data
      * @return int
      */
     public function create(array $data, string $table)
     {
-        if (empty($data)) {
+        $data = $this->filterAssignable($data);
+        $table = $this->assertIdentifier($table);
+        if ($data === []) {
             return 0;
         }
 
         R::begin();
         try {
             $bean = R::dispense($table);
-            $sanitizedData = array_map([$this, 'sanitize'], $data);
-
-            foreach ($sanitizedData as $key => $value) {
+            foreach ($data as $key => $value) {
                 $bean->$key = $value;
             }
 
             $id = R::store($bean);
             R::commit();
-            return $id;
+            return (int) $id;
         } catch (\Exception $e) {
             R::rollback();
             throw $e;
@@ -110,14 +126,14 @@ class BaseModelOrm
 
     /**
      * Create multiple records in batch
-     * 
-     * @param array $dataSet
-     * @param string $table
-     * @return array
+     *
+     * @param list<array<string, mixed>> $dataSet
+     * @return list<int>
      */
     public function createBatch(array $dataSet, string $table)
     {
-        if (empty($dataSet)) {
+        $table = $this->assertIdentifier($table);
+        if ($dataSet === []) {
             return [];
         }
 
@@ -125,12 +141,15 @@ class BaseModelOrm
         R::begin();
         try {
             foreach ($dataSet as $data) {
+                $data = $this->filterAssignable($data);
+                if ($data === []) {
+                    continue;
+                }
                 $bean = R::dispense($table);
-                $sanitizedData = array_map([$this, 'sanitize'], $data);
-                foreach ($sanitizedData as $key => $value) {
+                foreach ($data as $key => $value) {
                     $bean->$key = $value;
                 }
-                $ids[] = R::store($bean);
+                $ids[] = (int) R::store($bean);
             }
             R::commit();
             return $ids;
@@ -142,199 +161,208 @@ class BaseModelOrm
 
     /**
      * Read all records from a table
-     * 
-     * @param string $table
-     * @return array
+     *
+     * @return list<array<string, mixed>>
      */
     public function readAll(string $table)
     {
+        $table = $this->assertIdentifier($table);
         $cacheKey = "all_{$table}";
         if (isset($this->cache[$cacheKey])) {
             return $this->cache[$cacheKey];
         }
 
-        $result = R::getAll("SELECT * FROM $table");
+        $result = R::getAll('SELECT * FROM ' . $this->quoteIdentifier($table));
         $this->cache[$cacheKey] = $result;
         return $result;
     }
 
     /**
      * Read a single record
-     * 
-     * @param int $id
-     * @param string $table
-     * @return array
+     *
+     * @return list<array<string, mixed>>
      */
     public function read(int $id, string $table)
     {
+        $table = $this->assertIdentifier($table);
         $cacheKey = "{$table}_{$id}";
         if (isset($this->cache[$cacheKey])) {
             return $this->cache[$cacheKey];
         }
 
-        $sanitizedId = $this->sanitize($id);
         $result = R::getAll(
-            "SELECT * FROM $table WHERE id = :id",
-            [':id' => $sanitizedId]
-        );
-        
-        $this->cache[$cacheKey] = $result;
-        return $result;
-    }
-
-
-     /**
- * Read records with pagination
- * 
- * @param string $table
- * @param int $page Current page number
- * @param int $pageSize Number of items per page
- * @return array Returns ['data' => records, 'total' => total_records, 'pages' => total_pages]
- */
-public function readWithPagination(string $table, int $page = 1, int $pageSize = 3)
-{
-    // Ensure valid pagination parameters
-    $page = max(1, $page);
-    $pageSize = max(1, $pageSize);
-    $offset = ($page - 1) * $pageSize;
-
-    $cacheKey = "{$table}_page_{$page}_size_{$pageSize}";
-    
-    if (isset($this->cache[$cacheKey])) {
-        return $this->cache[$cacheKey];
-    }
-
-    R::begin();
-    try {
-        // Get total count of records
-        $total = R::count($table);
-        $totalPages = ceil($total / $pageSize);
-
-        // Get paginated data
-        $records = R::getAll(
-            "SELECT * FROM $table LIMIT :offset, :pageSize",
-            [
-                ':offset' => $offset,
-                ':pageSize' => $pageSize
-            ]
+            'SELECT * FROM ' . $this->quoteIdentifier($table) . ' WHERE `id` = :id',
+            [':id' => $id]
         );
 
-        $result = [
-            'data' => $records,
-            'total' => $total,
-            'current_page' => $page,
-            'per_page' => $pageSize,
-            'total_pages' => $totalPages,
-            'has_more' => $page < $totalPages
-        ];
-
-        R::commit();
-        
-        // Cache the results
         $this->cache[$cacheKey] = $result;
-        
         return $result;
-    } catch (\Exception $e) {
-        R::rollback();
-        throw $e;
-    }
-}
-
-/**
- * Read paginated records with additional options
- * 
- * @param string $table
- * @param int $page
- * @param int $pageSize
- * @param array $options Array with 'where', 'orderBy', 'search' keys
- * @return array
- */
-public function readWithAdvancedPagination(string $table, int $page = 1, int $pageSize = 10, array $options = [])
-{
-    $page = max(1, $page);
-    $pageSize = max(1, $pageSize);
-    $offset = ($page - 1) * $pageSize;
-
-    // Build query parts
-    $where = isset($options['where']) ? "WHERE {$options['where']}" : '';
-    $orderBy = isset($options['orderBy']) ? "ORDER BY {$options['orderBy']}" : '';
-    
-    $cacheKey = "{$table}_page_{$page}_size_{$pageSize}_" . md5(json_encode($options));
-    
-    if (isset($this->cache[$cacheKey])) {
-        return $this->cache[$cacheKey];
     }
 
-    R::begin();
-    try {
-        // Get total count with filters
-        $totalQuery = "SELECT COUNT(*) FROM $table $where";
-        $total = (int) R::getCell($totalQuery);
-        $totalPages = $pageSize > 0 ? (int) ceil($total / $pageSize) : 0;
+    /**
+     * Read records with pagination
+     *
+     * @return array{data: mixed, total: int, current_page: int, per_page: int, total_pages: float|int, has_more: bool}
+     */
+    public function readWithPagination(string $table, int $page = 1, int $pageSize = 3)
+    {
+        $table = $this->assertIdentifier($table);
+        $page = max(1, $page);
+        $pageSize = max(1, min(self::MAX_PAGE_SIZE, $pageSize));
+        $offset = ($page - 1) * $pageSize;
 
-        // Get paginated data with filters and ordering
-        $query = "SELECT * FROM $table $where $orderBy LIMIT :offset, :pageSize";
-        $records = R::getAll($query, [
-            ':offset' => $offset,
-            ':pageSize' => $pageSize
-        ]);
+        $cacheKey = "{$table}_page_{$page}_size_{$pageSize}";
 
-        $result = [
-            'data' => $records,
-            'total' => $total,
-            'current_page' => $page,
-            'per_page' => $pageSize,
-            'total_pages' => $totalPages,
-            'has_more' => $page < $totalPages,
-            'from' => $offset + 1,
-            'to' => min($offset + $pageSize, $total)
-        ];
+        if (isset($this->cache[$cacheKey])) {
+            return $this->cache[$cacheKey];
+        }
 
-        R::commit();
-        
-        $this->cache[$cacheKey] = $result;
-        
-        return $result;
-    } catch (\Exception $e) {
-        R::rollback();
-        throw $e;
-    }
-}
+        R::begin();
+        try {
+            $total = R::count($table);
+            $totalPages = $pageSize > 0 ? (int) ceil($total / $pageSize) : 0;
 
-/**
- * Clear pagination cache for a specific table
- * 
- * @param string $table
- */
-public function clearPaginationCache(string $table)
-{
-    foreach ($this->cache as $key => $value) {
-        if (strpos($key, "{$table}_page_") === 0) {
-            unset($this->cache[$key]);
+            $records = R::getAll(
+                'SELECT * FROM ' . $this->quoteIdentifier($table) . ' LIMIT :offset, :pageSize',
+                [
+                    ':offset' => $offset,
+                    ':pageSize' => $pageSize
+                ]
+            );
+
+            $result = [
+                'data' => $records,
+                'total' => $total,
+                'current_page' => $page,
+                'per_page' => $pageSize,
+                'total_pages' => $totalPages,
+                'has_more' => $page < $totalPages
+            ];
+
+            R::commit();
+            $this->cache[$cacheKey] = $result;
+
+            return $result;
+        } catch (\Exception $e) {
+            R::rollback();
+            throw $e;
         }
     }
-}
 
+    /**
+     * Read paginated records with additional options.
+     *
+     * Options:
+     * - where: associative column => value (AND equality; values bound)
+     * - orderBy: column name string, or ['column' => string, 'direction' => ASC|DESC]
+     *
+     * @param array{where?: array<string, mixed>, orderBy?: string|array{column?: string, direction?: string}} $options
+     * @return array<string, mixed>
+     */
+    public function readWithAdvancedPagination(string $table, int $page = 1, int $pageSize = 10, array $options = [])
+    {
+        $tableSql = $this->quoteIdentifier($table);
+        $page = max(1, $page);
+        $pageSize = max(1, min(self::MAX_PAGE_SIZE, $pageSize));
+        $offset = ($page - 1) * $pageSize;
 
+        $bindings = [];
+        $whereParts = [];
+        if (!empty($options['where']) && is_array($options['where'])) {
+            $i = 0;
+            foreach ($options['where'] as $col => $value) {
+                if (!is_string($col) || !$this->isSafeIdentifier($col)) {
+                    throw new \InvalidArgumentException('Invalid WHERE column: ' . (string) $col);
+                }
+                $param = ':w' . $i++;
+                $whereParts[] = $this->quoteIdentifier($col) . ' = ' . $param;
+                $bindings[$param] = $value;
+            }
+        }
+        $whereSql = $whereParts !== [] ? 'WHERE ' . implode(' AND ', $whereParts) : '';
+
+        $orderSql = '';
+        if (!empty($options['orderBy'])) {
+            $orderCol = '';
+            $direction = 'ASC';
+            if (is_array($options['orderBy'])) {
+                $orderCol = (string) ($options['orderBy']['column'] ?? '');
+                $direction = strtoupper((string) ($options['orderBy']['direction'] ?? 'ASC'));
+            } else {
+                $orderCol = (string) $options['orderBy'];
+            }
+            if (!in_array($direction, ['ASC', 'DESC'], true)) {
+                $direction = 'ASC';
+            }
+            $orderSql = 'ORDER BY ' . $this->quoteIdentifier($orderCol) . ' ' . $direction;
+        }
+
+        $cacheKey = "{$table}_page_{$page}_size_{$pageSize}_" . md5(json_encode($options));
+
+        if (isset($this->cache[$cacheKey])) {
+            return $this->cache[$cacheKey];
+        }
+
+        R::begin();
+        try {
+            $totalQuery = "SELECT COUNT(*) FROM {$tableSql} {$whereSql}";
+            $total = (int) R::getCell($totalQuery, $bindings);
+            $totalPages = $pageSize > 0 ? (int) ceil($total / $pageSize) : 0;
+
+            $query = "SELECT * FROM {$tableSql} {$whereSql} {$orderSql} LIMIT :offset, :pageSize";
+            $records = R::getAll($query, array_merge($bindings, [
+                ':offset' => $offset,
+                ':pageSize' => $pageSize
+            ]));
+
+            $result = [
+                'data' => $records,
+                'total' => $total,
+                'current_page' => $page,
+                'per_page' => $pageSize,
+                'total_pages' => $totalPages,
+                'has_more' => $page < $totalPages,
+                'from' => $total > 0 ? $offset + 1 : 0,
+                'to' => min($offset + $pageSize, $total)
+            ];
+
+            R::commit();
+            $this->cache[$cacheKey] = $result;
+
+            return $result;
+        } catch (\Exception $e) {
+            R::rollback();
+            throw $e;
+        }
+    }
+
+    /**
+     * Clear pagination cache for a specific table
+     */
+    public function clearPaginationCache(string $table)
+    {
+        foreach ($this->cache as $key => $value) {
+            if (strpos($key, "{$table}_page_") === 0) {
+                unset($this->cache[$key]);
+            }
+        }
+    }
 
     /**
      * Delete a record
-     * 
-     * @param int $id
-     * @param string $table
+     *
      * @return int
      */
     public function delete(int $id, string $table)
     {
-        $sanitizedId = $this->sanitize($id);
-        
+        $table = $this->assertIdentifier($table);
+
         R::begin();
         try {
-            $bean = R::load($table, $sanitizedId);
+            $bean = R::load($table, $id);
             R::trash($bean);
             R::commit();
 
-            // Clear cache for this entry
             unset($this->cache["{$table}_{$id}"]);
             unset($this->cache["all_{$table}"]);
 
@@ -347,22 +375,21 @@ public function clearPaginationCache(string $table)
 
     /**
      * Delete multiple records in batch
-     * 
-     * @param array $ids
-     * @param string $table
+     *
+     * @param list<int> $ids
      * @return int
      */
     public function deleteBatch(array $ids, string $table)
     {
-        if (empty($ids)) {
+        $table = $this->assertIdentifier($table);
+        if ($ids === []) {
             return 0;
         }
 
         R::begin();
         try {
             foreach ($ids as $id) {
-                $sanitizedId = $this->sanitize($id);
-                $bean = R::load($table, $sanitizedId);
+                $bean = R::load($table, (int) $id);
                 R::trash($bean);
                 unset($this->cache["{$table}_{$id}"]);
             }
@@ -377,36 +404,32 @@ public function clearPaginationCache(string $table)
 
     /**
      * Update a record
-     * 
-     * @param int $id
-     * @param array $data
-     * @param string $table
+     *
+     * @param array<string, mixed> $data
      * @return int
      */
     public function update(int $id, array $data, string $table)
     {
-        if (empty($data)) {
+        $data = $this->filterAssignable($data);
+        $table = $this->assertIdentifier($table);
+        if ($data === []) {
             return 0;
         }
 
-        $sanitizedId = $this->sanitize($id);
-        
         R::begin();
         try {
-            $bean = R::load($table, $sanitizedId);
-            $sanitizedData = array_map([$this, 'sanitize'], $data);
-            
-            foreach ($sanitizedData as $key => $value) {
+            $bean = R::load($table, $id);
+
+            foreach ($data as $key => $value) {
                 $bean->$key = $value;
             }
-            
+
             R::store($bean);
             R::commit();
-            
-            // Clear cache for this entry
+
             unset($this->cache["{$table}_{$id}"]);
             unset($this->cache["all_{$table}"]);
-            
+
             return R::getQueryCount();
         } catch (\Exception $e) {
             R::rollback();
@@ -423,27 +446,45 @@ public function clearPaginationCache(string $table)
     }
 
     /**
-     * Sanitizes the input data to prevent SQL injection and XSS attacks.
-     *
-     * @param mixed $input
-     * @return mixed
+     * @param array<string, mixed> $data
+     * @return array<string, mixed>
      */
-    private function sanitize($input)
+    protected function filterAssignable(array $data): array
     {
-        if (is_string($input)) {
-            return htmlspecialchars(
-                strip_tags($input),
-                ENT_QUOTES | ENT_HTML5,
-                'UTF-8'
-            );
-        } elseif (is_array($input)) {
-            return array_map([$this, 'sanitize'], $input);
+        $out = [];
+        foreach ($data as $key => $value) {
+            if (!is_string($key) || !$this->isSafeIdentifier($key)) {
+                continue;
+            }
+            if ($this->fillable !== [] && !in_array($key, $this->fillable, true)) {
+                continue;
+            }
+            $out[$key] = $value;
         }
-        return $input;
+        return $out;
+    }
+
+    protected function isSafeIdentifier(string $name): bool
+    {
+        return (bool) preg_match('/^[a-zA-Z_][a-zA-Z0-9_]*$/', $name);
+    }
+
+    /**
+     * @throws \InvalidArgumentException
+     */
+    protected function assertIdentifier(string $name): string
+    {
+        if (!$this->isSafeIdentifier($name)) {
+            throw new \InvalidArgumentException('Invalid SQL identifier: ' . $name);
+        }
+        return $name;
+    }
+
+    /**
+     * @throws \InvalidArgumentException
+     */
+    protected function quoteIdentifier(string $name): string
+    {
+        return '`' . $this->assertIdentifier($name) . '`';
     }
 }
-
-
-
-
-

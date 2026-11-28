@@ -130,19 +130,50 @@ class RateLimiter
     }
 
     /**
-     * Determine the real client IP, respecting common proxy headers.
+     * Client IP for rate limiting.
+     *
+     * Default: only $_SERVER['REMOTE_ADDR'] (not spoofable by the client).
+     * Opt-in: when REMOTE_ADDR is in TRUSTED_PROXIES (.env comma list),
+     * honour CF-Connecting-IP / X-Forwarded-For / X-Real-IP.
      */
     public static function getClientIp(): string
     {
-        foreach (['HTTP_CF_CONNECTING_IP', 'HTTP_X_FORWARDED_FOR', 'HTTP_X_REAL_IP', 'REMOTE_ADDR'] as $h) {
-            if (!empty($_SERVER[$h])) {
-                $ip = trim(explode(',', $_SERVER[$h])[0]);
+        $remote = $_SERVER['REMOTE_ADDR'] ?? '';
+        if ($remote !== '' && filter_var($remote, FILTER_VALIDATE_IP) && self::isTrustedProxy($remote)) {
+            foreach (['HTTP_CF_CONNECTING_IP', 'HTTP_X_FORWARDED_FOR', 'HTTP_X_REAL_IP'] as $h) {
+                if (empty($_SERVER[$h])) {
+                    continue;
+                }
+                $ip = trim(explode(',', (string) $_SERVER[$h])[0]);
                 if (filter_var($ip, FILTER_VALIDATE_IP)) {
                     return $ip;
                 }
             }
         }
+
+        if ($remote !== '' && filter_var($remote, FILTER_VALIDATE_IP)) {
+            return $remote;
+        }
+
         return '0.0.0.0';
+    }
+
+    /**
+     * @return list<string>
+     */
+    private static function trustedProxies(): array
+    {
+        $raw = getenv('TRUSTED_PROXIES');
+        if ($raw === false || $raw === '') {
+            return [];
+        }
+
+        return array_values(array_filter(array_map('trim', explode(',', (string) $raw))));
+    }
+
+    private static function isTrustedProxy(string $ip): bool
+    {
+        return in_array($ip, self::trustedProxies(), true);
     }
 
     /**
@@ -225,6 +256,9 @@ class RateLimiter
 
     private static function filePath(string $identifier, string $action): string
     {
+        if (!preg_match('/^[a-zA-Z0-9_-]+$/', $action)) {
+            throw new \InvalidArgumentException('Invalid rate-limit action name');
+        }
         return self::$storageDir . $action . '_' . md5($identifier) . '.json';
     }
 

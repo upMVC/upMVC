@@ -198,9 +198,9 @@ class FileCache implements CacheInterface
             if ($file->isFile() && $file->getExtension() === 'cache') {
                 $content = file_get_contents($file->getPathname());
                 if ($content !== false) {
-                    $data = unserialize($content);
-                    if ($data !== false && 
-                        $data['expires'] !== null && 
+                    $data = unserialize($content, ['allowed_classes' => false]);
+                    if (is_array($data) &&
+                        ($data['expires'] ?? null) !== null &&
                         $data['expires'] < time()) {
                         if (unlink($file->getPathname())) {
                             $cleaned++;
@@ -243,9 +243,9 @@ class FileCache implements CacheInterface
 
                 $content = file_get_contents($file->getPathname());
                 if ($content !== false) {
-                    $data = unserialize($content);
-                    if ($data !== false && 
-                        $data['expires'] !== null && 
+                    $data = unserialize($content, ['allowed_classes' => false]);
+                    if (is_array($data) &&
+                        ($data['expires'] ?? null) !== null &&
                         $data['expires'] < time()) {
                         $stats['expired_files']++;
                     }
