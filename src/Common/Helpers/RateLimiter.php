@@ -132,15 +132,15 @@ class RateLimiter
     /**
      * Client IP for rate limiting.
      *
-     * Default: only $_SERVER['REMOTE_ADDR'] (not spoofable by the client).
-     * Opt-in: when REMOTE_ADDR is in TRUSTED_PROXIES (.env comma list),
-     * honour CF-Connecting-IP / X-Forwarded-For / X-Real-IP.
+     * Default: only $_SERVER['REMOTE_ADDR'].
+     * When REMOTE_ADDR ∈ TRUSTED_PROXIES (exact or CIDR): honour XFF / X-Real-IP.
+     * CF-Connecting-IP only when TRUST_CF_HEADER=true (never implicit on Nginx/ALB).
      */
     public static function getClientIp(): string
     {
         $remote = $_SERVER['REMOTE_ADDR'] ?? '';
-        if ($remote !== '' && filter_var($remote, FILTER_VALIDATE_IP) && self::isTrustedProxy($remote)) {
-            if (!empty($_SERVER['HTTP_CF_CONNECTING_IP'])) {
+        if ($remote !== '' && filter_var($remote, FILTER_VALIDATE_IP) && \App\Etc\TrustedProxies::contains($remote)) {
+            if (\App\Etc\TrustedProxies::trustCfConnectingIp() && !empty($_SERVER['HTTP_CF_CONNECTING_IP'])) {
                 $cf = trim((string) $_SERVER['HTTP_CF_CONNECTING_IP']);
                 if (filter_var($cf, FILTER_VALIDATE_IP)) {
                     return $cf;
@@ -151,7 +151,7 @@ class RateLimiter
                 // Append-style chains: client is the rightmost non-trusted hop
                 $parts = array_reverse(array_map('trim', explode(',', (string) $_SERVER['HTTP_X_FORWARDED_FOR'])));
                 foreach ($parts as $ip) {
-                    if (filter_var($ip, FILTER_VALIDATE_IP) && !self::isTrustedProxy($ip)) {
+                    if (filter_var($ip, FILTER_VALIDATE_IP) && !\App\Etc\TrustedProxies::contains($ip)) {
                         return $ip;
                     }
                 }
@@ -170,27 +170,6 @@ class RateLimiter
         }
 
         return '0.0.0.0';
-    }
-
-    /**
-     * @return list<string>
-     */
-    private static function trustedProxies(): array
-    {
-        $raw = getenv('TRUSTED_PROXIES');
-        if ($raw === false || $raw === '') {
-            $raw = $_ENV['TRUSTED_PROXIES'] ?? '';
-        }
-        if ($raw === '') {
-            return [];
-        }
-
-        return array_values(array_filter(array_map('trim', explode(',', (string) $raw))));
-    }
-
-    private static function isTrustedProxy(string $ip): bool
-    {
-        return in_array($ip, self::trustedProxies(), true);
     }
 
     /**

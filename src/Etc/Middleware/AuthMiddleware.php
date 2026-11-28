@@ -34,16 +34,16 @@ class AuthMiddleware implements MiddlewareInterface
 
         if ($this->requiresAuth($route)) {
             if (!$this->isAuthenticated()) {
-                if (!isset($_SESSION['intended_url'])) {
+                $wantsJson = self::wantsJsonResponse((string) $route);
+
+                // Never store API/JSON endpoints as post-login browser redirects
+                if (!$wantsJson && !isset($_SESSION['intended_url'])) {
                     $candidate = (string) ($request['route'] ?? $request['uri'] ?? '');
                     $safe = self::safeIntendedPath($candidate);
                     if ($safe !== null) {
                         $_SESSION['intended_url'] = $safe;
                     }
                 }
-
-                $wantsJson = str_contains((string) ($_SERVER['HTTP_ACCEPT'] ?? ''), 'application/json')
-                    || str_starts_with((string) $route, '/api');
 
                 if ($wantsJson) {
                     http_response_code(401);
@@ -59,6 +59,18 @@ class AuthMiddleware implements MiddlewareInterface
         }
 
         return $next($request);
+    }
+
+    /**
+     * True for /api and /api/… — not /apiInfo or /api-docs.
+     */
+    public static function wantsJsonResponse(string $route): bool
+    {
+        if (str_contains((string) ($_SERVER['HTTP_ACCEPT'] ?? ''), 'application/json')) {
+            return true;
+        }
+
+        return $route === '/api' || str_starts_with($route, '/api/');
     }
 
     /**

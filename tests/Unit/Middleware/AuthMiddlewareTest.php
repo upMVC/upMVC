@@ -40,4 +40,14 @@ final class AuthMiddlewareTest extends TestCase
         $this->assertTrue($method->invoke($mw, '/admin/users'));
         $this->assertFalse($method->invoke($mw, '/public'));
     }
+
+    public function testWantsJsonOnlyForApiSegmentNotApiInfo(): void
+    {
+        unset($_SERVER['HTTP_ACCEPT']);
+        $this->assertTrue(AuthMiddleware::wantsJsonResponse('/api'));
+        $this->assertTrue(AuthMiddleware::wantsJsonResponse('/api/users'));
+        $this->assertFalse(AuthMiddleware::wantsJsonResponse('/apiInfo'));
+        $this->assertFalse(AuthMiddleware::wantsJsonResponse('/api-docs'));
+        $this->assertFalse(AuthMiddleware::wantsJsonResponse('/admin'));
+    }
 }

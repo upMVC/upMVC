@@ -2,9 +2,9 @@
 
 > **Modern, lightweight PHP NoFramework with Islands Architecture for real-world PHP + JS systems**
 
-**Status: ✅ Production Ready (v2.7.0)** | **PHP 8.3+** | **PSR-4 Compliant** | **MIT License**
+**Status: ✅ Production Ready (v2.7.1)** | **PHP 8.3+** | **PSR-4 Compliant** | **MIT License**
 
-**v2.7.0:** Empty protected-route defaults (Thin Core honesty); PHPStan 2 + `composer check`; agent **product shapes** how-to. **v2.6.x:** PHP **8.3+** floor; session cookie Secure on HTTPS/proxy; Common/BMVC docs. **v2.5:** Thin create-project — **Welcome** homepage, optional demos zip, migrations, Router v2.0, packages, **AI Agent pack**, Islands Architecture. Kernel lives in `src/Etc/`; modules are optional.
+**v2.7.1:** Security hardening Phase 1–2b + regression fixes (TrustedProxies/CIDR, custom-routes after packs, SITE_PATH segment boundary, Auth `/api/` JSON, view extract isolation). **v2.7.0:** Empty protected-route defaults; PHPStan 2 + `composer check`; agent product shapes. **v2.6.x:** PHP **8.3+** floor; session Secure on HTTPS. **v2.5:** Thin Core Welcome + optional demos. Kernel lives in `src/Etc/`; modules are optional.
 
 ## 🤖 AI Agent — built-in context for Cursor, Claude, and local LLMs
 

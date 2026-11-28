@@ -84,9 +84,12 @@ class BaseController
         $data['csrf_token'] = Security::csrfToken();
         $data['errors'] = $this->errors;
 
-        extract($data, EXTR_SKIP);
         $viewFile = $this->resolveModuleView($view);
-        include_once $viewFile;
+        // Isolate extract scope so path locals never overwrite view data (e.g. $base)
+        (static function (string $__file, array $__data): void {
+            extract($__data, EXTR_SKIP);
+            include_once $__file;
+        })($viewFile, $data);
     }
 
     /**
@@ -96,21 +99,23 @@ class BaseController
      */
     protected function resolveModuleView(string $view): string
     {
-        $relative = str_replace(['\\', "\0"], '', $view);
-        $relative = str_replace('..', '', $relative);
-        $relative = ltrim($relative, '/');
+        if (str_contains($view, '..') || str_contains($view, "\0") || str_contains($view, '\\')) {
+            throw new \InvalidArgumentException('Invalid view path');
+        }
+
+        $relative = ltrim($view, '/');
         if ($relative === '' || !preg_match('#^[a-zA-Z0-9_./-]+$#', $relative)) {
             throw new \InvalidArgumentException('Invalid view path');
         }
 
-        $base = realpath(THIS_DIR . '/Modules');
-        if ($base === false) {
+        $modulesRoot = realpath(THIS_DIR . '/Modules');
+        if ($modulesRoot === false) {
             throw new \RuntimeException('Modules directory missing');
         }
 
-        $full = $base . DIRECTORY_SEPARATOR . str_replace('/', DIRECTORY_SEPARATOR, $relative) . '.php';
+        $full = $modulesRoot . DIRECTORY_SEPARATOR . str_replace('/', DIRECTORY_SEPARATOR, $relative) . '.php';
         $real = realpath($full);
-        if ($real === false || !str_starts_with($real, $base . DIRECTORY_SEPARATOR)) {
+        if ($real === false || !str_starts_with($real, $modulesRoot . DIRECTORY_SEPARATOR)) {
             throw new \RuntimeException('View file not found: ' . $view);
         }
 

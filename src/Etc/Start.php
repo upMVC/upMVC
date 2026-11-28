@@ -226,8 +226,7 @@ class Start
                 return true;
             }
 
-            $wantsJson = str_contains((string) ($_SERVER['HTTP_ACCEPT'] ?? ''), 'application/json')
-                || str_starts_with((string) ($route ?? ''), '/api');
+            $wantsJson = \App\Etc\Middleware\AuthMiddleware::wantsJsonResponse((string) ($route ?? ''));
 
             if ($wantsJson) {
                 http_response_code(401);

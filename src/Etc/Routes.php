@@ -108,6 +108,33 @@ class Routes
             $modulesRoutes = new InitModsImproved($modulesPath);
             $modulesRoutes->addRoutes($this->router);
         }
+
+        // custom-routes.php runs LAST (after every module path) so '/' can override packs.
+        // Must not live inside InitModsImproved — that runs once per path.
+        $this->registerCustomRoutes();
+    }
+
+    /**
+     * Register app-owned exact routes from src/Etc/custom-routes.php once.
+     */
+    private function registerCustomRoutes(): void
+    {
+        $configFile = Application::getInstance()->path('src/Etc/custom-routes.php');
+        if (!is_file($configFile)) {
+            return;
+        }
+
+        $customRoutes = include $configFile;
+        if (!is_array($customRoutes)) {
+            return;
+        }
+
+        foreach ($customRoutes as $route) {
+            if (!isset($route['path'], $route['controller'], $route['method'])) {
+                continue;
+            }
+            $this->router->addRoute($route['path'], $route['controller'], $route['method']);
+        }
     }
 
     // ========================================

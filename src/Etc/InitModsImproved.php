@@ -199,8 +199,7 @@ class InitModsImproved
         foreach ($cachedModules as $moduleData) {
             $this->registerModuleRoutes($router, $moduleData);
         }
-        
-        $this->registerCustomRoutes($router);
+        // custom-routes.php is registered once in Routes::registerRoutes() after all paths
     }
 
     /**
@@ -219,7 +218,7 @@ class InitModsImproved
         }
         
         $this->autoDiscoverModules($router);
-        $this->registerCustomRoutes($router);
+        // custom-routes.php is registered once in Routes::registerRoutes() after all paths
     }
 
     /**
@@ -474,42 +473,6 @@ class InitModsImproved
         } catch (\Exception $e) {
             $this->logError("Exception in module {$moduleName}: " . $e->getMessage());
         }
-    }
-
-    /**
-     * Register custom routes from configuration file
-     * 
-     * Loads routes from custom-routes.php if file exists.
-     * 
-     * @param Router $router The router instance
-     * @return void
-     */
-    /** @var bool Ensures custom-routes.php registers once across multi module-path scans */
-    private static bool $customRoutesRegistered = false;
-
-    private function registerCustomRoutes(Router $router): void
-    {
-        if (self::$customRoutesRegistered) {
-            return;
-        }
-        self::$customRoutesRegistered = true;
-
-        $customRoutes = $this->loadCustomRoutes();
-
-        foreach ($customRoutes as $route) {
-            $router->addRoute($route['path'], $route['controller'], $route['method']);
-        }
-    }
-
-    /**
-     * Load custom routes from configuration file
-     * 
-     * @return array Array of custom routes or empty array
-     */
-    private function loadCustomRoutes(): array
-    {
-        $configFile = Application::getInstance()->path('src/Etc/custom-routes.php');
-        return file_exists($configFile) ? include $configFile : [];
     }
 
     // ========================================
