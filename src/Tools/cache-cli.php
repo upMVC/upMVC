@@ -10,6 +10,13 @@
  *   php src/Tools/cache-cli.php clear:all
  */
 
+declare(strict_types=1);
+
+if (PHP_SAPI !== 'cli') {
+    http_response_code(403);
+    exit("cache-cli.php is CLI only\n");
+}
+
 require_once __DIR__ . '/../../vendor/autoload.php';
 
 use App\Etc\InitModsImproved;

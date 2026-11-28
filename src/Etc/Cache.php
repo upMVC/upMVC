@@ -1,6 +1,9 @@
 <?php
 /**
  * Cache.php - Simple File-Based Cache System
+ *
+ * @deprecated Use App\Etc\Cache\CacheManager / FileCache instead. This legacy
+ *             class remains for old call sites; Prefer storage/cache, not CWD.
  * 
  * This class provides a lightweight file-based caching mechanism for upMVC:
  * - Key-value storage with TTL (Time To Live)
@@ -37,6 +40,9 @@
 
 namespace App\Etc;
 
+/**
+ * @deprecated Use App\Etc\Cache\CacheManager instead
+ */
 class Cache
 {
     // ========================================
@@ -44,14 +50,11 @@ class Cache
     // ========================================
     
     /**
-     * Cache directory path
-     * 
-     * All cache files are stored here with .cache extension.
-     * Keys are MD5 hashed for safe filenames.
-     * 
-     * @var string
+     * Cache directory path (resolved under storage/cache — never public/)
+     *
+     * @var string|null
      */
-    private static $cacheDir = 'cache/';
+    private static $cacheDir = null;
     
     // ========================================
     // Read Operations
@@ -93,15 +96,21 @@ class Cache
             return $default;
         }
         
-        // Unserialize cached data
-        $data = unserialize(file_get_contents($file));
-        
-        // Check if cache has expired
-        if ($data['expires'] < time()) {
-            unlink($file); // Auto-cleanup expired cache
+        $raw = file_get_contents($file);
+        if ($raw === false) {
             return $default;
         }
-        
+
+        $data = unserialize($raw, ['allowed_classes' => false]);
+        if (!is_array($data) || !array_key_exists('expires', $data) || !array_key_exists('value', $data)) {
+            return $default;
+        }
+
+        if ($data['expires'] < time()) {
+            unlink($file);
+            return $default;
+        }
+
         return $data['value'];
     }
     
@@ -139,12 +148,11 @@ class Cache
             return false;
         }
         
-        // Ensure cache directory exists
-        if (!is_dir(self::$cacheDir)) {
-            mkdir(self::$cacheDir, 0755, true);
+        $dir = self::cacheDirectory();
+        if (!is_dir($dir)) {
+            mkdir($dir, 0755, true);
         }
-        
-        // Use config TTL if not specified
+
         $ttl = $ttl ?? Config::get('cache.ttl', 3600);
         $file = self::getCacheFile($key);
         
@@ -201,36 +209,43 @@ class Cache
      */
     public static function clear(): bool
     {
-        // Return early if directory doesn't exist
-        if (!is_dir(self::$cacheDir)) {
+        $dir = self::cacheDirectory();
+        if (!is_dir($dir)) {
             return true;
         }
-        
-        // Delete all .cache files
-        $files = glob(self::$cacheDir . '*.cache');
-        foreach ($files as $file) {
+
+        foreach (glob($dir . '*.cache') ?: [] as $file) {
             unlink($file);
         }
-        
+
         return true;
     }
-    
+
     // ========================================
     // Helper Methods
     // ========================================
-    
+
+    private static function cacheDirectory(): string
+    {
+        if (self::$cacheDir !== null) {
+            return self::$cacheDir;
+        }
+
+        if (class_exists(Application::class)) {
+            self::$cacheDir = rtrim(Application::getInstance()->path('storage/cache'), '\\/') . DIRECTORY_SEPARATOR;
+        } else {
+            self::$cacheDir = dirname(__DIR__, 2) . DIRECTORY_SEPARATOR . 'storage' . DIRECTORY_SEPARATOR . 'cache' . DIRECTORY_SEPARATOR;
+        }
+
+        return self::$cacheDir;
+    }
+
     /**
      * Get cache file path for key
-     * 
-     * Uses MD5 hash to create safe filenames from any key.
-     * All cache files use .cache extension.
-     * 
-     * @param string $key Cache key
-     * @return string Full path to cache file
      */
     private static function getCacheFile(string $key): string
     {
-        return self::$cacheDir . md5($key) . '.cache';
+        return self::cacheDirectory() . md5($key) . '.cache';
     }
 }
 

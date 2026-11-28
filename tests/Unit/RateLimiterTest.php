@@ -84,4 +84,28 @@ class RateLimiterTest extends TestCase
         $ip = RateLimiter::getClientIp();
         $this->assertMatchesRegularExpression('/^\d{1,3}(\.\d{1,3}){3}$/', $ip);
     }
+
+    public function testGetClientIpIgnoresSpoofedHeadersByDefault(): void
+    {
+        putenv('TRUSTED_PROXIES');
+        $_SERVER['REMOTE_ADDR'] = '10.0.0.5';
+        $_SERVER['HTTP_X_FORWARDED_FOR'] = '1.2.3.4';
+        $_SERVER['HTTP_CF_CONNECTING_IP'] = '8.8.8.8';
+
+        $this->assertSame('10.0.0.5', RateLimiter::getClientIp());
+
+        unset($_SERVER['REMOTE_ADDR'], $_SERVER['HTTP_X_FORWARDED_FOR'], $_SERVER['HTTP_CF_CONNECTING_IP']);
+    }
+
+    public function testGetClientIpHonoursForwardedWhenProxyTrusted(): void
+    {
+        putenv('TRUSTED_PROXIES=10.0.0.5');
+        $_SERVER['REMOTE_ADDR'] = '10.0.0.5';
+        $_SERVER['HTTP_X_FORWARDED_FOR'] = '203.0.113.9, 10.0.0.5';
+
+        $this->assertSame('203.0.113.9', RateLimiter::getClientIp());
+
+        putenv('TRUSTED_PROXIES');
+        unset($_SERVER['REMOTE_ADDR'], $_SERVER['HTTP_X_FORWARDED_FOR']);
+    }
 }

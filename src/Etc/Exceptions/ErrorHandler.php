@@ -187,14 +187,14 @@ class ErrorHandler
      */
     public function handleException(Throwable $exception): void
     {
-        // Log exception with full context
+        // Log exception — never persist frame args (passwords, secrets, tokens)
         $this->logError([
             'type' => 'EXCEPTION',
             'class' => get_class($exception),
             'message' => $exception->getMessage(),
             'file' => $exception->getFile(),
             'line' => $exception->getLine(),
-            'trace' => $exception->getTrace(),
+            'trace' => $this->redactTrace($exception->getTrace()),
             'context' => $exception instanceof upMVCException ? $exception->getContext() : []
         ]);
 
@@ -448,18 +448,32 @@ class ErrorHandler
      * @param array $trace Stack trace array from exception or debug_backtrace()
      * @return string Formatted multi-line stack trace
      */
+    /**
+     * Drop call arguments from stack frames before logging or display.
+     *
+     * @param array<int, array<string, mixed>> $trace
+     * @return array<int, array<string, mixed>>
+     */
+    private function redactTrace(array $trace): array
+    {
+        return array_map(static function (array $frame): array {
+            unset($frame['args']);
+            return $frame;
+        }, $trace);
+    }
+
     private function formatTrace(array $trace): string
     {
         $output = '';
-        foreach ($trace as $i => $step) {
+        foreach ($this->redactTrace($trace) as $i => $step) {
             $output .= "#{$i} ";
             if (isset($step['file'])) {
                 $output .= $step['file'] . '(' . ($step['line'] ?? '?') . '): ';
             }
             if (isset($step['class'])) {
-                $output .= $step['class'] . $step['type'];
+                $output .= $step['class'] . ($step['type'] ?? '::');
             }
-            $output .= $step['function'] . "()\n";
+            $output .= ($step['function'] ?? '{unknown}') . "()\n";
         }
         return $output;
     }
