@@ -43,7 +43,8 @@ public/index.php
     Application::bootProviders($router)
     Routes::startRoutes()
       for each Application::getModulePathsForRoutes():
-        InitModsImproved::addRoutes()    ← discover + custom-routes.php last
+        InitModsImproved::addRoutes()    ← discover module Routes only
+      Routes::registerCustomRoutes()     ← custom-routes.php once, AFTER all paths
       Router::dispatch(...)
 ```
 

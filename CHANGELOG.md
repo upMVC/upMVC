@@ -2,7 +2,11 @@
 
 ## [Unreleased]
 
-### Security (fix Phase 2b regressions — branch `fix/phase2b-regressions`)
+## v2.7.1 - Security hardening (Phase 1–2b + regression fixes) (2026-11-28)
+
+Ship of Git-surface + kernel auth hardening that landed on `main` after the `2.7.0` tag, plus fixes for regressions introduced by Phase 2b (`fix/phase2b-regressions`). **Hosts / starters should require `^2.7.1` (or update the lock) to pick this up from Packagist.**
+
+### Security (fix Phase 2b regressions)
 - **custom-routes** — registered once in `Routes` *after* all module paths (restores pack→app→custom order; no static flag).
 - **TrustedProxies** — shared helper with CIDR; `CF-Connecting-IP` only if `TRUST_CF_HEADER=true`.
 - **cleanUrlSitePath** — segment boundary (`/app` ≠ `/apple`); trailing-slash normalize.
@@ -15,7 +19,6 @@
 - **RateLimiter** — storage via `Application::path('storage')` when booted; XFF rightmost non-trusted hop; read `TRUSTED_PROXIES` from `$_ENV` too.
 - **ConfigManager** — always load app/database from Environment (library hosts without `Config.php` stubs).
 - **Router::route** — `preg_quote` + `rawurlencode` on named URL params.
-- **InitModsImproved** — register `custom-routes.php` once across multi module-path scans.
 - **BaseController / Orm** — view paths resolved under `Modules/` with `realpath` (no `..`).
 
 ### Security (Phase 2)
@@ -38,7 +41,10 @@
 - **Ops** — CLI-only guards on `cache-cli.php` / `upmvc-next.php`; `composer audit` in CI; untrack `composer.phar` + rate-limit JSON junk.
 
 ### Docs / agent
-- **Product shapes** — Human how-to [`docs/PRODUCT_SHAPES.md`](docs/PRODUCT_SHAPES.md); linked from README AI Agent section. Agent pack: `product_shapes` + `simple_product_shape` (propose, do not prescribe). Rules prefer + scaffold `api_domain`.
+- Agent pack `verified_against` → **v2.7.1**; product shapes how-to remains under `docs/PRODUCT_SHAPES.md`.
+
+### Tests
+- `TrustedProxiesTest`, `CustomRoutesRegistrationTest`, `BaseControllerViewScopeTest`; extended CleanUrl / RateLimiter / AuthMiddleware edge cases.
 
 ## v2.7.0 - Empty protected-route defaults + QA scripts (2026-11-26)
 
