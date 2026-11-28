@@ -484,10 +484,18 @@ class InitModsImproved
      * @param Router $router The router instance
      * @return void
      */
+    /** @var bool Ensures custom-routes.php registers once across multi module-path scans */
+    private static bool $customRoutesRegistered = false;
+
     private function registerCustomRoutes(Router $router): void
     {
+        if (self::$customRoutesRegistered) {
+            return;
+        }
+        self::$customRoutesRegistered = true;
+
         $customRoutes = $this->loadCustomRoutes();
-        
+
         foreach ($customRoutes as $route) {
             $router->addRoute($route['path'], $route['controller'], $route['method']);
         }

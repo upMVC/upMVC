@@ -140,13 +140,27 @@ class RateLimiter
     {
         $remote = $_SERVER['REMOTE_ADDR'] ?? '';
         if ($remote !== '' && filter_var($remote, FILTER_VALIDATE_IP) && self::isTrustedProxy($remote)) {
-            foreach (['HTTP_CF_CONNECTING_IP', 'HTTP_X_FORWARDED_FOR', 'HTTP_X_REAL_IP'] as $h) {
-                if (empty($_SERVER[$h])) {
-                    continue;
+            if (!empty($_SERVER['HTTP_CF_CONNECTING_IP'])) {
+                $cf = trim((string) $_SERVER['HTTP_CF_CONNECTING_IP']);
+                if (filter_var($cf, FILTER_VALIDATE_IP)) {
+                    return $cf;
                 }
-                $ip = trim(explode(',', (string) $_SERVER[$h])[0]);
-                if (filter_var($ip, FILTER_VALIDATE_IP)) {
-                    return $ip;
+            }
+
+            if (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+                // Append-style chains: client is the rightmost non-trusted hop
+                $parts = array_reverse(array_map('trim', explode(',', (string) $_SERVER['HTTP_X_FORWARDED_FOR'])));
+                foreach ($parts as $ip) {
+                    if (filter_var($ip, FILTER_VALIDATE_IP) && !self::isTrustedProxy($ip)) {
+                        return $ip;
+                    }
+                }
+            }
+
+            if (!empty($_SERVER['HTTP_X_REAL_IP'])) {
+                $real = trim((string) $_SERVER['HTTP_X_REAL_IP']);
+                if (filter_var($real, FILTER_VALIDATE_IP)) {
+                    return $real;
                 }
             }
         }
@@ -165,6 +179,9 @@ class RateLimiter
     {
         $raw = getenv('TRUSTED_PROXIES');
         if ($raw === false || $raw === '') {
+            $raw = $_ENV['TRUSTED_PROXIES'] ?? '';
+        }
+        if ($raw === '') {
             return [];
         }
 
@@ -236,9 +253,7 @@ class RateLimiter
     private static function ensureStorageDir(): void
     {
         if (self::$storageDir === '') {
-            // src/Common/Helpers/ → up 3 levels → project root
-            self::$storageDir = dirname(__DIR__, 3)
-                . DIRECTORY_SEPARATOR . 'storage'
+            self::$storageDir = self::storageRoot()
                 . DIRECTORY_SEPARATOR . 'rate-limits'
                 . DIRECTORY_SEPARATOR;
         }
@@ -251,8 +266,7 @@ class RateLimiter
     private static function ensureLogDir(): void
     {
         if (self::$logDir === '') {
-            self::$logDir = dirname(__DIR__, 3)
-                . DIRECTORY_SEPARATOR . 'storage'
+            self::$logDir = self::storageRoot()
                 . DIRECTORY_SEPARATOR . 'logs'
                 . DIRECTORY_SEPARATOR;
         }
@@ -260,6 +274,19 @@ class RateLimiter
             mkdir(self::$logDir, 0755, true);
             file_put_contents(self::$logDir . '.htaccess', "Require all denied\n");
         }
+    }
+
+    private static function storageRoot(): string
+    {
+        if (class_exists(\App\Etc\Application::class)) {
+            try {
+                return rtrim(\App\Etc\Application::getInstance()->path('storage'), '\\/');
+            } catch (\Throwable) {
+                // Fall through when Application is not bootstrapped (unit tests)
+            }
+        }
+
+        return dirname(__DIR__, 3) . DIRECTORY_SEPARATOR . 'storage';
     }
 
     private static function filePath(string $identifier, string $action): string

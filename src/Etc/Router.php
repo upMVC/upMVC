@@ -271,10 +271,11 @@ class Router
         $route = $this->namedRoutes[$name];
         $pattern = $route['pattern'];
         
-        // Replace placeholders with values
+        // Replace placeholders with values (quote key; encode value for URL safety)
         foreach ($params as $key => $value) {
-            // Match both {key} and {key:type}
-            $pattern = preg_replace('/{' . $key . '(?::[a-z]+)?}/', $value, $pattern);
+            $safeKey = preg_quote((string) $key, '/');
+            $encoded = rawurlencode((string) $value);
+            $pattern = preg_replace('/\{' . $safeKey . '(?::[a-z]+)?\}/', $encoded, $pattern);
         }
         
         // Check for unreplaced placeholders

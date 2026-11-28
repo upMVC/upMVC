@@ -20,18 +20,23 @@ class BaseControllerOrm
             extract($data, EXTR_SKIP);
         }
 
-        // Convert view path to file path
-        $viewFile = \THIS_DIR . '/Modules/' . str_replace('/', '/', $viewPath) . '.php';
-
-        // Check if view exists
-        if (!file_exists($viewFile)) {
-            throw new \Exception("View file not found: {$viewFile}");
+        $relative = str_replace(['\\', "\0", '..'], '', (string) $viewPath);
+        $relative = ltrim($relative, '/');
+        if ($relative === '' || !preg_match('#^[a-zA-Z0-9_./-]+$#', $relative)) {
+            throw new \InvalidArgumentException('Invalid view path');
         }
 
-        // Start output buffering
-        // ob_start();
+        $base = realpath(\THIS_DIR . '/Modules');
+        if ($base === false) {
+            throw new \RuntimeException('Modules directory missing');
+        }
 
-        // Include the view file
+        $candidate = $base . DIRECTORY_SEPARATOR . str_replace('/', DIRECTORY_SEPARATOR, $relative) . '.php';
+        $viewFile = realpath($candidate);
+        if ($viewFile === false || !str_starts_with($viewFile, $base . DIRECTORY_SEPARATOR)) {
+            throw new \RuntimeException("View file not found: {$viewPath}");
+        }
+
         include $viewFile;
 
         // Return the buffered content

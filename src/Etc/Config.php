@@ -450,7 +450,20 @@ class Config
      */
     private function cleanUrlSitePath(string $sitePath, string $reqUrl): string
     {
-        return str_replace($sitePath, '', $reqUrl);
+        if ($sitePath === '' || $sitePath === '/') {
+            return $reqUrl;
+        }
+
+        // Prefix-only: never str_replace mid-path (SITE_PATH substring elsewhere).
+        if (str_starts_with($reqUrl, $sitePath)) {
+            $rest = substr($reqUrl, strlen($sitePath));
+            if ($rest === '') {
+                return '/';
+            }
+            return str_starts_with($rest, '/') ? $rest : '/' . $rest;
+        }
+
+        return $reqUrl;
     }
 }
 
