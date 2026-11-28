@@ -16,9 +16,8 @@ class BaseControllerOrm
         //define('THIS_DIR', str_replace("\\","/",dirname(__FILE__, 2)));
 
 
-        // Extract data to make variables available in view
         if ($data) {
-            extract($data);
+            extract($data, EXTR_SKIP);
         }
 
         // Convert view path to file path
@@ -49,18 +48,12 @@ class BaseControllerOrm
     protected function redirect($reqRoute, $reqMet)
     {
         $baseUrl = \BASE_URL;
-
-        // Remove trailing slashes and ensure leading slash
-        $path = '/' . trim($reqRoute, '/');
-        //$path = $reqRoute;
-
+        $path = '/' . trim((string) $reqRoute, '/');
         $fullUrl = $baseUrl . $path;
-        echo $fullUrl;
 
-        // Method 1: JavaScript redirect
-        echo "<script>window.location.href = '" . htmlspecialchars($fullUrl, ENT_QUOTES, 'UTF-8') . "';</script>";
-
-        exit();
+        http_response_code(302);
+        header('Location: ' . $fullUrl);
+        exit;
     }
 
     /**

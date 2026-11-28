@@ -6,8 +6,8 @@
  * and stores it in $GLOBALS['current_user'] so any controller downstream
  * can read it without touching sessions.
  *
- * Algorithm: HS256 (HMAC-SHA256)
- * Secret:    JWT_SECRET in .env
+ * Algorithm: HS256 (HMAC-SHA256) only — other algs (incl. "none") are rejected.
+ * Secret:    JWT_SECRET in .env (minimum 32 bytes)
  *
  * Sets $GLOBALS['current_user']:
  *   ['sub' => userId, 'username' => '...', 'tenant_id' => ..., 'exp' => ...]
@@ -21,6 +21,8 @@ use App\Etc\Config\Environment;
 
 class JwtAuthMiddleware
 {
+    private const MIN_SECRET_LENGTH = 32;
+
     /**
      * Verify the bearer token and populate $GLOBALS['current_user'].
      * Returns false if the token is missing or invalid (aborts the request).
@@ -33,7 +35,7 @@ class JwtAuthMiddleware
      */
     public function __invoke(string $route, string $method): bool
     {
-        $header = $_SERVER['HTTP_AUTHORIZATION'] ?? '';
+        $header = self::authorizationHeader();
 
         if (!preg_match('/^Bearer\s+(.+)$/i', $header, $m)) {
             $this->abort(401, 'No bearer token provided');
@@ -48,20 +50,34 @@ class JwtAuthMiddleware
         return true;
     }
 
+    /**
+     * Authorization header across CGI / Apache / IIS setups.
+     */
+    public static function authorizationHeader(): string
+    {
+        if (!empty($_SERVER['HTTP_AUTHORIZATION'])) {
+            return (string) $_SERVER['HTTP_AUTHORIZATION'];
+        }
+        if (!empty($_SERVER['REDIRECT_HTTP_AUTHORIZATION'])) {
+            return (string) $_SERVER['REDIRECT_HTTP_AUTHORIZATION'];
+        }
+        if (function_exists('apache_request_headers')) {
+            $headers = apache_request_headers();
+            foreach ($headers as $key => $value) {
+                if (strcasecmp((string) $key, 'Authorization') === 0) {
+                    return (string) $value;
+                }
+            }
+        }
+        return '';
+    }
+
     // -----------------------------------------------------------------------
     // JWT helpers
     // -----------------------------------------------------------------------
 
     /**
      * Verify an HS256 JWT and return its payload, or null on failure.
-     *
-     * Public and static because tokens do not only arrive in an Authorization
-     * header. Anything holding a raw token — an impersonation form post, a
-     * queued job, a CLI tool — needs to verify it without going through the
-     * request pipeline, and JwtService deliberately issues only.
-     *
-     * Returns null rather than throwing: an invalid token is an expected
-     * condition, not an exceptional one. Callers decide what to do about it.
      *
      * @param string $token Raw JWT (no "Bearer " prefix)
      * @return array<string, mixed>|null Decoded claims, or null if invalid or expired
@@ -73,33 +89,59 @@ class JwtAuthMiddleware
             return null;
         }
 
-        [$header, $payload, $sig] = $parts;
+        [$headerB64, $payloadB64, $sigB64] = $parts;
 
         $secret = (string) (Environment::get('JWT_SECRET') ?: getenv('JWT_SECRET') ?: ($_ENV['JWT_SECRET'] ?? ''));
-        if ($secret === '') {
-            error_log('JwtAuthMiddleware: JWT_SECRET is not set in .env');
+        if ($secret === '' || strlen($secret) < self::MIN_SECRET_LENGTH) {
+            error_log('JwtAuthMiddleware: JWT_SECRET is missing or shorter than ' . self::MIN_SECRET_LENGTH . ' bytes');
             return null;
         }
 
-        // Verify signature — constant-time comparison prevents timing attacks
-        $expected = hash_hmac('sha256', "$header.$payload", $secret, true);
-        $provided = base64_decode(strtr($sig, '-_', '+/'));
-
-        if (!hash_equals($expected, $provided)) {
+        $headerJson = self::b64uDecode($headerB64);
+        if ($headerJson === null) {
+            return null;
+        }
+        $header = json_decode($headerJson, true);
+        if (!is_array($header) || ($header['alg'] ?? null) !== 'HS256') {
             return null;
         }
 
-        $data = json_decode(base64_decode(strtr($payload, '-_', '+/')), true);
+        $expected = hash_hmac('sha256', "$headerB64.$payloadB64", $secret, true);
+        $provided = self::b64uDecode($sigB64);
+        if ($provided === null || !hash_equals($expected, $provided)) {
+            return null;
+        }
+
+        $payloadJson = self::b64uDecode($payloadB64);
+        if ($payloadJson === null) {
+            return null;
+        }
+        $data = json_decode($payloadJson, true);
         if (!is_array($data)) {
             return null;
         }
 
-        // Check expiry
-        if (isset($data['exp']) && $data['exp'] < time()) {
+        if (!isset($data['exp']) || !is_numeric($data['exp'])) {
+            return null;
+        }
+        if ((int) $data['exp'] < time()) {
+            return null;
+        }
+        if (isset($data['nbf']) && (!is_numeric($data['nbf']) || (int) $data['nbf'] > time())) {
             return null;
         }
 
         return $data;
+    }
+
+    private static function b64uDecode(string $data): ?string
+    {
+        $remainder = strlen($data) % 4;
+        if ($remainder > 0) {
+            $data .= str_repeat('=', 4 - $remainder);
+        }
+        $decoded = base64_decode(strtr($data, '-_', '+/'), true);
+        return $decoded === false ? null : $decoded;
     }
 
     // -----------------------------------------------------------------------
@@ -107,10 +149,6 @@ class JwtAuthMiddleware
     // -----------------------------------------------------------------------
 
     /**
-     * Send a JSON error response and halt execution.
-     *
-     * @param int    $code HTTP status code
-     * @param string $msg  Error message
      * @return never
      */
     private function abort(int $code, string $msg): never

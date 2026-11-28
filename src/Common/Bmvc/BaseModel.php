@@ -188,28 +188,33 @@ class BaseModel
     public function update(int $id, array $data, string $table = ''): bool
     {
         $data = $this->filterAssignable($data);
+        // Avoid colliding with WHERE id when callers pass 'id' in $data (e.g. $_POST)
+        unset($data['id']);
         if ($data === [] || $table === '') {
             return false;
         }
 
         $setParts = [];
-        foreach (array_keys($data) as $key) {
-            $setParts[] = $this->quoteIdentifier($key) . ' = :' . $key;
+        $values = [];
+        foreach ($data as $key => $value) {
+            $setParts[] = $this->quoteIdentifier($key) . ' = ?';
+            $values[] = $value;
         }
 
         $stmt = $this->conn->prepare(
             'UPDATE ' . $this->quoteIdentifier($table)
             . ' SET ' . implode(', ', $setParts)
-            . ' WHERE `id` = :id'
+            . ' WHERE `id` = ?'
         );
         if (!$stmt) {
             return false;
         }
 
-        $stmt->bindValue(':id', $id, PDO::PARAM_INT);
-        foreach ($data as $key => $value) {
-            $stmt->bindValue(':' . $key, $value);
+        $i = 1;
+        foreach ($values as $value) {
+            $stmt->bindValue($i++, $value);
         }
+        $stmt->bindValue($i, $id, PDO::PARAM_INT);
 
         if (!$stmt->execute()) {
             return false;

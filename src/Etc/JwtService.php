@@ -19,6 +19,8 @@ use App\Etc\Config\Environment;
 
 class JwtService
 {
+    private const MIN_SECRET_LENGTH = 32;
+
     private string $secret;
     private int    $accessTtl;
     private int    $refreshTtl;
@@ -44,8 +46,10 @@ class JwtService
      */
     public function issueAccessToken(array $claims): string
     {
-        if ($this->secret === '') {
-            throw new \RuntimeException('JWT_SECRET is not set in .env');
+        if ($this->secret === '' || strlen($this->secret) < self::MIN_SECRET_LENGTH) {
+            throw new \RuntimeException(
+                'JWT_SECRET must be set in .env and be at least ' . self::MIN_SECRET_LENGTH . ' bytes'
+            );
         }
 
         $now           = time();

@@ -19,13 +19,14 @@ class ResponseHelper
      */
     public static function view(string $path, array $data = []): void
     {
-        extract($data);
-        $viewPath = __DIR__ . '/../../modules/' . str_replace('.', '/', $path) . '.php';
-        
+        extract($data, EXTR_SKIP);
+        $relative = str_replace(['..', '\\'], '', str_replace('.', '/', $path));
+        $viewPath = __DIR__ . '/../../Modules/' . $relative . '.php';
+
         if (!file_exists($viewPath)) {
             throw new \RuntimeException("View not found: {$path}");
         }
-        
+
         include $viewPath;
     }
     

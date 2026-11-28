@@ -130,20 +130,30 @@ class CorsMiddleware implements MiddlewareInterface
      */
     public function __construct(array $config = [])
     {
-        // Set allowed origins (default: all)
-        $this->allowedOrigins = $config['origins'] ?? ['*'];
-        
-        // Set allowed methods (default: common REST methods)
+        $origins = $config['origins'] ?? ['*'];
+        if (is_string($origins)) {
+            $origins = explode(',', $origins);
+        }
+        $this->allowedOrigins = array_values(array_filter(array_map(
+            static fn($o) => is_string($o) ? trim($o) : '',
+            (array) $origins
+        ), static fn($o) => $o !== ''));
+        if ($this->allowedOrigins === []) {
+            $this->allowedOrigins = ['*'];
+        }
+
         $this->allowedMethods = $config['methods'] ?? ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'];
-        
-        // Set allowed headers (default: common API headers)
-        $this->allowedHeaders = $config['headers'] ?? ['Content-Type', 'Authorization', 'X-Requested-With'];
-        
-        // Credentials support (default: disabled for security)
-        $this->allowCredentials = $config['credentials'] ?? false;
-        
-        // Preflight cache duration (default: 24 hours)
-        $this->maxAge = $config['max_age'] ?? 86400;
+        if (is_string($this->allowedMethods)) {
+            $this->allowedMethods = array_map('trim', explode(',', $this->allowedMethods));
+        }
+
+        $this->allowedHeaders = $config['headers'] ?? ['Content-Type', 'Authorization', 'X-Requested-With', 'X-CSRF-Token'];
+        if (is_string($this->allowedHeaders)) {
+            $this->allowedHeaders = array_map('trim', explode(',', $this->allowedHeaders));
+        }
+
+        $this->allowCredentials = (bool) ($config['credentials'] ?? false);
+        $this->maxAge = (int) ($config['max_age'] ?? 86400);
     }
 
     // ========================================
@@ -200,27 +210,26 @@ class CorsMiddleware implements MiddlewareInterface
      */
     private function setCorsHeaders(string $origin): void
     {
-        // Set Access-Control-Allow-Origin header
-        if ($this->isOriginAllowed($origin)) {
-            // Origin is in whitelist - use specific origin
-            header('Access-Control-Allow-Origin: ' . $origin);
-        } elseif (in_array('*', $this->allowedOrigins)) {
-            // Wildcard enabled - allow all origins
-            header('Access-Control-Allow-Origin: *');
-        }
-        // Note: If origin not allowed and no wildcard, header not set (request blocked)
+        $reflected = false;
+        $wildcard = in_array('*', $this->allowedOrigins, true);
 
-        // Set allowed HTTP methods
+        if ($origin !== '' && $this->isOriginAllowed($origin)) {
+            header('Access-Control-Allow-Origin: ' . $origin);
+            header('Vary: Origin');
+            $reflected = true;
+        } elseif ($wildcard && !$this->allowCredentials) {
+            header('Access-Control-Allow-Origin: *');
+        } elseif ($wildcard && $this->allowCredentials) {
+            // Never reflect arbitrary Origin with credentials (CWE-942).
+            // Browsers also reject Allow-Origin: * + credentials — refuse both.
+            error_log('CorsMiddleware: origins=* with credentials=true is unsafe; set an explicit origin whitelist');
+        }
+
         header('Access-Control-Allow-Methods: ' . implode(', ', $this->allowedMethods));
-        
-        // Set allowed request headers
         header('Access-Control-Allow-Headers: ' . implode(', ', $this->allowedHeaders));
-        
-        // Set preflight cache duration
         header('Access-Control-Max-Age: ' . $this->maxAge);
 
-        // Set credentials flag if enabled
-        if ($this->allowCredentials) {
+        if ($this->allowCredentials && $reflected) {
             header('Access-Control-Allow-Credentials: true');
         }
     }
@@ -246,8 +255,7 @@ class CorsMiddleware implements MiddlewareInterface
      */
     private function isOriginAllowed(string $origin): bool
     {
-        // Exact match against allowed origins list
-        return in_array($origin, $this->allowedOrigins);
+        return in_array($origin, $this->allowedOrigins, true);
     }
 }
 

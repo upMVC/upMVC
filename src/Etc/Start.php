@@ -28,6 +28,7 @@ use App\Etc\Middleware\AuthMiddleware;
 use App\Etc\Middleware\LoggingMiddleware;
 use App\Etc\Middleware\CorsMiddleware;
 use App\Etc\Middleware\JwtAuthMiddleware;
+use App\Etc\Middleware\SecurityHeadersMiddleware;
 use App\Etc\Helpers\HelperFacade;
 
 class Start
@@ -153,7 +154,8 @@ class Start
 
         // Global logging for all requests
         $middlewareManager->addGlobal(new LoggingMiddleware());
-        
+        $middlewareManager->addGlobal(new SecurityHeadersMiddleware());
+
         // Optional CORS support
         if (ConfigManager::get('app.cors.enabled', false)) {
             $corsConfig = $this->getCorsConfig();
@@ -173,11 +175,12 @@ class Start
      */
     private function registerMiddleware($router): void
     {
-        // CSRF protection for POST requests
+        // CSRF for mutating methods (POST body or X-CSRF-Token header — never query)
         $router->addMiddleware('csrf', function($route, $method) {
-            if ($method === 'POST' && ConfigManager::get('security.csrf_protection', true)) {
-                $token = $_POST['csrf_token'] ?? '';
-                if (!Security::validateCsrf($token)) {
+            $mutating = in_array(strtoupper((string) $method), ['POST', 'PUT', 'PATCH', 'DELETE'], true);
+            if ($mutating && ConfigManager::get('security.csrf_protection', true)) {
+                $token = $_POST['csrf_token'] ?? $_SERVER['HTTP_X_CSRF_TOKEN'] ?? '';
+                if (!Security::validateCsrf((string) $token)) {
                     http_response_code(403);
                     echo 'CSRF token validation failed';
                     return false;
@@ -185,12 +188,12 @@ class Start
             }
             return true;
         });
-        
+
         // Rate limiting by IP address
         $router->addMiddleware('rate_limit', function($route, $method) {
             $identifier = $_SERVER['REMOTE_ADDR'] ?? 'unknown';
             $limit = ConfigManager::get('security.rate_limit', 100);
-            
+
             if (!Security::rateLimit($identifier, $limit)) {
                 http_response_code(429);
                 echo 'Rate limit exceeded';
@@ -211,18 +214,32 @@ class Start
             $result = $cors->handle($request, fn() => true);
             return $result !== false;
         });
-        
+
         // JWT bearer token verification — sets $GLOBALS['current_user']
         $router->addMiddleware('jwt', new JwtAuthMiddleware());
 
-        // Session-based authentication check
+        // Session-based authentication (same flags as AuthMiddleware)
         $router->addMiddleware('auth', function($route, $method) {
-            if (!isset($_SESSION['logged']) || $_SESSION['logged'] !== true) {
+            $ok = (isset($_SESSION['authenticated']) && $_SESSION['authenticated'] === true)
+                || (isset($_SESSION['logged']) && $_SESSION['logged'] === true);
+            if ($ok) {
+                return true;
+            }
+
+            $wantsJson = str_contains((string) ($_SERVER['HTTP_ACCEPT'] ?? ''), 'application/json')
+                || str_starts_with((string) ($route ?? ''), '/api');
+
+            if ($wantsJson) {
                 http_response_code(401);
-                header('Location: /auth');
+                header('Content-Type: application/json; charset=utf-8');
+                echo json_encode(['error' => 'Unauthenticated']);
                 return false;
             }
-            return true;
+
+            $baseUrl = defined('BASE_URL') ? BASE_URL : '';
+            http_response_code(302);
+            header('Location: ' . $baseUrl . '/auth');
+            return false;
         });
     }
 
@@ -302,10 +319,27 @@ class Start
     {
         $config = ConfigManager::get('app.cors', []);
 
+        $origins = $config['origins'] ?? $config['allowed_origins'] ?? ['*'];
+        if (is_string($origins)) {
+            $origins = array_map('trim', explode(',', $origins));
+        } elseif (is_array($origins)) {
+            $origins = array_values(array_map(
+                static fn($o) => is_string($o) ? trim($o) : $o,
+                $origins
+            ));
+        } else {
+            $origins = ['*'];
+        }
+
+        $headers = $config['headers'] ?? $config['allowed_headers'] ?? ['Content-Type', 'Authorization', 'X-Requested-With', 'X-CSRF-Token'];
+        if (is_string($headers)) {
+            $headers = array_map('trim', explode(',', $headers));
+        }
+
         return [
-            'origins' => $config['origins'] ?? $config['allowed_origins'] ?? ['*'],
+            'origins' => $origins,
             'methods' => $config['methods'] ?? $config['allowed_methods'] ?? ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-            'headers' => $config['headers'] ?? $config['allowed_headers'] ?? ['Content-Type', 'Authorization', 'X-Requested-With'],
+            'headers' => $headers,
             'credentials' => $config['credentials'] ?? false,
             'max_age' => $config['max_age'] ?? 86400,
         ];

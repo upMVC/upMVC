@@ -204,6 +204,8 @@ class RateLimiter
     public static function logFailedLogin(string $email, string $status = 'FAILED', ?int $attemptNumber = null): void
     {
         self::ensureLogDir();
+        $email = self::sanitizeLogField($email);
+        $status = self::sanitizeLogField($status);
         $info = $attemptNumber ? " ({$attemptNumber} attempt(s))" : '';
         $line = sprintf("[%s] IP: %s | Email: %s | %s%s\n",
             date('Y-m-d H:i:s'), self::getClientIp(), $email, $status, $info);
@@ -216,9 +218,15 @@ class RateLimiter
     public static function logSuccessfulLogin(string $email): void
     {
         self::ensureLogDir();
+        $email = self::sanitizeLogField($email);
         $line = sprintf("[%s] IP: %s | Email: %s | SUCCESS\n",
             date('Y-m-d H:i:s'), self::getClientIp(), $email);
         @file_put_contents(self::$logDir . 'logins.log', $line, FILE_APPEND | LOCK_EX);
+    }
+
+    private static function sanitizeLogField(string $value): string
+    {
+        return str_replace(["\r", "\n"], '', $value);
     }
 
     // =========================================================================

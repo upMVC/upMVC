@@ -150,8 +150,8 @@ class BaseView
         ?>
     <p>
         &copy; <?php echo date('Y'); ?>
-        <a href="https://bitshost.biz/free-web-hosting.html" target="_blank">BitsHost Cloud</a>
-        &mdash; <a href="https://upmvc.com" target="_blank">upMVC</a>
+        <a href="https://bitshost.biz/free-web-hosting.html" target="_blank" rel="noopener noreferrer">BitsHost Cloud</a>
+        &mdash; <a href="https://upmvc.com" target="_blank" rel="noopener noreferrer">upMVC</a>
     </p>
 </footer>
 </body>
